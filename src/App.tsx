@@ -7,6 +7,7 @@ import './App.css';
 
 function App() {
   return (
+    <div className = 'app'>
     <ChakraProvider>
     <Box padding = '3px'>
     <Heading>react-infinite-grid-scroller (RIGS) demo site</Heading>
@@ -22,6 +23,7 @@ function App() {
     </Flex>
     </Box>
     </ChakraProvider>
+    </div>
   );
 }
 
