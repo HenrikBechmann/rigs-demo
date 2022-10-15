@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, Flex, Text } from '@chakra-ui/react'
 
 import logo from './logo.svg';
 import './App.css';
@@ -8,22 +8,10 @@ import './App.css';
 function App() {
   return (
     <ChakraProvider>
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Flex padding = '3px'>
+      <Text>Open the right drawer for options. Open the left drawer for explanations. 
+      On desktop, change the browser size to change the viewport size.</Text>
+    </Flex>
     </ChakraProvider>
   );
 }
