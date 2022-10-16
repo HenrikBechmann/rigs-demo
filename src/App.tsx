@@ -7,6 +7,7 @@ import {
   Grid, 
   Heading, 
   Button, 
+  Show,
   useDisclosure,
   Drawer,
   DrawerOverlay,
@@ -17,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 
 function App() {
-  
+
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
   const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
 
@@ -30,7 +31,12 @@ function App() {
     <Box height = '100vh'><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr'>
 
       <Box padding = {[1,1,2]}>
-        <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>react-infinite-grid-scroller (RIGS) demo</Heading>
+        <Show above = 'sm'>
+          <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>react-infinite-grid-scroller (RIGS) demo</Heading>
+        </Show>
+        <Show below = 'sm'>
+          <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>RIGS demo</Heading>
+        </Show>
         <HStack align = 'start'>
           <Button ref = {explanationsButtonRef} size = {['sm','sm','md']} onClick = {onOpenExplanations}>
             Explanations
