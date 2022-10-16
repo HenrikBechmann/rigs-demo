@@ -19,7 +19,8 @@ import {
   DrawerBody,
 } from '@chakra-ui/react'
 
-import Scroller from 'react-infinite-grid-scroller'
+import Explanations from './Explanations'
+import Options from './Options'
 
 function App() {
 
@@ -61,6 +62,7 @@ function App() {
     <Drawer
       isOpen={isOpenOptions}
       placement='right'
+      size = 'sm'
       onClose={onCloseOptions}
       finalFocusRef={optionsButtonRef}
     >
@@ -70,6 +72,7 @@ function App() {
         <DrawerHeader>Select Scroller Options</DrawerHeader>
 
         <DrawerBody>
+          <Options />
         </DrawerBody>
 
       </DrawerContent>
@@ -88,6 +91,7 @@ function App() {
         <DrawerHeader>Explanations</DrawerHeader>
 
         <DrawerBody>
+          <Explanations />
         </DrawerBody>
 
       </DrawerContent>
