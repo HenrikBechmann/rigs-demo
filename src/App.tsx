@@ -17,15 +17,18 @@ import {
 } from '@chakra-ui/react'
 
 function App() {
+  
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
   const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
+
   const optionsButtonRef = React.useRef(null)
   const explanationsButtonRef = React.useRef(null)
 
   return (
     <ChakraProvider>
-    <Box height = '100vh'>
-    <Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr'>
+
+    <Box height = '100vh'><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr'>
+
       <Box padding = {[1,1,2]}>
         <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>react-infinite-grid-scroller (RIGS) demo</Heading>
         <HStack align = 'start'>
@@ -37,10 +40,12 @@ function App() {
           </Button>
         </HStack>
       </Box>
+
       <Box margin = {[1,2,3]} border = '1px' >
       </Box>
-      </Grid>
-    </Box>
+
+    </Grid></Box>
+
     <Drawer
       isOpen={isOpenOptions}
       placement='right'
@@ -57,6 +62,7 @@ function App() {
 
       </DrawerContent>
     </Drawer>
+
     <Drawer
       isOpen={isOpenExplanations}
       placement='left'
@@ -74,6 +80,7 @@ function App() {
 
       </DrawerContent>
     </Drawer>
+
     </ChakraProvider>
   );
 }
