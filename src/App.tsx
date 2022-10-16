@@ -37,7 +37,7 @@ function App() {
           <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>react-infinite-grid-scroller (RIGS) demo</Heading>
         </Show>
         <Show below = 'sm'>
-          <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>RIGS demo</Heading>
+          <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>RIGS scroller demo</Heading>
         </Show>
         <HStack align = 'center' justify = "start">
           <Button ref = {explanationsButtonRef} size = {['sm','sm','md']} onClick = {onOpenExplanations}>
