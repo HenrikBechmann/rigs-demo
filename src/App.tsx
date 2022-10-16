@@ -19,6 +19,8 @@ import {
   DrawerBody,
 } from '@chakra-ui/react'
 
+import Scroller from 'react-infinite-grid-scroller'
+
 function App() {
 
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
