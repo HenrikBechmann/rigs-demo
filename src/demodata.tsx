@@ -53,7 +53,7 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
 
 // -----------------------------[ generic items ]------------------------
 
-const genericstyle = {
+const genericstyle:React.CSSProperties = {
     position:'absolute',
     top:0,
     left:0,
@@ -62,15 +62,16 @@ const genericstyle = {
     borderRadius:'8px',
     backgroundColor:'white', 
     margin:'3px'
-} as React.CSSProperties
+}
 
 const GenericItem = (props:any) => {
 
+    console.log('loading GenericItem', props)
     const originalindexRef = useRef(props.index)
 
     return <div style = {{position:'relative',height:'100%', width:'100%',backgroundColor:'white'}}>
         <div style = {genericstyle}>
-            {originalindexRef.current + 1}{false && <img style= {{height:'100%'}} src={props.image}/>}
+            {originalindexRef.current + 1}
         </div>
     </div>
 
@@ -111,6 +112,8 @@ const GenericItemDynamic = (props:any) => {
 
 const getGenericItem = (index:number) => {
 
+    console.log('getting generic item', index, typeof index)
+
     // if (index == 0) return <GenericItemDynamic index = {index}/>
 
      // return <GenericItem index = {index} image = {'https://loremflickr.com/200/300?random='+index}/>
@@ -118,7 +121,9 @@ const getGenericItem = (index:number) => {
      if (index == 30) return Promise.reject(new Error('not found'))
      if (index == 40) return 5
      // if (index == 45) return null
-     return <GenericItem index = {index} />
+     const returnvalue = <GenericItem index = {index} />
+     console.log('return value from getGenericItem', returnvalue)
+     return returnvalue
 
 }
 
@@ -157,8 +162,8 @@ const getNestedItem = (index:number) => {
 
     return <NestedBox 
         index = {index} 
-        childorientation = {demos.nested.childorientation} 
-        setlistsize = {demos.nested.estimatedListSize}
+        childorientation = {demoproperties.nested.childorientation} 
+        setlistsize = {demoproperties.nested.estimatedListSize}
         scrollerProperties = {null}
     />
 
@@ -168,8 +173,8 @@ const getNestedItemPromises = (index:number) => {
 
     return <NestedBox 
         index = {index} 
-        childorientation = {demos.nested.childorientation} 
-        setlistsize = {demos.nested.estimatedListSize}
+        childorientation = {demoproperties.nested.childorientation} 
+        setlistsize = {demoproperties.nested.estimatedListSize}
         scrollerProperties = {null}
     />
 
@@ -178,8 +183,8 @@ const getNestedItemDynamic = (index:number) => {
 
     return <NestedBox 
         index = {index} 
-        childorientation = {demos.nested.childorientation} 
-        setlistsize = {demos.nested.estimatedListSize}
+        childorientation = {demoproperties.nested.childorientation} 
+        setlistsize = {demoproperties.nested.estimatedListSize}
         scrollerProperties = {null}
     />
 
@@ -383,7 +388,7 @@ const genericcomponentstyles = {
     }
 }
 
-export const demos = {
+export const demoproperties = {
     generic: {
         gap:5,
         padding:10,
@@ -402,7 +407,6 @@ export const demos = {
         //     referenceIndexCallback:null,
         // },
         layout: 'uniform',
-        scrollerName:'GENERIC',
     },
     genericpromises: {
         gap:5,
@@ -422,7 +426,6 @@ export const demos = {
         //     referenceIndexCallback:null,
         // },
         layout: 'uniform',
-        scrollerName:'GENERICPROMISES',
     },
     genericdynamic: {
         gap:5,
@@ -442,7 +445,6 @@ export const demos = {
         //     referenceIndexCallback:null,
         // },
         layout: 'uniform',
-        scrollerName:'GENERICDYNAMIC',
     },
     nested: {
         childorientation:'horizontal',
@@ -463,49 +465,6 @@ export const demos = {
         //     referenceIndexCallback:null,
         // },
         layout:'uniform',
-        scrollerName:'NESTED',
-    },
-    nestedpromises: {
-        childorientation:'horizontal',
-        gap:5,
-        padding:5,
-        cellHeight:400,
-        cellWidth:250,
-        runwaySize:2,
-        startingIndex:0,
-        estimatedListSize:400,
-        getItem:getNestedItemPromises,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout:'uniform',
-        scrollerName:'NESTEDPROMISES',
-    },
-    nesteddynamic: {
-        childorientation:'horizontal',
-        gap:5,
-        padding:5,
-        cellHeight:400,
-        cellWidth:250,
-        runwaySize:2,
-        startingIndex:0,
-        estimatedListSize:400,
-        getItem:getNestedItemDynamic,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout:'uniform',
-        scrollerName:'NESTEDDYNAMIC',
     },
     variable: {
         gap:5,
@@ -547,7 +506,6 @@ export const demos = {
         //     referenceIndexCallback:null,
         // },
         layout:'variable',
-        scrollerName: 'VARIABLEPROMISES',
     },
     variabledynamic: {
         gap:5,
@@ -568,7 +526,6 @@ export const demos = {
         //     referenceIndexCallback:null,
         // },
         layout:'variable',
-        scrollerName: 'VARIABLEDYNAMIC',
     },
 }
 

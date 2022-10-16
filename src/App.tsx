@@ -21,6 +21,8 @@ import {
 
 import Explanations from './Explanations'
 import Options from './Options'
+import Scroller from './Scroller'
+import {demoproperties} from './demodata'
 
 function App() {
 
@@ -54,7 +56,8 @@ function App() {
           </Link>
         </HStack>
       </Box>
-      <Box margin = {[1,2,3]} border = '1px' >
+      <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
+        <Scroller properties = {demoproperties.generic} />
       </Box>
 
     </Grid></Box>
