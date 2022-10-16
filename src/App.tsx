@@ -7,6 +7,8 @@ import {
   Grid, 
   Heading, 
   Button, 
+  Link,
+  Image,
   Show,
   useDisclosure,
   Drawer,
@@ -37,16 +39,18 @@ function App() {
         <Show below = 'sm'>
           <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>RIGS demo</Heading>
         </Show>
-        <HStack align = 'start'>
+        <HStack align = 'center' justify = "start">
           <Button ref = {explanationsButtonRef} size = {['sm','sm','md']} onClick = {onOpenExplanations}>
             Explanations
           </Button>
           <Button ref = {optionsButtonRef} size = {['sm','sm','md']} onClick = {onOpenOptions}>
             Options
           </Button>
+          <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
+            <Image src="https://img.shields.io/badge/npm-1.0.0--Beta--2-brightgreen"/>
+          </Link>
         </HStack>
       </Box>
-
       <Box margin = {[1,2,3]} border = '1px' >
       </Box>
 
