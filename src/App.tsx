@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import { 
   ChakraProvider, 
@@ -22,17 +22,9 @@ import {
 import Explanations from './Explanations'
 import Options from './Options'
 import Scroller from './Scroller'
-import {demoproperties} from './demodata'
+import { demoproperties } from './demodata'
 
 function App() {
-
-  useEffect(() => {
-
-    console.log('initializing')
-
-    return () => {console.log('unmounting')}
-
-  },[])
 
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
   const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
@@ -69,7 +61,6 @@ function App() {
       </Box>
 
     </Grid></Box>
-
     <Drawer
       isOpen={isOpenOptions}
       placement='right'
@@ -109,7 +100,7 @@ function App() {
     </Drawer>
 
     </ChakraProvider>
-  );
+  )
 }
 
 export default App;
