@@ -21,6 +21,7 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
+    Heading,
 
 } from '@chakra-ui/react'
 
@@ -33,7 +34,9 @@ const Options = (props:any) => {
     return <Box>
         <VStack align = 'start' alignItems = 'stretch'>
         <FormControl mb = {3}>
+
             <FormLabel>Select Content Type</FormLabel>
+
             <Select 
                 size = 'md'
                 value = {contentType} 
@@ -46,23 +49,30 @@ const Options = (props:any) => {
                 <option value="variabledynamic">Variable dynamic</option>
                 <option value="nested">Nested uniform scrollers</option>
             </Select>
+
             <FormHelperText>
-                Current content will be replaced on Apply
+                Current content will be replaced on Apply.
             </FormHelperText>
+
         </FormControl>
-        <FormLabel>More Options</FormLabel>
+
+        <Heading as = 'h3' fontSize = 'md'>More Options</Heading>
+
         <Accordion allowMultiple>
+
             <AccordionItem>
-                <h3>
+
+                <Heading as ='h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
                             Properties
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
-                </h3>
-                <AccordionPanel pb={4}>
-                <VStack>
+                </Heading>
+
+                <AccordionPanel pb={4}><VStack>
+
                     <FormControl>
                         <Stack direction = {['column','row','row']} align = 'normal'>
                         <FormLabel size = 'sm'>Orientation</FormLabel>
@@ -74,6 +84,7 @@ const Options = (props:any) => {
                         </RadioGroup>
                         </Stack>
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Padding and gaps</FormLabel>
                         <HStack>
@@ -90,6 +101,7 @@ const Options = (props:any) => {
                             Integers, optional. Padding applies to the scroller borders; gaps apply to the space between cells.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl isRequired = {true}>
                         <FormLabel size = 'sm'>Base cell sizes</FormLabel>
                         <HStack>
@@ -108,6 +120,7 @@ const Options = (props:any) => {
                            the cross dimensions are allocated fractionally (fr).
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Minimum cell sizes</FormLabel>
                         <HStack>
@@ -124,6 +137,7 @@ const Options = (props:any) => {
                             Integers. These only apply to variable layouts. Minimum 25, default 25.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Runway size</FormLabel>
                         <HStack>
@@ -136,6 +150,7 @@ const Options = (props:any) => {
                             Integer. This is the number of rows out of view at the head and tail of lists. Minimum 1, default 1.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Cache settings</FormLabel>
                         <HStack>
@@ -153,38 +168,43 @@ const Options = (props:any) => {
                             CacheMax:integer is ignored for 'cradle' cache setting. 
                             Otherwise, very high settings can degrade performance. CacheMax blank or zero is ignored.
                         </FormHelperText>
-
                     </FormControl>
-                </VStack>
-                </AccordionPanel>
+
+                </VStack></AccordionPanel>
 
             </AccordionItem>
+
             <AccordionItem>
-                <h3>
+
+                <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
                             Callbacks
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
-                </h3>
+                </Heading>
+
                 <AccordionPanel pb={4}>
                 </AccordionPanel>
 
             </AccordionItem>
+
             <AccordionItem>
-                <h3>
+                <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
                             Functions
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
-                </h3>
+                </Heading>
+
                 <AccordionPanel pb={4}>
                 </AccordionPanel>
 
             </AccordionItem>
+
         </Accordion>
         </VStack>
     </Box>

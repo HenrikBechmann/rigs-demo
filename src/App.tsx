@@ -1,3 +1,12 @@
+
+/*
+
+  TODO
+  - stack input fields for small screens
+  - investigate flash of scroller on resize or refresh
+
+*/
+
 import React, {useEffect, useRef} from 'react';
 
 import { 
