@@ -26,7 +26,11 @@ const Options = (props:any) => {
         <VStack align = 'start' alignItems = 'stretch'>
         <FormControl mb = {3}>
             <FormLabel>Select Content Type</FormLabel>
-            <Select value = {contentType} onChange = {(event) => {setContentType(event.target.value)}}>
+            <Select 
+                size = {['sm','sm','md']}
+                value = {contentType} 
+                onChange = {(event) => {setContentType(event.target.value)}}
+            >
                 <option value="simple">Simple</option>
                 <option value="simplepromises">Simple promises</option>
                 <option value="variable">Variable</option>
