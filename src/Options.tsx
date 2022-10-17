@@ -78,43 +78,80 @@ const Options = (props:any) => {
                         <FormLabel size = 'sm'>Padding and gaps</FormLabel>
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>Padding:</FormLabel>
+                            <FormLabel fontSize = 'sm'>padding:</FormLabel>
                             <Input border = '2px' type = 'number' />
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>Gaps:</FormLabel>
+                            <FormLabel fontSize = 'sm'>gap:</FormLabel>
                             <Input border = '2px' type = 'number' />
                         </InputGroup>
                         </HStack>
                         <FormHelperText>
-                            Integers. Padding applies to the scroller borders; gaps apply to the space between cells.
+                            Integers, optional. Padding applies to the scroller borders; gaps apply to the space between cells.
                         </FormHelperText>
                     </FormControl>
-                    <FormControl>
+                    <FormControl isRequired = {true}>
                         <FormLabel size = 'sm'>Base cell sizes</FormLabel>
+                        <HStack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
+                            <Input border = '2px' type = 'number' />
+                        </InputGroup>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
+                            <Input border = '2px' type = 'number' />
+                        </InputGroup>
+                        </HStack>
                         <FormHelperText>
-                           Integers. cellHeight for vertical, and cellWidth for horizontal are exact for 'uniform' layout,
+                           Integers, required. cellHeight for vertical, and cellWidth for horizontal are exact for 'uniform' layout,
                            maximum for 'variable' layout; 
-                           the cross dimension is allocated fractionally.
+                           the cross dimensions are allocated fractionally (fr).
                         </FormHelperText>
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Minimum cell sizes</FormLabel>
+                        <HStack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
+                            <Input border = '2px' type = 'number' />
+                        </InputGroup>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
+                            <Input border = '2px' type = 'number' />
+                        </InputGroup>
+                        </HStack>
                         <FormHelperText>
-                            Integers. These only apply to variable layouts.
+                            Integers. These only apply to variable layouts. Minimum 25, default 25.
                         </FormHelperText>
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Runway size</FormLabel>
+                        <HStack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>runwaySize:</FormLabel>
+                            <Input border = '2px' type = 'number' />
+                        </InputGroup>
+                        </HStack>
                         <FormHelperText>
-                            Integer. This is the number of rows out of view at the head and tail of lists. Minimum 1.
+                            Integer. This is the number of rows out of view at the head and tail of lists. Minimum 1, default 1.
                         </FormHelperText>
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Cache settings</FormLabel>
+                        <HStack>
+                        <Select flexGrow = {.8} size = 'sm'>
+                            <option value="cradle">cradle</option>
+                            <option value="keepload">keep load</option>
+                            <option value="preload">preload</option>
+                        </Select>
+                        <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
+                            <Input border = '2px' type = 'number' />
+                        </InputGroup>
+                        </HStack>
                         <FormHelperText>
-                            CacheMax:integer is ignored for 'cradle' cache setting; 
-                            very high settings can degrade performance.
+                            CacheMax:integer is ignored for 'cradle' cache setting. 
+                            Otherwise, very high settings can degrade performance. CacheMax blank or zero is ignored.
                         </FormHelperText>
 
                     </FormControl>
