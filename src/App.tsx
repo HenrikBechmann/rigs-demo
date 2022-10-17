@@ -72,7 +72,7 @@ function App() {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader borderBottom = '1px'>Select Scroller Options</DrawerHeader>
+        <DrawerHeader borderBottom = '1px'>Scroller Options</DrawerHeader>
 
         <DrawerBody>
           <Options />
