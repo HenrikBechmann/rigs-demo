@@ -3,7 +3,9 @@ import React, {useState} from 'react'
 import {
 
     Box, 
+    Stack,
     VStack,
+    HStack,
     FormControl, 
     FormLabel, 
     FormHelperText, 
@@ -14,6 +16,8 @@ import {
     AccordionPanel,
     AccordionIcon,
     Divider,
+    Radio,
+    RadioGroup,
 
 } from '@chakra-ui/react'
 
@@ -21,13 +25,14 @@ import {
 const Options = (props:any) => {
 
     const [contentType, setContentType] = useState('simple')
+    const [orientation, setOrientation] = useState('vertical')
 
     return <Box>
         <VStack align = 'start' alignItems = 'stretch'>
         <FormControl mb = {3}>
             <FormLabel>Select Content Type</FormLabel>
             <Select 
-                size = {['sm','sm','md']}
+                size = 'md'
                 value = {contentType} 
                 onChange = {(event) => {setContentType(event.target.value)}}
             >
@@ -54,6 +59,18 @@ const Options = (props:any) => {
                     </AccordionButton>
                 </h3>
                 <AccordionPanel pb={4}>
+                    <FormControl>
+                        <Stack direction = {['column','row','row']}align = 'normal'>
+                        <FormLabel size = 'sm'>Orientation</FormLabel>
+                        <RadioGroup value = {orientation} onChange = {setOrientation}>
+                            <HStack align = 'center'>
+                                <Radio value = 'vertical'>Vertical</Radio>
+                                <Radio value = 'horizontal'>Horizontal</Radio>
+                            </HStack>
+                        </RadioGroup>
+                        </Stack>
+                    </FormControl>
+
                 </AccordionPanel>
 
             </AccordionItem>
