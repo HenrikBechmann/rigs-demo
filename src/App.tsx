@@ -17,6 +17,7 @@ import {
   DrawerCloseButton,
   DrawerHeader,
   DrawerBody,
+  DrawerFooter,
 } from '@chakra-ui/react'
 
 import Explanations from './Explanations'
@@ -44,7 +45,7 @@ function App() {
         <Show below = 'sm'>
           <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>RIGS scroller demo</Heading>
         </Show>
-        <HStack align = 'center' justify = "start">
+        <HStack align = 'center' justify = 'start'>
           <Button ref = {explanationsButtonRef} size = {['sm','sm','md']} onClick = {onOpenExplanations}>
             Explanations
           </Button>
@@ -71,11 +72,25 @@ function App() {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <DrawerHeader>Select Scroller Options</DrawerHeader>
+        <DrawerHeader borderBottom = '1px'>Select Scroller Options</DrawerHeader>
 
         <DrawerBody>
           <Options />
         </DrawerBody>
+
+        <DrawerFooter justifyContent = 'start' borderTop = '1px'>
+          <HStack>
+          <Button size = {['sm','sm','md']}>
+            Apply
+          </Button>
+          <Button size = {['sm','sm','md']}>
+            Cancel
+          </Button>
+          <Button size = {['sm','sm','md']}>
+            Reset
+          </Button>
+          </HStack>
+        </DrawerFooter>
 
       </DrawerContent>
     </Drawer>
