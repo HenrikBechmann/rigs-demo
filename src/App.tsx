@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import { 
   ChakraProvider, 
@@ -25,6 +25,14 @@ import Scroller from './Scroller'
 import {demoproperties} from './demodata'
 
 function App() {
+
+  useEffect(() => {
+
+    console.log('initializing')
+
+    return () => {console.log('unmounting')}
+
+  },[])
 
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
   const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()

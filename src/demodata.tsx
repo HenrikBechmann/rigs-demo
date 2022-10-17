@@ -66,7 +66,7 @@ const genericstyle:React.CSSProperties = {
 
 const GenericItem = (props:any) => {
 
-    console.log('loading GenericItem', props)
+    // console.log('loading GenericItem', props)
     const originalindexRef = useRef(props.index)
 
     return <div style = {{position:'relative',height:'100%', width:'100%',backgroundColor:'white'}}>
@@ -112,7 +112,7 @@ const GenericItemDynamic = (props:any) => {
 
 const getGenericItem = (index:number) => {
 
-    console.log('getting generic item', index, typeof index)
+    // console.log('getting generic item', index, typeof index)
 
     // if (index == 0) return <GenericItemDynamic index = {index}/>
 
@@ -122,7 +122,7 @@ const getGenericItem = (index:number) => {
      if (index == 40) return 5
      // if (index == 45) return null
      const returnvalue = <GenericItem index = {index} />
-     console.log('return value from getGenericItem', returnvalue)
+     // console.log('return value from getGenericItem', returnvalue)
      return returnvalue
 
 }
@@ -402,6 +402,9 @@ export const demoproperties = {
         cache:'cradle',
         cacheMax:200,
         styles: genericcomponentstyles,
+        technical: {
+            // rigsdebug:true,
+        },
         // callbacks: {
         //     functionsCallback:null,
         //     referenceIndexCallback:null,
