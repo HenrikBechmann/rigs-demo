@@ -8,7 +8,8 @@ import {
     HStack,
     FormControl, 
     FormLabel, 
-    FormHelperText, 
+    FormHelperText,
+    FormErrorMessage,
     Select,   
     Accordion,
     AccordionItem,
@@ -130,6 +131,34 @@ const Options = (props:any) => {
             remapDemo,
         }
     },[])
+
+    const displayErrorsRef = useRef<GenericObject>(
+        {
+            contentType:false,
+            orientation:false,
+            cellHeight:false,
+            cellWidth:false,
+            minCellHeight:false,
+            minCellWidth:false,
+            padding:false,
+            gap:false,
+            runwaySize:false,
+            cache:false,
+            cacheMax:false,
+            gotoIndex:false,
+            listsizeIndex:false,
+            insertFrom:false,
+            insertRange:false,
+            removeFrom:false,
+            removeRange:false,
+            moveFrom:false,
+            moveRange:false,
+            moveTo:false,
+            remapDemo:false,
+        }
+    )
+
+    const displayErrors = displayErrorsRef.current
 
     const onChangeFuncs:GenericObject = {
         contentType:(event:React.ChangeEvent) => {
@@ -294,7 +323,7 @@ const Options = (props:any) => {
                         </Stack>
                     </FormControl>
 
-                    <FormControl isRequired = {true}>
+                    <FormControl>
                         <FormLabel size = 'sm'>Base cell sizes</FormLabel>
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
@@ -323,6 +352,14 @@ const Options = (props:any) => {
                            <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
                            'variable' layout; the cross dimensions are allocated fractionally (<Code>fr</Code>).
                         </FormHelperText>
+                        {displayErrors.cellHeight &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
+                        {displayErrors.cellWidth &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
 
                     <FormControl>
@@ -352,6 +389,14 @@ const Options = (props:any) => {
                         <FormHelperText>
                             Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
                         </FormHelperText>
+                        {displayErrors.minCellHeight &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
+                        {displayErrors.minCellWidth &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
 
                     <FormControl>
@@ -382,6 +427,14 @@ const Options = (props:any) => {
                             Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
                             the space between cells.
                         </FormHelperText>
+                        {displayErrors.padding &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
+                        {displayErrors.gap &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
 
                     <FormControl>
@@ -402,6 +455,10 @@ const Options = (props:any) => {
                             Integer. This is the number of rows out of view at the head and tail of lists. 
                             Minimum 1, default 1.
                         </FormHelperText>
+                        {displayErrors.runwaySize &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
 
                     <FormControl>
@@ -433,6 +490,14 @@ const Options = (props:any) => {
                             Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
                             or zero is ignored.
                         </FormHelperText>
+                        {displayErrors.cache &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
+                        {displayErrors.cacheMax &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
 
                 </VStack></AccordionPanel>
@@ -613,7 +678,13 @@ const Options = (props:any) => {
                         <HStack>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
-                                <NumberInput value = {displayValues.gotoIndex} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                                <NumberInput 
+                                    value = {displayValues.gotoIndex} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.gotoIndex}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
                             </InputGroup>
                         </HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -635,7 +706,13 @@ const Options = (props:any) => {
                         <HStack>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
-                                <NumberInput value = {displayValues.listsizeIndex} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                                <NumberInput 
+                                    value = {displayValues.listsizeIndex} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.listsizeIndex}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
                             </InputGroup>
                         </HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -673,11 +750,23 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput value = {displayValues.insertIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.insertIndexes.from} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.insertFrom}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput value = {displayValues.insertIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.insertIndexes.range} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.insertRange}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -700,11 +789,23 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput value = {displayValues.removeIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.removeIndexes.from} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.removeFrom}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput value = {displayValues.removeIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.removeIndexes.range} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.removeRange}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -727,16 +828,34 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']} mb = {2}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput value = {displayValues.moveIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.moveIndexes.from} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.moveFrom}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput value = {displayValues.moveIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.moveIndexes.range} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.moveRange}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
-                            <NumberInput value = {displayValues.moveIndexes.to} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.moveIndexes.to} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.moveTo}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='move' fontSize = 'sm'>
