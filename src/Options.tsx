@@ -85,26 +85,9 @@ const Options = (props:any) => {
                         </Stack>
                     </FormControl>
 
-                    <FormControl>
-                        <FormLabel size = 'sm'>Padding and gaps</FormLabel>
-                        <HStack>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>padding:</FormLabel>
-                            <Input border = '2px' type = 'number' />
-                        </InputGroup>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>gap:</FormLabel>
-                            <Input border = '2px' type = 'number' />
-                        </InputGroup>
-                        </HStack>
-                        <FormHelperText>
-                            Integers, optional. Padding applies to the scroller borders; gaps apply to the space between cells.
-                        </FormHelperText>
-                    </FormControl>
-
                     <FormControl isRequired = {true}>
                         <FormLabel size = 'sm'>Base cell sizes</FormLabel>
-                        <HStack>
+                        <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
                             <Input border = '2px' type = 'number' />
@@ -113,9 +96,9 @@ const Options = (props:any) => {
                             <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
                             <Input border = '2px' type = 'number' />
                         </InputGroup>
-                        </HStack>
+                        </Stack>
                         <FormHelperText>
-                           Integers, required. cellHeight for vertical, and cellWidth for horizontal are exact for 'uniform' layout,
+                           Integers (pixels), required. cellHeight for vertical, and cellWidth for horizontal are exact for 'uniform' layout,
                            maximum for 'variable' layout; 
                            the cross dimensions are allocated fractionally (fr).
                         </FormHelperText>
@@ -123,7 +106,7 @@ const Options = (props:any) => {
 
                     <FormControl>
                         <FormLabel size = 'sm'>Minimum cell sizes</FormLabel>
-                        <HStack>
+                        <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
                             <Input border = '2px' type = 'number' />
@@ -132,9 +115,26 @@ const Options = (props:any) => {
                             <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
                             <Input border = '2px' type = 'number' />
                         </InputGroup>
-                        </HStack>
+                        </Stack>
                         <FormHelperText>
-                            Integers. These only apply to variable layouts. Minimum 25, default 25.
+                            Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl>
+                        <FormLabel size = 'sm'>Padding and gaps</FormLabel>
+                        <Stack direction = {['column','row','row']}>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>padding:</FormLabel>
+                            <Input border = '2px' type = 'number' />
+                        </InputGroup>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>gap:</FormLabel>
+                            <Input border = '2px' type = 'number' />
+                        </InputGroup>
+                        </Stack>
+                        <FormHelperText>
+                            Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to the space between cells.
                         </FormHelperText>
                     </FormControl>
 
@@ -153,7 +153,7 @@ const Options = (props:any) => {
 
                     <FormControl>
                         <FormLabel size = 'sm'>Cache settings</FormLabel>
-                        <HStack>
+                        <Stack direction = {['column','row','row']}>
                         <Select flexGrow = {.8} size = 'sm'>
                             <option value="cradle">cradle</option>
                             <option value="keepload">keep load</option>
@@ -163,7 +163,7 @@ const Options = (props:any) => {
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
                             <Input border = '2px' type = 'number' />
                         </InputGroup>
-                        </HStack>
+                        </Stack>
                         <FormHelperText>
                             CacheMax:integer is ignored for 'cradle' cache setting. 
                             Otherwise, very high settings can degrade performance. CacheMax blank or zero is ignored.
@@ -194,7 +194,22 @@ const Options = (props:any) => {
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Functions
+                            Functions: snapshots
+                        </Box>
+                    <AccordionIcon />                        
+                    </AccordionButton>
+                </Heading>
+
+                <AccordionPanel pb={4}>
+                </AccordionPanel>
+
+            </AccordionItem>
+
+            <AccordionItem>
+                <Heading as = 'h3'>
+                    <AccordionButton bg = 'lightgray'>
+                        <Box flex='1' textAlign='left'>
+                            Functions: operations
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
