@@ -18,7 +18,9 @@ import {
     Divider,
     Radio,
     RadioGroup,
-    Input,
+    // Input,
+    NumberInput,
+    NumberInputField,
     InputGroup,
     InputLeftElement,
     Heading,
@@ -26,6 +28,7 @@ import {
     Checkbox,
     Code,
     Button,
+    Switch,
 
 } from '@chakra-ui/react'
 
@@ -94,17 +97,17 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
-                            <Input border = '2px' type = 'number' />
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
-                            <Input border = '2px' type = 'number' />
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
-                           Integers (pixels), required. <Code>cellHeight</Code> for vertical, and <Code>cellWidth</Code> for 
-                           horizontal are exact for 'uniform' layout, maximum for 'variable' layout; 
-                           the cross dimensions are allocated fractionally (<Code>fr</Code>).
+                           Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
+                           <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
+                           'variable' layout; the cross dimensions are allocated fractionally (<Code>fr</Code>).
                         </FormHelperText>
                     </FormControl>
 
@@ -113,11 +116,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
-                            <Input border = '2px' type = 'number' />
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
-                            <Input border = '2px' type = 'number' />
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -130,11 +133,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
-                            <Input border = '2px' type = 'number' />
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
-                            <Input border = '2px' type = 'number' />
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -148,7 +151,7 @@ const Options = (props:any) => {
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>runwaySize:</FormLabel>
-                            <Input border = '2px' type = 'number' />
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </HStack>
                         <FormHelperText>
@@ -167,7 +170,7 @@ const Options = (props:any) => {
                         </Select>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
-                            <Input border = '2px' type = 'number' />
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -302,6 +305,72 @@ const Options = (props:any) => {
                 </Heading>
 
                 <AccordionPanel pb={4}>
+                    <Text mb = {2}>
+                        Perform these functions one at a time. Enable the function of choice, then hit the Appply
+                        button.
+                    </Text>
+                    <VStack>
+                    <FormControl>
+                        <FormLabel size = 'sm'>Go to</FormLabel>
+                        <HStack>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>index:</FormLabel>
+                                <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            </InputGroup>
+                        </HStack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='goto' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch id='goto' />
+                        </InputGroup>
+                        <FormHelperText>
+                            Integer. Go to the specified index number in the virtual list.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel size = 'sm'>Change virtual list size</FormLabel>
+                        <HStack>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>size:</FormLabel>
+                                <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            </InputGroup>
+                        </HStack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='listsize' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch id='listsize' />
+                        </InputGroup>
+                        <FormHelperText>
+                            Integer. Change the size of the scroller's virtual list.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel size = 'sm'>Reload the cradle</FormLabel>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='reload' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch id='reload' />
+                        </InputGroup>
+                        <FormHelperText>
+                            This clears the cache reloads the cradle at its current position.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel size = 'sm'>Clear the cradle</FormLabel>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='clearcache' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch id='clearcache' />
+                        </InputGroup>
+                        <FormHelperText>
+                            This clears the cache (and therefore the cradle).
+                        </FormHelperText>
+                    </FormControl>
+                    </VStack>
                 </AccordionPanel>
 
             </AccordionItem>
