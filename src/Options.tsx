@@ -1,5 +1,5 @@
 
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 import {
 
     Box, 
@@ -15,10 +15,8 @@ import {
     AccordionButton,
     AccordionPanel,
     AccordionIcon,
-    Divider,
     Radio,
     RadioGroup,
-    // Input,
     NumberInput,
     NumberInputField,
     InputGroup,
@@ -32,11 +30,41 @@ import {
 
 } from '@chakra-ui/react'
 
+interface FunctionSettings {
+    [prop:string]:boolean
+}
 
 const Options = (props:any) => {
 
     const [contentType, setContentType] = useState('simple')
     const [orientation, setOrientation] = useState('vertical')
+    const [operationFunction, setOperationFunction] = useState<string|null>(null)
+    const functionSettingsRef = useRef({
+        goto:false,
+        listsize:false,
+        reload:false,
+        insert:false,
+        remove:false,
+        move:false,
+        remap:false,
+        clear:false,
+    } as FunctionSettings)
+
+    const onChangeEnabler = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const enablerID = target.id
+        const enablerValue = target.checked
+        const functionSettings = functionSettingsRef.current
+        for (const prop in functionSettings) {
+            functionSettings[prop] = false
+        }
+        functionSettings[enablerID] = enablerValue
+        const opfunc = 
+            enablerValue?
+            enablerID:
+            null
+        setOperationFunction(opfunc)
+    }
 
     return <Box>
         <VStack align = 'start' alignItems = 'stretch'>
@@ -323,7 +351,11 @@ const Options = (props:any) => {
                             <FormLabel htmlFor='goto' fontSize = 'sm'>
                                 Enable
                             </FormLabel>
-                            <Switch id='goto' />
+                            <Switch 
+                                isChecked = {functionSettingsRef.current.goto} 
+                                onChange = {onChangeEnabler} 
+                                id='goto' 
+                            />
                         </InputGroup>
                         <FormHelperText>
                             Integer. Go to the specified index number in the virtual list.
@@ -341,7 +373,11 @@ const Options = (props:any) => {
                             <FormLabel htmlFor='listsize' fontSize = 'sm'>
                                 Enable
                             </FormLabel>
-                            <Switch id='listsize' />
+                            <Switch 
+                                isChecked = {functionSettingsRef.current.listsize} 
+                                onChange = {onChangeEnabler} 
+                                id='listsize' 
+                            />
                         </InputGroup>
                         <FormHelperText>
                             Integer. Change the size of the scroller's virtual list.
@@ -353,7 +389,11 @@ const Options = (props:any) => {
                             <FormLabel htmlFor='reload' fontSize = 'sm'>
                                 Enable
                             </FormLabel>
-                            <Switch id='reload' />
+                            <Switch 
+                                isChecked = {functionSettingsRef.current.reload} 
+                                onChange = {onChangeEnabler} 
+                                id='reload' 
+                            />
                         </InputGroup>
                         <FormHelperText>
                             This clears the cache reloads the cradle at its current position.
@@ -372,10 +412,14 @@ const Options = (props:any) => {
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='insertindexes' fontSize = 'sm'>
+                            <FormLabel htmlFor='insert' fontSize = 'sm'>
                                 Enable
                             </FormLabel>
-                            <Switch id='insertindexes' />
+                            <Switch 
+                                isChecked = {functionSettingsRef.current.insert} 
+                                onChange = {onChangeEnabler} 
+                                id='insert' 
+                            />
                         </InputGroup>
                         <FormHelperText>
                             Integers. Insert one or more indexes. 'range' is optional, and must be equal to or 
@@ -395,10 +439,14 @@ const Options = (props:any) => {
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='removeindexes' fontSize = 'sm'>
+                            <FormLabel htmlFor='remove' fontSize = 'sm'>
                                 Enable
                             </FormLabel>
-                            <Switch id='removeindexes' />
+                            <Switch 
+                                isChecked = {functionSettingsRef.current.remove} 
+                                onChange = {onChangeEnabler} 
+                                id='remove' 
+                            />
                         </InputGroup>
                         <FormHelperText>
                             Integers. Remove one or more indexes. 'range' is optional, and must be equal to or 
@@ -422,10 +470,14 @@ const Options = (props:any) => {
                             <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='moveindexes' fontSize = 'sm'>
+                            <FormLabel htmlFor='move' fontSize = 'sm'>
                                 Enable
                             </FormLabel>
-                            <Switch id='moveindexes' />
+                            <Switch 
+                                isChecked = {functionSettingsRef.current.move} 
+                                onChange = {onChangeEnabler} 
+                                id='move' 
+                            />
                         </InputGroup>
                         <FormHelperText>
                             Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
@@ -435,15 +487,19 @@ const Options = (props:any) => {
                     <FormControl>
                         <FormLabel size = 'sm'>Remap indexes</FormLabel>
                         <Select size = 'sm'>
-                            <option value="cradle">Backward sort</option>
-                            <option value="keepload">Test 2</option>
-                            <option value="preload">Test 3</option>
+                            <option value="backwardsort">Backward sort</option>
+                            <option value="test2">Test 2</option>
+                            <option value="test3">Test 3</option>
                         </Select>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='remapindexes' fontSize = 'sm'>
+                            <FormLabel htmlFor='remap' fontSize = 'sm'>
                                 Enable
                             </FormLabel>
-                            <Switch id='remapindexes' />
+                            <Switch 
+                                isChecked = {functionSettingsRef.current.remap} 
+                                onChange = {onChangeEnabler} 
+                                id='remap' 
+                            />
                         </InputGroup>
                         <FormHelperText>
                             The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
@@ -455,10 +511,14 @@ const Options = (props:any) => {
                     <FormControl>
                         <FormLabel size = 'sm'>Clear the cache</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='clearcache' fontSize = 'sm'>
+                            <FormLabel htmlFor='clear' fontSize = 'sm'>
                                 Enable
                             </FormLabel>
-                            <Switch id='clearcache' />
+                            <Switch 
+                                isChecked = {functionSettingsRef.current.clear} 
+                                onChange = {onChangeEnabler} 
+                                id='clear' 
+                            />
                         </InputGroup>
                         <FormHelperText>
                             This clears the cache (and therefore the cradle). Not very interesting.
