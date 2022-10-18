@@ -700,6 +700,10 @@ const Options = (props:any) => {
                         <FormHelperText>
                             Integer. Go to the specified index number in the virtual list.
                         </FormHelperText>
+                        {displayErrors.gotoIndex &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Change virtual list size</FormLabel>
@@ -728,6 +732,10 @@ const Options = (props:any) => {
                         <FormHelperText>
                             Integer. Change the size of the scroller's virtual list.
                         </FormHelperText>
+                        {displayErrors.listsizeIndex &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Reload the cradle</FormLabel>
@@ -783,6 +791,14 @@ const Options = (props:any) => {
                             Integers. Insert one or more indexes. 'range' is optional, and must be equal to or 
                             above the 'from' value. The size of the virtual list is increased accordingly.
                         </FormHelperText> 
+                        {displayErrors.insertFrom &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
+                        {displayErrors.insertRange &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Remove indexes</FormLabel>
@@ -822,6 +838,14 @@ const Options = (props:any) => {
                             Integers. Remove one or more indexes. 'range' is optional, and must be equal to or 
                             above the 'from' value. The size of the virtual list is decreased accordingly.
                         </FormHelperText> 
+                        {displayErrors.removeFrom &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
+                        {displayErrors.removeRange &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Move indexes</FormLabel>
@@ -871,6 +895,18 @@ const Options = (props:any) => {
                             Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
                             above the 'from' value.
                         </FormHelperText> 
+                        {displayErrors.moveFrom &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
+                        {displayErrors.moveRange &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
+                        {displayErrors.moveTo &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Remap indexes</FormLabel>
@@ -899,6 +935,10 @@ const Options = (props:any) => {
                             the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
                             items scroll out of scope.
                         </FormHelperText>
+                        {displayErrors.remapDemo &&
+                            <FormErrorMessage>
+                                
+                            </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Clear the cache</FormLabel>
