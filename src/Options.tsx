@@ -24,6 +24,7 @@ import {
     Heading,
     Text,
     Checkbox,
+    Code,
 
 } from '@chakra-ui/react'
 
@@ -100,9 +101,9 @@ const Options = (props:any) => {
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
-                           Integers (pixels), required. cellHeight for vertical, and cellWidth for horizontal are exact for 'uniform' layout,
-                           maximum for 'variable' layout; 
-                           the cross dimensions are allocated fractionally (fr).
+                           Integers (pixels), required. <Code>cellHeight</Code> for vertical, and <Code>cellWidth</Code> for 
+                           horizontal are exact for 'uniform' layout, maximum for 'variable' layout; 
+                           the cross dimensions are allocated fractionally (<Code>fr</Code>).
                         </FormHelperText>
                     </FormControl>
 
@@ -136,7 +137,8 @@ const Options = (props:any) => {
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
-                            Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to the space between cells.
+                            Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
+                            the space between cells.
                         </FormHelperText>
                     </FormControl>
 
@@ -149,7 +151,8 @@ const Options = (props:any) => {
                         </InputGroup>
                         </HStack>
                         <FormHelperText>
-                            Integer. This is the number of rows out of view at the head and tail of lists. Minimum 1, default 1.
+                            Integer. This is the number of rows out of view at the head and tail of lists. 
+                            Minimum 1, default 1.
                         </FormHelperText>
                     </FormControl>
 
@@ -167,8 +170,9 @@ const Options = (props:any) => {
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
-                            CacheMax:integer is ignored for 'cradle' cache setting. 
-                            Otherwise, very high settings can degrade performance. CacheMax blank or zero is ignored.
+                            <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
+                            Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
+                            or zero is ignored.
                         </FormHelperText>
                     </FormControl>
 
@@ -209,13 +213,14 @@ const Options = (props:any) => {
                     <FormControl borderTop = '1px'>
                         <Checkbox size = 'sm'>Item Exceptions</Checkbox>
                         <FormHelperText>
-                            This reports details of a failed getItem call.
+                            This reports details of a failed <Code>getItem</Code> call.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
                         <Checkbox size = 'sm'>isRepositioning Notification</Checkbox>
                         <FormHelperText>
-                            Alerts the beginning (true) or end (false) of a rapid repositioning session.
+                            Alerts the beginning (<Code>true</Code>) or end (<Code>false</Code>) of a rapid 
+                            repositioning session.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
