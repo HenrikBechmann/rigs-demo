@@ -282,7 +282,10 @@ const Options = (props:any) => {
                     <FormControl>
                         <Stack direction = {['column','row','row']} align = 'normal'>
                         <FormLabel size = 'sm'>Orientation</FormLabel>
-                        <RadioGroup value = {displayValues.orientation} onChange = {onChangeFuncs.orientation}>
+                        <RadioGroup 
+                            value = {displayValues.orientation} 
+                            onChange = {onChangeFuncs.orientation}
+                        >
                             <HStack align = 'center'>
                                 <Radio value = 'vertical'>Vertical</Radio>
                                 <Radio value = 'horizontal'>Horizontal</Radio>
