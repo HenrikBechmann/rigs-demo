@@ -22,6 +22,8 @@ import {
     InputGroup,
     InputLeftElement,
     Heading,
+    Text,
+    Checkbox,
 
 } from '@chakra-ui/react'
 
@@ -186,6 +188,56 @@ const Options = (props:any) => {
                 </Heading>
 
                 <AccordionPanel pb={4}>
+                    <Text mb = {2}>
+                        On a desktop, these callbacks, when checked, will stream information about the scroller 
+                        behaviour to the browser console. In an application the data can be used to enhance the 
+                        user experience.
+                    </Text>
+                    <VStack>
+                    <FormControl borderTop = '1px'>
+                        <Checkbox size = 'sm'>Reference index</Checkbox>
+                        <FormHelperText>
+                            This reports the first index of the tail grid, near the top or left of the viewport.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl borderTop = '1px'>
+                        <Checkbox size = 'sm'>Preload Index</Checkbox>
+                        <FormHelperText>
+                            This reports a stream of index numbers being preloaded.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl borderTop = '1px'>
+                        <Checkbox size = 'sm'>Item Exceptions</Checkbox>
+                        <FormHelperText>
+                            This reports details of a failed getItem call.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl borderTop = '1px'>
+                        <Checkbox size = 'sm'>isRepositioning Notification</Checkbox>
+                        <FormHelperText>
+                            Alerts the beginning (true) or end (false) of a rapid repositioning session.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl borderTop = '1px'>
+                        <Checkbox size = 'sm'>Repositioning Index</Checkbox>
+                        <FormHelperText>
+                            During rapid repositioning mode, this streams the virtual location of the scroller.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl borderTop = '1px'>
+                        <Checkbox size = 'sm'>Listsize change</Checkbox>
+                        <FormHelperText>
+                            Reports change to list size for any standard reason.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl borderTop = '1px'>
+                        <Checkbox size = 'sm'>Deleted List</Checkbox>
+                        <FormHelperText>
+                            Gives lists of indexes removed from the cache for any standard reason, such as going out
+                            of scope.
+                        </FormHelperText>
+                    </FormControl>
+                    </VStack>
                 </AccordionPanel>
 
             </AccordionItem>
