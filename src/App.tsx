@@ -4,6 +4,8 @@
   TODO
   - stack input fields for small screens
   - investigate flash of scroller on resize or refresh
+  - loading of simple components very slow in chakra - seems to be delayed
+    - touching the scroller while waiting resolves the wait
 
 */
 

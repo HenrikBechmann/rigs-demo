@@ -25,6 +25,7 @@ import {
     Text,
     Checkbox,
     Code,
+    Button,
 
 } from '@chakra-ui/react'
 
@@ -258,8 +259,36 @@ const Options = (props:any) => {
                 </Heading>
 
                 <AccordionPanel pb={4}>
+                    <Text mb = {2}>
+                        Snapshots provide an on-demand view of what's in the cache and the cradle. Press the 
+                        buttons below to see these lists printed to the browser console. An application can
+                        use this data to verify and control cache management changes for drag-n-drop, sorting, 
+                        and filtering.
+                    </Text>
+                <VStack>
+                <FormControl borderTop = '1px'>
+                    <Button size = 'sm'>Get Cache Index Map</Button>
+                    <FormHelperText>
+                        snapshot (javascript <Code>Map</Code>) of cache <Code>index</Code> (=key) to 
+                        scroller-assigned session <Code>itemID</Code> (=value) map.
+                    </FormHelperText>
+                </FormControl>
+                <FormControl borderTop = '1px'>
+                    <Button size = 'sm'>Get Cache Item Map</Button>
+                    <FormHelperText>
+                        snapshot (javascript <Code>Map</Code>) of cache <Code>itemID</Code> (=key) to 
+                        object (=value) map. Object = {"{"}index, component{"}"} where component = user component.
+                    </FormHelperText>
+                </FormControl>
+                <FormControl borderTop = '1px'>
+                    <Button size = 'sm'>Get Cradle Index Map</Button>
+                    <FormHelperText>
+                        snapshot (javascript <Code>Map</Code>) of cradle <Code>index</Code> (=key) to 
+                        scroller-assigned session <Code>itemID</Code> (=value) map.
+                    </FormHelperText>
+                </FormControl>
+                </VStack>
                 </AccordionPanel>
-
             </AccordionItem>
 
             <AccordionItem>
