@@ -20,7 +20,6 @@ import {
     NumberInput,
     NumberInputField,
     InputGroup,
-    InputLeftElement,
     Heading,
     Text,
     Checkbox,
@@ -30,16 +29,80 @@ import {
 
 } from '@chakra-ui/react'
 
-interface FunctionSettings {
+type FunctionSettings = {
     [prop:string]:boolean
+}
+
+type CellSizes = {
+    cellHeight:number,
+    cellWidth:number
+}
+
+type MinCellSizes = {
+    minCellHeight:number | undefined,
+    minCellWidth:number | undefined
+}
+
+type PaddingAndGap = {
+    padding:number | undefined,
+    gap:number | undefined
+}
+
+type CacheSettings = {
+    cache:string,
+    cacheMax:number | undefined
+}
+
+type CallbackSettings = {
+    referenceIndexCallback:boolean,
+    repositioningIndexCallback:boolean,
+    preloadIndexCallback:boolean,
+    itemExceptionCallback:boolean,
+    changeListsizeCallback:boolean,
+    deleteListCallback:boolean,
+    repositioningFlagCallback:boolean,
+}
+
+type RangeIndexes = {
+    from:number,
+    range: number | undefined,
+}
+
+type MoveIndexes = {
+    from:number,
+    range: number | undefined,
+    to:number,
 }
 
 const Options = (props:any) => {
 
     const [contentType, setContentType] = useState('simple')
     const [orientation, setOrientation] = useState('vertical')
-    const [operationFunction, setOperationFunction] = useState<string|null>(null)
-    const functionSettingsRef = useRef({
+    const [cellSizes, setCellSizes] = useState<CellSizes>({cellHeight:0,cellWidth:0})
+    const [minCellSizes, setMinCellSizes] = useState<MinCellSizes>({minCellHeight:undefined, minCellWidth:undefined})
+    const [paddingAndGap, setPaddingAndGap] = useState<PaddingAndGap>({padding:undefined, gap:undefined})
+    const [runwaySize, setRunwaySize] = useState<number | undefined>(undefined)
+    const [cacheSettings, setCacheSettings] = useState<CacheSettings>({cache:'cradle',cacheMax:undefined})
+    const [callbackSettings, setCallbackSettings] = useState<CallbackSettings>(
+        {
+            referenceIndexCallback:false,
+            repositioningIndexCallback:false,
+            preloadIndexCallback:false,
+            itemExceptionCallback:false,
+            changeListsizeCallback:false,
+            deleteListCallback:false,
+            repositioningFlagCallback:false,
+        }
+    )
+    const [operationFunction, setOperationFunction] = useState<string | null>(null)
+    const [gotoIndex, setGotoIndex] = useState<number | undefined>(undefined)
+    const [listsizeIndex, setListsizeIndex] = useState<number | undefined>(undefined)
+    const [insertIndexes, setInsertIndexes] = useState<RangeIndexes>({from:0,range:undefined})
+    const [removeIndexes, setRemoveIndexes] = useState<RangeIndexes>({from:0, range: undefined})
+    const [moveIndexes, setMoveIndexes] = useState<MoveIndexes>({from:0, range: undefined, to:0})
+    const [remapDemo, setRemapDemo] = useState<string>('backwardsort')
+
+    const functionSettingsRef = useRef<FunctionSettings>({
         goto:false,
         listsize:false,
         reload:false,
@@ -48,7 +111,7 @@ const Options = (props:any) => {
         move:false,
         remap:false,
         clear:false,
-    } as FunctionSettings)
+    })
 
     const onChangeEnabler = (event:React.ChangeEvent) => {
         const target = event.target as HTMLInputElement
@@ -125,11 +188,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {cellSizes.cellHeight} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {cellSizes.cellWidth} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -144,11 +207,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {minCellSizes.minCellHeight} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {minCellSizes.minCellWidth} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -161,11 +224,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {paddingAndGap.padding} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {paddingAndGap.gap} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -179,7 +242,7 @@ const Options = (props:any) => {
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>runwaySize:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {runwaySize} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </HStack>
                         <FormHelperText>
@@ -191,14 +254,14 @@ const Options = (props:any) => {
                     <FormControl>
                         <FormLabel size = 'sm'>Cache settings</FormLabel>
                         <Stack direction = {['column','row','row']}>
-                        <Select flexGrow = {.8} size = 'sm'>
+                        <Select value = {cacheSettings.cache} flexGrow = {.8} size = 'sm'>
                             <option value="cradle">cradle</option>
                             <option value="keepload">keep load</option>
                             <option value="preload">preload</option>
                         </Select>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {cacheSettings.cacheMax} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -231,44 +294,44 @@ const Options = (props:any) => {
                     </Text>
                     <VStack>
                     <FormControl borderTop = '1px'>
-                        <Checkbox size = 'sm'>Reference index</Checkbox>
+                        <Checkbox isChecked = {callbackSettings.referenceIndexCallback} size = 'sm'>Reference index</Checkbox>
                         <FormHelperText>
                             This reports the first index of the tail grid, near the top or left of the viewport.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox size = 'sm'>Preload Index</Checkbox>
+                        <Checkbox isChecked = {callbackSettings.preloadIndexCallback} size = 'sm'>Preload Index</Checkbox>
                         <FormHelperText>
                             This reports a stream of index numbers being preloaded.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox size = 'sm'>Item Exceptions</Checkbox>
+                        <Checkbox isChecked = {callbackSettings.itemExceptionCallback} size = 'sm'>Item Exceptions</Checkbox>
                         <FormHelperText>
                             This reports details of a failed <Code>getItem</Code> call.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox size = 'sm'>isRepositioning Notification</Checkbox>
+                        <Checkbox isChecked = {callbackSettings.repositioningFlagCallback} size = 'sm'>isRepositioning Notification</Checkbox>
                         <FormHelperText>
                             Alerts the beginning (<Code>true</Code>) or end (<Code>false</Code>) of a rapid 
                             repositioning session.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox size = 'sm'>Repositioning Index</Checkbox>
+                        <Checkbox isChecked = {callbackSettings.repositioningIndexCallback} size = 'sm'>Repositioning Index</Checkbox>
                         <FormHelperText>
                             During rapid repositioning mode, this streams the virtual location of the scroller.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox size = 'sm'>Listsize change</Checkbox>
+                        <Checkbox isChecked = {callbackSettings.changeListsizeCallback} size = 'sm'>Listsize change</Checkbox>
                         <FormHelperText>
                             Reports change to list size for any standard reason.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox size = 'sm'>Deleted List</Checkbox>
+                        <Checkbox isChecked = {callbackSettings.deleteListCallback} size = 'sm'>Deleted List</Checkbox>
                         <FormHelperText>
                             Gives lists of indexes removed from the cache for any standard reason, such as going out
                             of scope.
@@ -344,7 +407,7 @@ const Options = (props:any) => {
                         <HStack>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
-                                <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                                <NumberInput value = {gotoIndex} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                             </InputGroup>
                         </HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -366,7 +429,7 @@ const Options = (props:any) => {
                         <HStack>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
-                                <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                                <NumberInput value = {listsizeIndex} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                             </InputGroup>
                         </HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -404,11 +467,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {insertIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {insertIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -431,11 +494,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {removeIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {removeIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -458,16 +521,16 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']} mb = {2}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {moveIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {moveIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
-                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {moveIndexes.to} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='move' fontSize = 'sm'>
@@ -486,7 +549,7 @@ const Options = (props:any) => {
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Remap indexes</FormLabel>
-                        <Select size = 'sm'>
+                        <Select value = {remapDemo} size = 'sm'>
                             <option value="backwardsort">Backward sort</option>
                             <option value="test2">Test 2</option>
                             <option value="test3">Test 3</option>
