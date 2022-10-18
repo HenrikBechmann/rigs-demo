@@ -307,7 +307,8 @@ const Options = (props:any) => {
                 <AccordionPanel pb={4}>
                     <Text mb = {2}>
                         Perform these functions one at a time. Enable the function of choice, then hit the Appply
-                        button.
+                        button. Most of these functions provide feedback in the browser console. The feedback can 
+                        be used by apps.
                     </Text>
                     <VStack>
                     <FormControl>
@@ -359,7 +360,100 @@ const Options = (props:any) => {
                         </FormHelperText>
                     </FormControl>
                     <FormControl>
-                        <FormLabel size = 'sm'>Clear the cradle</FormLabel>
+                        <FormLabel size = 'sm'>Insert indexes</FormLabel>
+                        <Stack direction = {['column','row','row']}>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>from:</FormLabel>
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                        </InputGroup>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>range:</FormLabel>
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                        </InputGroup>
+                        </Stack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='insertindexes' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch id='insertindexes' />
+                        </InputGroup>
+                        <FormHelperText>
+                            Integers. Insert one or more indexes. 'range' is optional, and must be equal to or 
+                            above the 'from' value. The size of the virtual list is increased accordingly.
+                        </FormHelperText> 
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel size = 'sm'>Remove indexes</FormLabel>
+                        <Stack direction = {['column','row','row']}>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>from:</FormLabel>
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                        </InputGroup>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>range:</FormLabel>
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                        </InputGroup>
+                        </Stack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='removeindexes' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch id='removeindexes' />
+                        </InputGroup>
+                        <FormHelperText>
+                            Integers. Remove one or more indexes. 'range' is optional, and must be equal to or 
+                            above the 'from' value. The size of the virtual list is decreased accordingly.
+                        </FormHelperText> 
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel size = 'sm'>Move indexes</FormLabel>
+                        <Stack direction = {['column','row','row']} mb = {2}>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>from:</FormLabel>
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                        </InputGroup>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>range:</FormLabel>
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                        </InputGroup>
+                        </Stack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>to:</FormLabel>
+                            <NumberInput size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                        </InputGroup>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='moveindexes' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch id='moveindexes' />
+                        </InputGroup>
+                        <FormHelperText>
+                            Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
+                            above the 'from' value.
+                        </FormHelperText> 
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel size = 'sm'>Remap indexes</FormLabel>
+                        <Select size = 'sm'>
+                            <option value="cradle">Backward sort</option>
+                            <option value="keepload">Test 2</option>
+                            <option value="preload">Test 3</option>
+                        </Select>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='remapindexes' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch id='remapindexes' />
+                        </InputGroup>
+                        <FormHelperText>
+                            The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
+                            items to the newly assigned indexes. We've included a few random tests that apply to 
+                            the cradle. For purposes of the demo the new mappings are 'forgotten' when the moved
+                            items scroll out of scope.
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel size = 'sm'>Clear the cache</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='clearcache' fontSize = 'sm'>
                                 Enable
@@ -367,7 +461,7 @@ const Options = (props:any) => {
                             <Switch id='clearcache' />
                         </InputGroup>
                         <FormHelperText>
-                            This clears the cache (and therefore the cradle).
+                            This clears the cache (and therefore the cradle). Not very interesting.
                         </FormHelperText>
                     </FormControl>
                     </VStack>
