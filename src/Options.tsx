@@ -1,5 +1,5 @@
 
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import {
 
     Box, 
@@ -28,6 +28,10 @@ import {
     Switch,
 
 } from '@chakra-ui/react'
+
+type GenericObject = {
+    [prop:string]:any
+}
 
 type FunctionSettings = { 
     [prop:string]:boolean // allows iteration
@@ -76,6 +80,7 @@ type MoveIndexes = {
 
 const Options = (props:any) => {
 
+    const [optionsState, setOptionsState] = useState('setup')
     const [contentType, setContentType] = useState('simple')
     const [orientation, setOrientation] = useState('vertical')
     const [cellSizes, setCellSizes] = useState<CellSizes>({cellHeight:0,cellWidth:0})
@@ -101,6 +106,107 @@ const Options = (props:any) => {
     const [removeIndexes, setRemoveIndexes] = useState<RangeIndexes>({from:0, range: undefined})
     const [moveIndexes, setMoveIndexes] = useState<MoveIndexes>({from:0, range: undefined, to:0})
     const [remapDemo, setRemapDemo] = useState<string>('backwardsort')
+
+
+    const displayValuesRef = useRef<GenericObject>({})
+
+    const displayValues = displayValuesRef.current
+
+    useEffect(()=>{
+        displayValuesRef.current = {
+            contentType,
+            orientation,
+            cellSizes,
+            minCellSizes,
+            paddingAndGap,
+            runwaySize,
+            cacheSettings,
+            callbackSettings,
+            gotoIndex,
+            listsizeIndex,
+            insertIndexes,
+            removeIndexes,
+            moveIndexes,
+            remapDemo,
+        }
+    },[])
+
+    const onChangeFuncs:GenericObject = {
+        contentType:(event:React.ChangeEvent) => {
+
+        },
+        orientation:(event:React.ChangeEvent) => {
+            
+        },
+        cellHeight:(event:React.ChangeEvent) => {
+            
+        },
+        cellWidth:(event:React.ChangeEvent) => {
+            
+        },
+        minCellHeight:(event:React.ChangeEvent) => {
+            
+        },
+        minCellWidth:(event:React.ChangeEvent) => {
+            
+        },
+        padding:(event:React.ChangeEvent) => {
+            
+        },
+        gap:(event:React.ChangeEvent) => {
+            
+        },
+        runwaySize:(event:React.ChangeEvent) => {
+            
+        },
+        cache:(event:React.ChangeEvent) => {
+            
+        },
+        cacheMax:(event:React.ChangeEvent) => {
+            
+        },
+        callbackSettings:(event:React.ChangeEvent) => {
+            
+        },
+        gotoIndex:(event:React.ChangeEvent) => {
+            
+        },
+        listsizeIndex:(event:React.ChangeEvent) => {
+            
+        },
+        insertFrom:(event:React.ChangeEvent) => {
+            
+        },
+        insertRange:(event:React.ChangeEvent) => {
+            
+        },
+        removeFrom:(event:React.ChangeEvent) => {
+            
+        },
+        removeRange:(event:React.ChangeEvent) => {
+            
+        },
+        moveFrom:(event:React.ChangeEvent) => {
+            
+        },
+        moveRange:(event:React.ChangeEvent) => {
+            
+        },
+        moveTo:(event:React.ChangeEvent) => {
+            
+        },
+        remapDemo:(event:React.ChangeEvent) => {
+            
+        },
+    }
+
+    useEffect(()=>{
+
+        if (optionsState == 'setup') {
+            setOptionsState('ready')
+        }
+
+    }, [optionsState])
 
     const functionSettingsRef = useRef<FunctionSettings>({
         goto:false,
@@ -129,7 +235,9 @@ const Options = (props:any) => {
         setOperationFunction(opfunc)
     }
 
-    return <Box>
+    return (optionsState == 'setup')?
+        null:
+        (<Box>
         <VStack align = 'start' alignItems = 'stretch'>
         <FormControl mb = {3}>
 
@@ -137,8 +245,8 @@ const Options = (props:any) => {
 
             <Select 
                 size = 'md'
-                value = {contentType} 
-                onChange = {(event) => {setContentType(event.target.value)}}
+                value = {displayValues.contentType} 
+                onChange = {onChangeFuncs.contentType}
             >
                 <option value="simple">Simple uniform content</option>
                 <option value="simplepromises">Simple uniform promises</option>
@@ -174,7 +282,7 @@ const Options = (props:any) => {
                     <FormControl>
                         <Stack direction = {['column','row','row']} align = 'normal'>
                         <FormLabel size = 'sm'>Orientation</FormLabel>
-                        <RadioGroup value = {orientation} onChange = {setOrientation}>
+                        <RadioGroup value = {displayValues.orientation} onChange = {onChangeFuncs.orientation}>
                             <HStack align = 'center'>
                                 <Radio value = 'vertical'>Vertical</Radio>
                                 <Radio value = 'horizontal'>Horizontal</Radio>
@@ -188,11 +296,23 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
-                            <NumberInput value = {cellSizes.cellHeight} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.cellSizes.cellHeight} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.cellHeight}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
-                            <NumberInput value = {cellSizes.cellWidth} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.cellSizes.cellWidth} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.cellWidth}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -207,11 +327,23 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
-                            <NumberInput value = {minCellSizes.minCellHeight} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.minCellSizes.minCellHeight} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.minCellHeight}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
-                            <NumberInput value = {minCellSizes.minCellWidth} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.minCellSizes.minCellWidth} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.minCellWidth}
+                            >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -224,11 +356,23 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
-                            <NumberInput value = {paddingAndGap.padding} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.paddingAndGap.padding} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.padding}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
-                            <NumberInput value = {paddingAndGap.gap} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.paddingAndGap.gap} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.gap}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -242,7 +386,13 @@ const Options = (props:any) => {
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>runwaySize:</FormLabel>
-                            <NumberInput value = {runwaySize} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.runwaySize} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.runwaySize}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         </HStack>
                         <FormHelperText>
@@ -254,14 +404,25 @@ const Options = (props:any) => {
                     <FormControl>
                         <FormLabel size = 'sm'>Cache settings</FormLabel>
                         <Stack direction = {['column','row','row']}>
-                        <Select value = {cacheSettings.cache} flexGrow = {.8} size = 'sm'>
+                        <Select 
+                            value = {displayValues.cacheSettings.cache} 
+                            flexGrow = {.8} 
+                            size = 'sm'
+                            onChange = {onChangeFuncs.cache}
+                        >
                             <option value="cradle">cradle</option>
                             <option value="keepload">keep load</option>
                             <option value="preload">preload</option>
                         </Select>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
-                            <NumberInput value = {cacheSettings.cacheMax} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput 
+                                value = {displayValues.cacheSettings.cacheMax} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.cacheMax}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
                         </InputGroup>
                         </Stack>
                         <FormHelperText>
@@ -294,44 +455,86 @@ const Options = (props:any) => {
                     </Text>
                     <VStack>
                     <FormControl borderTop = '1px'>
-                        <Checkbox isChecked = {callbackSettings.referenceIndexCallback} size = 'sm'>Reference index</Checkbox>
+                        <Checkbox 
+                            isChecked = {displayValues.callbackSettings.referenceIndexCallback} 
+                            size = 'sm'
+                            id = 'referenceIndexCallback'
+                            onChange = {onChangeFuncs.callBackSettings}
+                        >
+                            Reference index
+                        </Checkbox>
                         <FormHelperText>
                             This reports the first index of the tail grid, near the top or left of the viewport.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox isChecked = {callbackSettings.preloadIndexCallback} size = 'sm'>Preload Index</Checkbox>
+                        <Checkbox 
+                            isChecked = {displayValues.callbackSettings.preloadIndexCallback} 
+                            size = 'sm'
+                            id = 'preloadIndexCallback'
+                            onChange = {onChangeFuncs.callBackSettings}
+                        >
+                            Preload Index
+                        </Checkbox>
                         <FormHelperText>
                             This reports a stream of index numbers being preloaded.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox isChecked = {callbackSettings.itemExceptionCallback} size = 'sm'>Item Exceptions</Checkbox>
+                        <Checkbox 
+                            isChecked = {displayValues.callbackSettings.itemExceptionCallback} 
+                            size = 'sm'
+                            id = 'itemExceptionCallback'
+                            onChange = {onChangeFuncs.callBackSettings}
+                        >
+                            Item Exceptions
+                        </Checkbox>
                         <FormHelperText>
                             This reports details of a failed <Code>getItem</Code> call.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox isChecked = {callbackSettings.repositioningFlagCallback} size = 'sm'>isRepositioning Notification</Checkbox>
+                        <Checkbox isChecked = {displayValues.callbackSettings.repositioningFlagCallback} size = 'sm'>isRepositioning Notification</Checkbox>
                         <FormHelperText>
                             Alerts the beginning (<Code>true</Code>) or end (<Code>false</Code>) of a rapid 
                             repositioning session.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox isChecked = {callbackSettings.repositioningIndexCallback} size = 'sm'>Repositioning Index</Checkbox>
+                        <Checkbox 
+                            isChecked = {displayValues.callbackSettings.repositioningIndexCallback} 
+                            size = 'sm'
+                            id = 'repositioningIndexCallback'
+                            onChange = {onChangeFuncs.callBackSettings}
+                        >
+                            Repositioning Index
+                        </Checkbox>
                         <FormHelperText>
                             During rapid repositioning mode, this streams the virtual location of the scroller.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox isChecked = {callbackSettings.changeListsizeCallback} size = 'sm'>Listsize change</Checkbox>
+                        <Checkbox 
+                            isChecked = {displayValues.callbackSettings.changeListsizeCallback} 
+                            size = 'sm'
+                            id = 'changeListsizeCallback'
+                            onChange = {onChangeFuncs.callBackSettings}
+                        >
+                            Listsize change
+                        </Checkbox>
                         <FormHelperText>
                             Reports change to list size for any standard reason.
                         </FormHelperText>
                     </FormControl>
                     <FormControl borderTop = '1px'>
-                        <Checkbox isChecked = {callbackSettings.deleteListCallback} size = 'sm'>Deleted List</Checkbox>
+                        <Checkbox 
+                            isChecked = {displayValues.callbackSettings.deleteListCallback} 
+                            size = 'sm'
+                            id = 'deleteListCallback'
+                            onChange = {onChangeFuncs.callBackSettings}
+                        >
+                            Deleted List
+                        </Checkbox>
                         <FormHelperText>
                             Gives lists of indexes removed from the cache for any standard reason, such as going out
                             of scope.
@@ -407,7 +610,7 @@ const Options = (props:any) => {
                         <HStack>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
-                                <NumberInput value = {gotoIndex} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                                <NumberInput value = {displayValues.gotoIndex} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                             </InputGroup>
                         </HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -429,7 +632,7 @@ const Options = (props:any) => {
                         <HStack>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
-                                <NumberInput value = {listsizeIndex} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                                <NumberInput value = {displayValues.listsizeIndex} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                             </InputGroup>
                         </HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -467,11 +670,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput value = {insertIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {displayValues.insertIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput value = {insertIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {displayValues.insertIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -494,11 +697,11 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput value = {removeIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {displayValues.removeIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput value = {removeIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {displayValues.removeIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -521,16 +724,16 @@ const Options = (props:any) => {
                         <Stack direction = {['column','row','row']} mb = {2}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput value = {moveIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {displayValues.moveIndexes.from} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput value = {moveIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {displayValues.moveIndexes.range} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
-                            <NumberInput value = {moveIndexes.to} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
+                            <NumberInput value = {displayValues.moveIndexes.to} size = 'sm'><NumberInputField border = '2px' /></NumberInput>
                         </InputGroup>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='move' fontSize = 'sm'>
@@ -549,7 +752,11 @@ const Options = (props:any) => {
                     </FormControl>
                     <FormControl>
                         <FormLabel size = 'sm'>Remap indexes</FormLabel>
-                        <Select value = {remapDemo} size = 'sm'>
+                        <Select 
+                            value = {displayValues.remapDemo} 
+                            size = 'sm'
+                            onChange = {onChangeFuncs.remapDemo}
+                        >
                             <option value="backwardsort">Backward sort</option>
                             <option value="test2">Test 2</option>
                             <option value="test3">Test 3</option>
@@ -567,7 +774,7 @@ const Options = (props:any) => {
                         <FormHelperText>
                             The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
                             items to the newly assigned indexes. We've included a few random tests that apply to 
-                            the cradle. For purposes of the demo the new mappings are 'forgotten' when the moved
+                            the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
                             items scroll out of scope.
                         </FormHelperText>
                     </FormControl>
@@ -594,7 +801,7 @@ const Options = (props:any) => {
 
         </Accordion>
         </VStack>
-    </Box>
+    </Box>)
 }
 
 export default Options
