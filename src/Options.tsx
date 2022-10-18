@@ -29,8 +29,8 @@ import {
 
 } from '@chakra-ui/react'
 
-type FunctionSettings = {
-    [prop:string]:boolean
+type FunctionSettings = { 
+    [prop:string]:boolean // allows iteration
 }
 
 type CellSizes = {
