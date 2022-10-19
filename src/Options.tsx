@@ -2,6 +2,7 @@
 /*
 
     - modify enabler onChange calls to verify related data, and turn off errors for unrelated data
+    - border color to signify changed value
 
 */
 
@@ -381,8 +382,8 @@ const Options = (props:any) => {
     // render
     return (optionsState == 'setup')?
         null:
-        (<Box>
-        <VStack align = 'start' alignItems = 'stretch'>
+        (<Box> <VStack align = 'start' alignItems = 'stretch'>
+
         <FormControl mb = {3}>
 
             <FormLabel>Select Content Type</FormLabel>
@@ -626,7 +627,7 @@ const Options = (props:any) => {
                         <Box flex='1' textAlign='left'>
                             Callbacks
                         </Box>
-                    <AccordionIcon />                        
+                        <AccordionIcon />                        
                     </AccordionButton>
                 </Heading>
 
@@ -636,7 +637,9 @@ const Options = (props:any) => {
                         behaviour to the browser console. In an application the data can be used to enhance the 
                         user experience.
                     </Text>
+
                     <VStack>
+
                     <FormControl borderTop = '1px'>
                         <Checkbox 
                             isChecked = {displayValues.callbackSettings.referenceIndexCallback} 
@@ -650,6 +653,7 @@ const Options = (props:any) => {
                             This reports the first index of the tail grid, near the top or left of the viewport.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl borderTop = '1px'>
                         <Checkbox 
                             isChecked = {displayValues.callbackSettings.preloadIndexCallback} 
@@ -663,6 +667,7 @@ const Options = (props:any) => {
                             This reports a stream of index numbers being preloaded.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl borderTop = '1px'>
                         <Checkbox 
                             isChecked = {displayValues.callbackSettings.itemExceptionCallback} 
@@ -676,13 +681,22 @@ const Options = (props:any) => {
                             This reports details of a failed <Code>getItem</Code> call.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl borderTop = '1px'>
-                        <Checkbox isChecked = {displayValues.callbackSettings.repositioningFlagCallback} size = 'sm'>isRepositioning Notification</Checkbox>
+                        <Checkbox 
+                            isChecked = {displayValues.callbackSettings.repositioningFlagCallback} 
+                            size = 'sm'
+                            id = 'repositioningFlagCallback'
+                            onChange = {onChangeFuncs.callBackSettings}
+                        >
+                            isRepositioning Notification
+                        </Checkbox>
                         <FormHelperText>
                             Alerts the beginning (<Code>true</Code>) or end (<Code>false</Code>) of a rapid 
                             repositioning session.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl borderTop = '1px'>
                         <Checkbox 
                             isChecked = {displayValues.callbackSettings.repositioningIndexCallback} 
@@ -696,6 +710,7 @@ const Options = (props:any) => {
                             During rapid repositioning mode, this streams the virtual location of the scroller.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl borderTop = '1px'>
                         <Checkbox 
                             isChecked = {displayValues.callbackSettings.changeListsizeCallback} 
@@ -709,6 +724,7 @@ const Options = (props:any) => {
                             Reports change to list size for any standard reason.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl borderTop = '1px'>
                         <Checkbox 
                             isChecked = {displayValues.callbackSettings.deleteListCallback} 
@@ -723,7 +739,9 @@ const Options = (props:any) => {
                             of scope.
                         </FormHelperText>
                     </FormControl>
+
                     </VStack>
+
                 </AccordionPanel>
 
             </AccordionItem>
@@ -745,29 +763,34 @@ const Options = (props:any) => {
                         use this data to verify and control cache management changes for drag-n-drop, sorting, 
                         and filtering.
                     </Text>
-                <VStack>
-                <FormControl borderTop = '1px'>
-                    <Button size = 'sm'>Get Cache Index Map</Button>
-                    <FormHelperText>
-                        snapshot (javascript <Code>Map</Code>) of cache <Code>index</Code> (=key) to 
-                        scroller-assigned session <Code>itemID</Code> (=value) map.
-                    </FormHelperText>
-                </FormControl>
-                <FormControl borderTop = '1px'>
-                    <Button size = 'sm'>Get Cache Item Map</Button>
-                    <FormHelperText>
-                        snapshot (javascript <Code>Map</Code>) of cache <Code>itemID</Code> (=key) to 
-                        object (=value) map. Object = {"{"}index, component{"}"} where component = user component.
-                    </FormHelperText>
-                </FormControl>
-                <FormControl borderTop = '1px'>
-                    <Button size = 'sm'>Get Cradle Index Map</Button>
-                    <FormHelperText>
-                        snapshot (javascript <Code>Map</Code>) of cradle <Code>index</Code> (=key) to 
-                        scroller-assigned session <Code>itemID</Code> (=value) map.
-                    </FormHelperText>
-                </FormControl>
-                </VStack>
+
+                    <VStack>
+
+                    <FormControl borderTop = '1px'>
+                        <Button size = 'sm'>Get Cache Index Map</Button>
+                        <FormHelperText>
+                            snapshot (javascript <Code>Map</Code>) of cache <Code>index</Code> (=key) to 
+                            scroller-assigned session <Code>itemID</Code> (=value) map.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Button size = 'sm'>Get Cache Item Map</Button>
+                        <FormHelperText>
+                            snapshot (javascript <Code>Map</Code>) of cache <Code>itemID</Code> (=key) to 
+                            object (=value) map. Object = {"{"}index, component{"}"} where component = user component.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Button size = 'sm'>Get Cradle Index Map</Button>
+                        <FormHelperText>
+                            snapshot (javascript <Code>Map</Code>) of cradle <Code>index</Code> (=key) to 
+                            scroller-assigned session <Code>itemID</Code> (=value) map.
+                        </FormHelperText>
+                    </FormControl>
+
+                    </VStack>
                 </AccordionPanel>
             </AccordionItem>
 
@@ -777,7 +800,7 @@ const Options = (props:any) => {
                         <Box flex='1' textAlign='left'>
                             Functions: operations
                         </Box>
-                    <AccordionIcon />                        
+                        <AccordionIcon />                        
                     </AccordionButton>
                 </Heading>
 
@@ -787,7 +810,9 @@ const Options = (props:any) => {
                         button. Most of these functions provide feedback in the browser console. The feedback can 
                         be used by apps.
                     </Text>
+
                     <VStack>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Go to</FormLabel>
                         <HStack>
@@ -820,6 +845,7 @@ const Options = (props:any) => {
                                 {errorMessages.gotoIndex}
                             </FormErrorMessage>}
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Change virtual list size</FormLabel>
                         <HStack>
@@ -852,6 +878,7 @@ const Options = (props:any) => {
                                 {errorMessages.listsize}
                             </FormErrorMessage>}
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Reload the cradle</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -868,6 +895,7 @@ const Options = (props:any) => {
                             This clears the cache reloads the cradle at its current position.
                         </FormHelperText>
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Insert indexes</FormLabel>
                         <Stack direction = {['column','row','row']}>
@@ -915,6 +943,7 @@ const Options = (props:any) => {
                                 {errorMessages.insertRange}
                             </FormErrorMessage>}
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Remove indexes</FormLabel>
                         <Stack direction = {['column','row','row']}>
@@ -962,6 +991,7 @@ const Options = (props:any) => {
                                 {errorMessages.removeRange}
                             </FormErrorMessage>}
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Move indexes</FormLabel>
                         <Stack direction = {['column','row','row']} mb = {2}>
@@ -1023,6 +1053,7 @@ const Options = (props:any) => {
                                 {errorMessages.moveTo}
                             </FormErrorMessage>}
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Remap indexes</FormLabel>
                         <Select 
@@ -1055,6 +1086,7 @@ const Options = (props:any) => {
                                 {errorMessages.remapDemo}
                             </FormErrorMessage>}
                     </FormControl>
+
                     <FormControl>
                         <FormLabel size = 'sm'>Clear the cache</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -1071,14 +1103,15 @@ const Options = (props:any) => {
                             This clears the cache (and therefore the cradle). Not very interesting.
                         </FormHelperText>
                     </FormControl>
+
                     </VStack>
                 </AccordionPanel>
 
             </AccordionItem>
 
         </Accordion>
-        </VStack>
-    </Box>)
+
+    </VStack></Box>)
 }
 
 export default Options
