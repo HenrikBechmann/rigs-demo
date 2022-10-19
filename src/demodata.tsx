@@ -140,6 +140,7 @@ const functionsCallback = (functions:GenericObject) => {
 }
 
 const callbacks = {
+    functionsCallback,
     referenceIndexCallback,
     repositioningIndexCallback,
     preloadIndexCallback,
@@ -290,7 +291,7 @@ const GenericItem = (props:any) => {
 
     return <div style = {genericstyleouter}>
         <div style = {genericstyleinner}>
-            {originalindexRef.current + 1}
+            {originalindexRef.current}
         </div>
     </div>
 
@@ -334,9 +335,9 @@ const getTestString = (index:number) => {
         if ([0,1,51,52,196,197,198,199].includes(index)) {
             teststrings[index] = 'TEST STRING' + index
         } else if (index == 0) {
-            teststrings[index] =`${index + 1}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
+            teststrings[index] =`${index}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
         } else {
-            teststrings[index] =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+            teststrings[index] =`${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
         }
     }
     return teststrings[index]
@@ -344,7 +345,7 @@ const getTestString = (index:number) => {
 
 const getTestStringDynamic = (index:number) => {
     // console.log('getTestString',index)
-    return `${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+    return `${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
 }
 
 const VariableItem = (props:any) => {
@@ -499,7 +500,7 @@ const styles = {
 
 const getListItem = (index:any) => {
 
-    return <div style = { styles.item as React.CSSProperties }> Item {index + 1} of this list </div>
+    return <div style = { styles.item as React.CSSProperties }> Item {index} of this list </div>
 
 }
 
@@ -580,7 +581,7 @@ const NestedBox = (props:any) => {
 
     return <div data-type = "list-frame" style = {styles.container as React.CSSProperties} >
         <div data-type = "list-header" style = {styles.header as React.CSSProperties} >
-            List #{printedNumberRef.current + 1} of {setlistsize}
+            List #{printedNumberRef.current} of {setlistsize}
         </div>
         <div data-type = "list-content" style = {styles.frame as React.CSSProperties}>
 
