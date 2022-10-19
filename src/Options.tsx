@@ -1,4 +1,10 @@
 
+/*
+
+    - modify enabler onChange calls to verify related data, and turn off errors for unrelated data
+
+*/
+
 import React, {useState, useRef, useEffect} from 'react'
 import {
 
@@ -10,26 +16,27 @@ import {
     FormLabel, 
     FormHelperText,
     FormErrorMessage,
-    Select,   
     Accordion,
     AccordionItem,
     AccordionButton,
     AccordionPanel,
     AccordionIcon,
+    Button,
+    Switch,
     Radio,
     RadioGroup,
+    Checkbox,
+    Select,   
     NumberInput,
     NumberInputField,
     InputGroup,
     Heading,
     Text,
-    Checkbox,
     Code,
-    Button,
-    Switch,
 
 } from '@chakra-ui/react'
 
+// type declarations
 type GenericObject = {
     [prop:string]:any
 }
@@ -79,6 +86,7 @@ type MoveIndexes = {
     to:number,
 }
 
+// Options component
 const Options = (props:any) => {
 
     // tested values
@@ -109,7 +117,7 @@ const Options = (props:any) => {
     const [moveIndexes, setMoveIndexes] = useState<MoveIndexes>({from:0, range: undefined, to:0})
     const [remapDemo, setRemapDemo] = useState<string>('backwardsort')
 
-
+    // untested display values
     const displayValuesRef = useRef<GenericObject>({})
 
     const displayValues = displayValuesRef.current
@@ -163,7 +171,7 @@ const Options = (props:any) => {
 
     const displayErrors = displayErrorsRef.current
 
-    // error messages
+    // displan error messages
     const errorMessagesRef = useRef<GenericObject>(
         {
             contentType:'',
@@ -192,7 +200,7 @@ const Options = (props:any) => {
 
     const errorMessages = errorMessagesRef.current
 
-    // error check functions
+    // display error check functions
     const errorChecks:GenericObject =
     {
         contentType:() => {
@@ -281,7 +289,7 @@ const Options = (props:any) => {
         },
     }
 
-    // on change functions
+    // display on change functions
     const onChangeFuncs:GenericObject = {
         contentType:(event:React.ChangeEvent) => {
 
