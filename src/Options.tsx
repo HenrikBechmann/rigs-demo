@@ -70,8 +70,14 @@ type MoveIndexes = {
 }
 
 // Options component
-const Options = ({displayPropertiesRef, contentTypeRef, callbackSettingsRef}:any) => {
-
+const Options = ({
+    displayPropertiesRef, 
+    contentTypeRef, 
+    callbackSettingsRef, 
+    operatingFunctionRef, 
+    functionPropertiesRef
+}:any) => {
+ 
     const typePropertiesRef = useRef(displayPropertiesRef.current[contentTypeRef.current])
     const typeProperties = typePropertiesRef.current
 

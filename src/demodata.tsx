@@ -78,114 +78,6 @@ const getVariableItemDynamic = (index:number) => {
 
 }
 
-export const defaultProperties = {
-    simple: {
-        orientation:'vertical',
-        cellHeight:150,
-        cellWidth:150,
-        padding:10,
-        gap:5,
-        runwaySize:4,
-        cache:'cradle',
-        cacheMax:200,
-
-        startingIndex:0,
-        estimatedListSize:200,
-        getItem:getGenericItem,
-    },
-    simplepromises: {
-        orientation:'vertical',
-        cellHeight:150,
-        cellWidth:150,
-        padding:10,
-        gap:5,
-        runwaySize:4,
-        cache:'cradle',
-        cacheMax:200,
-
-        startingIndex:0,
-        estimatedListSize:200,
-        getItem:getGenericItemPromise,
-    },
-    nested: {
-        childorientation:'horizontal',
-        cellHeight:400,
-        cellWidth:250,
-        padding:5,
-        gap:5,
-        runwaySize:2,
-        cache:'cradle',
-        cacheMax:200,
-
-        startingIndex:0,
-        estimatedListSize:400,
-        getItem:getNestedItem,
-    },
-    nestedpromises: {
-        childorientation:'horizontal',
-        cellHeight:400,
-        cellWidth:250,
-        padding:5,
-        gap:5,
-        runwaySize:2,
-        cache:'cradle',
-        cacheMax:200,
-
-        startingIndex:0,
-        estimatedListSize:400,
-        getItem:getNestedItemPromise,
-    },
-    variable: {
-        orientation:'vertical',
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:25,
-        cellMinWidth:25,
-        padding:10,
-        gap:5,
-        runwaySize:5,
-        cache:'cradle',
-        cacheMax:200,
-
-        startingIndex:0,
-        estimatedListSize:200,
-        getItem:getVariableItem,
-    },
-    variablepromises: {
-        orientation:'vertical',
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:25,
-        cellMinWidth:25,
-        padding:10,
-        gap:5,
-        runwaySize:5,
-        cache:'cradle',
-        cacheMax:200,
-
-        startingIndex:50,
-        estimatedListSize:200,
-        getItem:getVariableItemPromise,
-    },
-    variabledynamic: {
-        orientation:'vertical',
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:25,
-        cellMinWidth:25,
-        padding:10,
-        gap:5,
-        runwaySize:5,
-        cache:'cradle',
-        cacheMax:200,
-
-        startingIndex:0,
-        estimatedListSize:200,
-        getItem:getVariableItemDynamic,
-    },
-}
-
-
 export const callbackSettings = {
     referenceIndexCallback:false,
     repositioningIndexCallback:false,
@@ -235,6 +127,140 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
     callbackSettings.itemExceptionCallback && console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
         index, itemID, returnvalue, location, error)
 
+}
+
+export const functionsRef:GenericObject = {current:null}
+
+type GenericObject = {
+    [prop:string]:any
+}
+
+const functionsCallback = (functions:GenericObject) => {
+    functionsRef.current = functions
+}
+
+const callbacks = {
+    referenceIndexCallback,
+    repositioningIndexCallback,
+    preloadIndexCallback,
+    itemExceptionCallback,
+    changeListsizeCallback,
+    deleteListCallback,
+    repositioningFlagCallback,
+}
+
+export const defaultProperties = {
+    simple: {
+        orientation:'vertical',
+        cellHeight:150,
+        cellWidth:150,
+        padding:10,
+        gap:5,
+        runwaySize:4,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:200,
+        getItem:getGenericItem,
+        callbacks,
+    },
+    simplepromises: {
+        orientation:'vertical',
+        cellHeight:150,
+        cellWidth:150,
+        padding:10,
+        gap:5,
+        runwaySize:4,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:200,
+        getItem:getGenericItemPromise,
+        callbacks,
+    },
+    nested: {
+        childorientation:'horizontal',
+        cellHeight:400,
+        cellWidth:250,
+        padding:5,
+        gap:5,
+        runwaySize:2,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:400,
+        getItem:getNestedItem,
+        callbacks,
+    },
+    nestedpromises: {
+        childorientation:'horizontal',
+        cellHeight:400,
+        cellWidth:250,
+        padding:5,
+        gap:5,
+        runwaySize:2,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:400,
+        getItem:getNestedItemPromise,
+        callbacks,
+    },
+    variable: {
+        orientation:'vertical',
+        cellHeight:320,
+        cellWidth:250,
+        cellMinHeight:25,
+        cellMinWidth:25,
+        padding:10,
+        gap:5,
+        runwaySize:5,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:200,
+        getItem:getVariableItem,
+        callbacks,
+    },
+    variablepromises: {
+        orientation:'vertical',
+        cellHeight:320,
+        cellWidth:250,
+        cellMinHeight:25,
+        cellMinWidth:25,
+        padding:10,
+        gap:5,
+        runwaySize:5,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:50,
+        estimatedListSize:200,
+        getItem:getVariableItemPromise,
+        callbacks,
+    },
+    variabledynamic: {
+        orientation:'vertical',
+        cellHeight:320,
+        cellWidth:250,
+        cellMinHeight:25,
+        cellMinWidth:25,
+        padding:10,
+        gap:5,
+        runwaySize:5,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:200,
+        getItem:getVariableItemDynamic,
+        callbacks,
+    },
 }
 
 // -----------------------------[ generic items ]------------------------
