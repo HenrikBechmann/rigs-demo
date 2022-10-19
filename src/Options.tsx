@@ -6,33 +6,15 @@
 */
 
 import React, {useState, useRef, useEffect} from 'react'
+
 import {
 
-    Box, 
-    Stack,
-    VStack,
-    HStack,
-    FormControl, 
-    FormLabel, 
-    FormHelperText,
-    FormErrorMessage,
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
-    AccordionIcon,
-    Button,
-    Switch,
-    Radio,
-    RadioGroup,
-    Checkbox,
-    Select,   
-    NumberInput,
-    NumberInputField,
-    InputGroup,
-    Heading,
-    Text,
-    Code,
+    Box, Stack, VStack, HStack,
+    FormControl, FormLabel, FormHelperText, FormErrorMessage,
+    Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon,
+    Button, Switch, Radio, RadioGroup, Checkbox, Select,   
+    NumberInput, NumberInputField, InputGroup,
+    Heading, Text, Code,
 
 } from '@chakra-ui/react'
 
