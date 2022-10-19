@@ -81,6 +81,7 @@ type MoveIndexes = {
 
 const Options = (props:any) => {
 
+    // tested values
     const [optionsState, setOptionsState] = useState('setup')
     const [contentType, setContentType] = useState('simple')
     const [orientation, setOrientation] = useState('vertical')
@@ -102,7 +103,7 @@ const Options = (props:any) => {
     )
     const [operationFunction, setOperationFunction] = useState<string | null>(null)
     const [gotoIndex, setGotoIndex] = useState<number | undefined>(undefined)
-    const [listsizeIndex, setListsizeIndex] = useState<number | undefined>(undefined)
+    const [listsize, setListsize] = useState<number | undefined>(undefined)
     const [insertIndexes, setInsertIndexes] = useState<RangeIndexes>({from:0,range:undefined})
     const [removeIndexes, setRemoveIndexes] = useState<RangeIndexes>({from:0, range: undefined})
     const [moveIndexes, setMoveIndexes] = useState<MoveIndexes>({from:0, range: undefined, to:0})
@@ -113,6 +114,7 @@ const Options = (props:any) => {
 
     const displayValues = displayValuesRef.current
 
+    // display values
     useEffect(()=>{
         displayValuesRef.current = {
             contentType,
@@ -124,7 +126,7 @@ const Options = (props:any) => {
             cacheSettings,
             callbackSettings,
             gotoIndex,
-            listsizeIndex,
+            listsize,
             insertIndexes,
             removeIndexes,
             moveIndexes,
@@ -132,6 +134,7 @@ const Options = (props:any) => {
         }
     },[])
 
+    // display error flags
     const displayErrorsRef = useRef<GenericObject>(
         {
             contentType:false,
@@ -146,7 +149,7 @@ const Options = (props:any) => {
             cache:false,
             cacheMax:false,
             gotoIndex:false,
-            listsizeIndex:false,
+            listsize:false,
             insertFrom:false,
             insertRange:false,
             removeFrom:false,
@@ -160,6 +163,125 @@ const Options = (props:any) => {
 
     const displayErrors = displayErrorsRef.current
 
+    // error messages
+    const errorMessagesRef = useRef<GenericObject>(
+        {
+            contentType:'',
+            orientation:'',
+            cellHeight:'',
+            cellWidth:'',
+            minCellHeight:'',
+            minCellWidth:'',
+            padding:'',
+            gap:'',
+            runwaySize:'',
+            cache:'',
+            cacheMax:'',
+            gotoIndex:'',
+            listsize:'',
+            insertFrom:'',
+            insertRange:'',
+            removeFrom:'',
+            removeRange:'',
+            moveFrom:'',
+            moveRange:'',
+            moveTo:'',
+            remapDemo:'',
+        }
+    )
+
+    const errorMessages = errorMessagesRef.current
+
+    // error check functions
+    const errorChecks:GenericObject =
+    {
+        contentType:() => {
+            let isError = false
+            return isError
+        },
+        orientation:() => {
+            let isError = false
+            return isError
+        },
+        cellHeight:() => {
+            let isError = false
+            return isError
+        },
+        cellWidth:() => {
+            let isError = false
+            return isError
+        },
+        minCellHeight:() => {
+            let isError = false
+            return isError
+        },
+        minCellWidth:() => {
+            let isError = false
+            return isError
+        },
+        padding:() => {
+            let isError = false
+            return isError
+        },
+        gap:() => {
+            let isError = false
+            return isError
+        },
+        runwaySize:() => {
+            let isError = false
+            return isError
+        },
+        cache:() => {
+            let isError = false
+            return isError
+        },
+        cacheMax:() => {
+            let isError = false
+            return isError
+        },
+        gotoIndex:() => {
+            let isError = false
+            return isError
+        },
+        listsize:() => {
+            let isError = false
+            return isError
+        },
+        insertFrom:() => {
+            let isError = false
+            return isError
+        },
+        insertRange:() => {
+            let isError = false
+            return isError
+        },
+        removeFrom:() => {
+            let isError = false
+            return isError
+        },
+        removeRange:() => {
+            let isError = false
+            return isError
+        },
+        moveFrom:() => {
+            let isError = false
+            return isError
+        },
+        moveRange:() => {
+            let isError = false
+            return isError
+        },
+        moveTo:() => {
+            let isError = false
+            return isError
+        },
+        remapDemo:() => {
+            let isError = false
+            return isError
+        },
+    }
+
+    // on change functions
     const onChangeFuncs:GenericObject = {
         contentType:(event:React.ChangeEvent) => {
 
@@ -200,7 +322,7 @@ const Options = (props:any) => {
         gotoIndex:(event:React.ChangeEvent) => {
             
         },
-        listsizeIndex:(event:React.ChangeEvent) => {
+        listsize:(event:React.ChangeEvent) => {
             
         },
         insertFrom:(event:React.ChangeEvent) => {
@@ -237,6 +359,7 @@ const Options = (props:any) => {
 
     }, [optionsState])
 
+    // scroller function switch settings
     const functionSettingsRef = useRef<FunctionSettings>({
         goto:false,
         listsize:false,
@@ -248,6 +371,7 @@ const Options = (props:any) => {
         clear:false,
     })
 
+    // update scroller function switch settings
     const onChangeEnabler = (event:React.ChangeEvent) => {
         const target = event.target as HTMLInputElement
         const enablerID = target.id
@@ -264,6 +388,7 @@ const Options = (props:any) => {
         setOperationFunction(opfunc)
     }
 
+    // render
     return (optionsState == 'setup')?
         null:
         (<Box>
@@ -354,11 +479,11 @@ const Options = (props:any) => {
                         </FormHelperText>
                         {displayErrors.cellHeight &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.cellHeight}
                             </FormErrorMessage>}
                         {displayErrors.cellWidth &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.cellWidth}
                             </FormErrorMessage>}
                     </FormControl>
 
@@ -391,11 +516,11 @@ const Options = (props:any) => {
                         </FormHelperText>
                         {displayErrors.minCellHeight &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.minCellHeight}
                             </FormErrorMessage>}
                         {displayErrors.minCellWidth &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.minCellWidth}
                             </FormErrorMessage>}
                     </FormControl>
 
@@ -429,11 +554,11 @@ const Options = (props:any) => {
                         </FormHelperText>
                         {displayErrors.padding &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.padding}
                             </FormErrorMessage>}
                         {displayErrors.gap &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.gap}
                             </FormErrorMessage>}
                     </FormControl>
 
@@ -457,7 +582,7 @@ const Options = (props:any) => {
                         </FormHelperText>
                         {displayErrors.runwaySize &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.runwaySize}
                             </FormErrorMessage>}
                     </FormControl>
 
@@ -492,11 +617,11 @@ const Options = (props:any) => {
                         </FormHelperText>
                         {displayErrors.cache &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.cache}
                             </FormErrorMessage>}
                         {displayErrors.cacheMax &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.cacheMax}
                             </FormErrorMessage>}
                     </FormControl>
 
@@ -702,7 +827,7 @@ const Options = (props:any) => {
                         </FormHelperText>
                         {displayErrors.gotoIndex &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.gotoIndex}
                             </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
@@ -711,9 +836,9 @@ const Options = (props:any) => {
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.listsizeIndex} 
+                                    value = {displayValues.listsize} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.listsizeIndex}
+                                    onChange = {onChangeFuncs.listsize}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -732,9 +857,9 @@ const Options = (props:any) => {
                         <FormHelperText>
                             Integer. Change the size of the scroller's virtual list.
                         </FormHelperText>
-                        {displayErrors.listsizeIndex &&
+                        {displayErrors.listsize &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.listsize}
                             </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
@@ -793,11 +918,11 @@ const Options = (props:any) => {
                         </FormHelperText> 
                         {displayErrors.insertFrom &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.insertFrom}
                             </FormErrorMessage>}
                         {displayErrors.insertRange &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.insertRange}
                             </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
@@ -840,11 +965,11 @@ const Options = (props:any) => {
                         </FormHelperText> 
                         {displayErrors.removeFrom &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.removeFrom}
                             </FormErrorMessage>}
                         {displayErrors.removeRange &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.removeRange}
                             </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
@@ -897,15 +1022,15 @@ const Options = (props:any) => {
                         </FormHelperText> 
                         {displayErrors.moveFrom &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.moveFrom}
                             </FormErrorMessage>}
                         {displayErrors.moveRange &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.moveRange}
                             </FormErrorMessage>}
                         {displayErrors.moveTo &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.moveTo}
                             </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
@@ -937,7 +1062,7 @@ const Options = (props:any) => {
                         </FormHelperText>
                         {displayErrors.remapDemo &&
                             <FormErrorMessage>
-                                
+                                {errorMessages.remapDemo}
                             </FormErrorMessage>}
                     </FormControl>
                     <FormControl>
