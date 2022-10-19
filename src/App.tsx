@@ -34,7 +34,7 @@ import {
 import Explanations from './Explanations'
 import Options from './Options'
 import Scroller from './Scroller'
-import { demoproperties } from './demodata'
+import { defaultProperties } from './demodata'
 
 function App() {
 
@@ -43,6 +43,9 @@ function App() {
 
   const optionsButtonRef = React.useRef(null)
   const explanationsButtonRef = React.useRef(null)
+
+  const displayPropertiesRef = useRef(defaultProperties)
+  const contentTypeRef = useRef('simple')
 
   return (
     <ChakraProvider>
@@ -69,7 +72,7 @@ function App() {
         </HStack>
       </Box>
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
-        <Scroller properties = {demoproperties.generic} />
+        <Scroller contentType = {contentTypeRef.current} displayProperties = {displayPropertiesRef.current} />
       </Box>
 
     </Grid></Box>
@@ -86,7 +89,7 @@ function App() {
         <DrawerHeader borderBottom = '1px'>Scroller Options</DrawerHeader>
 
         <DrawerBody>
-          <Options />
+          <Options displayPropertiesRef = {displayPropertiesRef} contentTypeRef = {contentTypeRef}/>
         </DrawerBody>
 
         <DrawerFooter justifyContent = 'start' borderTop = '1px'>

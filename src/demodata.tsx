@@ -2,6 +2,196 @@ import React, {useRef, useState, useEffect} from 'react'
 
 import Scroller from 'react-infinite-grid-scroller'
 
+const getGenericItem = (index:number) => {
+
+    // console.log('getting generic item', index, typeof index)
+
+    // if (index == 0) return <GenericItemDynamic index = {index}/>
+
+     // return <GenericItem index = {index} image = {'https://loremflickr.com/200/300?random='+index}/>
+     // if ((index == 130) || (index == 145)) console.log('getGenericItem returning index', index)
+     if (index == 30) return Promise.reject(new Error('not found'))
+     if (index == 40) return 5
+     // if (index == 45) return null
+     const returnvalue = <GenericItem index = {index} />
+     // console.log('return value from getGenericItem', returnvalue)
+     return returnvalue
+
+}
+
+const getGenericItemPromises = (index:number) => {
+
+    return new Promise((resolve, reject) => {
+        setTimeout(()=> {
+
+            resolve(<GenericItem index = {index} />)
+
+        },400 + (Math.random() * 2000))
+    })
+
+     // return <GenericItem index = {index} image = {'https://loremflickr.com/200/300?random='+index}/>
+     // if ((index == 130) || (index == 145)) console.log('getGenericItem returning index', index)
+     // if (index == 30) return Promise.reject(new Error('not found'))
+     // if (index == 40) return 5
+     // if (index == 45) return null
+     // return <GenericItem index = {index} />
+
+}
+
+const getNestedItem = (index:number) => {
+
+    return <NestedBox 
+        index = {index} 
+        childorientation = {defaultProperties.nested.childorientation} 
+        setlistsize = {defaultProperties.nested.estimatedListSize}
+        scrollerProperties = {null}
+    />
+
+}
+
+const getNestedItemPromises = (index:number) => {
+
+    return <NestedBox 
+        index = {index} 
+        childorientation = {defaultProperties.nested.childorientation} 
+        setlistsize = {defaultProperties.nested.estimatedListSize}
+        scrollerProperties = {null}
+    />
+
+}
+
+const getVariableItem = (index:number) => {
+
+     return <VariableItem index = {index} scrollerProperties = {null}/>    
+
+}
+
+const getVariableItemPromises = (index:number) => {
+
+    return new Promise((resolve, reject) => {
+        setTimeout(()=> {
+
+            resolve(<VariableItemDynamic index = {index} scrollerProperties = {null}/>)
+
+        },400 + (Math.random() * 2000))
+    })
+
+     // return <VariableItem index = {index} scrollerProperties = {null}/>    
+
+}
+const getVariableItemDynamic = (index:number) => {
+
+     return <VariableItemDynamic index = {index} scrollerProperties = {null}/>    
+
+}
+
+export const defaultProperties = {
+    simple: {
+        orientation:'vertical',
+        cellHeight:150,
+        cellWidth:150,
+        padding:10,
+        gap:5,
+        runwaySize:4,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:200,
+        getItem:getGenericItem,
+    },
+    simplepromises: {
+        orientation:'vertical',
+        cellHeight:150,
+        cellWidth:150,
+        padding:10,
+        gap:5,
+        runwaySize:4,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:200,
+        getItem:getGenericItemPromises,
+    },
+    nested: {
+        childorientation:'horizontal',
+        cellHeight:400,
+        cellWidth:250,
+        padding:5,
+        gap:5,
+        runwaySize:2,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:400,
+        getItem:getNestedItem,
+    },
+    nestedpromises: {
+        childorientation:'horizontal',
+        cellHeight:400,
+        cellWidth:250,
+        padding:5,
+        gap:5,
+        runwaySize:2,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:400,
+        getItem:getNestedItemPromises,
+    },
+    variable: {
+        orientation:'vertical',
+        cellHeight:320,
+        cellWidth:250,
+        cellMinHeight:25,
+        cellMinWidth:25,
+        padding:10,
+        gap:5,
+        runwaySize:5,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:0,
+        estimatedListSize:10,
+        getItem:getVariableItem,
+    },
+    variablepromises: {
+        orientation:'vertical',
+        cellHeight:320,
+        cellWidth:250,
+        cellMinHeight:25,
+        cellMinWidth:25,
+        padding:10,
+        gap:5,
+        runwaySize:5,
+        cache:'cradle',
+        cacheMax:200,
+
+        startingIndex:50,
+        estimatedListSize:10,
+        getItem:getVariableItemPromises,
+    },
+    variabledynamic: {
+        orientation:'vertical',
+        cellHeight:320,
+        cellWidth:250,
+        cellMinHeight:25,
+        cellMinWidth:25,
+        padding:10,
+        gap:5,
+        runwaySize:5,
+        cache:'cradle',
+        cacheMax:200,
+        
+        startingIndex:0,
+        estimatedListSize:10,
+        getItem:getVariableItemDynamic,
+    },
+}
+
 let doitemstreaming = false
 let doindexstreaming = false
 let dopreloadstreaming = false
@@ -74,119 +264,6 @@ const GenericItem = (props:any) => {
             {originalindexRef.current + 1}
         </div>
     </div>
-
-}
-
-const GenericItemDynamic = (props:any) => {
-
-    const originalindexRef = useRef(props.index)
-
-    const intervalRef = useRef<NodeJS.Timer | null>(null)
-
-    const [iteration, setIteration] = useState(0)
-    const iterationRef = useRef(0)
-    iterationRef.current = iteration
-
-    // console.log('running dynamic', iteration)
-    useEffect(()=>{
-        intervalRef.current = setInterval<any>(() => {
-
-            // console.log('iteration:', iterationRef.current )
-            setIteration(iterationRef.current + 1)
-
-        },1000)
-
-        return () => {
-            clearInterval(intervalRef.current as NodeJS.Timer)
-        }
-
-    },[])
-    return <div style = {{position:'relative',height:'100%', width:'100%',backgroundColor:'white'}}>
-        <div style = {genericstyle}>
-            {originalindexRef.current + 1}{false && <img style= {{height:'100%'}} src={props.image}/>}
-            Iteration: {iteration}
-        </div>
-    </div>
-
-}
-
-const getGenericItem = (index:number) => {
-
-    // console.log('getting generic item', index, typeof index)
-
-    // if (index == 0) return <GenericItemDynamic index = {index}/>
-
-     // return <GenericItem index = {index} image = {'https://loremflickr.com/200/300?random='+index}/>
-     // if ((index == 130) || (index == 145)) console.log('getGenericItem returning index', index)
-     if (index == 30) return Promise.reject(new Error('not found'))
-     if (index == 40) return 5
-     // if (index == 45) return null
-     const returnvalue = <GenericItem index = {index} />
-     // console.log('return value from getGenericItem', returnvalue)
-     return returnvalue
-
-}
-
-const getGenericItemPromises = (index:number) => {
-
-    return new Promise((resolve, reject) => {
-        setTimeout(()=> {
-
-            resolve(<GenericItem index = {index} />)
-
-        },400 + (Math.random() * 2000))
-    })
-
-     // return <GenericItem index = {index} image = {'https://loremflickr.com/200/300?random='+index}/>
-     // if ((index == 130) || (index == 145)) console.log('getGenericItem returning index', index)
-     // if (index == 30) return Promise.reject(new Error('not found'))
-     // if (index == 40) return 5
-     // if (index == 45) return null
-     // return <GenericItem index = {index} />
-
-}
-const getGenericItemDynamic = (index:number) => {
-
-     // return <GenericItem index = {index} image = {'https://loremflickr.com/200/300?random='+index}/>
-     // if ((index == 130) || (index == 145)) console.log('getGenericItem returning index', index)
-     if (index == 30) return Promise.reject(new Error('not found'))
-     if (index == 40) return 5
-     // if (index == 45) return null
-     return <GenericItemDynamic index = {index} />
-
-}
-
-// ------------------------------[ nested items ]-----------------------------
-
-const getNestedItem = (index:number) => {
-
-    return <NestedBox 
-        index = {index} 
-        childorientation = {demoproperties.nested.childorientation} 
-        setlistsize = {demoproperties.nested.estimatedListSize}
-        scrollerProperties = {null}
-    />
-
-}
-
-const getNestedItemPromises = (index:number) => {
-
-    return <NestedBox 
-        index = {index} 
-        childorientation = {demoproperties.nested.childorientation} 
-        setlistsize = {demoproperties.nested.estimatedListSize}
-        scrollerProperties = {null}
-    />
-
-}
-const getNestedItemDynamic = (index:number) => {
-
-    return <NestedBox 
-        index = {index} 
-        childorientation = {demoproperties.nested.childorientation} 
-        setlistsize = {demoproperties.nested.estimatedListSize}
-        scrollerProperties = {null}
-    />
 
 }
 
@@ -324,31 +401,6 @@ const VariableItemDynamic = (props:any) => {
     </div>
 }
 
-const getVariableItem = (index:number) => {
-
-     return <VariableItem index = {index} scrollerProperties = {null}/>    
-
-}
-
-const getVariableItemPromises = (index:number) => {
-
-    return new Promise((resolve, reject) => {
-        setTimeout(()=> {
-
-            resolve(<VariableItemDynamic index = {index} scrollerProperties = {null}/>)
-
-        },400 + (Math.random() * 2000))
-    })
-
-     // return <VariableItem index = {index} scrollerProperties = {null}/>    
-
-}
-const getVariableItemDynamic = (index:number) => {
-
-     return <VariableItemDynamic index = {index} scrollerProperties = {null}/>    
-
-}
-
 // ---------------------------[ styles ]-----------------------
 
 const uistyles = {
@@ -386,150 +438,6 @@ const genericcomponentstyles = {
     scrolltracker:{
         backgroundColor:'cyan',
     }
-}
-
-export const demoproperties = {
-    generic: {
-        gap:5,
-        padding:10,
-        cellHeight:150,
-        cellWidth:150,
-        runwaySize:4,
-        startingIndex:0,
-        estimatedListSize:200,
-        getItem:getGenericItem,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        technical: {
-            // rigsdebug:true,
-        },
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout: 'uniform',
-    },
-    genericpromises: {
-        gap:5,
-        padding:10,
-        cellHeight:150,
-        cellWidth:150,
-        runwaySize:4,
-        startingIndex:0,
-        estimatedListSize:200,
-        getItem:getGenericItemPromises,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout: 'uniform',
-    },
-    genericdynamic: {
-        gap:5,
-        padding:10,
-        cellHeight:150,
-        cellWidth:150,
-        runwaySize:4,
-        startingIndex:0,
-        estimatedListSize:200,
-        getItem:getGenericItemDynamic,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout: 'uniform',
-    },
-    nested: {
-        childorientation:'horizontal',
-        gap:5,
-        padding:5,
-        cellHeight:400,
-        cellWidth:250,
-        runwaySize:2,
-        startingIndex:0,
-        estimatedListSize:400,
-        getItem:getNestedItem,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout:'uniform',
-    },
-    variable: {
-        gap:5,
-        padding:10,
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:20,
-        runwaySize:5,
-        startingIndex:0,
-        estimatedListSize:10,
-        getItem:getVariableItem,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout:'variable',
-        scrollerName: 'VARIABLE',
-    },
-    variablepromises: {
-        gap:5,
-        padding:10,
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:20,
-        runwaySize:5,
-        startingIndex:50,
-        estimatedListSize:10,
-        getItem:getVariableItemPromises,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout:'variable',
-    },
-    variabledynamic: {
-        gap:5,
-        padding:10,
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:20,
-        runwaySize:5,
-        startingIndex:0,
-        estimatedListSize:10,
-        getItem:getVariableItemDynamic,
-        placeholder:null,
-        cache:'cradle',
-        cacheMax:200,
-        styles: genericcomponentstyles,
-        // callbacks: {
-        //     functionsCallback:null,
-        //     referenceIndexCallback:null,
-        // },
-        layout:'variable',
-    },
 }
 
 const styles = {

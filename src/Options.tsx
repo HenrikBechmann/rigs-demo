@@ -70,11 +70,14 @@ type MoveIndexes = {
 }
 
 // Options component
-const Options = (props:any) => {
+const Options = ({displayPropertiesRef, contentTypeRef}:any) => {
+
+    const typePropertiesRef = useRef(displayPropertiesRef.current[contentTypeRef.current])
+    const typeProperties = typePropertiesRef.current
 
     // tested values
     const [optionsState, setOptionsState] = useState('setup')
-    const [contentType, setContentType] = useState('simple')
+    const [contentType, setContentType] = useState(contentTypeRef.current)
     const [orientation, setOrientation] = useState('vertical')
     const [cellSizes, setCellSizes] = useState<CellSizes>({cellHeight:0,cellWidth:0})
     const [minCellSizes, setMinCellSizes] = useState<MinCellSizes>({minCellHeight:undefined, minCellWidth:undefined})
@@ -401,6 +404,7 @@ const Options = (props:any) => {
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>
                 <option value="nested">Nested uniform scrollers</option>
+                <option value="nestedpromises">Nested uniform scroller promises</option>
             </Select>
 
             <FormHelperText>
