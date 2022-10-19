@@ -101,9 +101,7 @@ const Options = (props:any) => {
     const [remapDemo, setRemapDemo] = useState<string>('backwardsort')
 
     // untested display values
-    const displayValuesRef = useRef<GenericObject>({})
-
-    const displayValues = displayValuesRef.current
+    const displayValuesRef = useRef<GenericObject>()
 
     // display values
     useEffect(()=>{
@@ -123,7 +121,10 @@ const Options = (props:any) => {
             moveIndexes,
             remapDemo,
         }
+        setDisplayValues(displayValuesRef.current)
     },[])
+
+    const [displayValues, setDisplayValues] = useState<GenericObject>({})
 
     // display error flags
     const displayErrorsRef = useRef<GenericObject>(
