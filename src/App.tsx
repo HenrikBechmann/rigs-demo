@@ -9,7 +9,7 @@
 
 */
 
-import React, {useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 
 import { 
   ChakraProvider, 
@@ -45,11 +45,16 @@ function App() {
   const optionsButtonRef = React.useRef(null)
   const explanationsButtonRef = React.useRef(null)
 
+  // for modification by Options panel
   const displayPropertiesRef = useRef(defaultProperties)
   const contentTypeRef = useRef('simple')
   const callbackSettingsRef = useRef(callbackSettings)
   const functionPropertiesRef = useRef<any>({})
   const operatingFunctionRef = useRef<string>()
+
+  // for application to Scroller
+  const [applyProperties, setApplyProperties] = useState(displayPropertiesRef.current)
+  const [applyType, setApplyType] = useState(contentTypeRef.current)
 
   return (
     <ChakraProvider>
@@ -76,7 +81,9 @@ function App() {
         </HStack>
       </Box>
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
-        <Scroller contentType = {contentTypeRef.current} displayProperties = {displayPropertiesRef.current} />
+
+        <Scroller contentType = {applyType} displayProperties = {applyProperties} />
+
       </Box>
 
     </Grid></Box>
@@ -91,17 +98,17 @@ function App() {
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader borderBottom = '1px'>Scroller Options</DrawerHeader>
-
         <DrawerBody>
+
           <Options 
             displayPropertiesRef = { displayPropertiesRef } 
             contentTypeRef = { contentTypeRef }
             callbackSettingsRef = { callbackSettingsRef }
-            functionsPropertiesRef = { functionPropertiesRef }
+            functionPropertiesRef = { functionPropertiesRef }
             operatingFunctionRef = { operatingFunctionRef }
           />
-        </DrawerBody>
 
+        </DrawerBody>
         <DrawerFooter justifyContent = 'start' borderTop = '1px'>
           <HStack>
           <Button size = {['sm','sm','md']}>

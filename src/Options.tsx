@@ -78,62 +78,15 @@ const Options = ({
     functionPropertiesRef
 }:any) => {
  
-    const typePropertiesRef = useRef(displayPropertiesRef.current[contentTypeRef.current])
-    const typeProperties = typePropertiesRef.current
+    // const typePropertiesRef = useRef(displayPropertiesRef.current[contentTypeRef.current])
+    const [displayValues, setDisplayValues] = useState({...displayPropertiesRef.current[contentTypeRef.current]})
+    const [contentType, setContentType] = useState(contentTypeRef.current)
+    const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
+    const [operatingFunction, setOperatingFunction] = useState(operatingFunctionRef.current)
+    const [functionProperties, setFunctionProperties] = useState({...functionPropertiesRef.current})
 
     // tested values
     const [optionsState, setOptionsState] = useState('setup')
-    const [contentType, setContentType] = useState(contentTypeRef.current)
-    const [orientation, setOrientation] = useState('vertical')
-    const [cellSizes, setCellSizes] = useState<CellSizes>({cellHeight:0,cellWidth:0})
-    const [minCellSizes, setMinCellSizes] = useState<MinCellSizes>({minCellHeight:undefined, minCellWidth:undefined})
-    const [paddingAndGap, setPaddingAndGap] = useState<PaddingAndGap>({padding:undefined, gap:undefined})
-    const [runwaySize, setRunwaySize] = useState<number | undefined>(undefined)
-    const [cacheSettings, setCacheSettings] = useState<CacheSettings>({cache:'cradle',cacheMax:undefined})
-    const [callbackSettings, setCallbackSettings] = useState<CallbackSettings>(
-        {
-            referenceIndexCallback:false,
-            repositioningIndexCallback:false,
-            preloadIndexCallback:false,
-            itemExceptionCallback:false,
-            changeListsizeCallback:false,
-            deleteListCallback:false,
-            repositioningFlagCallback:false,
-        }
-    )
-    const [operationFunction, setOperationFunction] = useState<string | null>(null)
-    const [gotoIndex, setGotoIndex] = useState<number | undefined>(undefined)
-    const [listsize, setListsize] = useState<number | undefined>(undefined)
-    const [insertIndexes, setInsertIndexes] = useState<RangeIndexes>({from:0,range:undefined})
-    const [removeIndexes, setRemoveIndexes] = useState<RangeIndexes>({from:0, range: undefined})
-    const [moveIndexes, setMoveIndexes] = useState<MoveIndexes>({from:0, range: undefined, to:0})
-    const [remapDemo, setRemapDemo] = useState<string>('backwardsort')
-
-    // untested display values
-    const displayValuesRef = useRef<GenericObject>()
-
-    // display values
-    useEffect(()=>{
-        displayValuesRef.current = {
-            contentType,
-            orientation,
-            cellSizes,
-            minCellSizes,
-            paddingAndGap,
-            runwaySize,
-            cacheSettings,
-            callbackSettings,
-            gotoIndex,
-            listsize,
-            insertIndexes,
-            removeIndexes,
-            moveIndexes,
-            remapDemo,
-        }
-        setDisplayValues(displayValuesRef.current)
-    },[])
-
-    const [displayValues, setDisplayValues] = useState<GenericObject>({})
 
     // display error flags
     const displayErrorsRef = useRef<GenericObject>(
@@ -353,14 +306,6 @@ const Options = ({
         },
     }
 
-    useEffect(()=>{
-
-        if (optionsState == 'setup') {
-            setOptionsState('ready')
-        }
-
-    }, [optionsState])
-
     // scroller function switch settings
     const functionSettingsRef = useRef<FunctionSettings>({
         goto:false,
@@ -387,13 +332,11 @@ const Options = ({
             enablerValue?
             enablerID:
             null
-        setOperationFunction(opfunc)
+        // setOperationFunction(opfunc)
     }
 
     // render
-    return (optionsState == 'setup')?
-        null:
-        (<Box> <VStack align = 'start' alignItems = 'stretch'>
+    return (<Box> <VStack align = 'start' alignItems = 'stretch'>
 
         <FormControl mb = {3}>
 
@@ -457,7 +400,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.cellSizes.cellHeight} 
+                                value = {displayValues.cellHeight} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.cellHeight}
                             >
@@ -467,7 +410,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.cellSizes.cellWidth} 
+                                value = {displayValues.cellWidth} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.cellWidth}
                             >
@@ -496,7 +439,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.minCellSizes.minCellHeight} 
+                                value = {displayValues.minCellHeight} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.minCellHeight}
                             >
@@ -506,7 +449,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.minCellSizes.minCellWidth} 
+                                value = {displayValues.minCellWidth} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.minCellWidth}
                             >
@@ -533,7 +476,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.paddingAndGap.padding} 
+                                value = {displayValues.padding} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.padding}
                             >
@@ -543,7 +486,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.paddingAndGap.gap} 
+                                value = {displayValues.gap} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.gap}
                             >
@@ -593,7 +536,7 @@ const Options = ({
                         <FormLabel size = 'sm'>Cache settings</FormLabel>
                         <Stack direction = {['column','row','row']}>
                         <Select 
-                            value = {displayValues.cacheSettings.cache} 
+                            value = {displayValues.cache} 
                             flexGrow = {.8} 
                             size = 'sm'
                             onChange = {onChangeFuncs.cache}
@@ -605,7 +548,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.cacheSettings.cacheMax} 
+                                value = {displayValues.cacheMax} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.cacheMax}
                             >
@@ -654,7 +597,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {displayValues.callbackSettings.referenceIndexCallback} 
+                            isChecked = {callbackSettings.referenceIndexCallback} 
                             size = 'sm'
                             id = 'referenceIndexCallback'
                             onChange = {onChangeFuncs.callBackSettings}
@@ -668,7 +611,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {displayValues.callbackSettings.preloadIndexCallback} 
+                            isChecked = {callbackSettings.preloadIndexCallback} 
                             size = 'sm'
                             id = 'preloadIndexCallback'
                             onChange = {onChangeFuncs.callBackSettings}
@@ -682,7 +625,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {displayValues.callbackSettings.itemExceptionCallback} 
+                            isChecked = {callbackSettings.itemExceptionCallback} 
                             size = 'sm'
                             id = 'itemExceptionCallback'
                             onChange = {onChangeFuncs.callBackSettings}
@@ -696,7 +639,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {displayValues.callbackSettings.repositioningFlagCallback} 
+                            isChecked = {callbackSettings.repositioningFlagCallback} 
                             size = 'sm'
                             id = 'repositioningFlagCallback'
                             onChange = {onChangeFuncs.callBackSettings}
@@ -711,7 +654,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {displayValues.callbackSettings.repositioningIndexCallback} 
+                            isChecked = {callbackSettings.repositioningIndexCallback} 
                             size = 'sm'
                             id = 'repositioningIndexCallback'
                             onChange = {onChangeFuncs.callBackSettings}
@@ -725,7 +668,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {displayValues.callbackSettings.changeListsizeCallback} 
+                            isChecked = {callbackSettings.changeListsizeCallback} 
                             size = 'sm'
                             id = 'changeListsizeCallback'
                             onChange = {onChangeFuncs.callBackSettings}
@@ -739,7 +682,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {displayValues.callbackSettings.deleteListCallback} 
+                            isChecked = {callbackSettings.deleteListCallback} 
                             size = 'sm'
                             id = 'deleteListCallback'
                             onChange = {onChangeFuncs.callBackSettings}
@@ -831,7 +774,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.gotoIndex} 
+                                    value = {functionProperties.gotoIndex} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.gotoIndex}
                                 >
@@ -864,7 +807,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.listsize} 
+                                    value = {functionProperties.listsize} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.listsize}
                                 >
@@ -914,7 +857,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.insertIndexes.from} 
+                                value = {functionProperties.insertFrom} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.insertFrom}
                             >
@@ -924,7 +867,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.insertIndexes.range} 
+                                value = {functionProperties.insertRange} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.insertRange}
                             >
@@ -962,7 +905,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.removeIndexes.from} 
+                                value = {functionProperties.removeFrom} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.removeFrom}
                             >
@@ -972,7 +915,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.removeIndexes.range} 
+                                value = {functionProperties.removeRange} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.removeRange}
                             >
@@ -1010,7 +953,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.moveIndexes.from} 
+                                value = {functionProperties.moveFrom} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveFrom}
                             >
@@ -1020,7 +963,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.moveIndexes.range} 
+                                value = {functionProperties.moveRange} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveRange}
                             >
@@ -1031,7 +974,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.moveIndexes.to} 
+                                value = {functionProperties.moveTo} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveTo}
                             >
