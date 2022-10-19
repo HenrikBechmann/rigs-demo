@@ -34,7 +34,8 @@ import {
 import Explanations from './Explanations'
 import Options from './Options'
 import Scroller from './Scroller'
-import { defaultProperties } from './demodata'
+
+import { defaultProperties, callbackSettings } from './demodata'
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
 
   const displayPropertiesRef = useRef(defaultProperties)
   const contentTypeRef = useRef('simple')
+  const callbackSettingsRef = useRef(callbackSettings)
 
   return (
     <ChakraProvider>
@@ -89,7 +91,11 @@ function App() {
         <DrawerHeader borderBottom = '1px'>Scroller Options</DrawerHeader>
 
         <DrawerBody>
-          <Options displayPropertiesRef = {displayPropertiesRef} contentTypeRef = {contentTypeRef}/>
+          <Options 
+            displayPropertiesRef = {displayPropertiesRef} 
+            contentTypeRef = {contentTypeRef}
+            callbackSettingsRef = {callbackSettingsRef}
+          />
         </DrawerBody>
 
         <DrawerFooter justifyContent = 'start' borderTop = '1px'>

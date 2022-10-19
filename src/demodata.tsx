@@ -19,7 +19,7 @@ const getGenericItem = (index:number) => {
 
 }
 
-const getGenericItemPromises = (index:number) => {
+const getGenericItemPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
         setTimeout(()=> {
@@ -28,13 +28,6 @@ const getGenericItemPromises = (index:number) => {
 
         },400 + (Math.random() * 2000))
     })
-
-     // return <GenericItem index = {index} image = {'https://loremflickr.com/200/300?random='+index}/>
-     // if ((index == 130) || (index == 145)) console.log('getGenericItem returning index', index)
-     // if (index == 30) return Promise.reject(new Error('not found'))
-     // if (index == 40) return 5
-     // if (index == 45) return null
-     // return <GenericItem index = {index} />
 
 }
 
@@ -49,7 +42,7 @@ const getNestedItem = (index:number) => {
 
 }
 
-const getNestedItemPromises = (index:number) => {
+const getNestedItemPromise = (index:number) => {
 
     return <NestedBox 
         index = {index} 
@@ -66,7 +59,7 @@ const getVariableItem = (index:number) => {
 
 }
 
-const getVariableItemPromises = (index:number) => {
+const getVariableItemPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
         setTimeout(()=> {
@@ -112,7 +105,7 @@ export const defaultProperties = {
 
         startingIndex:0,
         estimatedListSize:200,
-        getItem:getGenericItemPromises,
+        getItem:getGenericItemPromise,
     },
     nested: {
         childorientation:'horizontal',
@@ -140,7 +133,7 @@ export const defaultProperties = {
 
         startingIndex:0,
         estimatedListSize:400,
-        getItem:getNestedItemPromises,
+        getItem:getNestedItemPromise,
     },
     variable: {
         orientation:'vertical',
@@ -155,7 +148,7 @@ export const defaultProperties = {
         cacheMax:200,
 
         startingIndex:0,
-        estimatedListSize:10,
+        estimatedListSize:200,
         getItem:getVariableItem,
     },
     variablepromises: {
@@ -171,8 +164,8 @@ export const defaultProperties = {
         cacheMax:200,
 
         startingIndex:50,
-        estimatedListSize:10,
-        getItem:getVariableItemPromises,
+        estimatedListSize:200,
+        getItem:getVariableItemPromise,
     },
     variabledynamic: {
         orientation:'vertical',
@@ -185,73 +178,83 @@ export const defaultProperties = {
         runwaySize:5,
         cache:'cradle',
         cacheMax:200,
-        
+
         startingIndex:0,
-        estimatedListSize:10,
+        estimatedListSize:200,
         getItem:getVariableItemDynamic,
     },
 }
 
-let doitemstreaming = false
-let doindexstreaming = false
-let dopreloadstreaming = false
-let dolistsizestreaming = false
-let dodeletestreaming = false
-let dorepositioningstreaming = false
-let dorepositioningflagstreaming = false
+
+export const callbackSettings = {
+    referenceIndexCallback:false,
+    repositioningIndexCallback:false,
+    preloadIndexCallback:false,
+    itemExceptionCallback:false,
+    changeListsizeCallback:false,
+    deleteListCallback:false,
+    repositioningFlagCallback:false,
+}
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
-    doindexstreaming && console.log('referenceIndexCallback: index, location, cradleState',
+    callbackSettings.referenceIndexCallback && console.log('referenceIndexCallback: index, location, cradleState',
         index, location, cradleState)
    
 }
 const preloadIndexCallback = (index:number) => {
     
-    dopreloadstreaming && console.log('preloadIndexCallback: index', index)
+    callbackSettings.preloadIndexCallback && console.log('preloadIndexCallback: index', index)
 
 }
 const deleteListCallback = (reason:string, deleteList:number[]) => {
     
-    dodeletestreaming && console.log('deleteListCallback: reason, deleteList',reason, deleteList)
+    callbackSettings.deleteListCallback && console.log('deleteListCallback: reason, deleteList',reason, deleteList)
 
 }
 const repositioningIndexCallback = (index:number) => {
     
-    dorepositioningstreaming && console.log('repositioningIndexCallback: index',index)
+    callbackSettings.repositioningIndexCallback && console.log('repositioningIndexCallback: index',index)
 
 }
 
 const repositioningFlagCallback = (flag:boolean) => {
     
-    dorepositioningflagstreaming && console.log('repositioningFlagCallback: index',flag)
+    callbackSettings.repositioningFlagCallback && console.log('repositioningFlagCallback: index',flag)
 
 }
 
 const changeListsizeCallback = (newlistsize:number) => {
     
-    dolistsizestreaming && console.log('changeListsizeCallback: newlistsize', newlistsize)
+    callbackSettings.changeListsizeCallback && console.log('changeListsizeCallback: newlistsize', newlistsize)
 
 }
 
 const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
     
-    doitemstreaming && console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
+    callbackSettings.itemExceptionCallback && console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
         index, itemID, returnvalue, location, error)
 
 }
 
 // -----------------------------[ generic items ]------------------------
 
-const genericstyle:React.CSSProperties = {
+const genericstyleinner:React.CSSProperties = {
     position:'absolute',
     top:0,
     left:0,
     padding:'3px',
-    opacity:.5,
-    borderRadius:'8px',
     backgroundColor:'white', 
     margin:'3px'
+}
+
+const genericstyleouter:React.CSSProperties = {
+    position:'relative',
+    height:'100%', 
+    width:'100%',
+    backgroundColor:'white',
+    border: '1px solid black',
+    borderRadius:'8px',
 }
 
 const GenericItem = (props:any) => {
@@ -259,8 +262,8 @@ const GenericItem = (props:any) => {
     // console.log('loading GenericItem', props)
     const originalindexRef = useRef(props.index)
 
-    return <div style = {{position:'relative',height:'100%', width:'100%',backgroundColor:'white'}}>
-        <div style = {genericstyle}>
+    return <div style = {genericstyleouter}>
+        <div style = {genericstyleinner}>
             {originalindexRef.current + 1}
         </div>
     </div>
@@ -469,12 +472,6 @@ const styles = {
 }
 
 const getListItem = (index:any) => {
-
-    // let promise = new Promise((resolve, reject) => {
-    //     resolve(<div style = { styles.item as React.CSSProperties }> Item {index + 1} of this list </div>)
-    // })
-
-    // return promise
 
     return <div style = { styles.item as React.CSSProperties }> Item {index + 1} of this list </div>
 
