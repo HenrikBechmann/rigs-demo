@@ -496,9 +496,9 @@ const Options = ({
                         Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
                     </Text>
 
-                    <FormControl>
-                        <FormLabel size = 'sm'>Padding and gaps</FormLabel>
-                        <Stack direction = {['column','row','row']}>
+                    <Heading size = 'xs'>Padding and gaps</Heading>
+                    <Stack direction = {['column','row','row']}>
+                    <FormControl isInvalid = {isInvalid.padding} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
                             <NumberInput 
@@ -509,6 +509,11 @@ const Options = ({
                                 <NumberInputField border = '2px' />
                             </NumberInput>
                         </InputGroup>
+                        <FormErrorMessage>
+                            {errorMessages.padding}
+                        </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid = {isInvalid.gap} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
                             <NumberInput 
@@ -519,22 +524,17 @@ const Options = ({
                                 <NumberInputField border = '2px' />
                             </NumberInput>
                         </InputGroup>
-                        </Stack>
-                        {isInvalid.padding &&
-                            <FormErrorMessage>
-                                {errorMessages.padding}
-                            </FormErrorMessage>}
-                        {isInvalid.gap &&
-                            <FormErrorMessage>
-                                {errorMessages.gap}
-                            </FormErrorMessage>}
-                        <FormHelperText>
-                            Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
-                            the space between cells.
-                        </FormHelperText>
+                        <FormErrorMessage>
+                            {errorMessages.gap}
+                        </FormErrorMessage>
                     </FormControl>
+                    </Stack>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
+                        the space between cells.
+                    </Text>
 
-                    <FormControl>
+                    <FormControl isInvalid = {isInvalid.runwaySize} >
                         <FormLabel size = 'sm'>Runway size</FormLabel>
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
@@ -548,19 +548,18 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </HStack>
-                        {isInvalid.runwaySize &&
-                            <FormErrorMessage>
-                                {errorMessages.runwaySize}
-                            </FormErrorMessage>}
+                        <FormErrorMessage>
+                            {errorMessages.runwaySize}
+                        </FormErrorMessage>
                         <FormHelperText>
                             Integer. This is the number of rows out of view at the head and tail of lists. 
                             Minimum 1, default 1.
                         </FormHelperText>
                     </FormControl>
 
+                    <Heading size = 'xs'>Cache settings</Heading>
+                    <Stack direction = {['column','row','row']}>
                     <FormControl>
-                        <FormLabel size = 'sm'>Cache settings</FormLabel>
-                        <Stack direction = {['column','row','row']}>
                         <Select 
                             value = {displayValues.cache} 
                             flexGrow = {.8} 
@@ -571,6 +570,8 @@ const Options = ({
                             <option value="keepload">keep load</option>
                             <option value="preload">preload</option>
                         </Select>
+                    </FormControl>
+                    <FormControl isInvalid = {isInvalid.cacheMax}>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
                             <NumberInput 
@@ -581,21 +582,16 @@ const Options = ({
                                 <NumberInputField border = '2px' />
                             </NumberInput>
                         </InputGroup>
-                        </Stack>
-                        {isInvalid.cache &&
-                            <FormErrorMessage>
-                                {errorMessages.cache}
-                            </FormErrorMessage>}
-                        {isInvalid.cacheMax &&
-                            <FormErrorMessage>
-                                {errorMessages.cacheMax}
-                            </FormErrorMessage>}
-                        <FormHelperText>
-                            <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
-                            Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
-                            or zero is ignored.
-                        </FormHelperText>
+                        <FormErrorMessage>
+                            {errorMessages.cacheMax}
+                        </FormErrorMessage>
                     </FormControl>
+                    </Stack>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
+                        Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
+                        or zero is ignored.
+                    </Text>
 
                 </VStack></AccordionPanel>
 
@@ -794,9 +790,9 @@ const Options = ({
 
                     <VStack>
 
-                    <FormControl>
-                        <FormLabel size = 'sm'>Go to</FormLabel>
-                        <HStack>
+                    <Heading size = 'xs'>Go to</Heading>
+                    <HStack>
+                        <FormControl isInvalid = {isInvalid.gotoIndex} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
                                 <NumberInput 
@@ -807,29 +803,30 @@ const Options = ({
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
                             </InputGroup>
-                        </HStack>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='goto' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
-                            <Switch 
-                                isChecked = {functionSettingsRef.current.goto} 
-                                onChange = {onChangeEnabler} 
-                                id='goto' 
-                            />
-                        </InputGroup>
-                        {isInvalid.gotoIndex &&
                             <FormErrorMessage>
                                 {errorMessages.gotoIndex}
-                            </FormErrorMessage>}
-                        <FormHelperText>
-                            Integer. Go to the specified index number in the virtual list.
-                        </FormHelperText>
-                    </FormControl>
+                            </FormErrorMessage>
+                        </FormControl>
+                        <FormControl>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                                <FormLabel htmlFor='goto' fontSize = 'sm'>
+                                    Enable
+                                </FormLabel>
+                                <Switch 
+                                    isChecked = {functionSettingsRef.current.goto} 
+                                    onChange = {onChangeEnabler} 
+                                    id='goto' 
+                                />
+                            </InputGroup>
+                        </FormControl>
+                    </HStack>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. Go to the specified index number in the virtual list.
+                    </Text>
 
-                    <FormControl>
-                        <FormLabel size = 'sm'>Change virtual list size</FormLabel>
-                        <HStack>
+                    <Heading size = 'xs'>Change virtual list size</Heading>
+                    <HStack>
+                        <FormControl isInvalid = {isInvalid.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
                                 <NumberInput 
@@ -840,25 +837,26 @@ const Options = ({
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
                             </InputGroup>
-                        </HStack>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='listsize' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
-                            <Switch 
-                                isChecked = {functionSettingsRef.current.listsize} 
-                                onChange = {onChangeEnabler} 
-                                id='listsize' 
-                            />
-                        </InputGroup>
-                        {isInvalid.listsize &&
                             <FormErrorMessage>
                                 {errorMessages.listsize}
-                            </FormErrorMessage>}
-                        <FormHelperText>
-                            Integer. Change the size of the scroller's virtual list.
-                        </FormHelperText>
-                    </FormControl>
+                            </FormErrorMessage>
+                        </FormControl>
+                        <FormControl>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                                <FormLabel htmlFor='listsize' fontSize = 'sm'>
+                                    Enable
+                                </FormLabel>
+                                <Switch 
+                                    isChecked = {functionSettingsRef.current.listsize} 
+                                    onChange = {onChangeEnabler} 
+                                    id='listsize' 
+                                />
+                            </InputGroup>
+                        </FormControl>
+                    </HStack>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. Change the size of the scroller's virtual list.
+                    </Text>
 
                     <FormControl>
                         <FormLabel size = 'sm'>Reload the cradle</FormLabel>
@@ -877,30 +875,40 @@ const Options = ({
                         </FormHelperText>
                     </FormControl>
 
+                    <Heading size = 'xs'>Insert indexes</Heading>
+                    <Stack direction = {['column','row','row']}>
+                        <FormControl isInvalid = {isInvalid.insertFrom} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>from:</FormLabel>
+                                <NumberInput 
+                                    value = {functionProperties.insertFrom} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.insertFrom}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.insertFrom}
+                            </FormErrorMessage>
+                        </FormControl>
+                        <FormControl isInvalid = {isInvalid.insertRange} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>range:</FormLabel>
+                                <NumberInput 
+                                    value = {functionProperties.insertRange} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.insertRange}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.insertRange}
+                            </FormErrorMessage>
+                        </FormControl>
+                    </Stack>
                     <FormControl>
-                        <FormLabel size = 'sm'>Insert indexes</FormLabel>
-                        <Stack direction = {['column','row','row']}>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput 
-                                value = {functionProperties.insertFrom} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.insertFrom}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput 
-                                value = {functionProperties.insertRange} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.insertRange}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='insert' fontSize = 'sm'>
                                 Enable
@@ -911,44 +919,46 @@ const Options = ({
                                 id='insert' 
                             />
                         </InputGroup>
-                        {isInvalid.insertFrom &&
-                            <FormErrorMessage>
-                                {errorMessages.insertFrom}
-                            </FormErrorMessage>}
-                        {isInvalid.insertRange &&
-                            <FormErrorMessage>
-                                {errorMessages.insertRange}
-                            </FormErrorMessage>}
-                        <FormHelperText>
-                            Integers. Insert one or more indexes. 'range' is optional, and must be equal to or 
-                            above the 'from' value. The size of the virtual list is increased accordingly.
-                        </FormHelperText> 
                     </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integers. Insert one or more indexes. 'range' is optional, and must be equal to or 
+                        above the 'from' value. The size of the virtual list is increased accordingly.
+                    </Text>
 
+                    <Heading size = 'xs'>Remove indexes</Heading>
+                    <Stack direction = {['column','row','row']}>
+                        <FormControl isInvalid ={isInvalid.removeFrom} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>from:</FormLabel>
+                                <NumberInput 
+                                    value = {functionProperties.removeFrom} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.removeFrom}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.removeFrom}
+                            </FormErrorMessage>
+                        </FormControl>
+                        <FormControl isInvalid = {isInvalid.removeRange} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>range:</FormLabel>
+                                <NumberInput 
+                                    value = {functionProperties.removeRange} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.removeRange}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.removeRange}
+                            </FormErrorMessage>
+                        </FormControl>
+                    </Stack>
                     <FormControl>
-                        <FormLabel size = 'sm'>Remove indexes</FormLabel>
-                        <Stack direction = {['column','row','row']}>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>from:</FormLabel>
-                            <NumberInput 
-                                value = {functionProperties.removeFrom} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.removeFrom}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>range:</FormLabel>
-                            <NumberInput 
-                                value = {functionProperties.removeRange} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.removeRange}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        </Stack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='remove' fontSize = 'sm'>
                                 Enable
@@ -959,23 +969,15 @@ const Options = ({
                                 id='remove' 
                             />
                         </InputGroup>
-                        {isInvalid.removeFrom &&
-                            <FormErrorMessage>
-                                {errorMessages.removeFrom}
-                            </FormErrorMessage>}
-                        {isInvalid.removeRange &&
-                            <FormErrorMessage>
-                                {errorMessages.removeRange}
-                            </FormErrorMessage>}
-                        <FormHelperText>
-                            Integers. Remove one or more indexes. 'range' is optional, and must be equal to or 
-                            above the 'from' value. The size of the virtual list is decreased accordingly.
-                        </FormHelperText> 
                     </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integers. Remove one or more indexes. 'range' is optional, and must be equal to or 
+                        above the 'from' value. The size of the virtual list is decreased accordingly.
+                    </Text>
 
-                    <FormControl>
-                        <FormLabel size = 'sm'>Move indexes</FormLabel>
-                        <Stack direction = {['column','row','row']} mb = {2}>
+                    <Heading size = 'xs'>Move indexes</Heading>
+                    <Stack direction = {['column','row','row']} mb = {2}>
+                    <FormControl isInvalid = {isInvalid.moveFrom} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
                             <NumberInput 
@@ -986,6 +988,11 @@ const Options = ({
                                 <NumberInputField border = '2px' />
                             </NumberInput>
                         </InputGroup>
+                        <FormErrorMessage>
+                            {errorMessages.moveFrom}
+                        </FormErrorMessage>
+                    </FormControl>
+                    <FormControl isInvalid = {isInvalid.moveRange} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
                             <NumberInput 
@@ -996,7 +1003,12 @@ const Options = ({
                                 <NumberInputField border = '2px' />
                             </NumberInput>
                         </InputGroup>
-                        </Stack>
+                        <FormErrorMessage>
+                            {errorMessages.moveRange}
+                        </FormErrorMessage>
+                    </FormControl>
+                    </Stack>
+                    <FormControl isInvalid = {isInvalid.moveTo} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
                             <NumberInput 
@@ -1007,6 +1019,11 @@ const Options = ({
                                 <NumberInputField border = '2px' />
                             </NumberInput>
                         </InputGroup>
+                        <FormErrorMessage>
+                            {errorMessages.moveTo}
+                        </FormErrorMessage>
+                    </FormControl>
+                    <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='move' fontSize = 'sm'>
                                 Enable
@@ -1017,23 +1034,11 @@ const Options = ({
                                 id='move' 
                             />
                         </InputGroup>
-                        {isInvalid.moveFrom &&
-                            <FormErrorMessage>
-                                {errorMessages.moveFrom}
-                            </FormErrorMessage>}
-                        {isInvalid.moveRange &&
-                            <FormErrorMessage>
-                                {errorMessages.moveRange}
-                            </FormErrorMessage>}
-                        {isInvalid.moveTo &&
-                            <FormErrorMessage>
-                                {errorMessages.moveTo}
-                            </FormErrorMessage>}
-                        <FormHelperText>
-                            Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
-                            above the 'from' value.
-                        </FormHelperText> 
                     </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
+                        above the 'from' value.
+                    </Text> 
 
                     <FormControl>
                         <FormLabel size = 'sm'>Remap indexes</FormLabel>
@@ -1056,10 +1061,6 @@ const Options = ({
                                 id='remap' 
                             />
                         </InputGroup>
-                        {isInvalid.remapDemo &&
-                            <FormErrorMessage>
-                                {errorMessages.remapDemo}
-                            </FormErrorMessage>}
                         <FormHelperText>
                             The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
                             items to the newly assigned indexes. We've included a few random tests that apply to 
