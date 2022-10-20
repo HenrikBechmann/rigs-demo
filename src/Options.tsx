@@ -71,14 +71,12 @@ type MoveIndexes = {
 
 const exists = (value:string) => {
     let test = !!value
-    // console.log('exists',test, typeof value)
     return test
 }
 
 const minValue = (value:any, minValue:number) => {
     const testvalue = Number(value)
     const test = (testvalue != NaN && testvalue >=minValue )
-    // console.log('minValue', testvalue, typeof testvalue, test, minValue, typeof minValue)
     return test
 }
 
@@ -103,7 +101,7 @@ const Options = ({
     const [optionsState, setOptionsState] = useState('setup')
 
     // display error flags
-    const displayErrorsRef = useRef<GenericObject>(
+    const invalidFlagsRef = useRef<GenericObject>(
         {
             contentType:false,
             orientation:false,
@@ -129,7 +127,7 @@ const Options = ({
         }
     )
 
-    const invalidFlags = displayErrorsRef.current
+    const invalidFlags = invalidFlagsRef.current
 
     // displan error messages
     const errorMessagesRef = useRef<GenericObject>(
@@ -174,8 +172,7 @@ const Options = ({
         },
         cellHeight:(value:any) => {
             const isInValid = (!exists(value) || !minValue(value, 25))
-            displayErrorsRef.current.cellHeight = isInValid
-            // console.log('cellHeight isValid', isValid, displayErrorsRef.current)
+            invalidFlagsRef.current.cellHeight = isInValid
             return isInValid
         },
         cellWidth:(value:any) => {
