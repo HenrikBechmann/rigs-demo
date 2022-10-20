@@ -34,8 +34,8 @@ type CellSizes = {
 }
 
 type MinCellSizes = {
-    minCellHeight:number | undefined,
-    minCellWidth:number | undefined
+    cellMinHeight:number | undefined,
+    cellMinWidth:number | undefined
 }
 
 type PaddingAndGap = {
@@ -107,8 +107,8 @@ const Options = ({
             orientation:false,
             cellHeight:false,
             cellWidth:false,
-            minCellHeight:false,
-            minCellWidth:false,
+            cellMinHeight:false,
+            cellMinWidth:false,
             padding:false,
             gap:false,
             runwaySize:false,
@@ -139,8 +139,8 @@ const Options = ({
             cache:'',
             cellHeight:'cellHeight is required with minimum of 25',
             cellWidth:'cellWidth is required with minimum 25',
-            minCellHeight:'minimum 25',
-            minCellWidth:'minimum 25',
+            cellMinHeight:'minimum 25',
+            cellMinWidth:'minimum 25',
             padding:'blank, or greater than or equal to 0',
             gap:'blank, or greater than or equal to 0',
             runwaySize:'blank, or minimum 1',
@@ -179,11 +179,11 @@ const Options = ({
             let isInvalid = false
             return isInvalid
         },
-        minCellHeight:(value:any) => {
+        cellMinHeight:(value:any) => {
             let isInvalid = false
             return isInvalid
         },
-        minCellWidth:(value:any) => {
+        cellMinWidth:(value:any) => {
             let isInvalid = false
             return isInvalid
         },
@@ -251,6 +251,7 @@ const Options = ({
 
     // display on change functions
     const onChangeFuncs:GenericObject = {
+        // enable/disable min/max
         contentType:(event:React.ChangeEvent) => {
             const target = event.target as HTMLSelectElement
             const value = target.value
@@ -270,29 +271,61 @@ const Options = ({
             }
             setDisplayValues({...displayValues})
         },
-        cellWidth:(event:React.ChangeEvent) => {
-            
+        cellWidth:(input:string) => {
+            displayValues.cellWidth = input
+            if (!isInvalidTests.cellWidth(input)) {
+                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            }
+            setDisplayValues({...displayValues})
         },
-        minCellHeight:(event:React.ChangeEvent) => {
-            
+        cellMinHeight:(input:string) => {
+            displayValues.cellMinHeight = input
+            if (!isInvalidTests.cellMinHeight(input)) {
+                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            }
+            setDisplayValues({...displayValues})
         },
-        minCellWidth:(event:React.ChangeEvent) => {
-            
+        cellMinWidth:(input:string) => {
+            displayValues.cellMinWidth = input
+            if (!isInvalidTests.cellMinWidth(input)) {
+                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            }
+            setDisplayValues({...displayValues})
         },
-        padding:(event:React.ChangeEvent) => {
-            
+        padding:(input:string) => {
+            displayValues.padding = input
+            if (!isInvalidTests.padding(input)) {
+                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            }
+            setDisplayValues({...displayValues})
         },
-        gap:(event:React.ChangeEvent) => {
-            
+        gap:(input:string) => {
+            displayValues.gap = input
+            if (!isInvalidTests.gap(input)) {
+                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            }
+            setDisplayValues({...displayValues})
         },
-        runwaySize:(event:React.ChangeEvent) => {
-            
+        runwaySize:(input:string) => {
+            displayValues.runwaySize = input
+            if (!isInvalidTests.runwaySize(input)) {
+                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            }
+            setDisplayValues({...displayValues})
         },
         cache:(event:React.ChangeEvent) => {
-            
+            const target = event.target as HTMLSelectElement
+            const value = target.value
+            displayValues.cache = value
+            allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            setDisplayValues({...displayValues})
         },
-        cacheMax:(event:React.ChangeEvent) => {
-            
+        cacheMax:(input:string) => {
+            displayValues.cacheMax = input
+            if (!isInvalidTests.cacheMax(input)) {
+                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            }
+            setDisplayValues({...displayValues})
         },
         callbackSettings:(event:React.ChangeEvent) => {
             
@@ -458,34 +491,34 @@ const Options = ({
 
                     <Heading size = 'xs'>Minimum cell sizes</Heading>
                     <Stack direction = {['column','row','row']}>
-                        <FormControl isInvalid = {invalidFlags.minCellHeight}>
+                        <FormControl isInvalid = {invalidFlags.cellMinHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.minCellHeight} 
+                                    value = {displayValues.cellMinHeight} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.minCellHeight}
+                                    onChange = {onChangeFuncs.cellMinHeight}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
                             </InputGroup>
                             <FormErrorMessage>
-                                {errorMessages.minCellHeight}
+                                {errorMessages.cellMinHeight}
                             </FormErrorMessage>
                         </FormControl>
-                        <FormControl isInvalid = {invalidFlags.minCellWidth} >
+                        <FormControl isInvalid = {invalidFlags.cellMinWidth} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.minCellWidth} 
+                                    value = {displayValues.cellMinWidth} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.minCellWidth}
+                                    onChange = {onChangeFuncs.cellMinWidth}
                                 >
                                         <NumberInputField border = '2px' />
                                     </NumberInput>
                             </InputGroup>
                             <FormErrorMessage>
-                                {errorMessages.minCellWidth}
+                                {errorMessages.cellMinWidth}
                             </FormErrorMessage>
                         </FormControl>
                     </Stack>
