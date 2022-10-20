@@ -328,37 +328,81 @@ const Options = ({
             setDisplayValues({...displayValues})
         },
         callbackSettings:(event:React.ChangeEvent) => {
-            
+            const target = event.target as HTMLInputElement
+            const callbackID = target.id
+            const callbackValue = target.checked
+            const callbackSettings = callbackSettingsRef.current
+            callbackSettings[callbackID] = callbackValue
+            setCallbackSettings({...callbackSettings})            
         },
-        gotoIndex:(event:React.ChangeEvent) => {
-            
+        gotoIndex:(input:string) => {
+            functionProperties.gotoIndex = input
+            if (!isInvalidTests.gotoIndex(input)) {
+                functionPropertiesRef.current.gotoIndex = input
+            }
+            setFunctionProperties({...functionProperties})
         },
-        listsize:(event:React.ChangeEvent) => {
-            
+        listsize:(input:string) => {
+            functionProperties.listsize = input
+            if (!isInvalidTests.listsize(input)) {
+                functionPropertiesRef.current.listsize = input
+            }
+            setFunctionProperties({...functionProperties})
         },
-        insertFrom:(event:React.ChangeEvent) => {
-            
+        insertFrom:(input:string) => {
+            functionProperties.insertFrom = input
+            if (!isInvalidTests.insertFrom(input)) {
+                functionPropertiesRef.current.insertFrom = input
+            }
+            setFunctionProperties({...functionProperties})
         },
-        insertRange:(event:React.ChangeEvent) => {
-            
+        insertRange:(input:string) => {
+            functionProperties.insertRange = input
+            if (!isInvalidTests.insertRange(input)) {
+                functionPropertiesRef.current.insertRange = input
+            }
+            setFunctionProperties({...functionProperties})
         },
-        removeFrom:(event:React.ChangeEvent) => {
-            
+        removeFrom:(input:string) => {
+            functionProperties.removeFrom = input
+            if (!isInvalidTests.removeFrom(input)) {
+                functionPropertiesRef.current.removeFrom = input
+            }
+            setFunctionProperties({...functionProperties})
         },
-        removeRange:(event:React.ChangeEvent) => {
-            
+        removeRange:(input:string) => {
+            functionProperties.removeRange = input
+            if (!isInvalidTests.removeRange(input)) {
+                functionPropertiesRef.current.removeRange = input
+            }
+            setFunctionProperties({...functionProperties})
         },
-        moveFrom:(event:React.ChangeEvent) => {
-            
+        moveFrom:(input:string) => {
+            functionProperties.moveFrom = input
+            if (!isInvalidTests.moveFrom(input)) {
+                functionPropertiesRef.current.moveFrom = input
+            }
+            setFunctionProperties({...functionProperties})
         },
-        moveRange:(event:React.ChangeEvent) => {
-            
+        moveRange:(input:string) => {
+            functionProperties.moveRange = input
+            if (!isInvalidTests.moveRange(input)) {
+                functionPropertiesRef.current.moveRange = input
+            }
+            setFunctionProperties({...functionProperties})
         },
-        moveTo:(event:React.ChangeEvent) => {
-            
+        moveTo:(input:string) => {
+            functionProperties.moveTo = input
+            if (!isInvalidTests.moveTo(input)) {
+                functionPropertiesRef.current.moveTo = input
+            }
+            setFunctionProperties({...functionProperties})
         },
         remapDemo:(event:React.ChangeEvent) => {
-            
+            const target = event.target as HTMLSelectElement
+            const value = target.value
+            functionPropertiesRef.current.remapDemo = value
+            setFunctionProperties({...functionProperties})
         },
     }
 
@@ -653,7 +697,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'referenceIndexCallback'
-                            onChange = {onChangeFuncs.callBackSettings}
+                            onChange = {onChangeFuncs.callbackSettings}
                         >
                             Reference index
                         </Checkbox>
@@ -668,7 +712,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'preloadIndexCallback'
-                            onChange = {onChangeFuncs.callBackSettings}
+                            onChange = {onChangeFuncs.callbackSettings}
                         >
                             Preload Index
                         </Checkbox>
@@ -683,7 +727,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'itemExceptionCallback'
-                            onChange = {onChangeFuncs.callBackSettings}
+                            onChange = {onChangeFuncs.callbackSettings}
                         >
                             Item Exceptions
                         </Checkbox>
@@ -698,7 +742,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningFlagCallback'
-                            onChange = {onChangeFuncs.callBackSettings}
+                            onChange = {onChangeFuncs.callbackSettings}
                         >
                             isRepositioning Notification
                         </Checkbox>
@@ -714,7 +758,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningIndexCallback'
-                            onChange = {onChangeFuncs.callBackSettings}
+                            onChange = {onChangeFuncs.callbackSettings}
                         >
                             Repositioning Index
                         </Checkbox>
@@ -729,7 +773,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'changeListsizeCallback'
-                            onChange = {onChangeFuncs.callBackSettings}
+                            onChange = {onChangeFuncs.callbackSettings}
                         >
                             Listsize change
                         </Checkbox>
@@ -744,7 +788,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'deleteListCallback'
-                            onChange = {onChangeFuncs.callBackSettings}
+                            onChange = {onChangeFuncs.callbackSettings}
                         >
                             Deleted List
                         </Checkbox>
