@@ -789,7 +789,7 @@ const Options = ({
                 </Heading>
 
                 <AccordionPanel pb={4}>
-                    <Text mb = {2}>
+                    <Text paddingBottom = {2} mb = {2} borderBottom = '1px'>
                         Perform these functions one at a time. Enable the function of choice, then hit the Apply
                         button. Most of these functions provide feedback in the browser console. The feedback can 
                         be used by apps.
