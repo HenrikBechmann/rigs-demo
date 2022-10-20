@@ -78,7 +78,7 @@ const getVariableItemDynamic = (index:number) => {
 
 }
 
-export const callbackSettings = {
+export const defaultCallbackSettings = {
     referenceIndexCallback:false,
     repositioningIndexCallback:false,
     preloadIndexCallback:false,
@@ -88,43 +88,55 @@ export const callbackSettings = {
     repositioningFlagCallback:false,
 }
 
+export const applyCallbackSettingsRef = {current:{
+
+    referenceIndexCallback:false,
+    repositioningIndexCallback:false,
+    preloadIndexCallback:false,
+    itemExceptionCallback:false,
+    changeListsizeCallback:false,
+    deleteListCallback:false,
+    repositioningFlagCallback:false,
+
+}}
+
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
-    callbackSettings.referenceIndexCallback && console.log('referenceIndexCallback: index, location, cradleState',
+    applyCallbackSettingsRef.current.referenceIndexCallback && console.log('referenceIndexCallback: index, location, cradleState',
         index, location, cradleState)
    
 }
 const preloadIndexCallback = (index:number) => {
     
-    callbackSettings.preloadIndexCallback && console.log('preloadIndexCallback: index', index)
+    applyCallbackSettingsRef.current.preloadIndexCallback && console.log('preloadIndexCallback: index', index)
 
 }
 const deleteListCallback = (reason:string, deleteList:number[]) => {
     
-    callbackSettings.deleteListCallback && console.log('deleteListCallback: reason, deleteList',reason, deleteList)
+    applyCallbackSettingsRef.current.deleteListCallback && console.log('deleteListCallback: reason, deleteList',reason, deleteList)
 
 }
 const repositioningIndexCallback = (index:number) => {
     
-    callbackSettings.repositioningIndexCallback && console.log('repositioningIndexCallback: index',index)
+    applyCallbackSettingsRef.current.repositioningIndexCallback && console.log('repositioningIndexCallback: index',index)
 
 }
 
 const repositioningFlagCallback = (flag:boolean) => {
     
-    callbackSettings.repositioningFlagCallback && console.log('repositioningFlagCallback: index',flag)
+    applyCallbackSettingsRef.current.repositioningFlagCallback && console.log('repositioningFlagCallback: index',flag)
 
 }
 
 const changeListsizeCallback = (newlistsize:number) => {
     
-    callbackSettings.changeListsizeCallback && console.log('changeListsizeCallback: newlistsize', newlistsize)
+    applyCallbackSettingsRef.current.changeListsizeCallback && console.log('changeListsizeCallback: newlistsize', newlistsize)
 
 }
 
 const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
     
-    callbackSettings.itemExceptionCallback && console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
+    applyCallbackSettingsRef.current.itemExceptionCallback && console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
         index, itemID, returnvalue, location, error)
 
 }
@@ -262,6 +274,18 @@ export const defaultProperties = {
         getItem:getVariableItemDynamic,
         callbacks,
     },
+}
+
+export const defaultFunctionProperties = {
+    gotoIndex:undefined,
+    listsize:undefined,
+    insertFrom:undefined,
+    insertRange:undefined,
+    removeFrom:undefined,
+    removeRange:undefined,
+    moveFrom:undefined,
+    moveRange:undefined,
+    moveTo:undefined,    
 }
 
 // -----------------------------[ generic items ]------------------------

@@ -23,7 +23,13 @@ import Explanations from './Explanations'
 import Options from './Options'
 import DemoScroller from './DemoScroller'
 
-import { defaultProperties, callbackSettings, functionsRef } from './demodata'
+import { 
+  defaultProperties, 
+  defaultCallbackSettings, 
+  applyCallbackSettingsRef as callbackSettingsRef, 
+  functionsRef, 
+  defaultFunctionProperties, 
+} from './demodata'
 
 function App() {
 
@@ -34,15 +40,21 @@ function App() {
   const explanationsButtonRef = React.useRef(null)
 
   // for modification by Options panel
-  const displayPropertiesRef = useRef(defaultProperties)
   const contentTypeRef = useRef('simple')
-  const callbackSettingsRef = useRef(callbackSettings)
-  const functionPropertiesRef = useRef<any>({})
-  const operatingFunctionRef = useRef<string>(null)
+  const operationFunctionRef = useRef<string>(null)
+
+  const allDisplayPropertiesRef = useRef({...defaultProperties})
+  const functionPropertiesRef = useRef<any>({...defaultFunctionProperties})
 
   // for application to Scroller
-  const [applyProperties, setApplyProperties] = useState(displayPropertiesRef.current)
+  const [applyProperties, setApplyProperties] = useState(allDisplayPropertiesRef.current)
   const [applyType, setApplyType] = useState(contentTypeRef.current)
+
+  useEffect(()=>{
+
+    // console.log(displayPropertiesRef,contentTypeRef,callbackSettingsRef,functionPropertiesRef, functionsRef)
+
+  },[])
 
   return (
     <ChakraProvider>
@@ -89,11 +101,13 @@ function App() {
         <DrawerBody>
 
           <Options 
-            displayPropertiesRef = { displayPropertiesRef } 
             contentTypeRef = { contentTypeRef }
+            operationFunctionRef = { operationFunctionRef }
+            // dynamic ref objects
+            allDisplayPropertiesRef = { allDisplayPropertiesRef } 
             callbackSettingsRef = { callbackSettingsRef }
             functionPropertiesRef = { functionPropertiesRef }
-            operatingFunctionRef = { operatingFunctionRef }
+            // static
             functionsRef = { functionsRef }
           />
 

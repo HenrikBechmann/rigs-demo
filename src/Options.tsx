@@ -71,22 +71,22 @@ type MoveIndexes = {
 
 // Options component
 const Options = ({
-    displayPropertiesRef, 
+    allDisplayPropertiesRef, 
     contentTypeRef, 
     callbackSettingsRef, 
-    operatingFunctionRef, 
+    operationFunctionRef, 
     functionPropertiesRef,
     functionsObject,
 }:any) => {
  
-    // const typePropertiesRef = useRef(displayPropertiesRef.current[contentTypeRef.current])
-    const [displayValues, setDisplayValues] = useState({...displayPropertiesRef.current[contentTypeRef.current]})
+    // simple values
     const [contentType, setContentType] = useState(contentTypeRef.current)
+    const [operationFunction, setOperationFunction] = useState(operationFunctionRef.current)
+    // objects. The local values will be used to return valid edits to the inherited values
+    const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentTypeRef.current]})
     const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
-    const [operatingFunction, setOperatingFunction] = useState(operatingFunctionRef.current)
     const [functionProperties, setFunctionProperties] = useState({...functionPropertiesRef.current})
 
-    // tested values
     const [optionsState, setOptionsState] = useState('setup')
 
     // display error flags
@@ -333,7 +333,7 @@ const Options = ({
             enablerValue?
             enablerID:
             null
-        // setOperationFunction(opfunc)
+        setOperationFunction(opfunc)
     }
 
     // render
