@@ -2,7 +2,6 @@
 /*
 
   TODO
-  - stack input fields for small screens
   - investigate flash of scroller on resize or refresh
   - loading of simple components very slow in chakra - seems to be delayed
     - touching the scroller while waiting resolves the wait
@@ -51,7 +50,7 @@ function App() {
   const functionPropertiesRef = useRef<any>({...defaultFunctionProperties})
 
   // for application to Scroller
-  const [applyProperties, setApplyProperties] = useState(allDisplayPropertiesRef.current)
+  const [applyProperties, setApplyProperties] = useState({...allDisplayPropertiesRef.current})
   const [applyType, setApplyType] = useState(contentTypeRef.current)
 
   useEffect(()=>{

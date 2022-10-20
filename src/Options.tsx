@@ -3,7 +3,6 @@
 
     - modify enabler onChange calls to verify related data, and turn off errors for unrelated data
     - border color to signify changed value, and error value
-    - orientation changes before apply is called, should wait until after
 
 */
 
