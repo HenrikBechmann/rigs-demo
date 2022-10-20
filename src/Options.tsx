@@ -1,6 +1,7 @@
 
 /*
 
+    - establish dependencies among fields
     - modify enabler onChange calls to verify related data, and turn off errors for unrelated data
     - border color to signify changed value, and error value
 
@@ -217,43 +218,57 @@ const Options = ({
             return isInvalid
         },
         gotoIndex:(value:any) => {
-            let isInvalid = false
+            const isInvalid = (!exists(value) || !minValue(value, 0))
+            invalidFlagsRef.current.gotoIndex = isInvalid
             return isInvalid
         },
         listsize:(value:any) => {
-            let isInvalid = false
+            const isInvalid = (!exists(value) || !minValue(value, 0))
+            invalidFlagsRef.current.listsize = isInvalid
             return isInvalid
         },
         insertFrom:(value:any) => {
-            let isInvalid = false
+            const isInvalid = (!exists(value) || !minValue(value, 0))
+            invalidFlagsRef.current.insertFrom = isInvalid
             return isInvalid
         },
         insertRange:(value:any) => {
             let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlagsRef.current.insertRange = isInvalid
             return isInvalid
         },
         removeFrom:(value:any) => {
-            let isInvalid = false
+            const isInvalid = (!exists(value) || !minValue(value, 0))
+            invalidFlagsRef.current.removeFrom = isInvalid
             return isInvalid
         },
         removeRange:(value:any) => {
             let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlagsRef.current.removeRange = isInvalid
             return isInvalid
         },
         moveFrom:(value:any) => {
-            let isInvalid = false
+            const isInvalid = (!exists(value) || !minValue(value, 0))
+            invalidFlagsRef.current.moveFrom = isInvalid
             return isInvalid
         },
         moveRange:(value:any) => {
             let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlagsRef.current.moveRange = isInvalid
             return isInvalid
         },
         moveTo:(value:any) => {
-            let isInvalid = false
-            return isInvalid
-        },
-        remapDemo:(value:any) => {
-            let isInvalid = false
+            const isInvalid = (!exists(value) || !minValue(value, 0))
+            invalidFlagsRef.current.moveTo = isInvalid
             return isInvalid
         },
     }
@@ -881,7 +896,7 @@ const Options = ({
                     <VStack alignItems = 'start'>
 
                     <Heading size = 'xs'>Go to</Heading>
-                    <HStack>
+                    <HStack alignItems = 'start'>
                         <FormControl isInvalid = {invalidFlags.gotoIndex} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
@@ -908,6 +923,9 @@ const Options = ({
                                     id='goto' 
                                 />
                             </InputGroup>
+                            <FormErrorMessage>
+                            something
+                            </FormErrorMessage>
                         </FormControl>
                     </HStack>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
@@ -915,7 +933,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Change virtual list size</Heading>
-                    <HStack>
+                    <HStack alignItems = 'start'>
                         <FormControl isInvalid = {invalidFlags.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
