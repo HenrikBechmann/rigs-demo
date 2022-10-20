@@ -129,7 +129,7 @@ const Options = ({
         }
     )
 
-    const isInvalid = displayErrorsRef.current
+    const invalidFlags = displayErrorsRef.current
 
     // displan error messages
     const errorMessagesRef = useRef<GenericObject>(
@@ -173,10 +173,10 @@ const Options = ({
             return isError
         },
         cellHeight:(value:any) => {
-            const isValid = (exists(value) && minValue(value, 25))
-            displayErrorsRef.current.cellHeight = !isValid
+            const isInValid = (!exists(value) || !minValue(value, 25))
+            displayErrorsRef.current.cellHeight = isInValid
             // console.log('cellHeight isValid', isValid, displayErrorsRef.current)
-            return !isValid
+            return isInValid
         },
         cellWidth:(value:any) => {
             let isError = false
@@ -422,7 +422,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Base cell sizes</Heading>
                     <Stack direction = {['column','row','row']}>
-                        <FormControl isInvalid = {isInvalid.cellHeight}>
+                        <FormControl isInvalid = {invalidFlags.cellHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
                                 <NumberInput 
@@ -437,7 +437,7 @@ const Options = ({
                                 {errorMessages.cellHeight}
                             </FormErrorMessage>
                         </FormControl>
-                        <FormControl isInvalid = {isInvalid.cellWidth}>
+                        <FormControl isInvalid = {invalidFlags.cellWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
                                 <NumberInput 
@@ -461,7 +461,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Minimum cell sizes</Heading>
                     <Stack direction = {['column','row','row']}>
-                        <FormControl isInvalid = {isInvalid.minCellHeight}>
+                        <FormControl isInvalid = {invalidFlags.minCellHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
                                 <NumberInput 
@@ -476,7 +476,7 @@ const Options = ({
                                 {errorMessages.minCellHeight}
                             </FormErrorMessage>
                         </FormControl>
-                        <FormControl isInvalid = {isInvalid.minCellWidth} >
+                        <FormControl isInvalid = {invalidFlags.minCellWidth} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
                                 <NumberInput 
@@ -498,7 +498,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Padding and gaps</Heading>
                     <Stack direction = {['column','row','row']}>
-                    <FormControl isInvalid = {isInvalid.padding} >
+                    <FormControl isInvalid = {invalidFlags.padding} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
                             <NumberInput 
@@ -513,7 +513,7 @@ const Options = ({
                             {errorMessages.padding}
                         </FormErrorMessage>
                     </FormControl>
-                    <FormControl isInvalid = {isInvalid.gap} >
+                    <FormControl isInvalid = {invalidFlags.gap} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
                             <NumberInput 
@@ -535,7 +535,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Runway size</Heading>
-                    <FormControl isInvalid = {isInvalid.runwaySize} >
+                    <FormControl isInvalid = {invalidFlags.runwaySize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>runwaySize:</FormLabel>
@@ -571,7 +571,7 @@ const Options = ({
                             <option value="preload">preload</option>
                         </Select>
                     </FormControl>
-                    <FormControl isInvalid = {isInvalid.cacheMax}>
+                    <FormControl isInvalid = {invalidFlags.cacheMax}>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
                             <NumberInput 
@@ -799,7 +799,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Go to</Heading>
                     <HStack>
-                        <FormControl isInvalid = {isInvalid.gotoIndex} >
+                        <FormControl isInvalid = {invalidFlags.gotoIndex} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
                                 <NumberInput 
@@ -833,7 +833,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Change virtual list size</Heading>
                     <HStack>
-                        <FormControl isInvalid = {isInvalid.listsize} >
+                        <FormControl isInvalid = {invalidFlags.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
                                 <NumberInput 
@@ -884,7 +884,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Insert indexes</Heading>
                     <Stack direction = {['column','row','row']}>
-                        <FormControl isInvalid = {isInvalid.insertFrom} >
+                        <FormControl isInvalid = {invalidFlags.insertFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
                                 <NumberInput 
@@ -899,7 +899,7 @@ const Options = ({
                                 {errorMessages.insertFrom}
                             </FormErrorMessage>
                         </FormControl>
-                        <FormControl isInvalid = {isInvalid.insertRange} >
+                        <FormControl isInvalid = {invalidFlags.insertRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
                                 <NumberInput 
@@ -934,7 +934,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Remove indexes</Heading>
                     <Stack direction = {['column','row','row']}>
-                        <FormControl isInvalid ={isInvalid.removeFrom} >
+                        <FormControl isInvalid ={invalidFlags.removeFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
                                 <NumberInput 
@@ -949,7 +949,7 @@ const Options = ({
                                 {errorMessages.removeFrom}
                             </FormErrorMessage>
                         </FormControl>
-                        <FormControl isInvalid = {isInvalid.removeRange} >
+                        <FormControl isInvalid = {invalidFlags.removeRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
                                 <NumberInput 
@@ -984,7 +984,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Move indexes</Heading>
                     <Stack direction = {['column','row','row']} mb = {2}>
-                    <FormControl isInvalid = {isInvalid.moveFrom} >
+                    <FormControl isInvalid = {invalidFlags.moveFrom} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
                             <NumberInput 
@@ -999,7 +999,7 @@ const Options = ({
                             {errorMessages.moveFrom}
                         </FormErrorMessage>
                     </FormControl>
-                    <FormControl isInvalid = {isInvalid.moveRange} >
+                    <FormControl isInvalid = {invalidFlags.moveRange} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
                             <NumberInput 
@@ -1015,7 +1015,7 @@ const Options = ({
                         </FormErrorMessage>
                     </FormControl>
                     </Stack>
-                    <FormControl isInvalid = {isInvalid.moveTo} >
+                    <FormControl isInvalid = {invalidFlags.moveTo} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
                             <NumberInput 
