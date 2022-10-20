@@ -86,7 +86,7 @@ function App() {
       </Box>
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
-        <DemoScroller contentType = {applyType} displayProperties = {applyProperties} />
+        <DemoScroller contentType = {applyType} applyProperties = {applyProperties} />
 
       </Box>
 
@@ -121,7 +121,7 @@ function App() {
           />
 
         </DrawerBody>
-        
+
         <DrawerFooter justifyContent = 'start' borderTop = '1px'>
           <HStack>
           <Button size = {['sm','sm','md']}>
