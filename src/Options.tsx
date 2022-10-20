@@ -369,7 +369,7 @@ const Options = ({
 
         </FormControl>
 
-        <Heading as = 'h3' fontSize = 'md'>More Options</Heading>
+        <Heading as = 'h3' fontSize = 'md'>Options for Selected Content Type</Heading>
 
         <Accordion allowMultiple>
 
@@ -425,11 +425,6 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </Stack>
-                        <FormHelperText>
-                           Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
-                           <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
-                           'variable' layout; the cross dimensions are allocated fractionally (<Code>fr</Code>).
-                        </FormHelperText>
                         {displayErrors.cellHeight &&
                             <FormErrorMessage>
                                 {errorMessages.cellHeight}
@@ -438,6 +433,11 @@ const Options = ({
                             <FormErrorMessage>
                                 {errorMessages.cellWidth}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                           Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
+                           <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
+                           'variable' layout; the cross dimensions are allocated fractionally (<Code>fr</Code>).
+                        </FormHelperText>
                     </FormControl>
 
                     <FormControl>
@@ -464,9 +464,6 @@ const Options = ({
                                 </NumberInput>
                         </InputGroup>
                         </Stack>
-                        <FormHelperText>
-                            Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
-                        </FormHelperText>
                         {displayErrors.minCellHeight &&
                             <FormErrorMessage>
                                 {errorMessages.minCellHeight}
@@ -475,6 +472,9 @@ const Options = ({
                             <FormErrorMessage>
                                 {errorMessages.minCellWidth}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
+                        </FormHelperText>
                     </FormControl>
 
                     <FormControl>
@@ -501,10 +501,6 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </Stack>
-                        <FormHelperText>
-                            Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
-                            the space between cells.
-                        </FormHelperText>
                         {displayErrors.padding &&
                             <FormErrorMessage>
                                 {errorMessages.padding}
@@ -513,6 +509,10 @@ const Options = ({
                             <FormErrorMessage>
                                 {errorMessages.gap}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
+                            the space between cells.
+                        </FormHelperText>
                     </FormControl>
 
                     <FormControl>
@@ -529,14 +529,14 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </HStack>
-                        <FormHelperText>
-                            Integer. This is the number of rows out of view at the head and tail of lists. 
-                            Minimum 1, default 1.
-                        </FormHelperText>
                         {displayErrors.runwaySize &&
                             <FormErrorMessage>
                                 {errorMessages.runwaySize}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            Integer. This is the number of rows out of view at the head and tail of lists. 
+                            Minimum 1, default 1.
+                        </FormHelperText>
                     </FormControl>
 
                     <FormControl>
@@ -563,11 +563,6 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </Stack>
-                        <FormHelperText>
-                            <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
-                            Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
-                            or zero is ignored.
-                        </FormHelperText>
                         {displayErrors.cache &&
                             <FormErrorMessage>
                                 {errorMessages.cache}
@@ -576,6 +571,11 @@ const Options = ({
                             <FormErrorMessage>
                                 {errorMessages.cacheMax}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
+                            Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
+                            or zero is ignored.
+                        </FormHelperText>
                     </FormControl>
 
                 </VStack></AccordionPanel>
@@ -799,13 +799,13 @@ const Options = ({
                                 id='goto' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            Integer. Go to the specified index number in the virtual list.
-                        </FormHelperText>
                         {displayErrors.gotoIndex &&
                             <FormErrorMessage>
                                 {errorMessages.gotoIndex}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            Integer. Go to the specified index number in the virtual list.
+                        </FormHelperText>
                     </FormControl>
 
                     <FormControl>
@@ -832,13 +832,13 @@ const Options = ({
                                 id='listsize' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            Integer. Change the size of the scroller's virtual list.
-                        </FormHelperText>
                         {displayErrors.listsize &&
                             <FormErrorMessage>
                                 {errorMessages.listsize}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            Integer. Change the size of the scroller's virtual list.
+                        </FormHelperText>
                     </FormControl>
 
                     <FormControl>
@@ -892,10 +892,6 @@ const Options = ({
                                 id='insert' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            Integers. Insert one or more indexes. 'range' is optional, and must be equal to or 
-                            above the 'from' value. The size of the virtual list is increased accordingly.
-                        </FormHelperText> 
                         {displayErrors.insertFrom &&
                             <FormErrorMessage>
                                 {errorMessages.insertFrom}
@@ -904,6 +900,10 @@ const Options = ({
                             <FormErrorMessage>
                                 {errorMessages.insertRange}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            Integers. Insert one or more indexes. 'range' is optional, and must be equal to or 
+                            above the 'from' value. The size of the virtual list is increased accordingly.
+                        </FormHelperText> 
                     </FormControl>
 
                     <FormControl>
@@ -940,10 +940,6 @@ const Options = ({
                                 id='remove' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            Integers. Remove one or more indexes. 'range' is optional, and must be equal to or 
-                            above the 'from' value. The size of the virtual list is decreased accordingly.
-                        </FormHelperText> 
                         {displayErrors.removeFrom &&
                             <FormErrorMessage>
                                 {errorMessages.removeFrom}
@@ -952,6 +948,10 @@ const Options = ({
                             <FormErrorMessage>
                                 {errorMessages.removeRange}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            Integers. Remove one or more indexes. 'range' is optional, and must be equal to or 
+                            above the 'from' value. The size of the virtual list is decreased accordingly.
+                        </FormHelperText> 
                     </FormControl>
 
                     <FormControl>
@@ -998,10 +998,6 @@ const Options = ({
                                 id='move' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
-                            above the 'from' value.
-                        </FormHelperText> 
                         {displayErrors.moveFrom &&
                             <FormErrorMessage>
                                 {errorMessages.moveFrom}
@@ -1014,6 +1010,10 @@ const Options = ({
                             <FormErrorMessage>
                                 {errorMessages.moveTo}
                             </FormErrorMessage>}
+                        <FormHelperText>
+                            Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
+                            above the 'from' value.
+                        </FormHelperText> 
                     </FormControl>
 
                     <FormControl>
@@ -1037,16 +1037,16 @@ const Options = ({
                                 id='remap' 
                             />
                         </InputGroup>
+                        {displayErrors.remapDemo &&
+                            <FormErrorMessage>
+                                {errorMessages.remapDemo}
+                            </FormErrorMessage>}
                         <FormHelperText>
                             The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
                             items to the newly assigned indexes. We've included a few random tests that apply to 
                             the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
                             items scroll out of scope.
                         </FormHelperText>
-                        {displayErrors.remapDemo &&
-                            <FormErrorMessage>
-                                {errorMessages.remapDemo}
-                            </FormErrorMessage>}
                     </FormControl>
 
                     <FormControl>
