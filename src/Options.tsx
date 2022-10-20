@@ -405,7 +405,7 @@ const Options = ({
 
                 <AccordionPanel pb={4}><VStack alignItems = 'start'>
 
-                    <FormControl>
+                    <FormControl borderBottom = '1px'>
                         <Stack direction = {['column','row','row']} align = 'normal'>
                         <FormLabel size = 'sm'>Orientation</FormLabel>
                         <RadioGroup 
@@ -453,7 +453,7 @@ const Options = ({
                             </FormErrorMessage>
                         </FormControl>
                     </Stack>
-                    <Text fontSize = 'sm'>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                        Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
                        <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
                        'variable' layout; the cross dimensions are allocated fractionally (<Code>fr</Code>).
