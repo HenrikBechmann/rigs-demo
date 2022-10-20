@@ -459,42 +459,42 @@ const Options = ({
                        'variable' layout; the cross dimensions are allocated fractionally (<Code>fr</Code>).
                     </Text>
 
-                    <FormControl>
-                        <FormLabel size = 'sm'>Minimum cell sizes</FormLabel>
-                        <Stack direction = {['column','row','row']}>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
-                            <NumberInput 
-                                value = {displayValues.minCellHeight} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.minCellHeight}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
-                            <NumberInput 
-                                value = {displayValues.minCellWidth} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.minCellWidth}
-                            >
+                    <Heading size = 'xs'>Minimum cell sizes</Heading>
+                    <Stack direction = {['column','row','row']}>
+                        <FormControl isInvalid = {isInvalid.minCellHeight}>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
+                                <NumberInput 
+                                    value = {displayValues.minCellHeight} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.minCellHeight}
+                                >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
-                        </InputGroup>
-                        </Stack>
-                        {isInvalid.minCellHeight &&
+                            </InputGroup>
                             <FormErrorMessage>
                                 {errorMessages.minCellHeight}
-                            </FormErrorMessage>}
-                        {isInvalid.minCellWidth &&
+                            </FormErrorMessage>
+                        </FormControl>
+                        <FormControl isInvalid = {isInvalid.minCellWidth} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
+                                <NumberInput 
+                                    value = {displayValues.minCellWidth} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.minCellWidth}
+                                >
+                                        <NumberInputField border = '2px' />
+                                    </NumberInput>
+                            </InputGroup>
                             <FormErrorMessage>
                                 {errorMessages.minCellWidth}
-                            </FormErrorMessage>}
-                        <FormHelperText>
-                            Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
-                        </FormHelperText>
-                    </FormControl>
+                            </FormErrorMessage>
+                        </FormControl>
+                    </Stack>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
+                    </Text>
 
                     <FormControl>
                         <FormLabel size = 'sm'>Padding and gaps</FormLabel>
