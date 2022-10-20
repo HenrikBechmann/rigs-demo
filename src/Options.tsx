@@ -370,7 +370,7 @@ const Options = ({
 
         </FormControl>
 
-        <Heading as = 'h3' fontSize = 'md'>Options for Selected Content Type</Heading>
+        <Heading as = 'h3' fontSize = 'md'>More Options</Heading>
 
         <Accordion allowMultiple>
 
@@ -379,7 +379,7 @@ const Options = ({
                 <Heading as ='h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Properties
+                            Properties for the selected content type
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
