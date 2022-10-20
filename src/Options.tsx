@@ -69,6 +69,19 @@ type MoveIndexes = {
     to:number,
 }
 
+const exists = (value:string) => {
+    let test = !!value
+    // console.log('exists',test, typeof value)
+    return test
+}
+
+const minValue = (value:any, minValue:number) => {
+    const testvalue = Number(value)
+    const test = (testvalue != NaN && testvalue >=minValue )
+    // console.log('minValue', testvalue, typeof testvalue, test, minValue, typeof minValue)
+    return test
+}
+
 // Options component
 const Options = ({
     allDisplayPropertiesRef, 
@@ -149,89 +162,91 @@ const Options = ({
     const errorMessages = errorMessagesRef.current
 
     // display error check functions
-    const errorChecks:GenericObject =
+    const errorTests:GenericObject =
     {
-        contentType:() => {
+        contentType:(value:any) => {
             let isError = false
             return isError
         },
-        orientation:() => {
+        orientation:(value:any) => {
             let isError = false
             return isError
         },
-        cellHeight:() => {
+        cellHeight:(value:any) => {
+            const isValid = (exists(value) && minValue(value, 25))
+            displayErrorsRef.current.cellHeight = !isValid
+            // console.log('cellHeight isValid', isValid, displayErrorsRef.current)
+            return !isValid
+        },
+        cellWidth:(value:any) => {
             let isError = false
             return isError
         },
-        cellWidth:() => {
+        minCellHeight:(value:any) => {
             let isError = false
             return isError
         },
-        minCellHeight:() => {
+        minCellWidth:(value:any) => {
             let isError = false
             return isError
         },
-        minCellWidth:() => {
+        padding:(value:any) => {
             let isError = false
             return isError
         },
-        padding:() => {
+        gap:(value:any) => {
             let isError = false
             return isError
         },
-        gap:() => {
+        runwaySize:(value:any) => {
             let isError = false
             return isError
         },
-        runwaySize:() => {
+        cache:(value:any) => {
             let isError = false
             return isError
         },
-        cache:() => {
+        cacheMax:(value:any) => {
             let isError = false
             return isError
         },
-        cacheMax:() => {
+        gotoIndex:(value:any) => {
             let isError = false
             return isError
         },
-        gotoIndex:() => {
+        listsize:(value:any) => {
             let isError = false
             return isError
         },
-        listsize:() => {
+        insertFrom:(value:any) => {
             let isError = false
             return isError
         },
-        insertFrom:() => {
+        insertRange:(value:any) => {
             let isError = false
             return isError
         },
-        insertRange:() => {
+        removeFrom:(value:any) => {
             let isError = false
             return isError
         },
-        removeFrom:() => {
+        removeRange:(value:any) => {
             let isError = false
             return isError
         },
-        removeRange:() => {
+        moveFrom:(value:any) => {
             let isError = false
             return isError
         },
-        moveFrom:() => {
+        moveRange:(value:any) => {
             let isError = false
             return isError
         },
-        moveRange:() => {
+        moveTo:(value:any) => {
             let isError = false
             return isError
         },
-        moveTo:() => {
-            let isError = false
-            return isError
-        },
-        remapDemo:() => {
+        remapDemo:(value:any) => {
             let isError = false
             return isError
         },
@@ -251,8 +266,12 @@ const Options = ({
             allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
             setDisplayValues({...displayValues})
         },
-        cellHeight:(event:React.ChangeEvent) => {
-            
+        cellHeight:(input:string) => {
+            displayValues.cellHeight = input
+            if (!errorTests.cellHeight(input)) {
+                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            }
+            setDisplayValues({...displayValues})
         },
         cellWidth:(event:React.ChangeEvent) => {
             
@@ -401,7 +420,7 @@ const Options = ({
                         </Stack>
                     </FormControl>
 
-                    <FormControl>
+                    <FormControl isInvalid = {displayErrors.cellHeight}>
                         <FormLabel size = 'sm'>Base cell sizes</FormLabel>
                         <Stack direction = {['column','row','row']}>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
@@ -425,14 +444,12 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </Stack>
-                        {displayErrors.cellHeight &&
-                            <FormErrorMessage>
-                                {errorMessages.cellHeight}
-                            </FormErrorMessage>}
-                        {displayErrors.cellWidth &&
-                            <FormErrorMessage>
-                                {errorMessages.cellWidth}
-                            </FormErrorMessage>}
+                        <FormErrorMessage>Hello
+                            {errorMessages.cellHeight}
+                        </FormErrorMessage>
+                        <FormErrorMessage>
+                            {errorMessages.cellWidth}
+                        </FormErrorMessage>
                         <FormHelperText>
                            Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
                            <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
