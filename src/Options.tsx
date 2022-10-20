@@ -615,7 +615,7 @@ const Options = ({
                         user experience.
                     </Text>
 
-                    <VStack>
+                    <VStack alignItems = 'start'>
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
@@ -748,10 +748,10 @@ const Options = ({
                         and filtering.
                     </Text>
 
-                    <VStack>
+                    <VStack alignItems = 'start'>
 
                     <FormControl borderTop = '1px'>
-                        <Button size = 'sm'>Get Cache Index Map</Button>
+                        <Button size = 'sm' mt = {2}>Get Cache Index Map</Button>
                         <FormHelperText>
                             snapshot (javascript <Code>Map</Code>) of cache <Code>index</Code> (=key) to 
                             scroller-assigned session <Code>itemID</Code> (=value) map.
@@ -759,7 +759,7 @@ const Options = ({
                     </FormControl>
 
                     <FormControl borderTop = '1px'>
-                        <Button size = 'sm'>Get Cache Item Map</Button>
+                        <Button size = 'sm' mt = {2}>Get Cache Item Map</Button>
                         <FormHelperText>
                             snapshot (javascript <Code>Map</Code>) of cache <Code>itemID</Code> (=key) to 
                             object (=value) map. Object = {"{"}index, component{"}"} where component = user component.
@@ -767,7 +767,7 @@ const Options = ({
                     </FormControl>
 
                     <FormControl borderTop = '1px'>
-                        <Button size = 'sm'>Get Cradle Index Map</Button>
+                        <Button size = 'sm' mt = {2}>Get Cradle Index Map</Button>
                         <FormHelperText>
                             snapshot (javascript <Code>Map</Code>) of cradle <Code>index</Code> (=key) to 
                             scroller-assigned session <Code>itemID</Code> (=value) map.
@@ -795,7 +795,7 @@ const Options = ({
                         be used by apps.
                     </Text>
 
-                    <VStack>
+                    <VStack alignItems = 'start'>
 
                     <Heading size = 'xs'>Go to</Heading>
                     <HStack>
@@ -1068,13 +1068,13 @@ const Options = ({
                                 id='remap' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
-                            items to the newly assigned indexes. We've included a few random tests that apply to 
-                            the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
-                            items scroll out of scope.
-                        </FormHelperText>
                     </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
+                        items to the newly assigned indexes. We've included a few random tests that apply to 
+                        the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
+                        items scroll out of scope.
+                    </Text>
 
                     <FormControl>
                         <FormLabel size = 'sm'>Clear the cache</FormLabel>
@@ -1088,10 +1088,10 @@ const Options = ({
                                 id='clear' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            This clears the cache (and therefore the cradle). Not very interesting.
-                        </FormHelperText>
                     </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2}>
+                        This clears the cache (and therefore the cradle). Not very interesting.
+                    </Text>
 
                     </VStack>
                 </AccordionPanel>
