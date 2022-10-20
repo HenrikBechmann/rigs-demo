@@ -240,10 +240,16 @@ const Options = ({
     // display on change functions
     const onChangeFuncs:GenericObject = {
         contentType:(event:React.ChangeEvent) => {
-
+            const target = event.target as HTMLSelectElement
+            const value = target.value
+            contentTypeRef.current = value
+            setContentType(value)
+            setDisplayValues(allDisplayPropertiesRef.current[value])
         },
-        orientation:(event:React.ChangeEvent) => {
-            
+        orientation:(orientation:string) => {
+            displayValues.orientation = orientation
+            allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            setDisplayValues({...displayValues})
         },
         cellHeight:(event:React.ChangeEvent) => {
             

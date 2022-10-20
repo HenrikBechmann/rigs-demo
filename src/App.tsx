@@ -32,7 +32,7 @@ import {
   applyCallbackSettingsRef as callbackSettingsRef, 
   functionsRef, 
   defaultFunctionProperties, 
-  
+
 } from './demodata'
 
 function App() {
@@ -102,20 +102,26 @@ function App() {
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader borderBottom = '1px'>Scroller Options</DrawerHeader>
+
         <DrawerBody>
 
           <Options 
+
+            // simple values
             contentTypeRef = { contentTypeRef }
             operationFunctionRef = { operationFunctionRef }
+
             // dynamic ref objects
             allDisplayPropertiesRef = { allDisplayPropertiesRef } 
             callbackSettingsRef = { callbackSettingsRef }
             functionPropertiesRef = { functionPropertiesRef }
+
             // static
             functionsRef = { functionsRef }
           />
 
         </DrawerBody>
+        
         <DrawerFooter justifyContent = 'start' borderTop = '1px'>
           <HStack>
           <Button size = {['sm','sm','md']}>
