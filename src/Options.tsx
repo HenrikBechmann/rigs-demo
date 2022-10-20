@@ -2,12 +2,13 @@
 /*
 
     - establish dependencies among fields
+    - intialize dependencies on load
     - modify enabler onChange calls to verify related data, and turn off errors for unrelated data
     - border color to signify changed value, and error value
 
 */
 
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useMemo} from 'react'
 
 import {
 
@@ -70,6 +71,7 @@ type MoveIndexes = {
     to:number,
 }
 
+// error check utilities
 const exists = (value:string) => {
     let test = !!value
     return test
@@ -101,6 +103,26 @@ const Options = ({
 
     const [optionsState, setOptionsState] = useState('setup')
 
+    // disabled controls
+    const disabledFlagsRef = useRef<GenericObject>(
+        {
+            cellMinHeight:false,
+            cellMinWidth:false,
+            gotoIndex:false,
+            listsize:false,
+            insertFrom:false,
+            insertRange:false,
+            removeFrom:false,
+            removeRange:false,
+            moveFrom:false,
+            moveRange:false,
+            moveTo:false,
+            remapDemo:false,
+        }
+    )
+
+    const disabledFlags = disabledFlagsRef.current
+
     // display error flags
     const invalidFlagsRef = useRef<GenericObject>(
         {
@@ -130,9 +152,9 @@ const Options = ({
 
     const invalidFlags = invalidFlagsRef.current
 
-    // displan error messages
-    const errorMessagesRef = useRef<GenericObject>(
-        {
+    // display error messages
+    const errorMessages = useMemo<GenericObject>(() => { 
+        return {
             // string selection, no errors
             cellHeight:'cellHeight is required with minimum of 25',
             cellWidth:'cellWidth is required with minimum 25',
@@ -152,283 +174,308 @@ const Options = ({
             moveRange:'blank, or greater than or equal to 0',
             moveTo:'required, greater than or equal to 0',
         }
-    )
-
-    const errorMessages = errorMessagesRef.current
+    },[])
 
     // display error check functions
-    const isInvalidTests:GenericObject =
-    {
-        cellHeight:(value:any) => {
-            const isInvalid = (!exists(value) || !minValue(value, 25))
-            invalidFlagsRef.current.cellHeight = isInvalid
-            return isInvalid
-        },
-        cellWidth:(value:any) => {
-            const isInvalid = (!exists(value) || !minValue(value, 25))
-            invalidFlagsRef.current.cellWidth = isInvalid
-            return isInvalid
-        },
-        cellMinHeight:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,25)
-            }
-            invalidFlagsRef.current.cellMinHeight = isInvalid
-            return isInvalid
-        },
-        cellMinWidth:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,25)
-            }
-            invalidFlagsRef.current.cellMinWidth = isInvalid
-            return isInvalid
-        },
-        padding:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,0)
-            }
-            invalidFlagsRef.current.padding = isInvalid
-            return isInvalid
-        },
-        gap:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,0)
-            }
-            invalidFlagsRef.current.gap = isInvalid
-            return isInvalid
-        },
-        runwaySize:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,1)
-            }
-            invalidFlagsRef.current.runwaySize = isInvalid
-            return isInvalid
-        },
-        cacheMax:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,0)
-            }
-            invalidFlagsRef.current.cacheMax = isInvalid
-            return isInvalid
-        },
-        gotoIndex:(value:any) => {
-            const isInvalid = (!exists(value) || !minValue(value, 0))
-            invalidFlagsRef.current.gotoIndex = isInvalid
-            return isInvalid
-        },
-        listsize:(value:any) => {
-            const isInvalid = (!exists(value) || !minValue(value, 0))
-            invalidFlagsRef.current.listsize = isInvalid
-            return isInvalid
-        },
-        insertFrom:(value:any) => {
-            const isInvalid = (!exists(value) || !minValue(value, 0))
-            invalidFlagsRef.current.insertFrom = isInvalid
-            return isInvalid
-        },
-        insertRange:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,0)
-            }
-            invalidFlagsRef.current.insertRange = isInvalid
-            return isInvalid
-        },
-        removeFrom:(value:any) => {
-            const isInvalid = (!exists(value) || !minValue(value, 0))
-            invalidFlagsRef.current.removeFrom = isInvalid
-            return isInvalid
-        },
-        removeRange:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,0)
-            }
-            invalidFlagsRef.current.removeRange = isInvalid
-            return isInvalid
-        },
-        moveFrom:(value:any) => {
-            const isInvalid = (!exists(value) || !minValue(value, 0))
-            invalidFlagsRef.current.moveFrom = isInvalid
-            return isInvalid
-        },
-        moveRange:(value:any) => {
-            let isInvalid = false
-            if (exists(value)) {
-                isInvalid = !minValue(value,0)
-            }
-            invalidFlagsRef.current.moveRange = isInvalid
-            return isInvalid
-        },
-        moveTo:(value:any) => {
-            const isInvalid = (!exists(value) || !minValue(value, 0))
-            invalidFlagsRef.current.moveTo = isInvalid
-            return isInvalid
-        },
-    }
+    const isInvalidTests = useMemo<GenericObject>(() => {
+        return {
+            cellHeight:(value:any) => {
+                const isInvalid = (!exists(value) || !minValue(value, 25))
+                invalidFlagsRef.current.cellHeight = isInvalid
+                return isInvalid
+            },
+            cellWidth:(value:any) => {
+                const isInvalid = (!exists(value) || !minValue(value, 25))
+                invalidFlagsRef.current.cellWidth = isInvalid
+                return isInvalid
+            },
+            cellMinHeight:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,25)
+                }
+                invalidFlagsRef.current.cellMinHeight = isInvalid
+                return isInvalid
+            },
+            cellMinWidth:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,25)
+                }
+                invalidFlagsRef.current.cellMinWidth = isInvalid
+                return isInvalid
+            },
+            padding:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,0)
+                }
+                invalidFlagsRef.current.padding = isInvalid
+                return isInvalid
+            },
+            gap:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,0)
+                }
+                invalidFlagsRef.current.gap = isInvalid
+                return isInvalid
+            },
+            runwaySize:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,1)
+                }
+                invalidFlagsRef.current.runwaySize = isInvalid
+                return isInvalid
+            },
+            cacheMax:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,0)
+                }
+                invalidFlagsRef.current.cacheMax = isInvalid
+                return isInvalid
+            },
+            gotoIndex:(value:any) => {
+                const isInvalid = (!exists(value) || !minValue(value, 0))
+                invalidFlagsRef.current.gotoIndex = isInvalid
+                return isInvalid
+            },
+            listsize:(value:any) => {
+                const isInvalid = (!exists(value) || !minValue(value, 0))
+                invalidFlagsRef.current.listsize = isInvalid
+                return isInvalid
+            },
+            insertFrom:(value:any) => {
+                const isInvalid = (!exists(value) || !minValue(value, 0))
+                invalidFlagsRef.current.insertFrom = isInvalid
+                return isInvalid
+            },
+            insertRange:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,0)
+                }
+                invalidFlagsRef.current.insertRange = isInvalid
+                return isInvalid
+            },
+            removeFrom:(value:any) => {
+                const isInvalid = (!exists(value) || !minValue(value, 0))
+                invalidFlagsRef.current.removeFrom = isInvalid
+                return isInvalid
+            },
+            removeRange:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,0)
+                }
+                invalidFlagsRef.current.removeRange = isInvalid
+                return isInvalid
+            },
+            moveFrom:(value:any) => {
+                const isInvalid = (!exists(value) || !minValue(value, 0))
+                invalidFlagsRef.current.moveFrom = isInvalid
+                return isInvalid
+            },
+            moveRange:(value:any) => {
+                let isInvalid = false
+                if (exists(value)) {
+                    isInvalid = !minValue(value,0)
+                }
+                invalidFlagsRef.current.moveRange = isInvalid
+                return isInvalid
+            },
+            moveTo:(value:any) => {
+                const isInvalid = (!exists(value) || !minValue(value, 0))
+                invalidFlagsRef.current.moveTo = isInvalid
+                return isInvalid
+            },
+        }
+    },[])
 
     // display on change functions
-    const onChangeFuncs:GenericObject = {
-        // enable/disable min/max
-        contentType:(event:React.ChangeEvent) => {
-            const target = event.target as HTMLSelectElement
-            const value = target.value
-            contentTypeRef.current = value
-            setContentType(value)
-            setDisplayValues(allDisplayPropertiesRef.current[value])
-        },
-        orientation:(orientation:string) => {
-            displayValues.orientation = orientation
-            allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            setDisplayValues({...displayValues})
-        },
-        cellHeight:(input:string) => {
-            displayValues.cellHeight = input
-            if (!isInvalidTests.cellHeight(input)) {
+    const onChangeFuncs = useMemo<GenericObject>(() => {
+        return {
+            // update scroller function switch settings
+            onChangeEnabler:(event:React.ChangeEvent) => {
+                const target = event.target as HTMLInputElement
+                const enablerID = target.id
+                const enablerValue = target.checked
+                const functionSettings = functionSettingsRef.current
+                for (const prop in functionSettings) {
+                    functionSettings[prop] = false
+                }
+                functionSettings[enablerID] = enablerValue
+                const opfunc = 
+                    enablerValue?
+                    enablerID:
+                    null
+                setOperationFunction(opfunc)
+            },
+            contentType:(event:React.ChangeEvent) => {
+                const target = event.target as HTMLSelectElement
+                const value = target.value
+                contentTypeRef.current = value
+                let disabled
+                if (['variable','variablepromises','variabledynamic'].includes(value)) {
+                    disabled = false
+                } else {
+                    disabled = true
+                }
+                disabledFlagsRef.current.cellMinHeight =
+                    disabledFlagsRef.current.cellMinWidth = disabled
+                console.log('disabledFlagsRef.current',disabledFlagsRef.current)
+                setContentType(value)
+                setDisplayValues(allDisplayPropertiesRef.current[value])
+            },
+            orientation:(orientation:string) => {
+                displayValues.orientation = orientation
                 allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            }
-            setDisplayValues({...displayValues})
-        },
-        cellWidth:(input:string) => {
-            displayValues.cellWidth = input
-            if (!isInvalidTests.cellWidth(input)) {
+                setDisplayValues({...displayValues})
+            },
+            cellHeight:(input:string) => {
+                displayValues.cellHeight = input
+                if (!isInvalidTests.cellHeight(input)) {
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                }
+                setDisplayValues({...displayValues})
+            },
+            cellWidth:(input:string) => {
+                displayValues.cellWidth = input
+                if (!isInvalidTests.cellWidth(input)) {
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                }
+                setDisplayValues({...displayValues})
+            },
+            cellMinHeight:(input:string) => {
+                displayValues.cellMinHeight = input
+                if (!isInvalidTests.cellMinHeight(input)) {
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                }
+                setDisplayValues({...displayValues})
+            },
+            cellMinWidth:(input:string) => {
+                displayValues.cellMinWidth = input
+                if (!isInvalidTests.cellMinWidth(input)) {
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                }
+                setDisplayValues({...displayValues})
+            },
+            padding:(input:string) => {
+                displayValues.padding = input
+                if (!isInvalidTests.padding(input)) {
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                }
+                setDisplayValues({...displayValues})
+            },
+            gap:(input:string) => {
+                displayValues.gap = input
+                if (!isInvalidTests.gap(input)) {
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                }
+                setDisplayValues({...displayValues})
+            },
+            runwaySize:(input:string) => {
+                displayValues.runwaySize = input
+                if (!isInvalidTests.runwaySize(input)) {
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                }
+                setDisplayValues({...displayValues})
+            },
+            cache:(event:React.ChangeEvent) => {
+                const target = event.target as HTMLSelectElement
+                const value = target.value
+                displayValues.cache = value
                 allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            }
-            setDisplayValues({...displayValues})
-        },
-        cellMinHeight:(input:string) => {
-            displayValues.cellMinHeight = input
-            if (!isInvalidTests.cellMinHeight(input)) {
-                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            }
-            setDisplayValues({...displayValues})
-        },
-        cellMinWidth:(input:string) => {
-            displayValues.cellMinWidth = input
-            if (!isInvalidTests.cellMinWidth(input)) {
-                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            }
-            setDisplayValues({...displayValues})
-        },
-        padding:(input:string) => {
-            displayValues.padding = input
-            if (!isInvalidTests.padding(input)) {
-                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            }
-            setDisplayValues({...displayValues})
-        },
-        gap:(input:string) => {
-            displayValues.gap = input
-            if (!isInvalidTests.gap(input)) {
-                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            }
-            setDisplayValues({...displayValues})
-        },
-        runwaySize:(input:string) => {
-            displayValues.runwaySize = input
-            if (!isInvalidTests.runwaySize(input)) {
-                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            }
-            setDisplayValues({...displayValues})
-        },
-        cache:(event:React.ChangeEvent) => {
-            const target = event.target as HTMLSelectElement
-            const value = target.value
-            displayValues.cache = value
-            allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            setDisplayValues({...displayValues})
-        },
-        cacheMax:(input:string) => {
-            displayValues.cacheMax = input
-            if (!isInvalidTests.cacheMax(input)) {
-                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
-            }
-            setDisplayValues({...displayValues})
-        },
-        callbackSettings:(event:React.ChangeEvent) => {
-            const target = event.target as HTMLInputElement
-            const callbackID = target.id
-            const callbackValue = target.checked
-            const callbackSettings = callbackSettingsRef.current
-            callbackSettings[callbackID] = callbackValue
-            setCallbackSettings({...callbackSettings})            
-        },
-        gotoIndex:(input:string) => {
-            functionProperties.gotoIndex = input
-            if (!isInvalidTests.gotoIndex(input)) {
-                functionPropertiesRef.current.gotoIndex = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        listsize:(input:string) => {
-            functionProperties.listsize = input
-            if (!isInvalidTests.listsize(input)) {
-                functionPropertiesRef.current.listsize = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        insertFrom:(input:string) => {
-            functionProperties.insertFrom = input
-            if (!isInvalidTests.insertFrom(input)) {
-                functionPropertiesRef.current.insertFrom = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        insertRange:(input:string) => {
-            functionProperties.insertRange = input
-            if (!isInvalidTests.insertRange(input)) {
-                functionPropertiesRef.current.insertRange = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        removeFrom:(input:string) => {
-            functionProperties.removeFrom = input
-            if (!isInvalidTests.removeFrom(input)) {
-                functionPropertiesRef.current.removeFrom = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        removeRange:(input:string) => {
-            functionProperties.removeRange = input
-            if (!isInvalidTests.removeRange(input)) {
-                functionPropertiesRef.current.removeRange = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        moveFrom:(input:string) => {
-            functionProperties.moveFrom = input
-            if (!isInvalidTests.moveFrom(input)) {
-                functionPropertiesRef.current.moveFrom = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        moveRange:(input:string) => {
-            functionProperties.moveRange = input
-            if (!isInvalidTests.moveRange(input)) {
-                functionPropertiesRef.current.moveRange = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        moveTo:(input:string) => {
-            functionProperties.moveTo = input
-            if (!isInvalidTests.moveTo(input)) {
-                functionPropertiesRef.current.moveTo = input
-            }
-            setFunctionProperties({...functionProperties})
-        },
-        remapDemo:(event:React.ChangeEvent) => {
-            const target = event.target as HTMLSelectElement
-            const value = target.value
-            functionPropertiesRef.current.remapDemo = value
-            setFunctionProperties({...functionProperties})
-        },
-    }
+                setDisplayValues({...displayValues})
+            },
+            cacheMax:(input:string) => {
+                displayValues.cacheMax = input
+                if (!isInvalidTests.cacheMax(input)) {
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                }
+                setDisplayValues({...displayValues})
+            },
+            callbackSettings:(event:React.ChangeEvent) => {
+                const target = event.target as HTMLInputElement
+                const callbackID = target.id
+                const callbackValue = target.checked
+                const callbackSettings = callbackSettingsRef.current
+                callbackSettings[callbackID] = callbackValue
+                setCallbackSettings({...callbackSettings})            
+            },
+            gotoIndex:(input:string) => {
+                functionProperties.gotoIndex = input
+                if (!isInvalidTests.gotoIndex(input)) {
+                    functionPropertiesRef.current.gotoIndex = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            listsize:(input:string) => {
+                functionProperties.listsize = input
+                if (!isInvalidTests.listsize(input)) {
+                    functionPropertiesRef.current.listsize = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            insertFrom:(input:string) => {
+                functionProperties.insertFrom = input
+                if (!isInvalidTests.insertFrom(input)) {
+                    functionPropertiesRef.current.insertFrom = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            insertRange:(input:string) => {
+                functionProperties.insertRange = input
+                if (!isInvalidTests.insertRange(input)) {
+                    functionPropertiesRef.current.insertRange = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            removeFrom:(input:string) => {
+                functionProperties.removeFrom = input
+                if (!isInvalidTests.removeFrom(input)) {
+                    functionPropertiesRef.current.removeFrom = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            removeRange:(input:string) => {
+                functionProperties.removeRange = input
+                if (!isInvalidTests.removeRange(input)) {
+                    functionPropertiesRef.current.removeRange = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            moveFrom:(input:string) => {
+                functionProperties.moveFrom = input
+                if (!isInvalidTests.moveFrom(input)) {
+                    functionPropertiesRef.current.moveFrom = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            moveRange:(input:string) => {
+                functionProperties.moveRange = input
+                if (!isInvalidTests.moveRange(input)) {
+                    functionPropertiesRef.current.moveRange = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            moveTo:(input:string) => {
+                functionProperties.moveTo = input
+                if (!isInvalidTests.moveTo(input)) {
+                    functionPropertiesRef.current.moveTo = input
+                }
+                setFunctionProperties({...functionProperties})
+            },
+            remapDemo:(event:React.ChangeEvent) => {
+                const target = event.target as HTMLSelectElement
+                const value = target.value
+                functionPropertiesRef.current.remapDemo = value
+                setFunctionProperties({...functionProperties})
+            },
+        }
+    },[])
 
     // scroller function switch settings
     const functionSettingsRef = useRef<FunctionSettings>({
@@ -441,23 +488,6 @@ const Options = ({
         remap:false,
         clear:false,
     })
-
-    // update scroller function switch settings
-    const onChangeEnabler = (event:React.ChangeEvent) => {
-        const target = event.target as HTMLInputElement
-        const enablerID = target.id
-        const enablerValue = target.checked
-        const functionSettings = functionSettingsRef.current
-        for (const prop in functionSettings) {
-            functionSettings[prop] = false
-        }
-        functionSettings[enablerID] = enablerValue
-        const opfunc = 
-            enablerValue?
-            enablerID:
-            null
-        setOperationFunction(opfunc)
-    }
 
     // render
     return (<Box> <VStack align = 'start' alignItems = 'stretch'>
@@ -559,7 +589,9 @@ const Options = ({
 
                     <Heading size = 'xs'>Minimum cell sizes</Heading>
                     <Stack direction = {['column','row','row']}>
-                        <FormControl isInvalid = {invalidFlags.cellMinHeight}>
+                        <FormControl 
+                            isDisabled = {disabledFlags.cellMinHeight}
+                            isInvalid = {invalidFlags.cellMinHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
                                 <NumberInput 
@@ -574,7 +606,9 @@ const Options = ({
                                 {errorMessages.cellMinHeight}
                             </FormErrorMessage>
                         </FormControl>
-                        <FormControl isInvalid = {invalidFlags.cellMinWidth} >
+                        <FormControl 
+                            isDisabled = {disabledFlags.cellMinHeight}
+                            isInvalid = {invalidFlags.cellMinWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
                                 <NumberInput 
@@ -919,7 +953,7 @@ const Options = ({
                                 </FormLabel>
                                 <Switch 
                                     isChecked = {functionSettingsRef.current.goto} 
-                                    onChange = {onChangeEnabler} 
+                                    onChange = {onChangeFuncs.onChangeEnabler} 
                                     id='goto' 
                                 />
                             </InputGroup>
@@ -956,7 +990,7 @@ const Options = ({
                                 </FormLabel>
                                 <Switch 
                                     isChecked = {functionSettingsRef.current.listsize} 
-                                    onChange = {onChangeEnabler} 
+                                    onChange = {onChangeFuncs.onChangeEnabler} 
                                     id='listsize' 
                                 />
                             </InputGroup>
@@ -974,7 +1008,7 @@ const Options = ({
                             </FormLabel>
                             <Switch 
                                 isChecked = {functionSettingsRef.current.reload} 
-                                onChange = {onChangeEnabler} 
+                                onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='reload' 
                             />
                         </InputGroup>
@@ -1023,7 +1057,7 @@ const Options = ({
                             </FormLabel>
                             <Switch 
                                 isChecked = {functionSettingsRef.current.insert} 
-                                onChange = {onChangeEnabler} 
+                                onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='insert' 
                             />
                         </InputGroup>
@@ -1073,7 +1107,7 @@ const Options = ({
                             </FormLabel>
                             <Switch 
                                 isChecked = {functionSettingsRef.current.remove} 
-                                onChange = {onChangeEnabler} 
+                                onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='remove' 
                             />
                         </InputGroup>
@@ -1138,7 +1172,7 @@ const Options = ({
                             </FormLabel>
                             <Switch 
                                 isChecked = {functionSettingsRef.current.move} 
-                                onChange = {onChangeEnabler} 
+                                onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='move' 
                             />
                         </InputGroup>
@@ -1165,7 +1199,7 @@ const Options = ({
                             </FormLabel>
                             <Switch 
                                 isChecked = {functionSettingsRef.current.remap} 
-                                onChange = {onChangeEnabler} 
+                                onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='remap' 
                             />
                         </InputGroup>
@@ -1185,7 +1219,7 @@ const Options = ({
                             </FormLabel>
                             <Switch 
                                 isChecked = {functionSettingsRef.current.clear} 
-                                onChange = {onChangeEnabler} 
+                                onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='clear' 
                             />
                         </InputGroup>
