@@ -129,7 +129,7 @@ const Options = ({
         }
     )
 
-    const displayErrors = displayErrorsRef.current
+    const isInvalid = displayErrorsRef.current
 
     // displan error messages
     const errorMessagesRef = useRef<GenericObject>(
@@ -139,8 +139,8 @@ const Options = ({
             orientation:'',
             remapDemo:'',
             cache:'',
-            cellHeight:'cellHeight is required (minimum 25)',
-            cellWidth:'cellWidth is required (minimum 25)',
+            cellHeight:'cellHeight is required with minimum of 25',
+            cellWidth:'cellWidth is required with minimum 25',
             minCellHeight:'minimum 25',
             minCellWidth:'minimum 25',
             padding:'blank, or greater than or equal to 0',
@@ -403,7 +403,7 @@ const Options = ({
                     </AccordionButton>
                 </Heading>
 
-                <AccordionPanel pb={4}><VStack>
+                <AccordionPanel pb={4}><VStack alignItems = 'start'>
 
                     <FormControl>
                         <Stack direction = {['column','row','row']} align = 'normal'>
@@ -420,42 +420,44 @@ const Options = ({
                         </Stack>
                     </FormControl>
 
-                    <FormControl isInvalid = {displayErrors.cellHeight}>
-                        <FormLabel size = 'sm'>Base cell sizes</FormLabel>
-                        <Stack direction = {['column','row','row']}>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
-                            <NumberInput 
-                                value = {displayValues.cellHeight} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.cellHeight}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
-                            <NumberInput 
-                                value = {displayValues.cellWidth} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.cellWidth}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        </Stack>
-                        <FormErrorMessage>Hello
-                            {errorMessages.cellHeight}
-                        </FormErrorMessage>
-                        <FormErrorMessage>
-                            {errorMessages.cellWidth}
-                        </FormErrorMessage>
-                        <FormHelperText>
-                           Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
-                           <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
-                           'variable' layout; the cross dimensions are allocated fractionally (<Code>fr</Code>).
-                        </FormHelperText>
-                    </FormControl>
+                    <Heading size = 'xs'>Base cell sizes</Heading>
+                    <Stack direction = {['column','row','row']}>
+                        <FormControl isInvalid = {isInvalid.cellHeight}>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
+                                <NumberInput 
+                                    value = {displayValues.cellHeight} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.cellHeight}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.cellHeight}
+                            </FormErrorMessage>
+                        </FormControl>
+                        <FormControl isInvalid = {isInvalid.cellWidth}>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
+                                <NumberInput 
+                                    value = {displayValues.cellWidth} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.cellWidth}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.cellWidth}
+                            </FormErrorMessage>
+                        </FormControl>
+                    </Stack>
+                    <Text fontSize = 'sm'>
+                       Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
+                       <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
+                       'variable' layout; the cross dimensions are allocated fractionally (<Code>fr</Code>).
+                    </Text>
 
                     <FormControl>
                         <FormLabel size = 'sm'>Minimum cell sizes</FormLabel>
@@ -481,11 +483,11 @@ const Options = ({
                                 </NumberInput>
                         </InputGroup>
                         </Stack>
-                        {displayErrors.minCellHeight &&
+                        {isInvalid.minCellHeight &&
                             <FormErrorMessage>
                                 {errorMessages.minCellHeight}
                             </FormErrorMessage>}
-                        {displayErrors.minCellWidth &&
+                        {isInvalid.minCellWidth &&
                             <FormErrorMessage>
                                 {errorMessages.minCellWidth}
                             </FormErrorMessage>}
@@ -518,11 +520,11 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </Stack>
-                        {displayErrors.padding &&
+                        {isInvalid.padding &&
                             <FormErrorMessage>
                                 {errorMessages.padding}
                             </FormErrorMessage>}
-                        {displayErrors.gap &&
+                        {isInvalid.gap &&
                             <FormErrorMessage>
                                 {errorMessages.gap}
                             </FormErrorMessage>}
@@ -546,7 +548,7 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </HStack>
-                        {displayErrors.runwaySize &&
+                        {isInvalid.runwaySize &&
                             <FormErrorMessage>
                                 {errorMessages.runwaySize}
                             </FormErrorMessage>}
@@ -580,11 +582,11 @@ const Options = ({
                             </NumberInput>
                         </InputGroup>
                         </Stack>
-                        {displayErrors.cache &&
+                        {isInvalid.cache &&
                             <FormErrorMessage>
                                 {errorMessages.cache}
                             </FormErrorMessage>}
-                        {displayErrors.cacheMax &&
+                        {isInvalid.cacheMax &&
                             <FormErrorMessage>
                                 {errorMessages.cacheMax}
                             </FormErrorMessage>}
@@ -816,7 +818,7 @@ const Options = ({
                                 id='goto' 
                             />
                         </InputGroup>
-                        {displayErrors.gotoIndex &&
+                        {isInvalid.gotoIndex &&
                             <FormErrorMessage>
                                 {errorMessages.gotoIndex}
                             </FormErrorMessage>}
@@ -849,7 +851,7 @@ const Options = ({
                                 id='listsize' 
                             />
                         </InputGroup>
-                        {displayErrors.listsize &&
+                        {isInvalid.listsize &&
                             <FormErrorMessage>
                                 {errorMessages.listsize}
                             </FormErrorMessage>}
@@ -909,11 +911,11 @@ const Options = ({
                                 id='insert' 
                             />
                         </InputGroup>
-                        {displayErrors.insertFrom &&
+                        {isInvalid.insertFrom &&
                             <FormErrorMessage>
                                 {errorMessages.insertFrom}
                             </FormErrorMessage>}
-                        {displayErrors.insertRange &&
+                        {isInvalid.insertRange &&
                             <FormErrorMessage>
                                 {errorMessages.insertRange}
                             </FormErrorMessage>}
@@ -957,11 +959,11 @@ const Options = ({
                                 id='remove' 
                             />
                         </InputGroup>
-                        {displayErrors.removeFrom &&
+                        {isInvalid.removeFrom &&
                             <FormErrorMessage>
                                 {errorMessages.removeFrom}
                             </FormErrorMessage>}
-                        {displayErrors.removeRange &&
+                        {isInvalid.removeRange &&
                             <FormErrorMessage>
                                 {errorMessages.removeRange}
                             </FormErrorMessage>}
@@ -1015,15 +1017,15 @@ const Options = ({
                                 id='move' 
                             />
                         </InputGroup>
-                        {displayErrors.moveFrom &&
+                        {isInvalid.moveFrom &&
                             <FormErrorMessage>
                                 {errorMessages.moveFrom}
                             </FormErrorMessage>}
-                        {displayErrors.moveRange &&
+                        {isInvalid.moveRange &&
                             <FormErrorMessage>
                                 {errorMessages.moveRange}
                             </FormErrorMessage>}
-                        {displayErrors.moveTo &&
+                        {isInvalid.moveTo &&
                             <FormErrorMessage>
                                 {errorMessages.moveTo}
                             </FormErrorMessage>}
@@ -1054,7 +1056,7 @@ const Options = ({
                                 id='remap' 
                             />
                         </InputGroup>
-                        {displayErrors.remapDemo &&
+                        {isInvalid.remapDemo &&
                             <FormErrorMessage>
                                 {errorMessages.remapDemo}
                             </FormErrorMessage>}
