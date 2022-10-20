@@ -101,8 +101,6 @@ const Options = ({
     const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
     const [functionProperties, setFunctionProperties] = useState({...functionPropertiesRef.current})
 
-    // const [optionsState, setOptionsState] = useState('setup')
-
     // disabled controls
     const disabledFlagsRef = useRef<GenericObject>(
         {
