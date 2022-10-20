@@ -101,7 +101,7 @@ const Options = ({
     const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
     const [functionProperties, setFunctionProperties] = useState({...functionPropertiesRef.current})
 
-    const [optionsState, setOptionsState] = useState('setup')
+    // const [optionsState, setOptionsState] = useState('setup')
 
     // disabled controls
     const disabledFlagsRef = useRef<GenericObject>(
@@ -302,7 +302,7 @@ const Options = ({
                 const target = event.target as HTMLInputElement
                 const enablerID = target.id
                 const enablerValue = target.checked
-                const functionSettings = functionSettingsRef.current
+                const functionSettings = functionEnabledSettingsRef.current
                 for (const prop in functionSettings) {
                     functionSettings[prop] = false
                 }
@@ -478,7 +478,7 @@ const Options = ({
     },[])
 
     // scroller function switch settings
-    const functionSettingsRef = useRef<FunctionSettings>({
+    const functionEnabledSettingsRef = useRef<FunctionSettings>({
         goto:false,
         listsize:false,
         reload:false,
@@ -952,7 +952,7 @@ const Options = ({
                                     Enable
                                 </FormLabel>
                                 <Switch 
-                                    isChecked = {functionSettingsRef.current.goto} 
+                                    isChecked = {functionEnabledSettingsRef.current.goto} 
                                     onChange = {onChangeFuncs.onChangeEnabler} 
                                     id='goto' 
                                 />
@@ -989,7 +989,7 @@ const Options = ({
                                     Enable
                                 </FormLabel>
                                 <Switch 
-                                    isChecked = {functionSettingsRef.current.listsize} 
+                                    isChecked = {functionEnabledSettingsRef.current.listsize} 
                                     onChange = {onChangeFuncs.onChangeEnabler} 
                                     id='listsize' 
                                 />
@@ -1007,7 +1007,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionSettingsRef.current.reload} 
+                                isChecked = {functionEnabledSettingsRef.current.reload} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='reload' 
                             />
@@ -1056,7 +1056,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionSettingsRef.current.insert} 
+                                isChecked = {functionEnabledSettingsRef.current.insert} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='insert' 
                             />
@@ -1106,7 +1106,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionSettingsRef.current.remove} 
+                                isChecked = {functionEnabledSettingsRef.current.remove} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='remove' 
                             />
@@ -1171,7 +1171,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionSettingsRef.current.move} 
+                                isChecked = {functionEnabledSettingsRef.current.move} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='move' 
                             />
@@ -1198,7 +1198,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionSettingsRef.current.remap} 
+                                isChecked = {functionEnabledSettingsRef.current.remap} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='remap' 
                             />
@@ -1218,7 +1218,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionSettingsRef.current.clear} 
+                                isChecked = {functionEnabledSettingsRef.current.clear} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='clear' 
                             />
