@@ -160,15 +160,15 @@ const Options = ({
     const errorMessages = errorMessagesRef.current
 
     // display error check functions
-    const errorTests:GenericObject =
+    const isInvalidTests:GenericObject =
     {
         contentType:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         orientation:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         cellHeight:(value:any) => {
             const isInValid = (!exists(value) || !minValue(value, 25))
@@ -176,76 +176,76 @@ const Options = ({
             return isInValid
         },
         cellWidth:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         minCellHeight:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         minCellWidth:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         padding:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         gap:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         runwaySize:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         cache:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         cacheMax:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         gotoIndex:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         listsize:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         insertFrom:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         insertRange:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         removeFrom:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         removeRange:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         moveFrom:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         moveRange:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         moveTo:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
         remapDemo:(value:any) => {
-            let isError = false
-            return isError
+            let isInvalid = false
+            return isInvalid
         },
     }
 
@@ -265,7 +265,7 @@ const Options = ({
         },
         cellHeight:(input:string) => {
             displayValues.cellHeight = input
-            if (!errorTests.cellHeight(input)) {
+            if (!isInvalidTests.cellHeight(input)) {
                 allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
             }
             setDisplayValues({...displayValues})
