@@ -13,27 +13,15 @@ import React, {useState, useEffect, useRef} from 'react';
 
 import { 
   ChakraProvider, 
-  Box, 
-  HStack, 
-  Grid, 
-  Heading, 
-  Button, 
-  Link,
-  Image,
-  Show,
-  useDisclosure,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerHeader,
-  DrawerBody,
-  DrawerFooter,
+  Box, HStack, Grid, Show,
+  Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, DrawerFooter,
+  Heading, Image,
+  useDisclosure, Button, Link,
 } from '@chakra-ui/react'
 
 import Explanations from './Explanations'
 import Options from './Options'
-import Scroller from './Scroller'
+import DemoScroller from './DemoScroller'
 
 import { defaultProperties, callbackSettings, functionsRef } from './demodata'
 
@@ -50,7 +38,7 @@ function App() {
   const contentTypeRef = useRef('simple')
   const callbackSettingsRef = useRef(callbackSettings)
   const functionPropertiesRef = useRef<any>({})
-  const operatingFunctionRef = useRef<string>()
+  const operatingFunctionRef = useRef<string>(null)
 
   // for application to Scroller
   const [applyProperties, setApplyProperties] = useState(displayPropertiesRef.current)
@@ -82,7 +70,7 @@ function App() {
       </Box>
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
-        <Scroller contentType = {applyType} displayProperties = {applyProperties} />
+        <DemoScroller contentType = {applyType} displayProperties = {applyProperties} />
 
       </Box>
 
@@ -106,6 +94,7 @@ function App() {
             callbackSettingsRef = { callbackSettingsRef }
             functionPropertiesRef = { functionPropertiesRef }
             operatingFunctionRef = { operatingFunctionRef }
+            functionsRef = { functionsRef }
           />
 
         </DrawerBody>

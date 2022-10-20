@@ -75,7 +75,8 @@ const Options = ({
     contentTypeRef, 
     callbackSettingsRef, 
     operatingFunctionRef, 
-    functionPropertiesRef
+    functionPropertiesRef,
+    functionsObject,
 }:any) => {
  
     // const typePropertiesRef = useRef(displayPropertiesRef.current[contentTypeRef.current])
