@@ -12,11 +12,13 @@
 import React, {useState, useEffect, useRef} from 'react';
 
 import { 
+
   ChakraProvider, 
   Box, HStack, Grid, Show,
   Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, DrawerFooter,
   Heading, Image,
   useDisclosure, Button, Link,
+
 } from '@chakra-ui/react'
 
 import Explanations from './Explanations'
@@ -24,11 +26,13 @@ import Options from './Options'
 import DemoScroller from './DemoScroller'
 
 import { 
+
   defaultProperties, 
   defaultCallbackSettings, 
   applyCallbackSettingsRef as callbackSettingsRef, 
   functionsRef, 
   defaultFunctionProperties, 
+  
 } from './demodata'
 
 function App() {
