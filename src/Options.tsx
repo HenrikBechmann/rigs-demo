@@ -407,7 +407,7 @@ const Options = ({
 
                     <FormControl borderBottom = '1px'>
                         <Stack direction = {['column','row','row']} align = 'normal'>
-                        <FormLabel size = 'sm'>Orientation</FormLabel>
+                        <FormLabel size = 'xs'>Orientation</FormLabel>
                         <RadioGroup 
                             value = {displayValues.orientation} 
                             onChange = {onChangeFuncs.orientation}
@@ -534,8 +534,8 @@ const Options = ({
                         the space between cells.
                     </Text>
 
+                    <Heading size = 'xs'>Runway size</Heading>
                     <FormControl isInvalid = {isInvalid.runwaySize} >
-                        <FormLabel size = 'sm'>Runway size</FormLabel>
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>runwaySize:</FormLabel>
@@ -551,11 +551,11 @@ const Options = ({
                         <FormErrorMessage>
                             {errorMessages.runwaySize}
                         </FormErrorMessage>
-                        <FormHelperText>
-                            Integer. This is the number of rows out of view at the head and tail of lists. 
-                            Minimum 1, default 1.
-                        </FormHelperText>
                     </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. This is the number of rows out of view at the head and tail of lists. 
+                        Minimum 1, default 1.
+                    </Text>
 
                     <Heading size = 'xs'>Cache settings</Heading>
                     <Stack direction = {['column','row','row']}>
@@ -587,7 +587,7 @@ const Options = ({
                         </FormErrorMessage>
                     </FormControl>
                     </Stack>
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                    <Text fontSize = 'sm' paddingBottom = {2}>
                         <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
                         Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
                         or zero is ignored.
