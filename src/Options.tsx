@@ -621,6 +621,7 @@ const Options = ({
                         <Checkbox 
                             isChecked = {callbackSettings.referenceIndexCallback} 
                             size = 'sm'
+                            mt = {2}
                             id = 'referenceIndexCallback'
                             onChange = {onChangeFuncs.callBackSettings}
                         >
@@ -635,6 +636,7 @@ const Options = ({
                         <Checkbox 
                             isChecked = {callbackSettings.preloadIndexCallback} 
                             size = 'sm'
+                            mt = {2}
                             id = 'preloadIndexCallback'
                             onChange = {onChangeFuncs.callBackSettings}
                         >
@@ -649,6 +651,7 @@ const Options = ({
                         <Checkbox 
                             isChecked = {callbackSettings.itemExceptionCallback} 
                             size = 'sm'
+                            mt = {2}
                             id = 'itemExceptionCallback'
                             onChange = {onChangeFuncs.callBackSettings}
                         >
@@ -663,6 +666,7 @@ const Options = ({
                         <Checkbox 
                             isChecked = {callbackSettings.repositioningFlagCallback} 
                             size = 'sm'
+                            mt = {2}
                             id = 'repositioningFlagCallback'
                             onChange = {onChangeFuncs.callBackSettings}
                         >
@@ -678,6 +682,7 @@ const Options = ({
                         <Checkbox 
                             isChecked = {callbackSettings.repositioningIndexCallback} 
                             size = 'sm'
+                            mt = {2}
                             id = 'repositioningIndexCallback'
                             onChange = {onChangeFuncs.callBackSettings}
                         >
@@ -692,6 +697,7 @@ const Options = ({
                         <Checkbox 
                             isChecked = {callbackSettings.changeListsizeCallback} 
                             size = 'sm'
+                            mt = {2}
                             id = 'changeListsizeCallback'
                             onChange = {onChangeFuncs.callBackSettings}
                         >
@@ -706,6 +712,7 @@ const Options = ({
                         <Checkbox 
                             isChecked = {callbackSettings.deleteListCallback} 
                             size = 'sm'
+                            mt = {2}
                             id = 'deleteListCallback'
                             onChange = {onChangeFuncs.callBackSettings}
                         >
