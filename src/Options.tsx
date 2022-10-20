@@ -133,10 +133,6 @@ const Options = ({
     const errorMessagesRef = useRef<GenericObject>(
         {
             // string selection, no errors
-            contentType:'',
-            orientation:'',
-            remapDemo:'',
-            cache:'',
             cellHeight:'cellHeight is required with minimum of 25',
             cellWidth:'cellWidth is required with minimum 25',
             cellMinHeight:'blank, or minimum 25',
