@@ -139,12 +139,12 @@ const Options = ({
             cache:'',
             cellHeight:'cellHeight is required with minimum of 25',
             cellWidth:'cellWidth is required with minimum 25',
-            cellMinHeight:'minimum 25',
-            cellMinWidth:'minimum 25',
+            cellMinHeight:'blank, or minimum 25',
+            cellMinWidth:'blank, or minimum 25',
             padding:'blank, or greater than or equal to 0',
             gap:'blank, or greater than or equal to 0',
             runwaySize:'blank, or minimum 1',
-            cacheMax:'greater than or equal to 0',
+            cacheMax:'blank, or greater than or equal to 0',
             gotoIndex:'required, greater than or equal to 0',
             listsize:'required, greater than or equal to 0',
             insertFrom:'required, greater than or equal to 0',
@@ -162,49 +162,62 @@ const Options = ({
     // display error check functions
     const isInvalidTests:GenericObject =
     {
-        contentType:(value:any) => {
-            let isInvalid = false
-            return isInvalid
-        },
-        orientation:(value:any) => {
-            let isInvalid = false
-            return isInvalid
-        },
         cellHeight:(value:any) => {
-            const isInValid = (!exists(value) || !minValue(value, 25))
-            invalidFlagsRef.current.cellHeight = isInValid
-            return isInValid
+            const isInvalid = (!exists(value) || !minValue(value, 25))
+            invalidFlagsRef.current.cellHeight = isInvalid
+            return isInvalid
         },
         cellWidth:(value:any) => {
-            let isInvalid = false
+            const isInvalid = (!exists(value) || !minValue(value, 25))
+            invalidFlagsRef.current.cellWidth = isInvalid
             return isInvalid
         },
         cellMinHeight:(value:any) => {
             let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,25)
+            }
+            invalidFlagsRef.current.cellMinHeight = isInvalid
             return isInvalid
         },
         cellMinWidth:(value:any) => {
             let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,25)
+            }
+            invalidFlagsRef.current.cellMinWidth = isInvalid
             return isInvalid
         },
         padding:(value:any) => {
             let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlagsRef.current.padding = isInvalid
             return isInvalid
         },
         gap:(value:any) => {
             let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlagsRef.current.gap = isInvalid
             return isInvalid
         },
         runwaySize:(value:any) => {
             let isInvalid = false
-            return isInvalid
-        },
-        cache:(value:any) => {
-            let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,1)
+            }
+            invalidFlagsRef.current.runwaySize = isInvalid
             return isInvalid
         },
         cacheMax:(value:any) => {
             let isInvalid = false
+            if (exists(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlagsRef.current.cacheMax = isInvalid
             return isInvalid
         },
         gotoIndex:(value:any) => {
