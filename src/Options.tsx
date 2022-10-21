@@ -1013,7 +1013,7 @@ const Options = ({
                     <VStack alignItems = 'start'>
 
                     <Heading size = 'xs'>Go to</Heading>
-                    <HStack alignItems = 'start'>
+                    <HStack alignItems = 'baseline'>
 
                         <FormControl isInvalid = {invalidFlags.gotoIndex} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
@@ -1054,7 +1054,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Change virtual list size</Heading>
-                    <HStack alignItems = 'start'>
+                    <HStack alignItems = 'baseline'>
 
                         <FormControl isInvalid = {invalidFlags.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
@@ -1296,7 +1296,7 @@ const Options = ({
                     </Text> 
 
                     <Heading size = 'xs'>Remap indexes</Heading>
-                    <Stack direction = {['column','row','row']}>
+                    <Stack direction = {['column','row','row']} alignItems = 'baseline'>
 
                     <FormControl>
                         <Select 
