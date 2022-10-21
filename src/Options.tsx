@@ -633,6 +633,7 @@ const Options = ({
                                     value = {displayValues.cellHeight} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.cellHeight}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -648,6 +649,7 @@ const Options = ({
                                     value = {displayValues.cellWidth} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.cellWidth}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -692,6 +694,7 @@ const Options = ({
                                     value = {displayValues.cellMinWidth} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.cellMinWidth}
+                                    clampValueOnBlur = {false}
                                 >
                                         <NumberInputField border = '2px' />
                                     </NumberInput>
@@ -714,6 +717,7 @@ const Options = ({
                                 value = {displayValues.padding} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.padding}
+                                clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
                             </NumberInput>
@@ -729,6 +733,7 @@ const Options = ({
                                 value = {displayValues.gap} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.gap}
+                                clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
                             </NumberInput>
@@ -752,6 +757,7 @@ const Options = ({
                                 value = {displayValues.runwaySize} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.runwaySize}
+                                clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
                             </NumberInput>
@@ -787,6 +793,7 @@ const Options = ({
                                 value = {displayValues.cacheMax} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.cacheMax}
+                                clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
                             </NumberInput>
@@ -1015,6 +1022,7 @@ const Options = ({
                                     value = {functionProperties.gotoIndex} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.gotoIndex}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -1052,6 +1060,7 @@ const Options = ({
                                     value = {functionProperties.listsize} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.listsize}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -1103,6 +1112,7 @@ const Options = ({
                                     value = {functionProperties.insertFrom} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.insertFrom}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -1118,6 +1128,7 @@ const Options = ({
                                     value = {functionProperties.insertRange} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.insertRange}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -1153,6 +1164,7 @@ const Options = ({
                                     value = {functionProperties.removeFrom} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.removeFrom}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -1168,6 +1180,7 @@ const Options = ({
                                     value = {functionProperties.removeRange} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.removeRange}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
@@ -1203,6 +1216,7 @@ const Options = ({
                                 value = {functionProperties.moveFrom} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveFrom}
+                                clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
                             </NumberInput>
@@ -1218,7 +1232,8 @@ const Options = ({
                                 value = {functionProperties.moveRange} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveRange}
-                            >
+                                clampValueOnBlur = {false}
+                           >
                                 <NumberInputField border = '2px' />
                             </NumberInput>
                         </InputGroup>
@@ -1234,6 +1249,7 @@ const Options = ({
                                 value = {functionProperties.moveTo} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveTo}
+                                clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
                             </NumberInput>
