@@ -8,7 +8,7 @@
 
 */
 
-import React, {useState, useRef, useEffect, useMemo} from 'react'
+import React, {useState, useRef, useEffect, useMemo, useCallback} from 'react'
 
 import {
 
@@ -94,12 +94,19 @@ const Options = ({
 }:any) => {
  
     // simple values
+    const [optionsState, setOptionsState] = useState('preparetoupdatedependencies')
     const [contentType, setContentType] = useState(contentTypeRef.current)
-    const [operationFunction, setOperationFunction] = useState(operationFunctionRef.current)
+    const [operationEditFunction, setOperationFunction] = useState(operationFunctionRef.current)
     // objects. The local values will be used to return valid edits to the inherited values
     const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentTypeRef.current]})
+    const displayValuesRef = useRef(displayValues)
+    displayValuesRef.current = displayValues
     const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
     const [functionProperties, setFunctionProperties] = useState({...functionPropertiesRef.current})
+
+    const updateDependencies = useCallback(()=>{
+        dependencyFuncs.contentType(contentTypeRef.current)
+    },[])
 
     // disabled controls
     const disabledFlagsRef = useRef<GenericObject>(
@@ -192,6 +199,7 @@ const Options = ({
                 if (exists(value)) {
                     isInvalid = !minValue(value,25)
                 }
+                console.log('cellMinHeight invalid check value, typeof, isInvalid', value, typeof value, isInvalid)
                 invalidFlagsRef.current.cellMinHeight = isInvalid
                 return isInvalid
             },
@@ -292,6 +300,27 @@ const Options = ({
         }
     },[])
 
+    const dependencyFuncs = useMemo<GenericObject>(()=>{
+        return {
+            contentType:(value:string) => {
+                console.log('contentType dependency func', value, displayValuesRef)
+                let disabled
+                if (['variable','variablepromises','variabledynamic'].includes(value)) {
+                    disabled = false
+                    isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
+                    isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
+                } else {
+                    disabled = true
+                    invalidFlagsRef.current.cellMinHeight = 
+                        invalidFlagsRef.current.cellMinWidth = false
+                }
+                disabledFlagsRef.current.cellMinHeight =
+                    disabledFlagsRef.current.cellMinWidth = disabled
+
+            }
+        }
+    },[])
+
     // display on change functions
     const onChangeFuncs = useMemo<GenericObject>(() => {
         return {
@@ -315,83 +344,108 @@ const Options = ({
                 const target = event.target as HTMLSelectElement
                 const value = target.value
                 contentTypeRef.current = value
-                let disabled
-                if (['variable','variablepromises','variabledynamic'].includes(value)) {
-                    disabled = false
-                } else {
-                    disabled = true
-                }
-                disabledFlagsRef.current.cellMinHeight =
-                    disabledFlagsRef.current.cellMinWidth = disabled
-                console.log('disabledFlagsRef.current',disabledFlagsRef.current)
-                setContentType(value)
+                // change property set to correspond with content type
                 setDisplayValues(allDisplayPropertiesRef.current[value])
+                console.log('updating allDisplayPropertiesRef',allDisplayPropertiesRef.current)
+                setContentType(value)
+                setOptionsState('preparetoupdatedependencies')
             },
-            orientation:(orientation:string) => {
-                displayValues.orientation = orientation
-                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+            orientation:(input:string) => {
+                const displayValues = displayValuesRef.current
+                displayValues.orientation = input
+                const newDisplayValues = 
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],orientation:input}
+                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 setDisplayValues({...displayValues})
             },
             cellHeight:(input:string) => {
+                const displayValues = displayValuesRef.current
                 displayValues.cellHeight = input
                 if (!isInvalidTests.cellHeight(input)) {
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                    const newDisplayValues = 
+                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cellHeight:input}
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
             },
             cellWidth:(input:string) => {
+                const displayValues = displayValuesRef.current
                 displayValues.cellWidth = input
                 if (!isInvalidTests.cellWidth(input)) {
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                    const newDisplayValues = 
+                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cellWidth:input}
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
             },
             cellMinHeight:(input:string) => {
+                const displayValues = displayValuesRef.current
                 displayValues.cellMinHeight = input
                 if (!isInvalidTests.cellMinHeight(input)) {
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                    console.log('update permanent displayValues from cellMinHeight', input)
+                    const newDisplayValues = 
+                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinHeight:input}
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
             },
             cellMinWidth:(input:string) => {
+                const displayValues = displayValuesRef.current
                 displayValues.cellMinWidth = input
                 if (!isInvalidTests.cellMinWidth(input)) {
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                    const newDisplayValues = 
+                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinWidth:input}
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
             },
             padding:(input:string) => {
+                const displayValues = displayValuesRef.current
                 displayValues.padding = input
                 if (!isInvalidTests.padding(input)) {
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                    const newDisplayValues = 
+                        {...allDisplayPropertiesRef.current[contentTypeRef.current],padding:input}
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
             },
             gap:(input:string) => {
+                const displayValues = displayValuesRef.current
                 displayValues.gap = input
                 if (!isInvalidTests.gap(input)) {
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                    const newDisplayValues = 
+                        {...allDisplayPropertiesRef.current[contentTypeRef.current],gap:input}
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
             },
             runwaySize:(input:string) => {
+                const displayValues = displayValuesRef.current
                 displayValues.runwaySize = input
                 if (!isInvalidTests.runwaySize(input)) {
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                    const newDisplayValues = 
+                        {...allDisplayPropertiesRef.current[contentTypeRef.current],runwaySize:input}
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
             },
             cache:(event:React.ChangeEvent) => {
+                const displayValues = displayValuesRef.current
                 const target = event.target as HTMLSelectElement
                 const value = target.value
                 displayValues.cache = value
-                allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                const newDisplayValues = 
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cache:value}
+                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 setDisplayValues({...displayValues})
             },
             cacheMax:(input:string) => {
+                const displayValues = displayValuesRef.current
                 displayValues.cacheMax = input
                 if (!isInvalidTests.cacheMax(input)) {
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = displayValues
+                    const newDisplayValues = 
+                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cacheMax:input}
+                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
             },
@@ -404,6 +458,7 @@ const Options = ({
                 setCallbackSettings({...callbackSettings})            
             },
             gotoIndex:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.gotoIndex = input
                 if (!isInvalidTests.gotoIndex(input)) {
                     functionPropertiesRef.current.gotoIndex = input
@@ -411,6 +466,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             listsize:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.listsize = input
                 if (!isInvalidTests.listsize(input)) {
                     functionPropertiesRef.current.listsize = input
@@ -418,6 +474,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             insertFrom:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.insertFrom = input
                 if (!isInvalidTests.insertFrom(input)) {
                     functionPropertiesRef.current.insertFrom = input
@@ -425,6 +482,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             insertRange:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.insertRange = input
                 if (!isInvalidTests.insertRange(input)) {
                     functionPropertiesRef.current.insertRange = input
@@ -432,6 +490,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             removeFrom:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.removeFrom = input
                 if (!isInvalidTests.removeFrom(input)) {
                     functionPropertiesRef.current.removeFrom = input
@@ -439,6 +498,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             removeRange:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.removeRange = input
                 if (!isInvalidTests.removeRange(input)) {
                     functionPropertiesRef.current.removeRange = input
@@ -446,6 +506,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             moveFrom:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.moveFrom = input
                 if (!isInvalidTests.moveFrom(input)) {
                     functionPropertiesRef.current.moveFrom = input
@@ -453,6 +514,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             moveRange:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.moveRange = input
                 if (!isInvalidTests.moveRange(input)) {
                     functionPropertiesRef.current.moveRange = input
@@ -460,6 +522,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             moveTo:(input:string) => {
+                const functionProperties = functionPropertiesRef.current
                 functionProperties.moveTo = input
                 if (!isInvalidTests.moveTo(input)) {
                     functionPropertiesRef.current.moveTo = input
@@ -467,6 +530,7 @@ const Options = ({
                 setFunctionProperties({...functionProperties})
             },
             remapDemo:(event:React.ChangeEvent) => {
+                const functionProperties = functionPropertiesRef.current
                 const target = event.target as HTMLSelectElement
                 const value = target.value
                 functionPropertiesRef.current.remapDemo = value
@@ -486,6 +550,20 @@ const Options = ({
         remap:false,
         clear:false,
     })
+
+    useEffect(()=>{
+        switch (optionsState) {
+            case 'preparetoupdatedependencies': {
+                setOptionsState('updatedependencies')
+                break
+            }
+            case 'updatedependencies': {
+                updateDependencies()
+                setOptionsState('ready')
+                break
+            }
+        }
+    },[optionsState])
 
     // render
     return (<Box> <VStack align = 'start' alignItems = 'stretch'>
@@ -596,6 +674,7 @@ const Options = ({
                                     value = {displayValues.cellMinHeight} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.cellMinHeight}
+                                    clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
