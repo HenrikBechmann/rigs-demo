@@ -57,7 +57,7 @@ const Options = ({
 }:any) => {
  
     // simple values
-    const [optionsState, setOptionsState] = useState('preparetoupdatedependencies')
+    const [optionsState, setOptionsState] = useState('initializedependencies')
     const [contentType, setContentType] = useState(contentTypeRef.current)
     const [operationEditFunction, setOperationFunction] = useState(operationFunctionRef.current)
     operationFunctionRef.current = operationEditFunction
@@ -72,13 +72,6 @@ const Options = ({
     const [functionDisplayValues, setFunctionDisplayValues] = useState({...functionPropertiesRef.current})
     const functionDisplayValuesRef = useRef(functionDisplayValues)
     functionDisplayValuesRef.current = functionDisplayValues
-
-    const updateDependencies = useCallback(()=>{
-
-        dependencyFuncs.contentType(contentTypeRef.current)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
 
     // disabled controls
     const disabledFlagsRef = useRef<GenericObject>(
@@ -293,7 +286,78 @@ const Options = ({
                 disabledFlagsRef.current.cellMinHeight =
                     disabledFlagsRef.current.cellMinWidth = disabled
 
+            },
+            serviceFunctions: (service:string) => {
+                // disable all, and reset error conditions
+                const dependentFields = [
+                    'gotoIndex',
+                    'listsize',
+                    'insertFrom', 'insertRange',
+                    'removeFrom', 'removeRange',
+                    'moveFrom', 'moveRange', 'moveTo',
+                    'remapDemo',
+                ]
+
+                for (const field of dependentFields) {
+                    disabledFlagsRef.current[field] = true
+                    if (invalidFlagsRef.current[field]) {
+                        invalidFlagsRef.current[field] = false
+                        functionDisplayValuesRef.current[field] = functionPropertiesRef.current[field]
+                    }
+                }
+
+                if (service) {
+                    switch (service) {
+                        case 'goto':{
+                            disabledFlagsRef.current.gotoIndex = false
+                            isInvalidTests.gotoIndex(functionDisplayValuesRef.current.gotoIndex)
+                            break
+                        }
+                        case 'listsize':{
+                            disabledFlagsRef.current.listsize = false
+                            isInvalidTests.listsize(functionDisplayValuesRef.current.listsize)
+                            break
+                        }
+                        case 'reload':{
+
+                            break
+                        }
+                        case 'insert':{
+                            disabledFlagsRef.current.insertFrom = false
+                            disabledFlagsRef.current.insertRange = false
+                            isInvalidTests.insertFrom(functionDisplayValuesRef.current.insertFrom)
+                            isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
+                            break
+                        }
+                        case 'remove':{
+                            disabledFlagsRef.current.removeFrom = false
+                            disabledFlagsRef.current.removeRange = false
+                            isInvalidTests.removeFrom(functionDisplayValuesRef.current.removeFrom)
+                            isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
+                            break
+                        }
+                        case 'move':{
+                            disabledFlagsRef.current.moveFrom = false
+                            disabledFlagsRef.current.moveRange = false
+                            disabledFlagsRef.current.moveTo = false
+                            isInvalidTests.moveFrom(functionDisplayValuesRef.current.moveFrom)
+                            isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
+                            isInvalidTests.moveTo(functionDisplayValuesRef.current.moveTo)
+                            break
+                        }
+                        case 'remap':{
+                            disabledFlagsRef.current.remapDemo = false
+                            break
+                        }
+                        case 'clear':{
+
+                            break
+                        }
+                    }
+                }
+                setFunctionDisplayValues(functionDisplayValuesRef.current)
             }
+
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
@@ -317,6 +381,7 @@ const Options = ({
                     enablerID:
                     null
                 setOperationFunction(opfunc)
+                setOptionsState('preparetoupdatefunctiondependencies')
             },
 
             // contentType global switch
@@ -327,7 +392,7 @@ const Options = ({
                 // change property set to correspond with content type
                 setDisplayValues({...allDisplayPropertiesRef.current[value]})
                 setContentType(value)
-                setOptionsState('preparetoupdatedependencies')
+                setOptionsState('preparetoupdatecontentdependencies')
             },
 
             // callback handling
@@ -537,12 +602,27 @@ const Options = ({
 
     useEffect(()=>{
         switch (optionsState) {
-            case 'preparetoupdatedependencies': {
-                setOptionsState('updatedependencies')
+            case 'initializedependencies': {
+                dependencyFuncs.contentType(contentTypeRef.current)
+                dependencyFuncs.serviceFunctions(operationFunctionRef.current)
+                setOptionsState('ready')
                 break
             }
-            case 'updatedependencies': {
-                updateDependencies()
+            case 'preparetoupdatecontentdependencies': {
+                setOptionsState('updatecontentdependencies')
+                break
+            }
+            case 'updatecontentdependencies': {
+                dependencyFuncs.contentType(contentTypeRef.current)
+                setOptionsState('ready')
+                break
+            }
+            case 'preparetoupdatefunctiondependencies': {
+                setOptionsState('updatefunctiondependencies')
+                break
+            }
+            case 'updatefunctiondependencies': {
+                dependencyFuncs.serviceFunctions(operationFunctionRef.current)
                 setOptionsState('ready')
                 break
             }
@@ -827,7 +907,7 @@ const Options = ({
                     <Text mb = {2}>
                         On a desktop, these callbacks, when checked, will stream information about the scroller 
                         behaviour to the browser console. In an application the data can be used to enhance the 
-                        user experience.
+                        user experience. Select the callbacks you want to activate.
                     </Text>
 
                     <VStack alignItems = 'start'>
@@ -949,7 +1029,7 @@ const Options = ({
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Functions: snapshots
+                            Service functions: snapshots
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
@@ -997,7 +1077,7 @@ const Options = ({
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Functions: operations
+                            Service functions: operations
                         </Box>
                         <AccordionIcon />                        
                     </AccordionButton>
@@ -1015,7 +1095,9 @@ const Options = ({
                     <Heading size = 'xs'>Go to</Heading>
                     <HStack alignItems = 'baseline'>
 
-                        <FormControl isInvalid = {invalidFlags.gotoIndex} >
+                        <FormControl 
+                            isDisabled = {disabledFlags.gotoIndex}
+                            isInvalid = {invalidFlags.gotoIndex}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
                                 <NumberInput 
@@ -1056,7 +1138,9 @@ const Options = ({
                     <Heading size = 'xs'>Change virtual list size</Heading>
                     <HStack alignItems = 'baseline'>
 
-                        <FormControl isInvalid = {invalidFlags.listsize} >
+                        <FormControl 
+                            isDisabled = {disabledFlags.listsize}
+                            isInvalid = {invalidFlags.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
                                 <NumberInput 
@@ -1111,7 +1195,9 @@ const Options = ({
                     <Heading size = 'xs'>Insert indexes</Heading>
                     <Stack direction = {['column','row','row']}>
 
-                        <FormControl isInvalid = {invalidFlags.insertFrom} >
+                        <FormControl 
+                            isDisabled = {disabledFlags.insertFrom}
+                            isInvalid = {invalidFlags.insertFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
                                 <NumberInput 
@@ -1128,7 +1214,9 @@ const Options = ({
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl isInvalid = {invalidFlags.insertRange} >
+                        <FormControl 
+                            isDisabled = {disabledFlags.insertRange}
+                            isInvalid = {invalidFlags.insertRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
                                 <NumberInput 
@@ -1167,7 +1255,9 @@ const Options = ({
                     <Heading size = 'xs'>Remove indexes</Heading>
                     <Stack direction = {['column','row','row']}>
 
-                        <FormControl isInvalid ={invalidFlags.removeFrom} >
+                        <FormControl 
+                            isDisabled = {disabledFlags.removeFrom}
+                            isInvalid = {invalidFlags.removeFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
                                 <NumberInput 
@@ -1184,7 +1274,9 @@ const Options = ({
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl isInvalid = {invalidFlags.removeRange} >
+                        <FormControl 
+                            isDisabled = {disabledFlags.removeRange}
+                            isInvalid = {invalidFlags.removeRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
                                 <NumberInput 
@@ -1224,7 +1316,9 @@ const Options = ({
                     <Heading size = 'xs'>Move indexes</Heading>
                     <Stack direction = {['column','row','row']} mb = {2}>
 
-                    <FormControl isInvalid = {invalidFlags.moveFrom} >
+                    <FormControl 
+                        isDisabled = {disabledFlags.moveFrom}
+                        isInvalid = {invalidFlags.moveFrom} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
                             <NumberInput 
@@ -1241,7 +1335,9 @@ const Options = ({
                         </FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isInvalid = {invalidFlags.moveRange} >
+                    <FormControl 
+                        isDisabled = {disabledFlags.moveRange}
+                        isInvalid = {invalidFlags.moveRange} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
                             <NumberInput 
@@ -1260,7 +1356,9 @@ const Options = ({
 
                     </Stack>
 
-                    <FormControl isInvalid = {invalidFlags.moveTo} >
+                    <FormControl 
+                        isDisabled = {disabledFlags.moveTo}
+                        isInvalid = {invalidFlags.moveTo} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
                             <NumberInput 
@@ -1298,7 +1396,7 @@ const Options = ({
                     <Heading size = 'xs'>Remap indexes</Heading>
                     <Stack direction = {['column','row','row']} alignItems = 'baseline'>
 
-                    <FormControl>
+                    <FormControl isDisabled = {disabledFlags.remapDemo}>
                         <Select 
                             value = {displayValues.remapDemo} 
                             size = 'sm'
