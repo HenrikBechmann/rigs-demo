@@ -30,47 +30,6 @@ type FunctionSettings = {
     [prop:string]:boolean // allows iteration
 }
 
-type CellSizes = {
-    cellHeight:number,
-    cellWidth:number
-}
-
-type MinCellSizes = {
-    cellMinHeight:number | undefined,
-    cellMinWidth:number | undefined
-}
-
-type PaddingAndGap = {
-    padding:number | undefined,
-    gap:number | undefined
-}
-
-type CacheSettings = {
-    cache:string,
-    cacheMax:number | undefined
-}
-
-type CallbackSettings = {
-    referenceIndexCallback:boolean,
-    repositioningIndexCallback:boolean,
-    preloadIndexCallback:boolean,
-    itemExceptionCallback:boolean,
-    changeListsizeCallback:boolean,
-    deleteListCallback:boolean,
-    repositioningFlagCallback:boolean,
-}
-
-type RangeIndexes = {
-    from:number,
-    range: number | undefined,
-}
-
-type MoveIndexes = {
-    from:number,
-    range: number | undefined,
-    to:number,
-}
-
 // error check utilities
 const exists = (value:string) => {
     let test = !!value
@@ -79,7 +38,7 @@ const exists = (value:string) => {
 
 const minValue = (value:any, minValue:number) => {
     const testvalue = Number(value)
-    const test = (testvalue != NaN && testvalue >=minValue )
+    const test = (!isNaN(testvalue) && testvalue >=minValue )
     return test
 }
 
@@ -97,6 +56,7 @@ const Options = ({
     const [optionsState, setOptionsState] = useState('preparetoupdatedependencies')
     const [contentType, setContentType] = useState(contentTypeRef.current)
     const [operationEditFunction, setOperationFunction] = useState(operationFunctionRef.current)
+    operationFunctionRef.current = operationEditFunction
     // objects. The local values will be used to return valid edits to the inherited values
     const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentType]})
     const displayValuesRef = useRef(displayValues)
@@ -110,6 +70,7 @@ const Options = ({
 
     const updateDependencies = useCallback(()=>{
         dependencyFuncs.contentType(contentTypeRef.current)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
     // disabled controls
@@ -321,6 +282,7 @@ const Options = ({
 
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
     // display on change functions
@@ -538,6 +500,7 @@ const Options = ({
                 setFunctionDisplayValues({...functionDisplayValues})
             },
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
     // scroller function switch settings
@@ -564,6 +527,7 @@ const Options = ({
                 break
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[optionsState])
 
     // render
