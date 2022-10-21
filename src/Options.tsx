@@ -101,9 +101,12 @@ const Options = ({
     const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentType]})
     const displayValuesRef = useRef(displayValues)
     displayValuesRef.current = displayValues
+
     const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
+    
     const [functionDisplayValues, setFunctionDisplayValues] = useState({...functionPropertiesRef.current})
     const functionDisplayValuesRef = useRef(functionDisplayValues)
+    functionDisplayValuesRef.current = functionDisplayValues
 
     const updateDependencies = useCallback(()=>{
         dependencyFuncs.contentType(contentTypeRef.current)
