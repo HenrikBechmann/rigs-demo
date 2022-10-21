@@ -98,14 +98,12 @@ const Options = ({
     const [contentType, setContentType] = useState(contentTypeRef.current)
     const [operationEditFunction, setOperationFunction] = useState(operationFunctionRef.current)
     // objects. The local values will be used to return valid edits to the inherited values
-    // const [displayValues, setDisplayValues] = useState(()=>{
-    //     return cloneAllDisplayProperties(allDisplayPropertiesRef.current)[contentType]
-    // })
     const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentType]})
     const displayValuesRef = useRef(displayValues)
     displayValuesRef.current = displayValues
     const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
-    const [functionProperties, setFunctionProperties] = useState({...functionPropertiesRef.current})
+    const [functionDisplayValues, setFunctionDisplayValues] = useState({...functionPropertiesRef.current})
+    const functionDisplayValuesRef = useRef(functionDisplayValues)
 
     const updateDependencies = useCallback(()=>{
         dependencyFuncs.contentType(contentTypeRef.current)
@@ -457,83 +455,84 @@ const Options = ({
                 setCallbackSettings({...callbackSettings})            
             },
             gotoIndex:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.gotoIndex = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.gotoIndex = input
                 if (!isInvalidTests.gotoIndex(input)) {
                     functionPropertiesRef.current.gotoIndex = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             listsize:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.listsize = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.listsize = input
                 if (!isInvalidTests.listsize(input)) {
                     functionPropertiesRef.current.listsize = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             insertFrom:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.insertFrom = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.insertFrom = input
                 if (!isInvalidTests.insertFrom(input)) {
                     functionPropertiesRef.current.insertFrom = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             insertRange:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.insertRange = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.insertRange = input
                 if (!isInvalidTests.insertRange(input)) {
                     functionPropertiesRef.current.insertRange = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             removeFrom:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.removeFrom = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.removeFrom = input
                 if (!isInvalidTests.removeFrom(input)) {
                     functionPropertiesRef.current.removeFrom = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             removeRange:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.removeRange = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.removeRange = input
                 if (!isInvalidTests.removeRange(input)) {
                     functionPropertiesRef.current.removeRange = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             moveFrom:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.moveFrom = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.moveFrom = input
                 if (!isInvalidTests.moveFrom(input)) {
                     functionPropertiesRef.current.moveFrom = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             moveRange:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.moveRange = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.moveRange = input
                 if (!isInvalidTests.moveRange(input)) {
                     functionPropertiesRef.current.moveRange = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             moveTo:(input:string) => {
-                const functionProperties = functionPropertiesRef.current
-                functionProperties.moveTo = input
+                const functionDisplayValues = functionDisplayValuesRef.current
+                functionDisplayValues.moveTo = input
                 if (!isInvalidTests.moveTo(input)) {
                     functionPropertiesRef.current.moveTo = input
                 }
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
             remapDemo:(event:React.ChangeEvent) => {
-                const functionProperties = functionPropertiesRef.current
+                const functionDisplayValues = functionDisplayValuesRef.current
                 const target = event.target as HTMLSelectElement
                 const value = target.value
+                functionDisplayValues.remapDemo = value
                 functionPropertiesRef.current.remapDemo = value
-                setFunctionProperties({...functionProperties})
+                setFunctionDisplayValues({...functionDisplayValues})
             },
         }
     },[])
@@ -1018,7 +1017,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
                                 <NumberInput 
-                                    value = {functionProperties.gotoIndex} 
+                                    value = {functionDisplayValues.gotoIndex} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.gotoIndex}
                                     clampValueOnBlur = {false}
@@ -1056,7 +1055,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
                                 <NumberInput 
-                                    value = {functionProperties.listsize} 
+                                    value = {functionDisplayValues.listsize} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.listsize}
                                     clampValueOnBlur = {false}
@@ -1108,7 +1107,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
                                 <NumberInput 
-                                    value = {functionProperties.insertFrom} 
+                                    value = {functionDisplayValues.insertFrom} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.insertFrom}
                                     clampValueOnBlur = {false}
@@ -1124,7 +1123,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
                                 <NumberInput 
-                                    value = {functionProperties.insertRange} 
+                                    value = {functionDisplayValues.insertRange} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.insertRange}
                                     clampValueOnBlur = {false}
@@ -1160,7 +1159,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
                                 <NumberInput 
-                                    value = {functionProperties.removeFrom} 
+                                    value = {functionDisplayValues.removeFrom} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.removeFrom}
                                     clampValueOnBlur = {false}
@@ -1176,7 +1175,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
                                 <NumberInput 
-                                    value = {functionProperties.removeRange} 
+                                    value = {functionDisplayValues.removeRange} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.removeRange}
                                     clampValueOnBlur = {false}
@@ -1212,7 +1211,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
                             <NumberInput 
-                                value = {functionProperties.moveFrom} 
+                                value = {functionDisplayValues.moveFrom} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveFrom}
                                 clampValueOnBlur = {false}
@@ -1228,7 +1227,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
                             <NumberInput 
-                                value = {functionProperties.moveRange} 
+                                value = {functionDisplayValues.moveRange} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveRange}
                                 clampValueOnBlur = {false}
@@ -1245,7 +1244,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
                             <NumberInput 
-                                value = {functionProperties.moveTo} 
+                                value = {functionDisplayValues.moveTo} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveTo}
                                 clampValueOnBlur = {false}
