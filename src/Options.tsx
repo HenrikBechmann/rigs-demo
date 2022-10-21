@@ -98,7 +98,10 @@ const Options = ({
     const [contentType, setContentType] = useState(contentTypeRef.current)
     const [operationEditFunction, setOperationFunction] = useState(operationFunctionRef.current)
     // objects. The local values will be used to return valid edits to the inherited values
-    const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentTypeRef.current]})
+    // const [displayValues, setDisplayValues] = useState(()=>{
+    //     return cloneAllDisplayProperties(allDisplayPropertiesRef.current)[contentType]
+    // })
+    const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentType]})
     const displayValuesRef = useRef(displayValues)
     displayValuesRef.current = displayValues
     const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
@@ -199,7 +202,6 @@ const Options = ({
                 if (exists(value)) {
                     isInvalid = !minValue(value,25)
                 }
-                console.log('cellMinHeight invalid check value, typeof, isInvalid', value, typeof value, isInvalid)
                 invalidFlagsRef.current.cellMinHeight = isInvalid
                 return isInvalid
             },
@@ -303,7 +305,6 @@ const Options = ({
     const dependencyFuncs = useMemo<GenericObject>(()=>{
         return {
             contentType:(value:string) => {
-                console.log('contentType dependency func', value, displayValuesRef)
                 let disabled
                 if (['variable','variablepromises','variabledynamic'].includes(value)) {
                     disabled = false
@@ -345,8 +346,7 @@ const Options = ({
                 const value = target.value
                 contentTypeRef.current = value
                 // change property set to correspond with content type
-                setDisplayValues(allDisplayPropertiesRef.current[value])
-                console.log('updating allDisplayPropertiesRef',allDisplayPropertiesRef.current)
+                setDisplayValues({...allDisplayPropertiesRef.current[value]})
                 setContentType(value)
                 setOptionsState('preparetoupdatedependencies')
             },
@@ -382,7 +382,6 @@ const Options = ({
                 const displayValues = displayValuesRef.current
                 displayValues.cellMinHeight = input
                 if (!isInvalidTests.cellMinHeight(input)) {
-                    console.log('update permanent displayValues from cellMinHeight', input)
                     const newDisplayValues = 
                         {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinHeight:input}
                     allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
