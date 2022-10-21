@@ -39,8 +39,18 @@ const exists = (value:string) => {
 const minValue = (value:any, minValue:number) => {
 
     const testvalue = +value
+    const testMinValue = +minValue
 
-    return (!isNaN(testvalue) && testvalue >=minValue )
+    return (!isNaN(testvalue) && !isNaN(testMinValue) && testvalue >=minValue )
+
+}
+
+const maxValue = (value:any, maxValue:number) => {
+
+    const testvalue = +value
+    const testMaxValue = +maxValue
+
+    return (!isNaN(testvalue) && !isNaN(testMaxValue) && testvalue >=maxValue )
 
 }
 
@@ -128,8 +138,8 @@ const Options = ({
             // string selection, no errors
             cellHeight:'cellHeight is required with minimum of 25',
             cellWidth:'cellWidth is required with minimum 25',
-            cellMinHeight:'blank, or minimum 25',
-            cellMinWidth:'blank, or minimum 25',
+            cellMinHeight:'blank, or minimum 25 and less than or equal to cellHeight',
+            cellMinWidth:'blank, or minimum 25 and less than or equal to cellWidth',
             padding:'blank, or greater than or equal to 0',
             gap:'blank, or greater than or equal to 0',
             runwaySize:'blank, or minimum 1',
@@ -137,11 +147,11 @@ const Options = ({
             gotoIndex:'required, greater than or equal to 0',
             listsize:'required, greater than or equal to 0',
             insertFrom:'required, greater than or equal to 0',
-            insertRange:'blank, or greater than or equal to 0',
+            insertRange:'blank, or greater than or equal to the "from" index',
             removeFrom:'required, greater than or equal to 0',
-            removeRange:'blank, or greater than or equal to 0',
+            removeRange:'blank, or greater than or equal to the "from" index',
             moveFrom:'required, greater than or equal to 0',
-            moveRange:'blank, or greater than or equal to 0',
+            moveRange:'blank, or greater than or equal to the "from" index',
             moveTo:'required, greater than or equal to 0',
         }
     },[])
