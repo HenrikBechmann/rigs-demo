@@ -37,19 +37,23 @@ const exists = (value:string) => {
 }
 
 const minValue = (value:any, minValue:number) => {
+
     const testvalue = +value
-    const test = (!isNaN(testvalue) && testvalue >=minValue )
-    return test
+
+    return (!isNaN(testvalue) && testvalue >=minValue )
+
 }
 
 // Options component
 const Options = ({
+
     allDisplayPropertiesRef, 
     contentTypeRef, 
     callbackSettingsRef, 
     operationFunctionRef, 
     functionPropertiesRef,
     functionsObject,
+
 }:any) => {
  
     // simple values
@@ -57,7 +61,8 @@ const Options = ({
     const [contentType, setContentType] = useState(contentTypeRef.current)
     const [operationEditFunction, setOperationFunction] = useState(operationFunctionRef.current)
     operationFunctionRef.current = operationEditFunction
-    // objects. The local values will be used to return valid edits to the inherited values
+
+    // objects. The local values are used to obtain valid edits to the inherited values
     const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentType]})
     const displayValuesRef = useRef(displayValues)
     displayValuesRef.current = displayValues
@@ -69,7 +74,9 @@ const Options = ({
     functionDisplayValuesRef.current = functionDisplayValues
 
     const updateDependencies = useCallback(()=>{
+
         dependencyFuncs.contentType(contentTypeRef.current)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
@@ -267,16 +274,22 @@ const Options = ({
     const dependencyFuncs = useMemo<GenericObject>(()=>{
         return {
             contentType:(value:string) => {
+
                 let disabled
                 if (['variable','variablepromises','variabledynamic'].includes(value)) {
+
                     disabled = false
                     isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
                     isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
+
                 } else {
+
                     disabled = true
                     invalidFlagsRef.current.cellMinHeight = 
                         invalidFlagsRef.current.cellMinWidth = false
+
                 }
+
                 disabledFlagsRef.current.cellMinHeight =
                     disabledFlagsRef.current.cellMinWidth = disabled
 
@@ -288,7 +301,8 @@ const Options = ({
     // display on change functions
     const onChangeFuncs = useMemo<GenericObject>(() => {
         return {
-            // update scroller function switch settings
+
+            // update scroller service function switch settings
             onChangeEnabler:(event:React.ChangeEvent) => {
                 const target = event.target as HTMLInputElement
                 const enablerID = target.id
@@ -304,6 +318,8 @@ const Options = ({
                     null
                 setOperationFunction(opfunc)
             },
+
+            // contentType global switch
             contentType:(event:React.ChangeEvent) => {
                 const target = event.target as HTMLSelectElement
                 const value = target.value
@@ -313,6 +329,18 @@ const Options = ({
                 setContentType(value)
                 setOptionsState('preparetoupdatedependencies')
             },
+
+            // callback handling
+            callbackSettings:(event:React.ChangeEvent) => {
+                const target = event.target as HTMLInputElement
+                const callbackID = target.id
+                const callbackValue = target.checked
+                const callbackSettings = callbackSettingsRef.current
+                callbackSettings[callbackID] = callbackValue
+                setCallbackSettings({...callbackSettings})            
+            },
+
+            // individual values
             orientation:(input:string) => {
                 const displayValues = displayValuesRef.current
                 displayValues.orientation = input
@@ -410,14 +438,6 @@ const Options = ({
                     allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
                 }
                 setDisplayValues({...displayValues})
-            },
-            callbackSettings:(event:React.ChangeEvent) => {
-                const target = event.target as HTMLInputElement
-                const callbackID = target.id
-                const callbackValue = target.checked
-                const callbackSettings = callbackSettingsRef.current
-                callbackSettings[callbackID] = callbackValue
-                setCallbackSettings({...callbackSettings})            
             },
             gotoIndex:(input:string) => {
                 const functionDisplayValues = functionDisplayValuesRef.current
@@ -591,6 +611,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Base cell sizes</Heading>
                     <Stack direction = {['column','row','row']}>
+
                         <FormControl isInvalid = {invalidFlags.cellHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
@@ -607,6 +628,7 @@ const Options = ({
                                 {errorMessages.cellHeight}
                             </FormErrorMessage>
                         </FormControl>
+
                         <FormControl isInvalid = {invalidFlags.cellWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
@@ -623,6 +645,7 @@ const Options = ({
                                 {errorMessages.cellWidth}
                             </FormErrorMessage>
                         </FormControl>
+
                     </Stack>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                        Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
@@ -632,6 +655,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Minimum cell sizes</Heading>
                     <Stack direction = {['column','row','row']}>
+
                         <FormControl 
                             isDisabled = {disabledFlags.cellMinHeight}
                             isInvalid = {invalidFlags.cellMinHeight}>
@@ -650,6 +674,7 @@ const Options = ({
                                 {errorMessages.cellMinHeight}
                             </FormErrorMessage>
                         </FormControl>
+
                         <FormControl 
                             isDisabled = {disabledFlags.cellMinHeight}
                             isInvalid = {invalidFlags.cellMinWidth}>
@@ -668,6 +693,7 @@ const Options = ({
                                 {errorMessages.cellMinWidth}
                             </FormErrorMessage>
                         </FormControl>
+
                     </Stack>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
@@ -675,6 +701,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Padding and gaps</Heading>
                     <Stack direction = {['column','row','row']}>
+
                     <FormControl isInvalid = {invalidFlags.padding} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
@@ -691,6 +718,7 @@ const Options = ({
                             {errorMessages.padding}
                         </FormErrorMessage>
                     </FormControl>
+
                     <FormControl isInvalid = {invalidFlags.gap} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
@@ -707,6 +735,7 @@ const Options = ({
                             {errorMessages.gap}
                         </FormErrorMessage>
                     </FormControl>
+
                     </Stack>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
@@ -714,6 +743,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Runway size</Heading>
+                    
                     <FormControl isInvalid = {invalidFlags.runwaySize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
@@ -732,6 +762,7 @@ const Options = ({
                             {errorMessages.runwaySize}
                         </FormErrorMessage>
                     </FormControl>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. This is the number of rows out of view at the head and tail of lists. 
                         Minimum 1, default 1.
@@ -739,6 +770,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Cache settings</Heading>
                     <Stack direction = {['column','row','row']}>
+
                     <FormControl>
                         <Select 
                             value = {displayValues.cache} 
@@ -751,6 +783,7 @@ const Options = ({
                             <option value="preload">preload</option>
                         </Select>
                     </FormControl>
+
                     <FormControl isInvalid = {invalidFlags.cacheMax}>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
@@ -767,6 +800,7 @@ const Options = ({
                             {errorMessages.cacheMax}
                         </FormErrorMessage>
                     </FormControl>
+
                     </Stack>
                     <Text fontSize = 'sm' paddingBottom = {2}>
                         <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
@@ -980,6 +1014,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Go to</Heading>
                     <HStack alignItems = 'start'>
+
                         <FormControl isInvalid = {invalidFlags.gotoIndex} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
@@ -996,6 +1031,7 @@ const Options = ({
                                 {errorMessages.gotoIndex}
                             </FormErrorMessage>
                         </FormControl>
+
                         <FormControl>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                                 <FormLabel htmlFor='goto' fontSize = 'sm'>
@@ -1011,6 +1047,7 @@ const Options = ({
                             something
                             </FormErrorMessage>
                         </FormControl>
+
                     </HStack>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. Go to the specified index number in the virtual list.
@@ -1018,6 +1055,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Change virtual list size</Heading>
                     <HStack alignItems = 'start'>
+
                         <FormControl isInvalid = {invalidFlags.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
@@ -1034,6 +1072,7 @@ const Options = ({
                                 {errorMessages.listsize}
                             </FormErrorMessage>
                         </FormControl>
+
                         <FormControl>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                                 <FormLabel htmlFor='listsize' fontSize = 'sm'>
@@ -1046,6 +1085,7 @@ const Options = ({
                                 />
                             </InputGroup>
                         </FormControl>
+
                     </HStack>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. Change the size of the scroller's virtual list.
@@ -1070,6 +1110,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Insert indexes</Heading>
                     <Stack direction = {['column','row','row']}>
+
                         <FormControl isInvalid = {invalidFlags.insertFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
@@ -1086,6 +1127,7 @@ const Options = ({
                                 {errorMessages.insertFrom}
                             </FormErrorMessage>
                         </FormControl>
+
                         <FormControl isInvalid = {invalidFlags.insertRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
@@ -1102,6 +1144,7 @@ const Options = ({
                                 {errorMessages.insertRange}
                             </FormErrorMessage>
                         </FormControl>
+
                     </Stack>
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -1115,6 +1158,7 @@ const Options = ({
                             />
                         </InputGroup>
                     </FormControl>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers. Insert one or more indexes. 'range' is optional, and must be equal to or 
                         above the 'from' value. The size of the virtual list is increased accordingly.
@@ -1122,6 +1166,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Remove indexes</Heading>
                     <Stack direction = {['column','row','row']}>
+
                         <FormControl isInvalid ={invalidFlags.removeFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
@@ -1138,6 +1183,7 @@ const Options = ({
                                 {errorMessages.removeFrom}
                             </FormErrorMessage>
                         </FormControl>
+
                         <FormControl isInvalid = {invalidFlags.removeRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
@@ -1154,7 +1200,9 @@ const Options = ({
                                 {errorMessages.removeRange}
                             </FormErrorMessage>
                         </FormControl>
+
                     </Stack>
+
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='remove' fontSize = 'sm'>
@@ -1167,6 +1215,7 @@ const Options = ({
                             />
                         </InputGroup>
                     </FormControl>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers. Remove one or more indexes. 'range' is optional, and must be equal to or 
                         above the 'from' value. The size of the virtual list is decreased accordingly.
@@ -1174,6 +1223,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Move indexes</Heading>
                     <Stack direction = {['column','row','row']} mb = {2}>
+
                     <FormControl isInvalid = {invalidFlags.moveFrom} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
@@ -1190,6 +1240,7 @@ const Options = ({
                             {errorMessages.moveFrom}
                         </FormErrorMessage>
                     </FormControl>
+
                     <FormControl isInvalid = {invalidFlags.moveRange} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
@@ -1206,7 +1257,9 @@ const Options = ({
                             {errorMessages.moveRange}
                         </FormErrorMessage>
                     </FormControl>
+
                     </Stack>
+
                     <FormControl isInvalid = {invalidFlags.moveTo} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
@@ -1223,6 +1276,7 @@ const Options = ({
                             {errorMessages.moveTo}
                         </FormErrorMessage>
                     </FormControl>
+
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='move' fontSize = 'sm'>
@@ -1235,13 +1289,16 @@ const Options = ({
                             />
                         </InputGroup>
                     </FormControl>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
                         above the 'from' value.
                     </Text> 
 
+                    <Heading size = 'xs'>Remap indexes</Heading>
+                    <Stack direction = {['column','row','row']}>
+
                     <FormControl>
-                        <FormLabel size = 'sm'>Remap indexes</FormLabel>
                         <Select 
                             value = {displayValues.remapDemo} 
                             size = 'sm'
@@ -1251,6 +1308,9 @@ const Options = ({
                             <option value="test2">Test 2</option>
                             <option value="test3">Test 3</option>
                         </Select>
+                    </FormControl>
+
+                    <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='remap' fontSize = 'sm'>
                                 Enable
@@ -1262,6 +1322,9 @@ const Options = ({
                             />
                         </InputGroup>
                     </FormControl>
+
+                    </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
                         items to the newly assigned indexes. We've included a few random tests that apply to 
@@ -1282,6 +1345,7 @@ const Options = ({
                             />
                         </InputGroup>
                     </FormControl>
+
                     <Text fontSize = 'sm' paddingBottom = {2}>
                         This clears the cache (and therefore the cradle). Not very interesting.
                     </Text>
