@@ -37,7 +37,7 @@ const exists = (value:string) => {
 }
 
 const minValue = (value:any, minValue:number) => {
-    const testvalue = Number(value)
+    const testvalue = +value
     const test = (!isNaN(testvalue) && testvalue >=minValue )
     return test
 }
