@@ -183,11 +183,17 @@ const Options = ({
             cellHeight:(value:any) => {
                 const isInvalid = (!exists(value) || !minValue(value, 25))
                 invalidFlagsRef.current.cellHeight = isInvalid
+                if (!disabledFlagsRef.current.cellMinHeight) {
+                    isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
+                }
                 return isInvalid
             },
             cellWidth:(value:any) => {
                 const isInvalid = (!exists(value) || !minValue(value, 25))
                 invalidFlagsRef.current.cellWidth = isInvalid
+                if (!disabledFlagsRef.current.cellMinWidth) {
+                    isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinWidth)
+                }
                 return isInvalid
             },
             cellMinHeight:(value:any) => {
@@ -251,6 +257,7 @@ const Options = ({
             insertFrom:(value:any) => {
                 const isInvalid = (!exists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.insertFrom = isInvalid
+                isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
                 return isInvalid
             },
             insertRange:(value:any) => {
@@ -264,6 +271,7 @@ const Options = ({
             removeFrom:(value:any) => {
                 const isInvalid = (!exists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.removeFrom = isInvalid
+                isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
                 return isInvalid
             },
             removeRange:(value:any) => {
@@ -277,6 +285,7 @@ const Options = ({
             moveFrom:(value:any) => {
                 const isInvalid = (!exists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.moveFrom = isInvalid
+                isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
                 return isInvalid
             },
             moveRange:(value:any) => {
