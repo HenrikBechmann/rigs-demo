@@ -54,7 +54,7 @@ const maxValue = (value:any, maxValue:number) => {
 
 }
 
-// Options component
+// Options component; almost 40 fields
 const Options = ({
 
     allDisplayPropertiesRef, 
@@ -66,13 +66,18 @@ const Options = ({
 
 }:any) => {
  
-    // simple values
+    // -------------------------[ state updates ]------------------------
+
+    // component state
     const [optionsState, setOptionsState] = useState('initializedependencies')
+
+    // simple values
     const [contentType, setContentType] = useState(contentTypeRef.current)
     const [operationEditFunction, setOperationFunction] = useState(operationFunctionRef.current)
     operationFunctionRef.current = operationEditFunction
 
     // objects. The local values are used to obtain valid edits to the inherited values
+
     const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentType]})
     const displayValuesRef = useRef(displayValues)
     displayValuesRef.current = displayValues
@@ -82,6 +87,8 @@ const Options = ({
     const [functionDisplayValues, setFunctionDisplayValues] = useState({...functionPropertiesRef.current})
     const functionDisplayValuesRef = useRef(functionDisplayValues)
     functionDisplayValuesRef.current = functionDisplayValues
+
+    // --------------------------------[ field data ]-----------------------------
 
     // disabled controls
     const disabledFlagsRef = useRef<GenericObject>(
@@ -132,6 +139,18 @@ const Options = ({
 
     const invalidFlags = invalidFlagsRef.current
 
+    // scroller function switch settings
+    const functionEnabledSettingsRef = useRef<FunctionSettings>({
+        goto:false,
+        listsize:false,
+        reload:false,
+        insert:false,
+        remove:false,
+        move:false,
+        remap:false,
+        clear:false,
+    })
+
     // display error messages
     const errorMessages = useMemo<GenericObject>(() => { 
         return {
@@ -155,6 +174,8 @@ const Options = ({
             moveTo:'required, greater than or equal to 0',
         }
     },[])
+
+    // -----------------------------------[ field functions ]------------------------------
 
     // display error check functions
     const isInvalidTests = useMemo<GenericObject>(() => {
@@ -598,17 +619,7 @@ const Options = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
-    // scroller function switch settings
-    const functionEnabledSettingsRef = useRef<FunctionSettings>({
-        goto:false,
-        listsize:false,
-        reload:false,
-        insert:false,
-        remove:false,
-        move:false,
-        remap:false,
-        clear:false,
-    })
+    // --------------------------[ state change control ]------------------
 
     useEffect(()=>{
         switch (optionsState) {
@@ -640,8 +651,11 @@ const Options = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[optionsState])
 
-    // render
-    return (<Box> <VStack align = 'start' alignItems = 'stretch'>
+    // ------------------------------[ render ]------------------------------
+    
+    return (
+
+    <Box><VStack align = 'start' alignItems = 'stretch'>
 
         <FormControl mb = {3}>
 
