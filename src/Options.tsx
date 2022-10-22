@@ -32,6 +32,11 @@ type FunctionSettings = {
 
 // error check utilities
 
+const isBlank = (value:any) => {
+    const testvalue = value ?? ''
+    return testvalue === ''
+}
+
 const numberExists = (value:any) => {
 
     return (!isNaN(Number(value)) && !isNaN(parseInt(value)))
@@ -220,7 +225,7 @@ const Options = ({
             },
             cellMinWidth:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellWidth)))
                 }
                 invalidFlagsRef.current.cellMinWidth = isInvalid
@@ -228,7 +233,7 @@ const Options = ({
             },
             padding:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = !minValue(value,0)
                 }
                 invalidFlagsRef.current.padding = isInvalid
@@ -236,7 +241,7 @@ const Options = ({
             },
             gap:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = !minValue(value,0)
                 }
                 invalidFlagsRef.current.gap = isInvalid
@@ -244,7 +249,7 @@ const Options = ({
             },
             runwaySize:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = !minValue(value,1)
                 }
                 invalidFlagsRef.current.runwaySize = isInvalid
@@ -252,7 +257,7 @@ const Options = ({
             },
             cacheMax:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = !minValue(value,0)
                 }
                 invalidFlagsRef.current.cacheMax = isInvalid
@@ -276,7 +281,7 @@ const Options = ({
             },
             insertRange:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = !minValue(value,functionDisplayValuesRef.current.insertFrom)
                 }
                 invalidFlagsRef.current.insertRange = isInvalid
@@ -290,7 +295,7 @@ const Options = ({
             },
             removeRange:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = !minValue(value,functionDisplayValuesRef.current.removeFrom)
                 }
                 invalidFlagsRef.current.removeRange = isInvalid
@@ -304,7 +309,7 @@ const Options = ({
             },
             moveRange:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = !minValue(value,functionDisplayValuesRef.current.moveFrom)
                 }
                 invalidFlagsRef.current.moveRange = isInvalid
