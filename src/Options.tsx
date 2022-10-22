@@ -217,7 +217,7 @@ const Options = ({
             },
             cellMinHeight:(value:any) => {
                 let isInvalid = false
-                if (numberExists(value)) {
+                if (!isBlank(value)) {
                     isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellHeight)))
                 }
                 invalidFlagsRef.current.cellMinHeight = isInvalid
