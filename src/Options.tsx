@@ -26,10 +26,6 @@ type GenericObject = {
     [prop:string]:any
 }
 
-type FunctionSettings = { 
-    [prop:string]:boolean // allows iteration
-}
-
 // error check utilities
 const isBlank = (value:any) => {
     const testvalue = value ?? ''
@@ -160,7 +156,7 @@ const Options = ({
     const invalidFlags = invalidFlagsRef.current
 
     // scroller function switch settings
-    const functionEnabledSettingsRef = useRef<FunctionSettings>({
+    const functionEnabledSettingsRef = useRef<GenericObject>({
         goto:false,
         listsize:false,
         reload:false,
@@ -174,7 +170,7 @@ const Options = ({
     const functionEnbledSettings = functionEnabledSettingsRef.current
 
     // display error messages
-    const errorMessagesRef = useRef<GenericObject>({ 
+    const errorMessages = { 
         // string selection, no errors
         cellHeight:'integer: cellHeight is required with minimum of 25',
         cellWidth:'integer: cellWidth is required with minimum 25',
@@ -193,14 +189,12 @@ const Options = ({
         moveFrom:'integer: required, greater than or equal to 0',
         moveRange:'blank, or integer greater than or equal to the "from" index',
         moveTo:'integer: required, greater than or equal to 0',
-    })
-
-    const errorMessages = errorMessagesRef.current
+    }
 
     // -----------------------------------[ field functions ]------------------------------
 
     // display error check functions
-    const isInvalidTestsRef = useRef<GenericObject>({
+    const isInvalidTests = {
         cellHeight:(value:any) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 25))
             invalidFlags.cellHeight = isInvalid
@@ -322,11 +316,9 @@ const Options = ({
             invalidFlags.moveTo = isInvalid
             return isInvalid
         },
-    })
+    }
 
-    const isInvalidTests = isInvalidTestsRef.current
-
-    const dependencyFuncsRef = useRef<GenericObject>({
+    const dependencyFuncs = {
         contentType:(value:string) => {
 
             let disabled
@@ -419,12 +411,10 @@ const Options = ({
             setFunctionDisplayValues(functionDisplayValuesRef.current)
         }
 
-    })
-
-    const dependencyFuncs = dependencyFuncsRef.current
+    }
 
     // display on change functions
-    const onChangeFuncsRef = useRef<GenericObject>({
+    const onChangeFuncs = {
 
         // update scroller service function switch settings
         onChangeEnabler:(event:React.ChangeEvent) => {
@@ -644,11 +634,9 @@ const Options = ({
             functionPropertiesRef.current.remapDemo = value
             setFunctionDisplayValues({...functionDisplayValues})
         },
-    })
+    }
 
-    const onChangeFuncs = onChangeFuncsRef.current
-
-    const serviceFuncsRef = useRef<GenericObject>({
+    const serviceFuncs = {
         getCacheIndexMap: () => {
             console.log('cacheIndexMap =',functionsObject.getCacheIndexMap())
         },
@@ -658,9 +646,7 @@ const Options = ({
         getCradleIndexMap: () => {
             console.log('cradleIndexMap =',functionsObject.getCradleIndexMap())
         },
-    })
-
-    const serviceFuncs = serviceFuncsRef.current
+    }
 
     // --------------------------[ state change control ]------------------
 
@@ -691,8 +677,7 @@ const Options = ({
                 break
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[optionsState])
+    },[optionsState, dependencyFuncs])
 
     // ------------------------------[ render ]------------------------------
     
