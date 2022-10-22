@@ -50,7 +50,7 @@ const maxValue = (value:any, maxValue:number) => {
     const testvalue = +value
     const testMaxValue = +maxValue
 
-    return (!isNaN(testvalue) && !isNaN(testMaxValue) && testvalue >=maxValue )
+    return (!isNaN(testvalue) && !isNaN(testMaxValue) && testvalue <=maxValue )
 
 }
 
@@ -172,7 +172,7 @@ const Options = ({
             cellMinHeight:(value:any) => {
                 let isInvalid = false
                 if (exists(value)) {
-                    isInvalid = !minValue(value,25)
+                    isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellHeight)))
                 }
                 invalidFlagsRef.current.cellMinHeight = isInvalid
                 return isInvalid
@@ -180,7 +180,7 @@ const Options = ({
             cellMinWidth:(value:any) => {
                 let isInvalid = false
                 if (exists(value)) {
-                    isInvalid = !minValue(value,25)
+                    isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellWidth)))
                 }
                 invalidFlagsRef.current.cellMinWidth = isInvalid
                 return isInvalid
@@ -235,7 +235,7 @@ const Options = ({
             insertRange:(value:any) => {
                 let isInvalid = false
                 if (exists(value)) {
-                    isInvalid = !minValue(value,0)
+                    isInvalid = !minValue(value,functionDisplayValuesRef.current.insertFrom)
                 }
                 invalidFlagsRef.current.insertRange = isInvalid
                 return isInvalid
@@ -248,7 +248,7 @@ const Options = ({
             removeRange:(value:any) => {
                 let isInvalid = false
                 if (exists(value)) {
-                    isInvalid = !minValue(value,0)
+                    isInvalid = !minValue(value,functionDisplayValuesRef.current.removeFrom)
                 }
                 invalidFlagsRef.current.removeRange = isInvalid
                 return isInvalid
@@ -261,7 +261,7 @@ const Options = ({
             moveRange:(value:any) => {
                 let isInvalid = false
                 if (exists(value)) {
-                    isInvalid = !minValue(value,0)
+                    isInvalid = !minValue(value,functionDisplayValuesRef.current.moveFrom)
                 }
                 invalidFlagsRef.current.moveRange = isInvalid
                 return isInvalid
