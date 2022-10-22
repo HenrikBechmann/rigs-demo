@@ -31,26 +31,31 @@ type FunctionSettings = {
 }
 
 // error check utilities
-const exists = (value:string) => {
-    let test = !!value
-    return test
+const numberExists = (value:any) => {
+
+    return (!isNaN(Number(value)) && !isNaN(parseInt(value)))
+
 }
 
-const minValue = (value:any, minValue:number) => {
+const minValue = (value:any, minValue:any) => {
+
+    if (!numberExists(value) || !numberExists(minValue)) return false
 
     const testvalue = +value
     const testMinValue = +minValue
 
-    return (!isNaN(testvalue) && !isNaN(testMinValue) && testvalue >=minValue )
+    return testvalue >=minValue
 
 }
 
-const maxValue = (value:any, maxValue:number) => {
+const maxValue = (value:any, maxValue:any) => {
+
+    if (!numberExists(value) || !numberExists(maxValue)) return false
 
     const testvalue = +value
     const testMaxValue = +maxValue
 
-    return (!isNaN(testvalue) && !isNaN(testMaxValue) && testvalue <=maxValue )
+    return testvalue <=maxValue
 
 }
 
@@ -181,7 +186,7 @@ const Options = ({
     const isInvalidTests = useMemo<GenericObject>(() => {
         return {
             cellHeight:(value:any) => {
-                const isInvalid = (!exists(value) || !minValue(value, 25))
+                const isInvalid = (!numberExists(value) || !minValue(value, 25))
                 invalidFlagsRef.current.cellHeight = isInvalid
                 if (!disabledFlagsRef.current.cellMinHeight) {
                     isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
@@ -189,16 +194,16 @@ const Options = ({
                 return isInvalid
             },
             cellWidth:(value:any) => {
-                const isInvalid = (!exists(value) || !minValue(value, 25))
+                const isInvalid = (!numberExists(value) || !minValue(value, 25))
                 invalidFlagsRef.current.cellWidth = isInvalid
                 if (!disabledFlagsRef.current.cellMinWidth) {
-                    isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinWidth)
+                    isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
                 }
                 return isInvalid
             },
             cellMinHeight:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellHeight)))
                 }
                 invalidFlagsRef.current.cellMinHeight = isInvalid
@@ -206,7 +211,7 @@ const Options = ({
             },
             cellMinWidth:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellWidth)))
                 }
                 invalidFlagsRef.current.cellMinWidth = isInvalid
@@ -214,7 +219,7 @@ const Options = ({
             },
             padding:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = !minValue(value,0)
                 }
                 invalidFlagsRef.current.padding = isInvalid
@@ -222,7 +227,7 @@ const Options = ({
             },
             gap:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = !minValue(value,0)
                 }
                 invalidFlagsRef.current.gap = isInvalid
@@ -230,7 +235,7 @@ const Options = ({
             },
             runwaySize:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = !minValue(value,1)
                 }
                 invalidFlagsRef.current.runwaySize = isInvalid
@@ -238,66 +243,66 @@ const Options = ({
             },
             cacheMax:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = !minValue(value,0)
                 }
                 invalidFlagsRef.current.cacheMax = isInvalid
                 return isInvalid
             },
             gotoIndex:(value:any) => {
-                const isInvalid = (!exists(value) || !minValue(value, 0))
+                const isInvalid = (!numberExists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.gotoIndex = isInvalid
                 return isInvalid
             },
             listsize:(value:any) => {
-                const isInvalid = (!exists(value) || !minValue(value, 0))
+                const isInvalid = (!numberExists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.listsize = isInvalid
                 return isInvalid
             },
             insertFrom:(value:any) => {
-                const isInvalid = (!exists(value) || !minValue(value, 0))
+                const isInvalid = (!numberExists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.insertFrom = isInvalid
                 isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
                 return isInvalid
             },
             insertRange:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = !minValue(value,functionDisplayValuesRef.current.insertFrom)
                 }
                 invalidFlagsRef.current.insertRange = isInvalid
                 return isInvalid
             },
             removeFrom:(value:any) => {
-                const isInvalid = (!exists(value) || !minValue(value, 0))
+                const isInvalid = (!numberExists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.removeFrom = isInvalid
                 isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
                 return isInvalid
             },
             removeRange:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = !minValue(value,functionDisplayValuesRef.current.removeFrom)
                 }
                 invalidFlagsRef.current.removeRange = isInvalid
                 return isInvalid
             },
             moveFrom:(value:any) => {
-                const isInvalid = (!exists(value) || !minValue(value, 0))
+                const isInvalid = (!numberExists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.moveFrom = isInvalid
                 isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
                 return isInvalid
             },
             moveRange:(value:any) => {
                 let isInvalid = false
-                if (exists(value)) {
+                if (numberExists(value)) {
                     isInvalid = !minValue(value,functionDisplayValuesRef.current.moveFrom)
                 }
                 invalidFlagsRef.current.moveRange = isInvalid
                 return isInvalid
             },
             moveTo:(value:any) => {
-                const isInvalid = (!exists(value) || !minValue(value, 0))
+                const isInvalid = (!numberExists(value) || !minValue(value, 0))
                 invalidFlagsRef.current.moveTo = isInvalid
                 return isInvalid
             },
