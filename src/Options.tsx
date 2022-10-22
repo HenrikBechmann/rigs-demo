@@ -8,16 +8,16 @@
 
 */
 
-import React, {useState, useRef, useEffect, useMemo, useCallback} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 
 import {
 
-    Box, Stack, VStack, HStack,
-    FormControl, FormLabel, FormHelperText, FormErrorMessage,
-    Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon,
-    Button, Switch, Radio, RadioGroup, Checkbox, Select,   
-    NumberInput, NumberInputField, InputGroup,
-    Heading, Text, Code,
+    Box, Stack, VStack, HStack, // layout
+    FormControl, FormLabel, FormHelperText, FormErrorMessage, // forms
+    Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, // accordion
+    Button, Switch, Radio, RadioGroup, Checkbox, Select, // active content components
+    NumberInput, NumberInputField, InputGroup, // number component
+    Heading, Text, Code, // passive content components
 
 } from '@chakra-ui/react'
 
@@ -31,7 +31,6 @@ type FunctionSettings = {
 }
 
 // error check utilities
-
 const isBlank = (value:any) => {
     const testvalue = value ?? ''
     return testvalue === ''
@@ -87,6 +86,7 @@ const Options = ({
  
     // -------------------------[ state updates ]------------------------
 
+    // inherited scroller service functions
     const functionsObject = functionsObjectRef.current
 
     // component state
@@ -98,7 +98,6 @@ const Options = ({
     operationFunctionRef.current = operationEditFunction
 
     // objects. The local values are used to obtain valid edits to the inherited values
-
     const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentType]})
     const displayValuesRef = useRef(displayValues)
     displayValuesRef.current = displayValues
@@ -172,496 +171,497 @@ const Options = ({
         clear:false,
     })
 
+    const functionEnbledSettings = functionEnabledSettingsRef.current
+
     // display error messages
-    const errorMessages = useMemo<GenericObject>(() => { 
-        return {
-            // string selection, no errors
-            cellHeight:'integer: cellHeight is required with minimum of 25',
-            cellWidth:'integer: cellWidth is required with minimum 25',
-            cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
-            cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
-            padding:'blank, or integer greater than or equal to 0',
-            gap:'blank, or integeer greater than or equal to 0',
-            runwaySize:'blank, or integer minimum 1',
-            cacheMax:'blank, or integer greater than or equal to 0',
-            gotoIndex:'integer: required, greater than or equal to 0',
-            listsize:'integer: required, greater than or equal to 0',
-            insertFrom:'integer: required, greater than or equal to 0',
-            insertRange:'blank, or integer greater than or equal to the "from" index',
-            removeFrom:'integer: required, greater than or equal to 0',
-            removeRange:'blank, or integer greater than or equal to the "from" index',
-            moveFrom:'integer: required, greater than or equal to 0',
-            moveRange:'blank, or integer greater than or equal to the "from" index',
-            moveTo:'integer: required, greater than or equal to 0',
-        }
-    },[])
+    const errorMessagesRef = useRef<GenericObject>({ 
+        // string selection, no errors
+        cellHeight:'integer: cellHeight is required with minimum of 25',
+        cellWidth:'integer: cellWidth is required with minimum 25',
+        cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
+        cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
+        padding:'blank, or integer greater than or equal to 0',
+        gap:'blank, or integeer greater than or equal to 0',
+        runwaySize:'blank, or integer minimum 1',
+        cacheMax:'blank, or integer greater than or equal to 0',
+        gotoIndex:'integer: required, greater than or equal to 0',
+        listsize:'integer: required, greater than or equal to 0',
+        insertFrom:'integer: required, greater than or equal to 0',
+        insertRange:'blank, or integer greater than or equal to the "from" index',
+        removeFrom:'integer: required, greater than or equal to 0',
+        removeRange:'blank, or integer greater than or equal to the "from" index',
+        moveFrom:'integer: required, greater than or equal to 0',
+        moveRange:'blank, or integer greater than or equal to the "from" index',
+        moveTo:'integer: required, greater than or equal to 0',
+    })
+
+    const errorMessages = errorMessagesRef.current
 
     // -----------------------------------[ field functions ]------------------------------
 
     // display error check functions
-    const isInvalidTests = useMemo<GenericObject>(() => {
-        return {
-            cellHeight:(value:any) => {
-                const isInvalid = (!isInteger(value) || !minValue(value, 25))
-                invalidFlagsRef.current.cellHeight = isInvalid
-                if (!disabledFlagsRef.current.cellMinHeight) {
-                    isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
-                }
-                return isInvalid
-            },
-            cellWidth:(value:any) => {
-                const isInvalid = (!isInteger(value) || !minValue(value, 25))
-                invalidFlagsRef.current.cellWidth = isInvalid
-                if (!disabledFlagsRef.current.cellMinWidth) {
-                    isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
-                }
-                return isInvalid
-            },
-            cellMinHeight:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellHeight)))
-                }
-                invalidFlagsRef.current.cellMinHeight = isInvalid
-                return isInvalid
-            },
-            cellMinWidth:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellWidth)))
-                }
-                invalidFlagsRef.current.cellMinWidth = isInvalid
-                return isInvalid
-            },
-            padding:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = !minValue(value,0)
-                }
-                invalidFlagsRef.current.padding = isInvalid
-                return isInvalid
-            },
-            gap:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = !minValue(value,0)
-                }
-                invalidFlagsRef.current.gap = isInvalid
-                return isInvalid
-            },
-            runwaySize:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = !minValue(value,1)
-                }
-                invalidFlagsRef.current.runwaySize = isInvalid
-                return isInvalid
-            },
-            cacheMax:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = !minValue(value,0)
-                }
-                invalidFlagsRef.current.cacheMax = isInvalid
-                return isInvalid
-            },
-            gotoIndex:(value:any) => {
-                const isInvalid = (!isInteger(value) || !minValue(value, 0))
-                invalidFlagsRef.current.gotoIndex = isInvalid
-                return isInvalid
-            },
-            listsize:(value:any) => {
-                const isInvalid = (!isInteger(value) || !minValue(value, 0))
-                invalidFlagsRef.current.listsize = isInvalid
-                return isInvalid
-            },
-            insertFrom:(value:any) => {
-                const isInvalid = (!isInteger(value) || !minValue(value, 0))
-                invalidFlagsRef.current.insertFrom = isInvalid
-                isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
-                return isInvalid
-            },
-            insertRange:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = !minValue(value,functionDisplayValuesRef.current.insertFrom)
-                }
-                invalidFlagsRef.current.insertRange = isInvalid
-                return isInvalid
-            },
-            removeFrom:(value:any) => {
-                const isInvalid = (!isInteger(value) || !minValue(value, 0))
-                invalidFlagsRef.current.removeFrom = isInvalid
-                isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
-                return isInvalid
-            },
-            removeRange:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = !minValue(value,functionDisplayValuesRef.current.removeFrom)
-                }
-                invalidFlagsRef.current.removeRange = isInvalid
-                return isInvalid
-            },
-            moveFrom:(value:any) => {
-                const isInvalid = (!isInteger(value) || !minValue(value, 0))
-                invalidFlagsRef.current.moveFrom = isInvalid
-                isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
-                return isInvalid
-            },
-            moveRange:(value:any) => {
-                let isInvalid = false
-                if (!isBlank(value)) {
-                    isInvalid = !minValue(value,functionDisplayValuesRef.current.moveFrom)
-                }
-                invalidFlagsRef.current.moveRange = isInvalid
-                return isInvalid
-            },
-            moveTo:(value:any) => {
-                const isInvalid = (!isInteger(value) || !minValue(value, 0))
-                invalidFlagsRef.current.moveTo = isInvalid
-                return isInvalid
-            },
-        }
-    },[])
+    const isInvalidTestsRef = useRef<GenericObject>({
+        cellHeight:(value:any) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 25))
+            invalidFlags.cellHeight = isInvalid
+            if (!disabledFlags.cellMinHeight) {
+                isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
+            }
+            return isInvalid
+        },
+        cellWidth:(value:any) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 25))
+            invalidFlags.cellWidth = isInvalid
+            if (!disabledFlags.cellMinWidth) {
+                isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
+            }
+            return isInvalid
+        },
+        cellMinHeight:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellHeight)))
+            }
+            invalidFlags.cellMinHeight = isInvalid
+            return isInvalid
+        },
+        cellMinWidth:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellWidth)))
+            }
+            invalidFlags.cellMinWidth = isInvalid
+            return isInvalid
+        },
+        padding:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlags.padding = isInvalid
+            return isInvalid
+        },
+        gap:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlags.gap = isInvalid
+            return isInvalid
+        },
+        runwaySize:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = !minValue(value,1)
+            }
+            invalidFlags.runwaySize = isInvalid
+            return isInvalid
+        },
+        cacheMax:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlags.cacheMax = isInvalid
+            return isInvalid
+        },
+        gotoIndex:(value:any) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            invalidFlags.gotoIndex = isInvalid
+            return isInvalid
+        },
+        listsize:(value:any) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            invalidFlags.listsize = isInvalid
+            return isInvalid
+        },
+        insertFrom:(value:any) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            invalidFlags.insertFrom = isInvalid
+            isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
+            return isInvalid
+        },
+        insertRange:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = !minValue(value,functionDisplayValuesRef.current.insertFrom)
+            }
+            invalidFlags.insertRange = isInvalid
+            return isInvalid
+        },
+        removeFrom:(value:any) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            invalidFlags.removeFrom = isInvalid
+            isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
+            return isInvalid
+        },
+        removeRange:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = !minValue(value,functionDisplayValuesRef.current.removeFrom)
+            }
+            invalidFlags.removeRange = isInvalid
+            return isInvalid
+        },
+        moveFrom:(value:any) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            invalidFlags.moveFrom = isInvalid
+            isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
+            return isInvalid
+        },
+        moveRange:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = !minValue(value,functionDisplayValuesRef.current.moveFrom)
+            }
+            invalidFlags.moveRange = isInvalid
+            return isInvalid
+        },
+        moveTo:(value:any) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            invalidFlags.moveTo = isInvalid
+            return isInvalid
+        },
+    })
 
-    const dependencyFuncs = useMemo<GenericObject>(()=>{
-        return {
-            contentType:(value:string) => {
+    const isInvalidTests = isInvalidTestsRef.current
 
-                let disabled
-                if (['variable','variablepromises','variabledynamic'].includes(value)) {
+    const dependencyFuncsRef = useRef<GenericObject>({
+        contentType:(value:string) => {
 
-                    disabled = false
-                    isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
-                    isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
+            let disabled
+            if (['variable','variablepromises','variabledynamic'].includes(value)) {
 
-                } else {
+                disabled = false
+                isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
+                isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
 
-                    disabled = true
-                    invalidFlagsRef.current.cellMinHeight = 
-                        invalidFlagsRef.current.cellMinWidth = false
+            } else {
 
-                }
+                disabled = true
+                invalidFlags.cellMinHeight = 
+                    invalidFlags.cellMinWidth = false
 
-                disabledFlagsRef.current.cellMinHeight =
-                    disabledFlagsRef.current.cellMinWidth = disabled
-
-            },
-            serviceFunctions: (service:string) => {
-                // disable all, and reset error conditions
-                const dependentFields = [
-                    'gotoIndex',
-                    'listsize',
-                    'insertFrom', 'insertRange',
-                    'removeFrom', 'removeRange',
-                    'moveFrom', 'moveRange', 'moveTo',
-                    'remapDemo',
-                ]
-
-                for (const field of dependentFields) {
-                    disabledFlagsRef.current[field] = true
-                    if (invalidFlagsRef.current[field]) {
-                        invalidFlagsRef.current[field] = false
-                        functionDisplayValuesRef.current[field] = functionPropertiesRef.current[field]
-                    }
-                }
-
-                if (service) {
-                    switch (service) {
-                        case 'goto':{
-                            disabledFlagsRef.current.gotoIndex = false
-                            isInvalidTests.gotoIndex(functionDisplayValuesRef.current.gotoIndex)
-                            break
-                        }
-                        case 'listsize':{
-                            disabledFlagsRef.current.listsize = false
-                            isInvalidTests.listsize(functionDisplayValuesRef.current.listsize)
-                            break
-                        }
-                        case 'reload':{
-
-                            break
-                        }
-                        case 'insert':{
-                            disabledFlagsRef.current.insertFrom = false
-                            disabledFlagsRef.current.insertRange = false
-                            isInvalidTests.insertFrom(functionDisplayValuesRef.current.insertFrom)
-                            isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
-                            break
-                        }
-                        case 'remove':{
-                            disabledFlagsRef.current.removeFrom = false
-                            disabledFlagsRef.current.removeRange = false
-                            isInvalidTests.removeFrom(functionDisplayValuesRef.current.removeFrom)
-                            isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
-                            break
-                        }
-                        case 'move':{
-                            disabledFlagsRef.current.moveFrom = false
-                            disabledFlagsRef.current.moveRange = false
-                            disabledFlagsRef.current.moveTo = false
-                            isInvalidTests.moveFrom(functionDisplayValuesRef.current.moveFrom)
-                            isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
-                            isInvalidTests.moveTo(functionDisplayValuesRef.current.moveTo)
-                            break
-                        }
-                        case 'remap':{
-                            disabledFlagsRef.current.remapDemo = false
-                            break
-                        }
-                        case 'clear':{
-
-                            break
-                        }
-                    }
-                }
-                setFunctionDisplayValues(functionDisplayValuesRef.current)
             }
 
+            disabledFlags.cellMinHeight =
+                disabledFlags.cellMinWidth = disabled
+
+        },
+        serviceFunctions: (service:string) => {
+            // disable all, and reset error conditions
+            const dependentFields = [
+                'gotoIndex',
+                'listsize',
+                'insertFrom', 'insertRange',
+                'removeFrom', 'removeRange',
+                'moveFrom', 'moveRange', 'moveTo',
+                'remapDemo',
+            ]
+
+            for (const field of dependentFields) {
+                disabledFlags[field] = true
+                if (invalidFlags[field]) {
+                    invalidFlags[field] = false
+                    functionDisplayValuesRef.current[field] = functionPropertiesRef.current[field]
+                }
+            }
+
+            if (service) {
+                switch (service) {
+                    case 'goto':{
+                        disabledFlags.gotoIndex = false
+                        isInvalidTests.gotoIndex(functionDisplayValuesRef.current.gotoIndex)
+                        break
+                    }
+                    case 'listsize':{
+                        disabledFlags.listsize = false
+                        isInvalidTests.listsize(functionDisplayValuesRef.current.listsize)
+                        break
+                    }
+                    case 'reload':{
+
+                        break
+                    }
+                    case 'insert':{
+                        disabledFlags.insertFrom = false
+                        disabledFlags.insertRange = false
+                        isInvalidTests.insertFrom(functionDisplayValuesRef.current.insertFrom)
+                        isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
+                        break
+                    }
+                    case 'remove':{
+                        disabledFlags.removeFrom = false
+                        disabledFlags.removeRange = false
+                        isInvalidTests.removeFrom(functionDisplayValuesRef.current.removeFrom)
+                        isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
+                        break
+                    }
+                    case 'move':{
+                        disabledFlags.moveFrom = false
+                        disabledFlags.moveRange = false
+                        disabledFlags.moveTo = false
+                        isInvalidTests.moveFrom(functionDisplayValuesRef.current.moveFrom)
+                        isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
+                        isInvalidTests.moveTo(functionDisplayValuesRef.current.moveTo)
+                        break
+                    }
+                    case 'remap':{
+                        disabledFlags.remapDemo = false
+                        break
+                    }
+                    case 'clear':{
+
+                        break
+                    }
+                }
+            }
+            setFunctionDisplayValues(functionDisplayValuesRef.current)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+
+    })
+
+    const dependencyFuncs = dependencyFuncsRef.current
 
     // display on change functions
-    const onChangeFuncs = useMemo<GenericObject>(() => {
-        return {
+    const onChangeFuncsRef = useRef<GenericObject>({
 
-            // update scroller service function switch settings
-            onChangeEnabler:(event:React.ChangeEvent) => {
-                const target = event.target as HTMLInputElement
-                const enablerID = target.id
-                const enablerValue = target.checked
-                const functionSettings = functionEnabledSettingsRef.current
-                for (const prop in functionSettings) {
-                    functionSettings[prop] = false
-                }
-                functionSettings[enablerID] = enablerValue
-                const opfunc = 
-                    enablerValue?
-                    enablerID:
-                    null
-                setOperationFunction(opfunc)
-                setOptionsState('preparetoupdatefunctiondependencies')
-            },
+        // update scroller service function switch settings
+        onChangeEnabler:(event:React.ChangeEvent) => {
+            const target = event.target as HTMLInputElement
+            const enablerID = target.id
+            const enablerValue = target.checked
+            const functionSettings = functionEnbledSettings
+            for (const prop in functionSettings) {
+                functionSettings[prop] = false
+            }
+            functionSettings[enablerID] = enablerValue
+            const opfunc = 
+                enablerValue?
+                enablerID:
+                null
+            setOperationFunction(opfunc)
+            setOptionsState('preparetoupdatefunctiondependencies')
+        },
 
-            // contentType global switch
-            contentType:(event:React.ChangeEvent) => {
-                const target = event.target as HTMLSelectElement
-                const value = target.value
-                contentTypeRef.current = value
-                // change property set to correspond with content type
-                setDisplayValues({...allDisplayPropertiesRef.current[value]})
-                setContentType(value)
-                setOptionsState('preparetoupdatecontentdependencies')
-            },
+        // contentType global switch
+        contentType:(event:React.ChangeEvent) => {
+            const target = event.target as HTMLSelectElement
+            const value = target.value
+            contentTypeRef.current = value
+            // change property set to correspond with content type
+            setDisplayValues({...allDisplayPropertiesRef.current[value]})
+            setContentType(value)
+            setOptionsState('preparetoupdatecontentdependencies')
+        },
 
-            // callback handling
-            callbackSettings:(event:React.ChangeEvent) => {
-                const target = event.target as HTMLInputElement
-                const callbackID = target.id
-                const callbackValue = target.checked
-                const callbackSettings = callbackSettingsRef.current
-                callbackSettings[callbackID] = callbackValue
-                setCallbackSettings({...callbackSettings})            
-            },
+        // callback handling
+        callbackSettings:(event:React.ChangeEvent) => {
+            const target = event.target as HTMLInputElement
+            const callbackID = target.id
+            const callbackValue = target.checked
+            const callbackSettings = callbackSettingsRef.current
+            callbackSettings[callbackID] = callbackValue
+            setCallbackSettings({...callbackSettings})            
+        },
 
-            // individual values
-            orientation:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.orientation = input
+        // individual values
+        orientation:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.orientation = input
+            const newDisplayValues = 
+                {...allDisplayPropertiesRef.current[contentTypeRef.current],orientation:input}
+            allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+            setDisplayValues({...displayValues})
+        },
+        cellHeight:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.cellHeight = input
+            if (!isInvalidTests.cellHeight(input)) {
                 const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],orientation:input}
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cellHeight:input}
                 allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                setDisplayValues({...displayValues})
-            },
-            cellHeight:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.cellHeight = input
-                if (!isInvalidTests.cellHeight(input)) {
-                    const newDisplayValues = 
-                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cellHeight:input}
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                }
-                setDisplayValues({...displayValues})
-            },
-            cellWidth:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.cellWidth = input
-                if (!isInvalidTests.cellWidth(input)) {
-                    const newDisplayValues = 
-                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cellWidth:input}
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                }
-                setDisplayValues({...displayValues})
-            },
-            cellMinHeight:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.cellMinHeight = input
-                if (!isInvalidTests.cellMinHeight(input)) {
-                    const newDisplayValues = 
-                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinHeight:input}
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                }
-                setDisplayValues({...displayValues})
-            },
-            cellMinWidth:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.cellMinWidth = input
-                if (!isInvalidTests.cellMinWidth(input)) {
-                    const newDisplayValues = 
-                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinWidth:input}
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                }
-                setDisplayValues({...displayValues})
-            },
-            padding:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.padding = input
-                if (!isInvalidTests.padding(input)) {
-                    const newDisplayValues = 
-                        {...allDisplayPropertiesRef.current[contentTypeRef.current],padding:input}
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                }
-                setDisplayValues({...displayValues})
-            },
-            gap:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.gap = input
-                if (!isInvalidTests.gap(input)) {
-                    const newDisplayValues = 
-                        {...allDisplayPropertiesRef.current[contentTypeRef.current],gap:input}
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                }
-                setDisplayValues({...displayValues})
-            },
-            runwaySize:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.runwaySize = input
-                if (!isInvalidTests.runwaySize(input)) {
-                    const newDisplayValues = 
-                        {...allDisplayPropertiesRef.current[contentTypeRef.current],runwaySize:input}
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                }
-                setDisplayValues({...displayValues})
-            },
-            cache:(event:React.ChangeEvent) => {
-                const displayValues = displayValuesRef.current
-                const target = event.target as HTMLSelectElement
-                const value = target.value
-                displayValues.cache = value
+            }
+            setDisplayValues({...displayValues})
+        },
+        cellWidth:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.cellWidth = input
+            if (!isInvalidTests.cellWidth(input)) {
                 const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cache:value}
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cellWidth:input}
                 allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                setDisplayValues({...displayValues})
-            },
-            cacheMax:(input:string) => {
-                const displayValues = displayValuesRef.current
-                displayValues.cacheMax = input
-                if (!isInvalidTests.cacheMax(input)) {
-                    const newDisplayValues = 
-                        {...allDisplayPropertiesRef.current[contentTypeRef.current],cacheMax:input}
-                    allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-                }
-                setDisplayValues({...displayValues})
-            },
-            gotoIndex:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.gotoIndex = input
-                if (!isInvalidTests.gotoIndex(input)) {
-                    functionPropertiesRef.current.gotoIndex = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            listsize:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.listsize = input
-                if (!isInvalidTests.listsize(input)) {
-                    functionPropertiesRef.current.listsize = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            insertFrom:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.insertFrom = input
-                if (!isInvalidTests.insertFrom(input)) {
-                    functionPropertiesRef.current.insertFrom = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            insertRange:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.insertRange = input
-                if (!isInvalidTests.insertRange(input)) {
-                    functionPropertiesRef.current.insertRange = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            removeFrom:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.removeFrom = input
-                if (!isInvalidTests.removeFrom(input)) {
-                    functionPropertiesRef.current.removeFrom = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            removeRange:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.removeRange = input
-                if (!isInvalidTests.removeRange(input)) {
-                    functionPropertiesRef.current.removeRange = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            moveFrom:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.moveFrom = input
-                if (!isInvalidTests.moveFrom(input)) {
-                    functionPropertiesRef.current.moveFrom = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            moveRange:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.moveRange = input
-                if (!isInvalidTests.moveRange(input)) {
-                    functionPropertiesRef.current.moveRange = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            moveTo:(input:string) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                functionDisplayValues.moveTo = input
-                if (!isInvalidTests.moveTo(input)) {
-                    functionPropertiesRef.current.moveTo = input
-                }
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-            remapDemo:(event:React.ChangeEvent) => {
-                const functionDisplayValues = functionDisplayValuesRef.current
-                const target = event.target as HTMLSelectElement
-                const value = target.value
-                functionDisplayValues.remapDemo = value
-                functionPropertiesRef.current.remapDemo = value
-                setFunctionDisplayValues({...functionDisplayValues})
-            },
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+            }
+            setDisplayValues({...displayValues})
+        },
+        cellMinHeight:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.cellMinHeight = input
+            if (!isInvalidTests.cellMinHeight(input)) {
+                const newDisplayValues = 
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinHeight:input}
+                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+            }
+            setDisplayValues({...displayValues})
+        },
+        cellMinWidth:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.cellMinWidth = input
+            if (!isInvalidTests.cellMinWidth(input)) {
+                const newDisplayValues = 
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinWidth:input}
+                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+            }
+            setDisplayValues({...displayValues})
+        },
+        padding:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.padding = input
+            if (!isInvalidTests.padding(input)) {
+                const newDisplayValues = 
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],padding:input}
+                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+            }
+            setDisplayValues({...displayValues})
+        },
+        gap:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.gap = input
+            if (!isInvalidTests.gap(input)) {
+                const newDisplayValues = 
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],gap:input}
+                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+            }
+            setDisplayValues({...displayValues})
+        },
+        runwaySize:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.runwaySize = input
+            if (!isInvalidTests.runwaySize(input)) {
+                const newDisplayValues = 
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],runwaySize:input}
+                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+            }
+            setDisplayValues({...displayValues})
+        },
+        cache:(event:React.ChangeEvent) => {
+            const displayValues = displayValuesRef.current
+            const target = event.target as HTMLSelectElement
+            const value = target.value
+            displayValues.cache = value
+            const newDisplayValues = 
+                {...allDisplayPropertiesRef.current[contentTypeRef.current],cache:value}
+            allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+            setDisplayValues({...displayValues})
+        },
+        cacheMax:(input:string) => {
+            const displayValues = displayValuesRef.current
+            displayValues.cacheMax = input
+            if (!isInvalidTests.cacheMax(input)) {
+                const newDisplayValues = 
+                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cacheMax:input}
+                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+            }
+            setDisplayValues({...displayValues})
+        },
+        gotoIndex:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.gotoIndex = input
+            if (!isInvalidTests.gotoIndex(input)) {
+                functionPropertiesRef.current.gotoIndex = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        listsize:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.listsize = input
+            if (!isInvalidTests.listsize(input)) {
+                functionPropertiesRef.current.listsize = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        insertFrom:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.insertFrom = input
+            if (!isInvalidTests.insertFrom(input)) {
+                functionPropertiesRef.current.insertFrom = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        insertRange:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.insertRange = input
+            if (!isInvalidTests.insertRange(input)) {
+                functionPropertiesRef.current.insertRange = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        removeFrom:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.removeFrom = input
+            if (!isInvalidTests.removeFrom(input)) {
+                functionPropertiesRef.current.removeFrom = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        removeRange:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.removeRange = input
+            if (!isInvalidTests.removeRange(input)) {
+                functionPropertiesRef.current.removeRange = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        moveFrom:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.moveFrom = input
+            if (!isInvalidTests.moveFrom(input)) {
+                functionPropertiesRef.current.moveFrom = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        moveRange:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.moveRange = input
+            if (!isInvalidTests.moveRange(input)) {
+                functionPropertiesRef.current.moveRange = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        moveTo:(input:string) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            functionDisplayValues.moveTo = input
+            if (!isInvalidTests.moveTo(input)) {
+                functionPropertiesRef.current.moveTo = input
+            }
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+        remapDemo:(event:React.ChangeEvent) => {
+            const functionDisplayValues = functionDisplayValuesRef.current
+            const target = event.target as HTMLSelectElement
+            const value = target.value
+            functionDisplayValues.remapDemo = value
+            functionPropertiesRef.current.remapDemo = value
+            setFunctionDisplayValues({...functionDisplayValues})
+        },
+    })
 
-    const serviceFuncs = useMemo<GenericObject>(() => {
-        return {
-            getCacheIndexMap: () => {
-                console.log('cacheIndexMap =',functionsObject.getCacheIndexMap())
-            },
-            getCacheItemMap: () => {
-                console.log('cacheItemMap =',functionsObject.getCacheItemMap())
-            },
-            getCradleIndexMap: () => {
-                console.log('cradleIndexMap =',functionsObject.getCradleIndexMap())
-            },
-        }
-    },[])
+    const onChangeFuncs = onChangeFuncsRef.current
+
+    const serviceFuncsRef = useRef<GenericObject>({
+        getCacheIndexMap: () => {
+            console.log('cacheIndexMap =',functionsObject.getCacheIndexMap())
+        },
+        getCacheItemMap: () => {
+            console.log('cacheItemMap =',functionsObject.getCacheItemMap())
+        },
+        getCradleIndexMap: () => {
+            console.log('cradleIndexMap =',functionsObject.getCradleIndexMap())
+        },
+    })
+
+    const serviceFuncs = serviceFuncsRef.current
+
     // --------------------------[ state change control ]------------------
 
     useEffect(()=>{
@@ -1208,7 +1208,7 @@ const Options = ({
                                     Enable
                                 </FormLabel>
                                 <Switch 
-                                    isChecked = {functionEnabledSettingsRef.current.goto} 
+                                    isChecked = {functionEnbledSettings.goto} 
                                     onChange = {onChangeFuncs.onChangeEnabler} 
                                     id='goto' 
                                 />
@@ -1251,7 +1251,7 @@ const Options = ({
                                     Enable
                                 </FormLabel>
                                 <Switch 
-                                    isChecked = {functionEnabledSettingsRef.current.listsize} 
+                                    isChecked = {functionEnbledSettings.listsize} 
                                     onChange = {onChangeFuncs.onChangeEnabler} 
                                     id='listsize' 
                                 />
@@ -1270,7 +1270,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnabledSettingsRef.current.reload} 
+                                isChecked = {functionEnbledSettings.reload} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='reload' 
                             />
@@ -1328,7 +1328,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnabledSettingsRef.current.insert} 
+                                isChecked = {functionEnbledSettings.insert} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='insert' 
                             />
@@ -1389,7 +1389,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnabledSettingsRef.current.remove} 
+                                isChecked = {functionEnbledSettings.remove} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='remove' 
                             />
@@ -1469,7 +1469,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnabledSettingsRef.current.move} 
+                                isChecked = {functionEnbledSettings.move} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='move' 
                             />
@@ -1502,7 +1502,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnabledSettingsRef.current.remap} 
+                                isChecked = {functionEnbledSettings.remap} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='remap' 
                             />
@@ -1525,7 +1525,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnabledSettingsRef.current.clear} 
+                                isChecked = {functionEnbledSettings.clear} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='clear' 
                             />

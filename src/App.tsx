@@ -44,7 +44,7 @@ function App() {
 
   // for modification by Options panel
   const contentTypeRef = useRef('simple')
-  const operationFunctionRef = useRef<string>(null)
+  const operationFunctionRef = useRef<string | null>(null)
 
   const allDisplayPropertiesRef = useRef({...defaultProperties})
   const functionPropertiesRef = useRef<any>({...defaultFunctionProperties})
@@ -58,6 +58,8 @@ function App() {
     // console.log(displayPropertiesRef,contentTypeRef,callbackSettingsRef,functionPropertiesRef, functionsRef)
 
   },[])
+
+  operationFunctionRef.current = null
 
   return (
     <ChakraProvider>
