@@ -104,7 +104,7 @@ const Options = ({
     const functionDisplayValuesRef = useRef(functionDisplayValues)
     functionDisplayValuesRef.current = functionDisplayValues
 
-    // --------------------------------[ field data ]-----------------------------
+    // --------------------------------[ mutable field data ]-----------------------------
 
     // disabled controls
     const disabledFlagsRef = useRef<GenericObject>(
@@ -169,6 +169,8 @@ const Options = ({
 
     const functionEnbledSettings = functionEnabledSettingsRef.current
 
+    // ------------------------[ static field data ]----------------------
+
     // display error messages
     const errorMessages = { 
         // string selection, no errors
@@ -193,7 +195,7 @@ const Options = ({
 
     // -----------------------------------[ field functions ]------------------------------
 
-    // display error check functions
+    // display value error check functions
     const isInvalidTests = {
         cellHeight:(value:any) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 25))
