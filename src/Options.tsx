@@ -81,11 +81,13 @@ const Options = ({
     callbackSettingsRef, 
     operationFunctionRef, 
     functionPropertiesRef,
-    functionsObject,
+    functionsObjectRef,
 
 }:any) => {
  
     // -------------------------[ state updates ]------------------------
+
+    const functionsObject = functionsObjectRef.current
 
     // component state
     const [optionsState, setOptionsState] = useState('initializedependencies')
@@ -647,6 +649,19 @@ const Options = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
 
+    const serviceFuncs = useMemo<GenericObject>(() => {
+        return {
+            getCacheIndexMap: () => {
+                console.log('cacheIndexMap =',functionsObject.getCacheIndexMap())
+            },
+            getCacheItemMap: () => {
+                console.log('cacheItemMap =',functionsObject.getCacheItemMap())
+            },
+            getCradleIndexMap: () => {
+                console.log('cradleIndexMap =',functionsObject.getCradleIndexMap())
+            },
+        }
+    },[])
     // --------------------------[ state change control ]------------------
 
     useEffect(()=>{
@@ -1098,7 +1113,14 @@ const Options = ({
                     <VStack alignItems = 'start'>
 
                     <FormControl borderTop = '1px'>
-                        <Button size = 'sm' mt = {2}>Get Cache Index Map</Button>
+                        <Button 
+                            size = 'sm' 
+                            mt = {2} 
+                            type = 'button'
+                            onClick = {serviceFuncs.getCacheIndexMap}
+                        >
+                                Get Cache Index Map
+                        </Button>
                         <FormHelperText>
                             snapshot (javascript <Code>Map</Code>) of cache <Code>index</Code> (=key) to 
                             scroller-assigned session <Code>itemID</Code> (=value) map.
@@ -1106,7 +1128,14 @@ const Options = ({
                     </FormControl>
 
                     <FormControl borderTop = '1px'>
-                        <Button size = 'sm' mt = {2}>Get Cache Item Map</Button>
+                        <Button 
+                            size = 'sm' 
+                            mt = {2} 
+                            type = 'button'
+                            onClick = {serviceFuncs.getCacheItemMap}
+                        >
+                            Get Cache Item Map
+                        </Button>
                         <FormHelperText>
                             snapshot (javascript <Code>Map</Code>) of cache <Code>itemID</Code> (=key) to 
                             object (=value) map. Object = {"{"}index, component{"}"} where component = user component.
@@ -1114,7 +1143,14 @@ const Options = ({
                     </FormControl>
 
                     <FormControl borderTop = '1px'>
-                        <Button size = 'sm' mt = {2}>Get Cradle Index Map</Button>
+                        <Button 
+                            size = 'sm' 
+                            mt = {2} 
+                            type = 'button'
+                            onClick = {serviceFuncs.getCradleIndexMap}
+                        >
+                            Get Cradle Index Map
+                        </Button>
                         <FormHelperText>
                             snapshot (javascript <Code>Map</Code>) of cradle <Code>index</Code> (=key) to 
                             scroller-assigned session <Code>itemID</Code> (=value) map.

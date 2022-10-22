@@ -116,7 +116,7 @@ function App() {
             functionPropertiesRef = { functionPropertiesRef }
 
             // static
-            functionsRef = { functionsRef }
+            functionsObjectRef = { functionsRef }
           />
 
         </DrawerBody>
