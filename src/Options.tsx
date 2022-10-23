@@ -1,7 +1,6 @@
 
 /*
 
-    - create startingIndex input
     - border color to signify changed value, and error value
 
 */
@@ -78,6 +77,7 @@ const errorMessages = {
     cellWidth:'integer: cellWidth is required with minimum 25',
     cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
+    startingIndex:'blank, or integer greater than or equal to 0',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
@@ -171,6 +171,7 @@ const Options = ({
             cellWidth:false,
             cellMinHeight:false,
             cellMinWidth:false,
+            startingIndex:false,
             padding:false,
             gap:false,
             runwaySize:false,
@@ -239,6 +240,14 @@ const Options = ({
                 isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellWidth)))
             }
             invalidFlags.cellMinWidth = isInvalid
+            return isInvalid
+        },
+        startingIndex:(value:any) => {
+            let isInvalid = false
+            if (!isBlank(value)) {
+                isInvalid = !minValue(value,0)
+            }
+            invalidFlags.startingIndex = isInvalid
             return isInvalid
         },
         padding:(value:any) => {
@@ -504,6 +513,16 @@ const Options = ({
             if (!isInvalidTests.cellMinWidth(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellMinWidth:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+            }
+            setEditContentTypeProperties({...editProperties})
+        },
+        startingIndex:(input:string) => {
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.startingIndex = input
+            if (!isInvalidTests.startingIndex(input)) {
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],startingIndex:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editProperties})
@@ -833,6 +852,32 @@ const Options = ({
                     </Stack>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
+                    </Text>
+
+                    <Heading size = 'xs'>Starting index</Heading>
+                    
+                    <FormControl isInvalid = {invalidFlags.startingIndex} >
+                        <HStack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>startingIndex:</FormLabel>
+                            <NumberInput 
+                                value = {editContentTypeProperties.startingIndex} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.startingIndex}
+                                clampValueOnBlur = {false}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
+                        </InputGroup>
+                        </HStack>
+                        <FormErrorMessage>
+                            {errorMessages.startingIndex}
+                        </FormErrorMessage>
+                    </FormControl>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. This will only apply right after a content type change. It will 
+                        set the starting index of the session for the content type.
                     </Text>
 
                     <Heading size = 'xs'>Padding and gaps</Heading>
