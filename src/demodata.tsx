@@ -191,7 +191,7 @@ const nestedstyles = {
     }
 }
 
-const NestedBox = (props:any) => {
+const NestedList = (props:any) => {
 
     // console.log('TestListBox props',props)
 
@@ -284,7 +284,7 @@ const NestedBox = (props:any) => {
 
 const getNestedItem = (index:number) => {
 
-    return <NestedBox 
+    return <NestedList 
         index = {index} 
         childorientation = {defaultProperties.nested.childorientation} 
         setlistsize = {defaultProperties.nested.estimatedListSize}
@@ -295,7 +295,7 @@ const getNestedItem = (index:number) => {
 
 const getNestedItemPromise = (index:number) => {
 
-    return <NestedBox 
+    return <NestedList 
         index = {index} 
         childorientation = {defaultProperties.nested.childorientation} 
         setlistsize = {defaultProperties.nested.estimatedListSize}
