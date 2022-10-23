@@ -132,7 +132,7 @@ function App() {
             Cancel
           </Button>
           <Button size = {['sm','sm','md']}>
-            Reset
+            Reset All
           </Button>
           </HStack>
         </DrawerFooter>
