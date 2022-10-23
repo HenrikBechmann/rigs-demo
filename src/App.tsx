@@ -26,7 +26,7 @@ import DemoScroller from './DemoScroller'
 
 import { 
 
-  defaultProperties, 
+  defaultScrollerProperties, 
   defaultCallbackSettings, 
   applyCallbackSettingsRef as callbackSettingsRef, 
   functionsRef, 
@@ -45,7 +45,7 @@ function App() {
   const contentTypeRef = useRef('simple')
   const operationFunctionRef = useRef<string | null>(null)
 
-  const allDisplayPropertiesRef = useRef({...defaultProperties})
+  const allDisplayPropertiesRef = useRef({...defaultScrollerProperties})
   const functionPropertiesRef = useRef<any>({})
 
   // for application to Scroller
