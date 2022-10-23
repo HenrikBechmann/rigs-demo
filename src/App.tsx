@@ -30,7 +30,6 @@ import {
   defaultCallbackSettings, 
   applyCallbackSettingsRef as callbackSettingsRef, 
   functionsRef, 
-  defaultFunctionProperties, 
 
 } from './demodata'
 
@@ -47,7 +46,7 @@ function App() {
   const operationFunctionRef = useRef<string | null>(null)
 
   const allDisplayPropertiesRef = useRef({...defaultProperties})
-  const functionPropertiesRef = useRef<any>({...defaultFunctionProperties})
+  const functionPropertiesRef = useRef<any>({})
 
   // for application to Scroller
   const [applyProperties, setApplyProperties] = useState({...allDisplayPropertiesRef.current})

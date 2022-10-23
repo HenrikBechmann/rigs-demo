@@ -430,8 +430,8 @@ const Options = ({
             functionSettings[enablerID] = enablerValue
             const opfunc = 
                 enablerValue?
-                enablerID:
-                null
+                    enablerID:
+                    null
             setOperationFunction(opfunc)
             setOptionsState('preparetoupdatefunctiondependencies')
         },
