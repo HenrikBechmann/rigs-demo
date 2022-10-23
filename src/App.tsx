@@ -47,7 +47,18 @@ function App() {
   const operationFunctionRef = useRef<string | null>(null)
 
   const allDisplayPropertiesRef = useRef({...defaultScrollerProperties})
-  const functionPropertiesRef = useRef<any>({})
+  const functionPropertiesRef = useRef<any>({
+    gotoIndex:'',
+    listsize:'',
+    insertFrom:'',
+    insertRange:'',
+    removeFrom:'',
+    removeRange:'',
+    moveFrom:'',
+    moveRange:'',
+    moveTo:'',
+    remapDemo:'',
+  })
 
   // for application to Scroller
   const [applyProperties, setApplyProperties] = useState({...allDisplayPropertiesRef.current})
@@ -109,13 +120,13 @@ function App() {
           <Options 
 
             // simple values
-            contentTypeRef = { contentTypeRef }
-            operationFunctionRef = { operationFunctionRef }
+            sessionContentTypeRef = { contentTypeRef }
+            sessionOperationFunctionRef = { operationFunctionRef }
 
             // dynamic ref objects
-            allDisplayPropertiesRef = { allDisplayPropertiesRef } 
-            callbackSettingsRef = { callbackSettingsRef }
-            functionPropertiesRef = { functionPropertiesRef }
+            sessionAllContentTypePropertiesRef = { allDisplayPropertiesRef } 
+            sessionCallbackSettingsRef = { callbackSettingsRef }
+            sessionFunctionPropertiesRef = { functionPropertiesRef }
 
             // static
             functionsObjectRef = { functionsRef }

@@ -32,7 +32,10 @@ const isBlank = (value:any) => {
 
 const isNumber = (value:any) => {
 
-    return (!isNaN(Number(value)) && !isNaN(parseInt(value)))
+    return ( 
+        (!isNaN(Number(value))) && 
+        (!isNaN(parseInt(value))) 
+    )
 
 }
 
@@ -66,14 +69,47 @@ const maxValue = (value:any, maxValue:any) => {
 
 }
 
+// ------------------------[ static field data ]----------------------
+
+// display error messages
+const errorMessages = { 
+    // string selection, no errors
+    cellHeight:'integer: cellHeight is required with minimum of 25',
+    cellWidth:'integer: cellWidth is required with minimum 25',
+    cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
+    cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
+    padding:'blank, or integer greater than or equal to 0',
+    gap:'blank, or integeer greater than or equal to 0',
+    runwaySize:'blank, or integer minimum 1',
+    cacheMax:'blank, or integer greater than or equal to 0',
+    gotoIndex:'integer: required, greater than or equal to 0',
+    listsize:'integer: required, greater than or equal to 0',
+    insertFrom:'integer: required, greater than or equal to 0',
+    insertRange:'blank, or integer greater than or equal to the "from" index',
+    removeFrom:'integer: required, greater than or equal to 0',
+    removeRange:'blank, or integer greater than or equal to the "from" index',
+    moveFrom:'integer: required, greater than or equal to 0',
+    moveRange:'blank, or integer greater than or equal to the "from" index',
+    moveTo:'integer: required, greater than or equal to 0',
+}
+
+const dependentFields = [
+    'gotoIndex',
+    'listsize',
+    'insertFrom', 'insertRange',
+    'removeFrom', 'removeRange',
+    'moveFrom', 'moveRange', 'moveTo',
+    'remapDemo',
+]
+
 // Options component; almost 40 fields
 const Options = ({
 
-    allDisplayPropertiesRef, 
-    contentTypeRef, 
-    callbackSettingsRef, 
-    operationFunctionRef, 
-    functionPropertiesRef,
+    sessionAllContentTypePropertiesRef, 
+    sessionContentTypeRef, 
+    sessionCallbackSettingsRef, 
+    sessionOperationFunctionRef, 
+    sessionFunctionPropertiesRef,
     functionsObjectRef,
 
 }:any) => {
@@ -84,25 +120,27 @@ const Options = ({
     const functionsObject = functionsObjectRef.current
 
     // component state
-    const [optionsState, setOptionsState] = useState('initializedependencies')
+    const [optionsState, setOptionsState] = useState('initialize-dependencies')
 
     // simple values
-    const [contentType, setContentType] = useState(contentTypeRef.current)
-    const [operationEditFunction, setOperationFunction] = useState(operationFunctionRef.current)
-    operationFunctionRef.current = operationEditFunction
+    const [sessionContentType, setSessionContentType] = useState(sessionContentTypeRef.current)
 
+    const [sessionOperationFunction, setSessionOperationFunction] = useState(sessionOperationFunctionRef.current)
+    sessionOperationFunctionRef.current = sessionOperationFunction
+
+    // set options edit/display values
     // objects. The local values are used to obtain valid edits to the inherited values
-    const [displayValues, setDisplayValues] = useState({...allDisplayPropertiesRef.current[contentType]})
-    const displayValuesRef = useRef(displayValues)
-    displayValuesRef.current = displayValues
-
-    const [callbackSettings, setCallbackSettings] = useState({...callbackSettingsRef.current})
+    const [editContentTypeProperties, setEditContentTypeProperties] = useState({...sessionAllContentTypePropertiesRef.current[sessionContentType]})
+    const editContentTypePropertiesRef = useRef(editContentTypeProperties)
+    editContentTypePropertiesRef.current = editContentTypeProperties
+    const [editCallbackSettings, setEditCallbackSettings] = useState({...sessionCallbackSettingsRef.current})
     
-    const [functionDisplayValues, setFunctionDisplayValues] = useState({...functionPropertiesRef.current})
-    const functionDisplayValuesRef = useRef(functionDisplayValues)
-    functionDisplayValuesRef.current = functionDisplayValues
+    const [editFunctionProperties, setEditFunctionProperties] = useState({...sessionFunctionPropertiesRef.current})
+    const editFunctionPropertiesRef = useRef(editFunctionProperties)
+    editFunctionPropertiesRef.current = editFunctionProperties
 
-    // --------------------------------[ mutable field data ]-----------------------------
+
+    // --------------------------------[ internal mutable field data ]-----------------------------
 
     // disabled controls
     const disabledFlagsRef = useRef<GenericObject>(
@@ -124,7 +162,7 @@ const Options = ({
 
     const disabledFlags = disabledFlagsRef.current
 
-    // display error flags
+    // invalid flags
     const invalidFlagsRef = useRef<GenericObject>(
         {
             contentType:false,
@@ -165,31 +203,7 @@ const Options = ({
         clear:false,
     })
 
-    const functionEnbledSettings = functionEnabledSettingsRef.current
-
-    // ------------------------[ static field data ]----------------------
-
-    // display error messages
-    const errorMessages = { 
-        // string selection, no errors
-        cellHeight:'integer: cellHeight is required with minimum of 25',
-        cellWidth:'integer: cellWidth is required with minimum 25',
-        cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
-        cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
-        padding:'blank, or integer greater than or equal to 0',
-        gap:'blank, or integeer greater than or equal to 0',
-        runwaySize:'blank, or integer minimum 1',
-        cacheMax:'blank, or integer greater than or equal to 0',
-        gotoIndex:'integer: required, greater than or equal to 0',
-        listsize:'integer: required, greater than or equal to 0',
-        insertFrom:'integer: required, greater than or equal to 0',
-        insertRange:'blank, or integer greater than or equal to the "from" index',
-        removeFrom:'integer: required, greater than or equal to 0',
-        removeRange:'blank, or integer greater than or equal to the "from" index',
-        moveFrom:'integer: required, greater than or equal to 0',
-        moveRange:'blank, or integer greater than or equal to the "from" index',
-        moveTo:'integer: required, greater than or equal to 0',
-    }
+    const functionEnabledSettings = functionEnabledSettingsRef.current
 
     // -----------------------------------[ field functions ]------------------------------
 
@@ -199,7 +213,7 @@ const Options = ({
             const isInvalid = (!isInteger(value) || !minValue(value, 25))
             invalidFlags.cellHeight = isInvalid
             if (!disabledFlags.cellMinHeight) {
-                isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
+                isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
             }
             return isInvalid
         },
@@ -207,14 +221,14 @@ const Options = ({
             const isInvalid = (!isInteger(value) || !minValue(value, 25))
             invalidFlags.cellWidth = isInvalid
             if (!disabledFlags.cellMinWidth) {
-                isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
+                isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
             }
             return isInvalid
         },
         cellMinHeight:(value:any) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellHeight)))
+                isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellHeight)))
             }
             invalidFlags.cellMinHeight = isInvalid
             return isInvalid
@@ -222,7 +236,7 @@ const Options = ({
         cellMinWidth:(value:any) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = (!minValue(value,25) || !(maxValue(value, displayValuesRef.current.cellWidth)))
+                isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellWidth)))
             }
             invalidFlags.cellMinWidth = isInvalid
             return isInvalid
@@ -272,13 +286,13 @@ const Options = ({
         insertFrom:(value:any) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.insertFrom = isInvalid
-            isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
+            isInvalidTests.insertRange(editFunctionPropertiesRef.current.insertRange)
             return isInvalid
         },
         insertRange:(value:any) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,functionDisplayValuesRef.current.insertFrom)
+                isInvalid = !minValue(value,editFunctionPropertiesRef.current.insertFrom)
             }
             invalidFlags.insertRange = isInvalid
             return isInvalid
@@ -286,13 +300,13 @@ const Options = ({
         removeFrom:(value:any) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.removeFrom = isInvalid
-            isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
+            isInvalidTests.removeRange(editFunctionPropertiesRef.current.removeRange)
             return isInvalid
         },
         removeRange:(value:any) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,functionDisplayValuesRef.current.removeFrom)
+                isInvalid = !minValue(value,editFunctionPropertiesRef.current.removeFrom)
             }
             invalidFlags.removeRange = isInvalid
             return isInvalid
@@ -300,13 +314,13 @@ const Options = ({
         moveFrom:(value:any) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.moveFrom = isInvalid
-            isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
+            isInvalidTests.moveRange(editFunctionPropertiesRef.current.moveRange)
             return isInvalid
         },
         moveRange:(value:any) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,functionDisplayValuesRef.current.moveFrom)
+                isInvalid = !minValue(value,editFunctionPropertiesRef.current.moveFrom)
             }
             invalidFlags.moveRange = isInvalid
             return isInvalid
@@ -325,8 +339,8 @@ const Options = ({
             if (['variable','variablepromises','variabledynamic'].includes(value)) {
 
                 disabled = false
-                isInvalidTests.cellMinHeight(displayValuesRef.current.cellMinHeight)
-                isInvalidTests.cellMinWidth(displayValuesRef.current.cellMinWidth)
+                isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
+                isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
 
             } else {
 
@@ -341,34 +355,25 @@ const Options = ({
 
         },
         serviceFunctions: (service:string) => {
-            // disable all, and reset error conditions
-            const dependentFields = [
-                'gotoIndex',
-                'listsize',
-                'insertFrom', 'insertRange',
-                'removeFrom', 'removeRange',
-                'moveFrom', 'moveRange', 'moveTo',
-                'remapDemo',
-            ]
 
+            // disable all, and reset error conditions
             for (const field of dependentFields) {
                 disabledFlags[field] = true
                 if (invalidFlags[field]) {
                     invalidFlags[field] = false
-                    functionDisplayValuesRef.current[field] = functionPropertiesRef.current[field]
+                    editFunctionPropertiesRef.current[field] = sessionFunctionPropertiesRef.current[field]
                 }
             }
-
             if (service) {
                 switch (service) {
                     case 'goto':{
                         disabledFlags.gotoIndex = false
-                        isInvalidTests.gotoIndex(functionDisplayValuesRef.current.gotoIndex)
+                        isInvalidTests.gotoIndex(editFunctionPropertiesRef.current.gotoIndex)
                         break
                     }
                     case 'listsize':{
                         disabledFlags.listsize = false
-                        isInvalidTests.listsize(functionDisplayValuesRef.current.listsize)
+                        isInvalidTests.listsize(editFunctionPropertiesRef.current.listsize)
                         break
                     }
                     case 'reload':{
@@ -378,24 +383,24 @@ const Options = ({
                     case 'insert':{
                         disabledFlags.insertFrom = false
                         disabledFlags.insertRange = false
-                        isInvalidTests.insertFrom(functionDisplayValuesRef.current.insertFrom)
-                        isInvalidTests.insertRange(functionDisplayValuesRef.current.insertRange)
+                        isInvalidTests.insertFrom(editFunctionPropertiesRef.current.insertFrom)
+                        isInvalidTests.insertRange(editFunctionPropertiesRef.current.insertRange)
                         break
                     }
                     case 'remove':{
                         disabledFlags.removeFrom = false
                         disabledFlags.removeRange = false
-                        isInvalidTests.removeFrom(functionDisplayValuesRef.current.removeFrom)
-                        isInvalidTests.removeRange(functionDisplayValuesRef.current.removeRange)
+                        isInvalidTests.removeFrom(editFunctionPropertiesRef.current.removeFrom)
+                        isInvalidTests.removeRange(editFunctionPropertiesRef.current.removeRange)
                         break
                     }
                     case 'move':{
                         disabledFlags.moveFrom = false
                         disabledFlags.moveRange = false
                         disabledFlags.moveTo = false
-                        isInvalidTests.moveFrom(functionDisplayValuesRef.current.moveFrom)
-                        isInvalidTests.moveRange(functionDisplayValuesRef.current.moveRange)
-                        isInvalidTests.moveTo(functionDisplayValuesRef.current.moveTo)
+                        isInvalidTests.moveFrom(editFunctionPropertiesRef.current.moveFrom)
+                        isInvalidTests.moveRange(editFunctionPropertiesRef.current.moveRange)
+                        isInvalidTests.moveTo(editFunctionPropertiesRef.current.moveTo)
                         break
                     }
                     case 'remap':{
@@ -408,7 +413,7 @@ const Options = ({
                     }
                 }
             }
-            setFunctionDisplayValues(functionDisplayValuesRef.current)
+            setEditFunctionProperties({...editFunctionPropertiesRef.current})
         }
 
     }
@@ -421,28 +426,27 @@ const Options = ({
             const target = event.target as HTMLInputElement
             const enablerID = target.id
             const enablerValue = target.checked
-            const functionSettings = functionEnbledSettings
-            for (const prop in functionSettings) {
-                functionSettings[prop] = false
+            for (const prop in functionEnabledSettings) {
+                functionEnabledSettings[prop] = false
             }
-            functionSettings[enablerID] = enablerValue
+            functionEnabledSettings[enablerID] = enablerValue
             const opfunc = 
                 enablerValue?
                     enablerID:
                     null
-            setOperationFunction(opfunc)
-            setOptionsState('preparetoupdatefunctiondependencies')
+            setSessionOperationFunction(opfunc)
+            setOptionsState('prepare-to-update-function-dependencies')
         },
 
         // contentType global switch
         contentType:(event:React.ChangeEvent) => {
             const target = event.target as HTMLSelectElement
             const value = target.value
-            contentTypeRef.current = value
+            sessionContentTypeRef.current = value
             // change property set to correspond with content type
-            setDisplayValues({...allDisplayPropertiesRef.current[value]})
-            setContentType(value)
-            setOptionsState('preparetoupdatecontentdependencies')
+            setEditContentTypeProperties({...sessionAllContentTypePropertiesRef.current[value]})
+            setSessionContentType(value)
+            setOptionsState('prepare-to-update-content-dependencies')
         },
 
         // callback handling
@@ -450,189 +454,189 @@ const Options = ({
             const target = event.target as HTMLInputElement
             const callbackID = target.id
             const callbackValue = target.checked
-            const callbackSettings = callbackSettingsRef.current
+            const callbackSettings = sessionCallbackSettingsRef.current
             callbackSettings[callbackID] = callbackValue
-            setCallbackSettings({...callbackSettings})            
+            setEditCallbackSettings({...callbackSettings})            
         },
 
         // individual values
         orientation:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.orientation = input
-            const newDisplayValues = 
-                {...allDisplayPropertiesRef.current[contentTypeRef.current],orientation:input}
-            allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-            setDisplayValues({...displayValues})
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.orientation = input
+            const newSessionProperties = 
+                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],orientation:input}
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+            setEditContentTypeProperties({...editProperties})
         },
         cellHeight:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.cellHeight = input
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.cellHeight = input
             if (!isInvalidTests.cellHeight(input)) {
-                const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cellHeight:input}
-                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellHeight:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
-            setDisplayValues({...displayValues})
+            setEditContentTypeProperties({...editProperties})
         },
         cellWidth:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.cellWidth = input
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.cellWidth = input
             if (!isInvalidTests.cellWidth(input)) {
-                const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cellWidth:input}
-                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellWidth:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
-            setDisplayValues({...displayValues})
+            setEditContentTypeProperties({...editProperties})
         },
         cellMinHeight:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.cellMinHeight = input
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.cellMinHeight = input
             if (!isInvalidTests.cellMinHeight(input)) {
-                const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinHeight:input}
-                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellMinHeight:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
-            setDisplayValues({...displayValues})
+            setEditContentTypeProperties({...editProperties})
         },
         cellMinWidth:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.cellMinWidth = input
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.cellMinWidth = input
             if (!isInvalidTests.cellMinWidth(input)) {
-                const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cellMinWidth:input}
-                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellMinWidth:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
-            setDisplayValues({...displayValues})
+            setEditContentTypeProperties({...editProperties})
         },
         padding:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.padding = input
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.padding = input
             if (!isInvalidTests.padding(input)) {
-                const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],padding:input}
-                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],padding:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
-            setDisplayValues({...displayValues})
+            setEditContentTypeProperties({...editProperties})
         },
         gap:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.gap = input
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.gap = input
             if (!isInvalidTests.gap(input)) {
-                const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],gap:input}
-                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],gap:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
-            setDisplayValues({...displayValues})
+            setEditContentTypeProperties({...editProperties})
         },
         runwaySize:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.runwaySize = input
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.runwaySize = input
             if (!isInvalidTests.runwaySize(input)) {
-                const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],runwaySize:input}
-                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],runwaySize:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
-            setDisplayValues({...displayValues})
+            setEditContentTypeProperties({...editProperties})
         },
         cache:(event:React.ChangeEvent) => {
-            const displayValues = displayValuesRef.current
+            const editProperties = editContentTypePropertiesRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
-            displayValues.cache = value
+            editProperties.cache = value
             const newDisplayValues = 
-                {...allDisplayPropertiesRef.current[contentTypeRef.current],cache:value}
-            allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
-            setDisplayValues({...displayValues})
+                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cache:value}
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newDisplayValues
+            setEditContentTypeProperties({...editProperties})
         },
         cacheMax:(input:string) => {
-            const displayValues = displayValuesRef.current
-            displayValues.cacheMax = input
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.cacheMax = input
             if (!isInvalidTests.cacheMax(input)) {
-                const newDisplayValues = 
-                    {...allDisplayPropertiesRef.current[contentTypeRef.current],cacheMax:input}
-                allDisplayPropertiesRef.current[contentTypeRef.current] = newDisplayValues
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cacheMax:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
-            setDisplayValues({...displayValues})
+            setEditContentTypeProperties({...editProperties})
         },
         gotoIndex:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.gotoIndex = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.gotoIndex = input
             if (!isInvalidTests.gotoIndex(input)) {
-                functionPropertiesRef.current.gotoIndex = input
+                sessionFunctionPropertiesRef.current.gotoIndex = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         listsize:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.listsize = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.listsize = input
             if (!isInvalidTests.listsize(input)) {
-                functionPropertiesRef.current.listsize = input
+                sessionFunctionPropertiesRef.current.listsize = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         insertFrom:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.insertFrom = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.insertFrom = input
             if (!isInvalidTests.insertFrom(input)) {
-                functionPropertiesRef.current.insertFrom = input
+                sessionFunctionPropertiesRef.current.insertFrom = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         insertRange:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.insertRange = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.insertRange = input
             if (!isInvalidTests.insertRange(input)) {
-                functionPropertiesRef.current.insertRange = input
+                sessionFunctionPropertiesRef.current.insertRange = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         removeFrom:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.removeFrom = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.removeFrom = input
             if (!isInvalidTests.removeFrom(input)) {
-                functionPropertiesRef.current.removeFrom = input
+                sessionFunctionPropertiesRef.current.removeFrom = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         removeRange:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.removeRange = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.removeRange = input
             if (!isInvalidTests.removeRange(input)) {
-                functionPropertiesRef.current.removeRange = input
+                sessionFunctionPropertiesRef.current.removeRange = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         moveFrom:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.moveFrom = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.moveFrom = input
             if (!isInvalidTests.moveFrom(input)) {
-                functionPropertiesRef.current.moveFrom = input
+                sessionFunctionPropertiesRef.current.moveFrom = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         moveRange:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.moveRange = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.moveRange = input
             if (!isInvalidTests.moveRange(input)) {
-                functionPropertiesRef.current.moveRange = input
+                sessionFunctionPropertiesRef.current.moveRange = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         moveTo:(input:string) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
-            functionDisplayValues.moveTo = input
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.moveTo = input
             if (!isInvalidTests.moveTo(input)) {
-                functionPropertiesRef.current.moveTo = input
+                sessionFunctionPropertiesRef.current.moveTo = input
             }
-            setFunctionDisplayValues({...functionDisplayValues})
+            setEditFunctionProperties({...editProperties})
         },
         remapDemo:(event:React.ChangeEvent) => {
-            const functionDisplayValues = functionDisplayValuesRef.current
+            const editProperties = editFunctionPropertiesRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
-            functionDisplayValues.remapDemo = value
-            functionPropertiesRef.current.remapDemo = value
-            setFunctionDisplayValues({...functionDisplayValues})
+            editProperties.remapDemo = value
+            sessionFunctionPropertiesRef.current.remapDemo = value
+            setEditFunctionProperties({...editProperties})
         },
     }
 
@@ -652,27 +656,27 @@ const Options = ({
 
     useEffect(()=>{
         switch (optionsState) {
-            case 'initializedependencies': {
-                dependencyFuncs.contentType(contentTypeRef.current)
-                dependencyFuncs.serviceFunctions(operationFunctionRef.current)
+            case 'initialize-dependencies': {
+                dependencyFuncs.contentType(sessionContentTypeRef.current)
+                dependencyFuncs.serviceFunctions(sessionOperationFunctionRef.current)
                 setOptionsState('ready')
                 break
             }
-            case 'preparetoupdatecontentdependencies': {
-                setOptionsState('updatecontentdependencies')
+            case 'prepare-to-update-content-dependencies': {
+                setOptionsState('update-content-dependencies')
                 break
             }
-            case 'updatecontentdependencies': {
-                dependencyFuncs.contentType(contentTypeRef.current)
+            case 'update-content-dependencies': {
+                dependencyFuncs.contentType(sessionContentTypeRef.current)
                 setOptionsState('ready')
                 break
             }
-            case 'preparetoupdatefunctiondependencies': {
-                setOptionsState('updatefunctiondependencies')
+            case 'prepare-to-update-function-dependencies': {
+                setOptionsState('update-function-dependencies')
                 break
             }
-            case 'updatefunctiondependencies': {
-                dependencyFuncs.serviceFunctions(operationFunctionRef.current)
+            case 'update-function-dependencies': {
+                dependencyFuncs.serviceFunctions(sessionOperationFunctionRef.current)
                 setOptionsState('ready')
                 break
             }
@@ -691,7 +695,7 @@ const Options = ({
 
             <Select 
                 size = 'md'
-                value = {displayValues.contentType} 
+                value = {editContentTypeProperties.contentType} 
                 onChange = {onChangeFuncs.contentType}
             >
                 <option value="simple">Simple uniform content</option>
@@ -730,7 +734,7 @@ const Options = ({
                         <Stack direction = {['column','row','row']} align = 'normal'>
                         <FormLabel size = 'xs'>Orientation</FormLabel>
                         <RadioGroup 
-                            value = {displayValues.orientation} 
+                            value = {editContentTypeProperties.orientation} 
                             onChange = {onChangeFuncs.orientation}
                         >
                             <HStack align = 'center'>
@@ -748,7 +752,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.cellHeight} 
+                                    value = {editContentTypeProperties.cellHeight} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.cellHeight}
                                     clampValueOnBlur = {false}
@@ -765,7 +769,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.cellWidth} 
+                                    value = {editContentTypeProperties.cellWidth} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.cellWidth}
                                     clampValueOnBlur = {false}
@@ -794,7 +798,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.cellMinHeight} 
+                                    value = {editContentTypeProperties.cellMinHeight} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.cellMinHeight}
                                     clampValueOnBlur = {false}
@@ -813,7 +817,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
                                 <NumberInput 
-                                    value = {displayValues.cellMinWidth} 
+                                    value = {editContentTypeProperties.cellMinWidth} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.cellMinWidth}
                                     clampValueOnBlur = {false}
@@ -838,7 +842,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.padding} 
+                                value = {editContentTypeProperties.padding} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.padding}
                                 clampValueOnBlur = {false}
@@ -855,7 +859,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.gap} 
+                                value = {editContentTypeProperties.gap} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.gap}
                                 clampValueOnBlur = {false}
@@ -881,7 +885,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>runwaySize:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.runwaySize} 
+                                value = {editContentTypeProperties.runwaySize} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.runwaySize}
                                 clampValueOnBlur = {false}
@@ -905,7 +909,7 @@ const Options = ({
 
                     <FormControl>
                         <Select 
-                            value = {displayValues.cache} 
+                            value = {editContentTypeProperties.cache} 
                             flexGrow = {.8} 
                             size = 'sm'
                             onChange = {onChangeFuncs.cache}
@@ -920,7 +924,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
                             <NumberInput 
-                                value = {displayValues.cacheMax} 
+                                value = {editContentTypeProperties.cacheMax} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.cacheMax}
                                 clampValueOnBlur = {false}
@@ -966,7 +970,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {callbackSettings.referenceIndexCallback} 
+                            isChecked = {editCallbackSettings.referenceIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'referenceIndexCallback'
@@ -981,7 +985,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {callbackSettings.preloadIndexCallback} 
+                            isChecked = {editCallbackSettings.preloadIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'preloadIndexCallback'
@@ -996,7 +1000,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {callbackSettings.itemExceptionCallback} 
+                            isChecked = {editCallbackSettings.itemExceptionCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'itemExceptionCallback'
@@ -1011,7 +1015,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {callbackSettings.repositioningFlagCallback} 
+                            isChecked = {editCallbackSettings.repositioningFlagCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningFlagCallback'
@@ -1027,7 +1031,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {callbackSettings.repositioningIndexCallback} 
+                            isChecked = {editCallbackSettings.repositioningIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningIndexCallback'
@@ -1042,7 +1046,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {callbackSettings.changeListsizeCallback} 
+                            isChecked = {editCallbackSettings.changeListsizeCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'changeListsizeCallback'
@@ -1057,7 +1061,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {callbackSettings.deleteListCallback} 
+                            isChecked = {editCallbackSettings.deleteListCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'deleteListCallback'
@@ -1174,7 +1178,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
                                 <NumberInput 
-                                    value = {functionDisplayValues.gotoIndex} 
+                                    value = {editFunctionProperties.gotoIndex} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.gotoIndex}
                                     clampValueOnBlur = {false}
@@ -1193,7 +1197,7 @@ const Options = ({
                                     Enable
                                 </FormLabel>
                                 <Switch 
-                                    isChecked = {functionEnbledSettings.goto} 
+                                    isChecked = {functionEnabledSettings.goto} 
                                     onChange = {onChangeFuncs.onChangeEnabler} 
                                     id='goto' 
                                 />
@@ -1217,7 +1221,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
                                 <NumberInput 
-                                    value = {functionDisplayValues.listsize} 
+                                    value = {editFunctionProperties.listsize} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.listsize}
                                     clampValueOnBlur = {false}
@@ -1236,7 +1240,7 @@ const Options = ({
                                     Enable
                                 </FormLabel>
                                 <Switch 
-                                    isChecked = {functionEnbledSettings.listsize} 
+                                    isChecked = {functionEnabledSettings.listsize} 
                                     onChange = {onChangeFuncs.onChangeEnabler} 
                                     id='listsize' 
                                 />
@@ -1255,7 +1259,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnbledSettings.reload} 
+                                isChecked = {functionEnabledSettings.reload} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='reload' 
                             />
@@ -1274,7 +1278,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
                                 <NumberInput 
-                                    value = {functionDisplayValues.insertFrom} 
+                                    value = {editFunctionProperties.insertFrom} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.insertFrom}
                                     clampValueOnBlur = {false}
@@ -1293,7 +1297,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
                                 <NumberInput 
-                                    value = {functionDisplayValues.insertRange} 
+                                    value = {editFunctionProperties.insertRange} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.insertRange}
                                     clampValueOnBlur = {false}
@@ -1313,7 +1317,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnbledSettings.insert} 
+                                isChecked = {functionEnabledSettings.insert} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='insert' 
                             />
@@ -1334,7 +1338,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
                                 <NumberInput 
-                                    value = {functionDisplayValues.removeFrom} 
+                                    value = {editFunctionProperties.removeFrom} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.removeFrom}
                                     clampValueOnBlur = {false}
@@ -1353,7 +1357,7 @@ const Options = ({
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
                                 <NumberInput 
-                                    value = {functionDisplayValues.removeRange} 
+                                    value = {editFunctionProperties.removeRange} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.removeRange}
                                     clampValueOnBlur = {false}
@@ -1374,7 +1378,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnbledSettings.remove} 
+                                isChecked = {functionEnabledSettings.remove} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='remove' 
                             />
@@ -1395,7 +1399,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
                             <NumberInput 
-                                value = {functionDisplayValues.moveFrom} 
+                                value = {editFunctionProperties.moveFrom} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveFrom}
                                 clampValueOnBlur = {false}
@@ -1414,7 +1418,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
                             <NumberInput 
-                                value = {functionDisplayValues.moveRange} 
+                                value = {editFunctionProperties.moveRange} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveRange}
                                 clampValueOnBlur = {false}
@@ -1435,7 +1439,7 @@ const Options = ({
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
                             <NumberInput 
-                                value = {functionDisplayValues.moveTo} 
+                                value = {editFunctionProperties.moveTo} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveTo}
                                 clampValueOnBlur = {false}
@@ -1454,7 +1458,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnbledSettings.move} 
+                                isChecked = {functionEnabledSettings.move} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='move' 
                             />
@@ -1471,7 +1475,7 @@ const Options = ({
 
                     <FormControl isDisabled = {disabledFlags.remapDemo}>
                         <Select 
-                            value = {displayValues.remapDemo} 
+                            value = {editContentTypeProperties.remapDemo} 
                             size = 'sm'
                             onChange = {onChangeFuncs.remapDemo}
                         >
@@ -1487,7 +1491,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnbledSettings.remap} 
+                                isChecked = {functionEnabledSettings.remap} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='remap' 
                             />
@@ -1510,7 +1514,7 @@ const Options = ({
                                 Enable
                             </FormLabel>
                             <Switch 
-                                isChecked = {functionEnbledSettings.clear} 
+                                isChecked = {functionEnabledSettings.clear} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
                                 id='clear' 
                             />
