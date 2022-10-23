@@ -2,6 +2,7 @@
 /*
 
   TODO
+  - recreate scroller by changing key on change of content type
   - investigate flash of scroller on resize or refresh
   - loading of simple components very slow in chakra - seems to be delayed
     - touching the scroller while waiting resolves the wait

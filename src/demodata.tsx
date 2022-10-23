@@ -34,46 +34,58 @@ export const applyCallbackSettingsRef = {current:{
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
-    applyCallbackSettingsRef.current.referenceIndexCallback && console.log('referenceIndexCallback: index, location, cradleState',
-        index, location, cradleState)
+    applyCallbackSettingsRef.current.referenceIndexCallback && 
+        console.log('referenceIndexCallback: index, location, cradleState',
+            index, location, cradleState)
    
 }
 const preloadIndexCallback = (index:number) => {
     
-    applyCallbackSettingsRef.current.preloadIndexCallback && console.log('preloadIndexCallback: index', index)
+    applyCallbackSettingsRef.current.preloadIndexCallback && 
+        console.log('preloadIndexCallback: index', 
+            index)
 
 }
 const deleteListCallback = (reason:string, deleteList:number[]) => {
     
-    applyCallbackSettingsRef.current.deleteListCallback && console.log('deleteListCallback: reason, deleteList',reason, deleteList)
+    applyCallbackSettingsRef.current.deleteListCallback && 
+        console.log('deleteListCallback: reason, deleteList',
+            reason, deleteList)
 
 }
 const repositioningIndexCallback = (index:number) => {
     
-    applyCallbackSettingsRef.current.repositioningIndexCallback && console.log('repositioningIndexCallback: index',index)
+    applyCallbackSettingsRef.current.repositioningIndexCallback && 
+        console.log('repositioningIndexCallback: index',
+            index)
 
 }
 
 const repositioningFlagCallback = (flag:boolean) => {
     
-    applyCallbackSettingsRef.current.repositioningFlagCallback && console.log('repositioningFlagCallback: index',flag)
+    applyCallbackSettingsRef.current.repositioningFlagCallback && 
+        console.log('repositioningFlagCallback: index',
+            flag)
 
 }
 
 const changeListsizeCallback = (newlistsize:number) => {
     
-    applyCallbackSettingsRef.current.changeListsizeCallback && console.log('changeListsizeCallback: newlistsize', newlistsize)
+    applyCallbackSettingsRef.current.changeListsizeCallback && 
+        console.log('changeListsizeCallback: newlistsize', 
+            newlistsize)
 
 }
 
 const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
     
-    applyCallbackSettingsRef.current.itemExceptionCallback && console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
-        index, itemID, returnvalue, location, error)
+    applyCallbackSettingsRef.current.itemExceptionCallback && 
+        console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
+            index, itemID, returnvalue, location, error)
 
 }
 
-export const functionsRef:GenericObject = {current:null}
+export const functionsRef = {current:null as GenericObject | null}
 
 const functionsCallback = (functions:GenericObject) => {
     functionsRef.current = functions
@@ -91,7 +103,7 @@ const callbacks = {
     repositioningFlagCallback,
 }
 
-// ==================================[ content components ]==========================
+// ==================================[ content type components ]==========================
 
 // -----------------------------[ simple items ]------------------------
 
@@ -194,8 +206,6 @@ const nesteComponentStyles = {
 
 const NestedItem = (props:any) => {
 
-    // console.log('TestListBox props',props)
-
     const [testState, setTestState] = useState('setup')
     const testStateRef = useRef<string|null>(null)
     testStateRef.current = testState
@@ -217,7 +227,7 @@ const NestedItem = (props:any) => {
         offset, 
         listsize, 
         getListItem, 
-    } = nestedItemProperties
+    } = nestedScrollerProperties
 
     const { scrollerPropertiesRef } = scrollerProperties
 
@@ -309,7 +319,7 @@ const getNestedItemPromise = (index:number) => {
 
 }
 
-const nestedItemProperties = {
+const nestedScrollerProperties = {
 
     orientation:'vertical',
     gap:2,
@@ -410,7 +420,7 @@ const VariableItemDynamic = (props:any) => {
     const teststringRef = useRef<string>()
     teststringRef.current = teststring
     const iterationRef = useRef(0)
-    // console.log('running dynamic', iteration)
+
     useEffect(()=>{
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
@@ -483,6 +493,7 @@ const getVariableItemDynamic = (index:number) => {
 
 export const defaultScrollerProperties = {
     simple: {
+        startingIndex:0,
         orientation:'vertical',
         cellHeight:150,
         cellWidth:150,
@@ -492,14 +503,13 @@ export const defaultScrollerProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        startingIndex:0,
         estimatedListSize:200,
-
         styles:simpleScrollerStyles,
         getItem:getSimpleItem,
         callbacks,
     },
     simplepromises: {
+        startingIndex:0,
         orientation:'vertical',
         cellHeight:150,
         cellWidth:150,
@@ -509,14 +519,13 @@ export const defaultScrollerProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        startingIndex:0,
         estimatedListSize:200,
-
         styles:simpleScrollerStyles,
         getItem:getSimpleItemPromise,
         callbacks,
     },
     nested: {
+        startingIndex:0,
         childorientation:'horizontal',
         cellHeight:400,
         cellWidth:250,
@@ -526,14 +535,13 @@ export const defaultScrollerProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        startingIndex:0,
         estimatedListSize:400,
-
         styles:nestedScrollerStyles,
         getItem:getNestedItem,
         callbacks,
     },
     nestedpromises: {
+        startingIndex:0,
         childorientation:'horizontal',
         cellHeight:400,
         cellWidth:250,
@@ -543,14 +551,13 @@ export const defaultScrollerProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        startingIndex:0,
         estimatedListSize:400,
-
         styles:nestedScrollerStyles,
         getItem:getNestedItemPromise,
         callbacks,
     },
     variable: {
+        startingIndex:0,
         orientation:'vertical',
         cellHeight:320,
         cellWidth:250,
@@ -562,14 +569,13 @@ export const defaultScrollerProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        startingIndex:0,
         estimatedListSize:200,
-
         styles:variableScrollerStyles,
         getItem:getVariableItem,
         callbacks,
     },
     variablepromises: {
+        startingIndex:0,
         orientation:'vertical',
         cellHeight:320,
         cellWidth:250,
@@ -581,14 +587,13 @@ export const defaultScrollerProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        startingIndex:50,
         estimatedListSize:200,
-
         styles:variableScrollerStyles,
         getItem:getVariableItemPromise,
         callbacks,
     },
     variabledynamic: {
+        startingIndex:0,
         orientation:'vertical',
         cellHeight:320,
         cellWidth:250,
@@ -600,9 +605,7 @@ export const defaultScrollerProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        startingIndex:0,
         estimatedListSize:200,
-
         styles:variableScrollerStyles,
         getItem:getVariableItemDynamic,
         callbacks,

@@ -1,9 +1,7 @@
 
 /*
 
-    - establish dependencies among fields
-    - intialize dependencies on load
-    - modify enabler onChange calls to verify related data, and turn off errors for unrelated data
+    - create startingIndex input
     - border color to signify changed value, and error value
 
 */
