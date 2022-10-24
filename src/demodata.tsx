@@ -212,8 +212,7 @@ const NestedItem = (props:any) => {
 
     const { 
         index, 
-        setlistsize, 
-        childorientation, 
+        parentlistsize, 
         scrollerProperties,
     } = props
 
@@ -223,26 +222,25 @@ const NestedItem = (props:any) => {
         padding, 
         cellHeight, 
         cellWidth, 
-        runway, 
-        offset, 
-        listsize, 
-        getListItem, 
+        runwaySize, 
+        startingIndex, 
+        estimatedListSize, 
+        getItem, 
     } = nestedScrollerProperties
 
     const { scrollerPropertiesRef } = scrollerProperties
 
-    const dynamicorientationRef = useRef(childorientation)
+    const dynamicorientationRef = useRef<null | string>(null)
 
     const printedNumberRef = useRef(index)
 
     useEffect(() =>{
         if (testStateRef.current == 'setup') return
-        const { orientation } = scrollerPropertiesRef.current
-        if (orientation == 'vertical') {
-            dynamicorientationRef.current = 'horizontal'
-        } else {
+        const { orientation } = scrollerPropertiesRef.current.orientation;
+        (orientation == 'vertical')?
+            dynamicorientationRef.current = 'horizontal':
             dynamicorientationRef.current = 'vertical'
-        }
+
         setTestState('revised')
 
     },[scrollerPropertiesRef.current.orientation])
@@ -263,7 +261,7 @@ const NestedItem = (props:any) => {
 
     return <div data-type = "list-frame" style = {nesteComponentStyles.container} >
         <div data-type = "list-header" style = {nesteComponentStyles.header} >
-            List #{printedNumberRef.current} of {setlistsize}
+            List #{printedNumberRef.current} of {parentlistsize}
         </div>
         <div data-type = "list-content" style = {nesteComponentStyles.frame}>
 
@@ -274,10 +272,10 @@ const NestedItem = (props:any) => {
                 padding = {padding}
                 cellHeight = {cellHeight}
                 cellWidth = {cellWidth}
-                runwaySize = {runway}
-                estimatedListSize = {listsize}
-                startingIndex = {offset}
-                getItem = {getListItem}
+                runwaySize = {runwaySize}
+                estimatedListSize = {estimatedListSize}
+                startingIndex = {startingIndex}
+                getItem = {getItem}
                 callbacks = {null}
                 placeholder = {null}
                 styles = { null }
@@ -301,8 +299,7 @@ const getNestedItem = (index:number) => {
 
     return <NestedItem 
         index = {index} 
-        childorientation = {demoAllContentTypePropertiesRef.current.nested.childorientation} 
-        setlistsize = {demoAllContentTypePropertiesRef.current.nested.estimatedListSize}
+        parentlistsize = {demoAllContentTypePropertiesRef.current.nested.estimatedListSize}
         scrollerProperties = {null}
     />
 
@@ -312,24 +309,10 @@ const getNestedItemPromise = (index:number) => {
 
     return <NestedItem 
         index = {index} 
-        childorientation = {demoAllContentTypePropertiesRef.current.nested.childorientation} 
-        setlistsize = {demoAllContentTypePropertiesRef.current.nested.estimatedListSize}
+        // childorientation = {demoAllContentTypePropertiesRef.current.nested.childorientation} 
+        parentlistsize = {demoAllContentTypePropertiesRef.current.nested.estimatedListSize}
         scrollerProperties = {null}
     />
-
-}
-
-const nestedScrollerProperties = {
-
-    orientation:'vertical',
-    gap:2,
-    padding:6,
-    cellHeight:40,
-    cellWidth:230,
-    runway:4,
-    offset:0,
-    listsize:100,
-    getListItem: getEmbeddedListItem,
 
 }
 
@@ -480,8 +463,6 @@ const getVariableItemPromise = (index:number) => {
         },400 + (Math.random() * 2000))
     })
 
-     // return <VariableItem index = {index} scrollerProperties = {null}/>    
-
 }
 const getVariableItemDynamic = (index:number) => {
 
@@ -490,6 +471,20 @@ const getVariableItemDynamic = (index:number) => {
 }
 
 // ======================================[ scroller properties ]===========================
+
+const nestedScrollerProperties = {
+
+    orientation:'vertical',
+    gap:2,
+    padding:6,
+    cellHeight:40,
+    cellWidth:230,
+    runwaySize:4,
+    startingIndex:0,
+    estimatedListSize:100,
+    getItem: getEmbeddedListItem,
+
+}
 
 export const defaultAllContentTypeProperties = {
     simple: {
@@ -527,7 +522,6 @@ export const defaultAllContentTypeProperties = {
     nested: {
         startingIndex:0,
         orientation:'vertical',
-        childorientation:'horizontal',
         cellHeight:400,
         cellWidth:250,
         padding:5,
@@ -544,7 +538,6 @@ export const defaultAllContentTypeProperties = {
     nestedpromises: {
         startingIndex:0,
         orientation:'vertical',
-        childorientation:'horizontal',
         cellHeight:400,
         cellWidth:250,
         padding:5,
