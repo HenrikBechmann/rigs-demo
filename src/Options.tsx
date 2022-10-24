@@ -123,16 +123,19 @@ const Options = ({
     const [optionsState, setOptionsState] = useState('initialize-dependencies')
 
     // simple values
-    const [sessionContentType, setSessionContentType] = useState(sessionContentTypeRef.current)
+    const [editContentType, setEditContentType] = useState(sessionContentTypeRef.current)
+    const editContentTypeRef = useRef(sessionContentTypeRef.current)
 
-    const [sessionOperationFunction, setSessionOperationFunction] = useState(sessionOperationFunctionRef.current)
-    sessionOperationFunctionRef.current = sessionOperationFunction
+    const [editOperationFunction, setEditOperationFunction] = useState(sessionOperationFunctionRef.current)
+    const editOperationFunctionRef = useRef(sessionOperationFunctionRef.current)
+    editOperationFunctionRef.current = editOperationFunction
 
     // set options edit/display values
     // objects. The local values are used to obtain valid edits to the inherited values
-    const [editContentTypeProperties, setEditContentTypeProperties] = useState({...sessionAllContentTypePropertiesRef.current[sessionContentType]})
+    const [editContentTypeProperties, setEditContentTypeProperties] = useState({...sessionAllContentTypePropertiesRef.current[editContentType]})
     const editContentTypePropertiesRef = useRef(editContentTypeProperties)
     editContentTypePropertiesRef.current = editContentTypeProperties
+
     const [editCallbackSettings, setEditCallbackSettings] = useState({...sessionCallbackSettingsRef.current})
     
     const [editFunctionProperties, setEditFunctionProperties] = useState({...sessionFunctionPropertiesRef.current})
@@ -442,8 +445,9 @@ const Options = ({
             const opfunc = 
                 enablerValue?
                     enablerID:
-                    null
-            setSessionOperationFunction(opfunc)
+                    ''
+            sessionOperationFunctionRef.current = opfunc
+            setEditOperationFunction(opfunc)
             setOptionsState('prepare-to-update-function-dependencies')
         },
 
@@ -454,7 +458,8 @@ const Options = ({
             sessionContentTypeRef.current = value
             // change property set to correspond with content type
             setEditContentTypeProperties({...sessionAllContentTypePropertiesRef.current[value]})
-            setSessionContentType(value)
+            sessionContentTypeRef.current = value
+            setEditContentType(value)
             setOptionsState('prepare-to-update-content-dependencies')
         },
 
@@ -714,7 +719,7 @@ const Options = ({
 
             <Select 
                 size = 'md'
-                value = {editContentTypeProperties.contentType} 
+                value = {editContentType} 
                 onChange = {onChangeFuncs.contentType}
             >
                 <option value="simple">Simple uniform content</option>
