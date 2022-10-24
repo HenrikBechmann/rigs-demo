@@ -36,7 +36,7 @@ import {
 
   functionsObjectRef,
 
-  GenericObject,  // type
+  GenericObject, // type
 
 } from './demodata'
 
@@ -71,6 +71,24 @@ function App() {
 
   const optionsButtonRef = useRef(null)
   const explanationsButtonRef = useRef(null)
+
+  const showOptions = () => {
+    sessionContentTypeRef.current = demoContentTypeRef.current
+    sessionOperationFunctionRef.current = demoOperationFunctionRef.current
+    sessionAllContentTypePropertiesRef.current = {...demoAllContentTypePropertiesRef.current}
+    sessionCallbackSettingsRef.current = {...demoCallbackSettingsRef.current}
+    sessionFunctionPropertiesRef.current = {...demoFunctionPropertiesRef.current}
+    onOpenOptions()
+  }
+
+  const applyOptions = () => {
+    demoContentTypeRef.current = sessionContentTypeRef.current
+    demoOperationFunctionRef.current = sessionOperationFunctionRef.current
+    demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
+    demoCallbackSettingsRef.current = {...sessionCallbackSettingsRef.current}
+    demoFunctionPropertiesRef.current = {...sessionFunctionPropertiesRef.current}
+    onCloseOptions()
+  }
 
   useEffect(()=>{
 
@@ -111,7 +129,7 @@ function App() {
           <Button ref = {explanationsButtonRef} size = {['sm','sm','md']} onClick = {onOpenExplanations}>
             Explanations
           </Button>
-          <Button ref = {optionsButtonRef} size = {['sm','sm','md']} onClick = {onOpenOptions}>
+          <Button ref = {optionsButtonRef} size = {['sm','sm','md']} onClick = {showOptions}>
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
@@ -161,7 +179,7 @@ function App() {
 
         <DrawerFooter justifyContent = 'start' borderTop = '1px'>
           <HStack>
-          <Button size = {['sm','sm','md']}>
+          <Button size = {['sm','sm','md']} onClick = {applyOptions}>
             Apply
           </Button>
           <Button size = {['sm','sm','md']}>

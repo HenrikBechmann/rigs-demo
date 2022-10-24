@@ -20,7 +20,7 @@ export const defaultCallbackSettings = {
     repositioningFlagCallback:false,
 }
 
-export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings}}
+export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as GenericObject}
 
     // referenceIndexCallback:false,
     // repositioningIndexCallback:false,
@@ -602,7 +602,7 @@ export const defaultAllContentTypeProperties = {
     },
 }
 
-export const demoAllContentTypePropertiesRef = {current:{...defaultAllContentTypeProperties}}
+export const demoAllContentTypePropertiesRef = {current:{...defaultAllContentTypeProperties} as GenericObject}
 
 export const defaultFunctionProperties:GenericObject = {
     gotoIndex:'',
