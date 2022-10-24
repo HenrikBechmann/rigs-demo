@@ -212,7 +212,6 @@ const NestedItem = (props:any) => {
 
     const { 
         index, 
-        parentlistsize, 
         scrollerProperties,
     } = props
 
@@ -232,20 +231,19 @@ const NestedItem = (props:any) => {
 
     const dynamicorientationRef = useRef<null | string>(null)
 
-    const printedNumberRef = useRef(index)
-
     useEffect(() =>{
         if (testStateRef.current == 'setup') return
-        const { orientation } = scrollerPropertiesRef.current.orientation;
-        (orientation == 'vertical')?
-            dynamicorientationRef.current = 'horizontal':
-            dynamicorientationRef.current = 'vertical'
+        const { orientation } = scrollerPropertiesRef.current.orientation
+        dynamicorientationRef.current = 
+            (orientation == 'vertical')?
+                'horizontal':
+                'vertical'
 
         setTestState('revised')
 
     },[scrollerPropertiesRef.current.orientation])
 
-    const { cache } = scrollerPropertiesRef.current
+    const { cache, listsize } = scrollerPropertiesRef.current
 
     useEffect(()=>{
 
@@ -261,7 +259,7 @@ const NestedItem = (props:any) => {
 
     return <div data-type = "list-frame" style = {nesteComponentStyles.container} >
         <div data-type = "list-header" style = {nesteComponentStyles.header} >
-            List #{printedNumberRef.current} of {parentlistsize}
+            List #{index} of {listsize}
         </div>
         <div data-type = "list-content" style = {nesteComponentStyles.frame}>
 
@@ -299,7 +297,6 @@ const getNestedItem = (index:number) => {
 
     return <NestedItem 
         index = {index} 
-        parentlistsize = {demoAllContentTypePropertiesRef.current.nested.estimatedListSize}
         scrollerProperties = {null}
     />
 
@@ -309,8 +306,6 @@ const getNestedItemPromise = (index:number) => {
 
     return <NestedItem 
         index = {index} 
-        // childorientation = {demoAllContentTypePropertiesRef.current.nested.childorientation} 
-        parentlistsize = {demoAllContentTypePropertiesRef.current.nested.estimatedListSize}
         scrollerProperties = {null}
     />
 
