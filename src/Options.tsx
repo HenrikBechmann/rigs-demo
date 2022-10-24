@@ -112,7 +112,7 @@ const Options = ({
     sessionFunctionPropertiesRef,
     functionsObjectRef,
 
-}:any) => {
+}:GenericObject) => {
  
     // -------------------------[ state updates ]------------------------
 

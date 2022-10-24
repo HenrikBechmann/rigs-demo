@@ -27,9 +27,12 @@ import DemoScroller from './DemoScroller'
 
 import { 
 
-  defaultScrollerProperties, 
-  defaultCallbackSettings, 
-  applyCallbackSettingsRef as callbackSettingsRef, 
+  defaultScrollerProperties as defaultAllContentTypeProperties, 
+  demoScrollerPropertiesRef,
+
+  defaultCallbackSettings,
+  demoCallbackSettingsRef, 
+
   functionsRef, 
 
 } from './demodata'
@@ -46,7 +49,7 @@ function App() {
   const contentTypeRef = useRef('simple')
   const operationFunctionRef = useRef<string | null>(null)
 
-  const allDisplayPropertiesRef = useRef({...defaultScrollerProperties})
+  const allDisplayPropertiesRef = useRef({...defaultAllContentTypeProperties})
   const functionPropertiesRef = useRef<any>({
     gotoIndex:'',
     listsize:'',
@@ -61,12 +64,11 @@ function App() {
   })
 
   // for application to Scroller
-  const [applyProperties, setApplyProperties] = useState({...allDisplayPropertiesRef.current})
-  const [applyType, setApplyType] = useState(contentTypeRef.current)
+  const [demoAllContentTypeProperties, setDemoAllContentTypeProperties] = 
+    useState({...defaultAllContentTypeProperties})
+  const [demoContentType, setDemoContentType] = useState(contentTypeRef.current)
 
   useEffect(()=>{
-
-    // console.log(displayPropertiesRef,contentTypeRef,callbackSettingsRef,functionPropertiesRef, functionsRef)
 
   },[])
 
@@ -98,7 +100,7 @@ function App() {
       </Box>
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
-        <DemoScroller contentType = {applyType} applyProperties = {applyProperties} />
+        <DemoScroller demoContentType = {demoContentType} demoAllContentTypeProperties = {demoAllContentTypeProperties} />
 
       </Box>
 
@@ -125,7 +127,7 @@ function App() {
 
             // dynamic ref objects
             sessionAllContentTypePropertiesRef = { allDisplayPropertiesRef } 
-            sessionCallbackSettingsRef = { callbackSettingsRef }
+            sessionCallbackSettingsRef = { demoCallbackSettingsRef }
             sessionFunctionPropertiesRef = { functionPropertiesRef }
 
             // static

@@ -20,42 +20,42 @@ export const defaultCallbackSettings = {
     repositioningFlagCallback:false,
 }
 
-export const applyCallbackSettingsRef = {current:{
+export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings}}
 
-    referenceIndexCallback:false,
-    repositioningIndexCallback:false,
-    preloadIndexCallback:false,
-    itemExceptionCallback:false,
-    changeListsizeCallback:false,
-    deleteListCallback:false,
-    repositioningFlagCallback:false,
+    // referenceIndexCallback:false,
+    // repositioningIndexCallback:false,
+    // preloadIndexCallback:false,
+    // itemExceptionCallback:false,
+    // changeListsizeCallback:false,
+    // deleteListCallback:false,
+    // repositioningFlagCallback:false,
 
-}}
+// }}
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
-    applyCallbackSettingsRef.current.referenceIndexCallback && 
+    demoCallbackSettingsRef.current.referenceIndexCallback && 
         console.log('referenceIndexCallback: index, location, cradleState',
             index, location, cradleState)
    
 }
 const preloadIndexCallback = (index:number) => {
     
-    applyCallbackSettingsRef.current.preloadIndexCallback && 
+    demoCallbackSettingsRef.current.preloadIndexCallback && 
         console.log('preloadIndexCallback: index', 
             index)
 
 }
 const deleteListCallback = (reason:string, deleteList:number[]) => {
     
-    applyCallbackSettingsRef.current.deleteListCallback && 
+    demoCallbackSettingsRef.current.deleteListCallback && 
         console.log('deleteListCallback: reason, deleteList',
             reason, deleteList)
 
 }
 const repositioningIndexCallback = (index:number) => {
     
-    applyCallbackSettingsRef.current.repositioningIndexCallback && 
+    demoCallbackSettingsRef.current.repositioningIndexCallback && 
         console.log('repositioningIndexCallback: index',
             index)
 
@@ -63,7 +63,7 @@ const repositioningIndexCallback = (index:number) => {
 
 const repositioningFlagCallback = (flag:boolean) => {
     
-    applyCallbackSettingsRef.current.repositioningFlagCallback && 
+    demoCallbackSettingsRef.current.repositioningFlagCallback && 
         console.log('repositioningFlagCallback: index',
             flag)
 
@@ -71,7 +71,7 @@ const repositioningFlagCallback = (flag:boolean) => {
 
 const changeListsizeCallback = (newlistsize:number) => {
     
-    applyCallbackSettingsRef.current.changeListsizeCallback && 
+    demoCallbackSettingsRef.current.changeListsizeCallback && 
         console.log('changeListsizeCallback: newlistsize', 
             newlistsize)
 
@@ -79,7 +79,7 @@ const changeListsizeCallback = (newlistsize:number) => {
 
 const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
     
-    applyCallbackSettingsRef.current.itemExceptionCallback && 
+    demoCallbackSettingsRef.current.itemExceptionCallback && 
         console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
             index, itemID, returnvalue, location, error)
 
@@ -611,3 +611,6 @@ export const defaultScrollerProperties = {
         callbacks,
     },
 }
+
+export const demoScrollerPropertiesRef = {current:{...defaultScrollerProperties}}
+
