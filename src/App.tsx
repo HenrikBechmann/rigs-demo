@@ -36,31 +36,36 @@ import {
 
   functionsObjectRef,
 
-  GenericObject,
+  GenericObject,  // type
 
 } from './demodata'
 
 function App() {
 
+  const [demoState, setDemoState] = useState('ready')
 
+  // baseline
   const defaultContentType = 'simple'
   const defaultOperationFunction = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackSettings imported above
   // defaultFunctionProperties imported above
   
+  // assigned from demo versions for edit
   const sessionContentTypeRef = useRef<string>('')
   const sessionOperationFunctionRef = useRef<string>('')
   const sessionAllContentTypePropertiesRef = useRef<GenericObject>({})
   const sessionCallbackSettingsRef = useRef<GenericObject>({})
   const sessionFunctionPropertiesRef = useRef<GenericObject>({})
 
+  // live demo control
   const demoContentTypeRef = useRef<string>(defaultContentType)
   const demoOperationFunctionRef = useRef(defaultOperationFunction)
   // demoAllContentTypePropertiesRef imported above
   // demoCallbackSettingsRef imported above
   const demoFunctionPropertiesRef = useRef<GenericObject>({...defaultFunctionProperties})
 
+  // drawer management
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
   const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
 
@@ -69,7 +74,26 @@ function App() {
 
   useEffect(()=>{
 
-  },[])
+    switch (demoState) {
+      case 'openoptions': {
+        setDemoState('ready')
+        break
+      }
+      case 'openexplanations': {
+        setDemoState('ready')
+        break
+      }
+      case 'apply': {
+        setDemoState('ready')
+        break
+      }
+      case 'resetall': {
+        setDemoState('ready')
+        break
+      }
+    }
+
+  },[demoState])
 
   return (
     <ChakraProvider>
