@@ -27,52 +27,49 @@ import DemoScroller from './DemoScroller'
 
 import { 
 
-  defaultScrollerProperties as defaultAllContentTypeProperties, 
-  demoScrollerPropertiesRef,
-
+  defaultAllContentTypeProperties, 
   defaultCallbackSettings,
+  defaultFunctionProperties,
+
+  demoAllContentTypePropertiesRef,
   demoCallbackSettingsRef, 
 
-  functionsRef, 
+  functionsObjectRef,
+
+  GenericObject,
 
 } from './demodata'
 
 function App() {
 
+
+  const defaultContentType = 'simple'
+  const defaultOperationFunction = ''
+  // defaultAllContentTypeProperties imported above
+  // defaultCallbackSettings imported above
+  // defaultFunctionProperties imported above
+  
+  const sessionContentTypeRef = useRef<string>('')
+  const sessionOperationFunctionRef = useRef<string>('')
+  const sessionAllContentTypePropertiesRef = useRef<GenericObject>({})
+  const sessionCallbackSettingsRef = useRef<GenericObject>({})
+  const sessionFunctionPropertiesRef = useRef<GenericObject>({})
+
+  const demoContentTypeRef = useRef<string>(defaultContentType)
+  const demoOperationFunctionRef = useRef(defaultOperationFunction)
+  // demoAllContentTypePropertiesRef imported above
+  // demoCallbackSettingsRef imported above
+  const demoFunctionPropertiesRef = useRef<GenericObject>({...defaultFunctionProperties})
+
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
   const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
 
-  const optionsButtonRef = React.useRef(null)
-  const explanationsButtonRef = React.useRef(null)
-
-  // for modification by Options panel
-  const contentTypeRef = useRef('simple')
-  const operationFunctionRef = useRef<string | null>(null)
-
-  const allDisplayPropertiesRef = useRef({...defaultAllContentTypeProperties})
-  const functionPropertiesRef = useRef<any>({
-    gotoIndex:'',
-    listsize:'',
-    insertFrom:'',
-    insertRange:'',
-    removeFrom:'',
-    removeRange:'',
-    moveFrom:'',
-    moveRange:'',
-    moveTo:'',
-    remapDemo:'',
-  })
-
-  // for application to Scroller
-  const [demoAllContentTypeProperties, setDemoAllContentTypeProperties] = 
-    useState({...defaultAllContentTypeProperties})
-  const [demoContentType, setDemoContentType] = useState(contentTypeRef.current)
+  const optionsButtonRef = useRef(null)
+  const explanationsButtonRef = useRef(null)
 
   useEffect(()=>{
 
   },[])
-
-  operationFunctionRef.current = null
 
   return (
     <ChakraProvider>
@@ -100,7 +97,9 @@ function App() {
       </Box>
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
-        <DemoScroller demoContentType = {demoContentType} demoAllContentTypeProperties = {demoAllContentTypeProperties} />
+        <DemoScroller 
+          demoContentType = {demoContentTypeRef.current} 
+          demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} />
 
       </Box>
 
@@ -122,16 +121,16 @@ function App() {
           <Options 
 
             // simple values
-            sessionContentTypeRef = { contentTypeRef }
-            sessionOperationFunctionRef = { operationFunctionRef }
+            sessionContentTypeRef = { sessionContentTypeRef }
+            sessionOperationFunctionRef = { sessionOperationFunctionRef }
 
             // dynamic ref objects
-            sessionAllContentTypePropertiesRef = { allDisplayPropertiesRef } 
-            sessionCallbackSettingsRef = { demoCallbackSettingsRef }
-            sessionFunctionPropertiesRef = { functionPropertiesRef }
+            sessionAllContentTypePropertiesRef = { sessionAllContentTypePropertiesRef } 
+            sessionCallbackSettingsRef = { sessionCallbackSettingsRef }
+            sessionFunctionPropertiesRef = { sessionFunctionPropertiesRef }
 
             // static
-            functionsObjectRef = { functionsRef }
+            functionsObjectRef = { functionsObjectRef }
           />
 
         </DrawerBody>

@@ -4,7 +4,7 @@ import Scroller from 'react-infinite-grid-scroller'
 
 // ----------------------------------[ types ]------------------------------
 
-type GenericObject = {
+export type GenericObject = {
     [prop:string]:any
 }
 
@@ -85,10 +85,10 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
 
 }
 
-export const functionsRef = {current:null as GenericObject | null}
+export const functionsObjectRef = {current:null as GenericObject | null}
 
 const functionsCallback = (functions:GenericObject) => {
-    functionsRef.current = functions
+    functionsObjectRef.current = functions
 }
 
 // for properties
@@ -301,8 +301,8 @@ const getNestedItem = (index:number) => {
 
     return <NestedItem 
         index = {index} 
-        childorientation = {defaultScrollerProperties.nested.childorientation} 
-        setlistsize = {defaultScrollerProperties.nested.estimatedListSize}
+        childorientation = {demoAllContentTypePropertiesRef.current.nested.childorientation} 
+        setlistsize = {demoAllContentTypePropertiesRef.current.nested.estimatedListSize}
         scrollerProperties = {null}
     />
 
@@ -312,8 +312,8 @@ const getNestedItemPromise = (index:number) => {
 
     return <NestedItem 
         index = {index} 
-        childorientation = {defaultScrollerProperties.nested.childorientation} 
-        setlistsize = {defaultScrollerProperties.nested.estimatedListSize}
+        childorientation = {demoAllContentTypePropertiesRef.current.nested.childorientation} 
+        setlistsize = {demoAllContentTypePropertiesRef.current.nested.estimatedListSize}
         scrollerProperties = {null}
     />
 
@@ -491,7 +491,7 @@ const getVariableItemDynamic = (index:number) => {
 
 // ======================================[ scroller properties ]===========================
 
-export const defaultScrollerProperties = {
+export const defaultAllContentTypeProperties = {
     simple: {
         startingIndex:0,
         orientation:'vertical',
@@ -526,6 +526,7 @@ export const defaultScrollerProperties = {
     },
     nested: {
         startingIndex:0,
+        orientation:'vertical',
         childorientation:'horizontal',
         cellHeight:400,
         cellWidth:250,
@@ -542,6 +543,7 @@ export const defaultScrollerProperties = {
     },
     nestedpromises: {
         startingIndex:0,
+        orientation:'vertical',
         childorientation:'horizontal',
         cellHeight:400,
         cellWidth:250,
@@ -612,5 +614,19 @@ export const defaultScrollerProperties = {
     },
 }
 
-export const demoScrollerPropertiesRef = {current:{...defaultScrollerProperties}}
+export const demoAllContentTypePropertiesRef = {current:{...defaultAllContentTypeProperties}}
+
+export const defaultFunctionProperties:GenericObject = {
+    gotoIndex:'',
+    listsize:'',
+    insertFrom:'',
+    insertRange:'',
+    removeFrom:'',
+    removeRange:'',
+    moveFrom:'',
+    moveRange:'',
+    moveTo:'',
+    remapDemo:'',
+  }
+
 
