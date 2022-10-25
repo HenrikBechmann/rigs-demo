@@ -53,7 +53,7 @@ const minValue = (value:any, minValue:any) => {
     const testvalue = +value
     const testMinValue = +minValue
 
-    return testvalue >=minValue
+    return testvalue >= testMinValue
 
 }
 
@@ -64,7 +64,7 @@ const maxValue = (value:any, maxValue:any) => {
     const testvalue = +value
     const testMaxValue = +maxValue
 
-    return testvalue <=maxValue
+    return testvalue <= testMaxValue
 
 }
 
@@ -130,7 +130,6 @@ const Options = ({
     const editOperationFunctionRef = useRef(sessionOperationFunctionRef.current)
     editOperationFunctionRef.current = editOperationFunction
 
-    // set options edit/display values
     // objects. The local values are used to obtain valid edits to the inherited values
     const [editContentTypeProperties, setEditContentTypeProperties] = useState({...sessionAllContentTypePropertiesRef.current[editContentType]})
     const editContentTypePropertiesRef = useRef(editContentTypeProperties)
@@ -213,7 +212,7 @@ const Options = ({
 
     // display value error check functions
     const isInvalidTests = {
-        cellHeight:(value:any) => {
+        cellHeight:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 25))
             invalidFlags.cellHeight = isInvalid
             if (!disabledFlags.cellMinHeight) {
@@ -221,7 +220,7 @@ const Options = ({
             }
             return isInvalid
         },
-        cellWidth:(value:any) => {
+        cellWidth:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 25))
             invalidFlags.cellWidth = isInvalid
             if (!disabledFlags.cellMinWidth) {
@@ -229,7 +228,7 @@ const Options = ({
             }
             return isInvalid
         },
-        cellMinHeight:(value:any) => {
+        cellMinHeight:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellHeight)))
@@ -237,7 +236,7 @@ const Options = ({
             invalidFlags.cellMinHeight = isInvalid
             return isInvalid
         },
-        cellMinWidth:(value:any) => {
+        cellMinWidth:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellWidth)))
@@ -245,7 +244,7 @@ const Options = ({
             invalidFlags.cellMinWidth = isInvalid
             return isInvalid
         },
-        startingIndex:(value:any) => {
+        startingIndex:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = !minValue(value,0)
@@ -253,7 +252,7 @@ const Options = ({
             invalidFlags.startingIndex = isInvalid
             return isInvalid
         },
-        padding:(value:any) => {
+        padding:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = !minValue(value,0)
@@ -261,7 +260,7 @@ const Options = ({
             invalidFlags.padding = isInvalid
             return isInvalid
         },
-        gap:(value:any) => {
+        gap:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = !minValue(value,0)
@@ -269,7 +268,7 @@ const Options = ({
             invalidFlags.gap = isInvalid
             return isInvalid
         },
-        runwaySize:(value:any) => {
+        runwaySize:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = !minValue(value,1)
@@ -277,7 +276,7 @@ const Options = ({
             invalidFlags.runwaySize = isInvalid
             return isInvalid
         },
-        cacheMax:(value:any) => {
+        cacheMax:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = !minValue(value,0)
@@ -285,23 +284,23 @@ const Options = ({
             invalidFlags.cacheMax = isInvalid
             return isInvalid
         },
-        gotoIndex:(value:any) => {
+        gotoIndex:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.gotoIndex = isInvalid
             return isInvalid
         },
-        listsize:(value:any) => {
+        listsize:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.listsize = isInvalid
             return isInvalid
         },
-        insertFrom:(value:any) => {
+        insertFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.insertFrom = isInvalid
             isInvalidTests.insertRange(editFunctionPropertiesRef.current.insertRange)
             return isInvalid
         },
-        insertRange:(value:any) => {
+        insertRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = !minValue(value,editFunctionPropertiesRef.current.insertFrom)
@@ -309,13 +308,13 @@ const Options = ({
             invalidFlags.insertRange = isInvalid
             return isInvalid
         },
-        removeFrom:(value:any) => {
+        removeFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.removeFrom = isInvalid
             isInvalidTests.removeRange(editFunctionPropertiesRef.current.removeRange)
             return isInvalid
         },
-        removeRange:(value:any) => {
+        removeRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = !minValue(value,editFunctionPropertiesRef.current.removeFrom)
@@ -323,13 +322,13 @@ const Options = ({
             invalidFlags.removeRange = isInvalid
             return isInvalid
         },
-        moveFrom:(value:any) => {
+        moveFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.moveFrom = isInvalid
             isInvalidTests.moveRange(editFunctionPropertiesRef.current.moveRange)
             return isInvalid
         },
-        moveRange:(value:any) => {
+        moveRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
                 isInvalid = !minValue(value,editFunctionPropertiesRef.current.moveFrom)
@@ -337,7 +336,7 @@ const Options = ({
             invalidFlags.moveRange = isInvalid
             return isInvalid
         },
-        moveTo:(value:any) => {
+        moveTo:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.moveTo = isInvalid
             return isInvalid
