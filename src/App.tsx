@@ -6,6 +6,7 @@
   - investigate flash of scroller on resize or refresh
   - loading of simple components very slow in chakra - seems to be delayed
     - touching the scroller while waiting resolves the wait
+  - show content selection on main page
 
 */
 
@@ -182,7 +183,7 @@ function App() {
           <Button size = {['sm','sm','md']} onClick = {applyOptions}>
             Apply
           </Button>
-          <Button size = {['sm','sm','md']}>
+          <Button size = {['sm','sm','md']} onClick = {onCloseOptions}>
             Cancel
           </Button>
           <Button size = {['sm','sm','md']}>
