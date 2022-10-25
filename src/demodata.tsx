@@ -22,16 +22,6 @@ export const defaultCallbackSettings = {
 
 export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as GenericObject}
 
-    // referenceIndexCallback:false,
-    // repositioningIndexCallback:false,
-    // preloadIndexCallback:false,
-    // itemExceptionCallback:false,
-    // changeListsizeCallback:false,
-    // deleteListCallback:false,
-    // repositioningFlagCallback:false,
-
-// }}
-
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
     demoCallbackSettingsRef.current.referenceIndexCallback && 
@@ -230,16 +220,18 @@ const NestedItem = (props:any) => {
     const { scrollerPropertiesRef } = scrollerProperties
 
     const dynamicorientationRef = useRef<null | string>(null)
+    //     dynamicorientationRef.current = 
+    //         (orientation == 'vertical')?
+    //             'horizontal':
+    //             'vertical'
 
     useEffect(() =>{
-        if (testStateRef.current == 'setup') return
-        const { orientation } = scrollerPropertiesRef.current.orientation
+
+        const { orientation } = scrollerPropertiesRef.current
         dynamicorientationRef.current = 
             (orientation == 'vertical')?
                 'horizontal':
                 'vertical'
-
-        setTestState('revised')
 
     },[scrollerPropertiesRef.current.orientation])
 
