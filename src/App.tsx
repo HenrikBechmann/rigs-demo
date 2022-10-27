@@ -3,9 +3,6 @@
 
   TODO
   - recreate scroller by changing key on change of content type
-  - investigate flash of scroller on resize or refresh
-  - loading of simple components very slow in chakra - seems to be delayed
-    - touching the scroller while waiting resolves the wait
   - show content selection on main page
 
 */
@@ -17,7 +14,7 @@ import {
   ChakraProvider, 
   Box, HStack, Grid, Show,
   Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, DrawerFooter,
-  Heading, Image,
+  Heading, Image, Text,
   useDisclosure, Button, Link,
 
 } from '@chakra-ui/react'
@@ -40,6 +37,20 @@ import {
   GenericObject, // type
 
 } from './demodata'
+
+
+const contentTitles:GenericObject = {
+
+  simple:"Simple uniform content",
+  simplepromises:"Simple uniform promises",
+  variable:"Variable content",
+  variablepromises:"Variable promises",
+  variabledynamic:"Variable dynamic",
+  nested:"Nested uniform scrollers",
+  nestedpromises:"Nested uniform scroller promises",
+
+}
+
 
 function App() {
 
@@ -137,6 +148,7 @@ function App() {
             <Image src="https://img.shields.io/badge/npm-1.0.0--Beta--2-brightgreen"/>
           </Link>
         </HStack>
+        <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}><i>Content:</i> {contentTitles[demoContentTypeRef.current]}</Text>
       </Box>
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
