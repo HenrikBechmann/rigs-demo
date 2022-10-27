@@ -2,8 +2,6 @@
 /*
 
   TODO
-  - recreate scroller by changing key on change of content type
-  - show content selection on main page
 
 */
 
