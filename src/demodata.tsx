@@ -215,6 +215,7 @@ const NestedItem = (props:any) => {
         startingIndex, 
         estimatedListSize, 
         getItem, 
+        cache,
     } = nestedScrollerProperties
 
     const { scrollerPropertiesRef } = scrollerProperties
@@ -235,7 +236,7 @@ const NestedItem = (props:any) => {
 
     },[scrollerPropertiesRef.current.orientation])
 
-    const { cache, listsize } = scrollerPropertiesRef.current
+    const { listsize } = scrollerPropertiesRef.current
 
     useEffect(()=>{
 
@@ -461,13 +462,16 @@ const getVariableItemDynamic = (index:number) => {
 
 const nestedScrollerProperties = {
 
+    startingIndex:0,
     orientation:'vertical',
-    gap:2,
-    padding:6,
     cellHeight:40,
     cellWidth:230,
+    padding:6,
+    gap:2,
     runwaySize:4,
-    startingIndex:0,
+    cache:'cradle',
+    cacheMax:200,
+
     estimatedListSize:100,
     getItem: getEmbeddedListItem,
 
