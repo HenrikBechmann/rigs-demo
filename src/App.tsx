@@ -2,7 +2,7 @@
 /*
 
   TODO
-
+    - add estimated list size to test properties
 */
 
 import React, {useState, useEffect, useRef} from 'react';
