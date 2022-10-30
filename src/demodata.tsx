@@ -517,7 +517,7 @@ export const defaultAllContentTypeProperties = {
         cellWidth:250,
         padding:5,
         gap:5,
-        runwaySize:1,
+        runwaySize:3,
         cache:'cradle',
         cacheMax:200,
 
@@ -533,7 +533,7 @@ export const defaultAllContentTypeProperties = {
         cellWidth:250,
         padding:5,
         gap:5,
-        runwaySize:1,
+        runwaySize:3,
         cache:'cradle',
         cacheMax:200,
 
