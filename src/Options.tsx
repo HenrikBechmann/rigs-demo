@@ -881,7 +881,8 @@ const Options = ({
 
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. This will only apply right after a content type change. It will 
-                        set the starting index of the session for the content type.
+                        set the starting index of the session for the content type. See also
+                        'Go to index' in the 'Service functions: operations' section.
                     </Text>
 
                     <Heading size = 'xs'>Padding and gaps</Heading>
