@@ -95,6 +95,15 @@ function App() {
     onCloseOptions()
   }
 
+  const resetOptions = () => {
+    demoContentTypeRef.current = defaultContentType
+    demoOperationFunctionRef.current = defaultOperationFunction
+    demoAllContentTypePropertiesRef.current = {...defaultAllContentTypeProperties}
+    demoCallbackSettingsRef.current = {...defaultCallbackSettings}
+    demoFunctionPropertiesRef.current = {...defaultFunctionProperties}
+    onCloseOptions()
+  }
+
   useEffect(()=>{
 
     switch (demoState) {
@@ -194,7 +203,7 @@ function App() {
           <Button size = {['sm','sm','md']} onClick = {onCloseOptions}>
             Cancel
           </Button>
-          <Button size = {['sm','sm','md']}>
+          <Button size = {['sm','sm','md']} onClick = {resetOptions}>
             Reset All
           </Button>
           </HStack>

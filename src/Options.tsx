@@ -78,7 +78,7 @@ const errorMessages = {
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
     cacheMax:'blank, or integer greater than or equal to 0',
-    gotoIndex:'integer: required, greater than or equal to 0',
+    scrolltoIndex:'integer: required, greater than or equal to 0',
     listsize:'integer: required, greater than or equal to 0',
     insertFrom:'integer: required, greater than or equal to 0',
     insertRange:'blank, or integer greater than or equal to the "from" index',
@@ -90,7 +90,7 @@ const errorMessages = {
 }
 
 const dependentFields = [
-    'gotoIndex',
+    'scrolltoIndex',
     'listsize',
     'insertFrom', 'insertRange',
     'removeFrom', 'removeRange',
@@ -145,7 +145,7 @@ const Options = ({
         {
             cellMinHeight:false,
             cellMinWidth:false,
-            gotoIndex:false,
+            scrolltoIndex:false,
             listsize:false,
             insertFrom:false,
             insertRange:false,
@@ -176,7 +176,7 @@ const Options = ({
             runwaySize:false,
             cache:false,
             cacheMax:false,
-            gotoIndex:false,
+            scrolltoIndex:false,
             listsize:false,
             insertFrom:false,
             insertRange:false,
@@ -286,9 +286,9 @@ const Options = ({
             invalidFlags.cacheMax = isInvalid
             return isInvalid
         },
-        gotoIndex:(value:string) => {
+        scrolltoIndex:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.gotoIndex = isInvalid
+            invalidFlags.scrolltoIndex = isInvalid
             return isInvalid
         },
         listsize:(value:string) => {
@@ -380,8 +380,8 @@ const Options = ({
             if (service) {
                 switch (service) {
                     case 'goto':{
-                        disabledFlags.gotoIndex = false
-                        isInvalidTests.gotoIndex(editFunctionPropertiesRef.current.gotoIndex)
+                        disabledFlags.scrolltoIndex = false
+                        isInvalidTests.scrolltoIndex(editFunctionPropertiesRef.current.scrolltoIndex)
                         break
                     }
                     case 'listsize':{
@@ -593,11 +593,11 @@ const Options = ({
             }
             setEditContentTypeProperties({...editProperties})
         },
-        gotoIndex:(input:string) => {
+        scrolltoIndex:(input:string) => {
             const editProperties = editFunctionPropertiesRef.current
-            editProperties.gotoIndex = input
-            if (!isInvalidTests.gotoIndex(input)) {
-                sessionFunctionPropertiesRef.current.gotoIndex = input
+            editProperties.scrolltoIndex = input
+            if (!isInvalidTests.scrolltoIndex(input)) {
+                sessionFunctionPropertiesRef.current.scrolltoIndex = input
             }
             setEditFunctionProperties({...editProperties})
         },
@@ -1258,25 +1258,25 @@ const Options = ({
 
                     <VStack alignItems = 'start'>
 
-                    <Heading size = 'xs'>Go to</Heading>
+                    <Heading size = 'xs'>Scroll to</Heading>
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.gotoIndex}
-                            isInvalid = {invalidFlags.gotoIndex}>
+                            isDisabled = {disabledFlags.scrolltoIndex}
+                            isInvalid = {invalidFlags.scrolltoIndex}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
                                 <NumberInput 
-                                    value = {editFunctionProperties.gotoIndex} 
+                                    value = {editFunctionProperties.scrolltoIndex} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.gotoIndex}
+                                    onChange = {onChangeFuncs.scrolltoIndex}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
                             </InputGroup>
                             <FormErrorMessage>
-                                {errorMessages.gotoIndex}
+                                {errorMessages.scrolltoIndex}
                             </FormErrorMessage>
                         </FormControl>
 
