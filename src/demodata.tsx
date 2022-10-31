@@ -319,7 +319,7 @@ let variableComponentStyles = {
     } as React.CSSProperties,
     inner:{
         padding:'3px',
-        opacity:.5,
+        border:'1px solid black',
         borderRadius:'8px',
         backgroundColor:'white', 
     } as React.CSSProperties
@@ -352,7 +352,7 @@ const VariableItem = (props:any) => {
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
 
-    return <div style = {variableComponentStyles.outer}>
+    return <div style = {outerstyles}>
         <div style = {variableComponentStyles.inner}>{getTestString(props.index)}</div>
     </div>
 }
@@ -448,7 +448,7 @@ const getVariableItemPromise = (index:number) => {
     return new Promise((resolve, reject) => {
         setTimeout(()=> {
 
-            resolve(<VariableItemDynamic index = {index} scrollerProperties = {null}/>)
+            resolve(<VariableItem index = {index} scrollerProperties = {null}/>)
 
         },400 + (Math.random() * 2000))
     })
@@ -491,6 +491,7 @@ export const defaultAllContentTypeProperties = {
         runwaySize:4,
         cache:'cradle',
         cacheMax:200,
+        layout: 'uniform',
 
         styles:simpleScrollerStyles,
         getItem:getSimpleItem,
@@ -507,6 +508,7 @@ export const defaultAllContentTypeProperties = {
         runwaySize:4,
         cache:'cradle',
         cacheMax:200,
+        layout: 'uniform',
 
         styles:simpleScrollerStyles,
         getItem:getSimpleItemPromise,
@@ -523,6 +525,7 @@ export const defaultAllContentTypeProperties = {
         runwaySize:3,
         cache:'cradle',
         cacheMax:200,
+        layout: 'uniform',
 
         styles:nestedScrollerStyles,
         getItem:getNestedItem,
@@ -539,6 +542,7 @@ export const defaultAllContentTypeProperties = {
         runwaySize:3,
         cache:'cradle',
         cacheMax:200,
+        layout: 'uniform',
 
         styles:nestedScrollerStyles,
         getItem:getNestedItemPromise,
@@ -557,6 +561,7 @@ export const defaultAllContentTypeProperties = {
         runwaySize:5,
         cache:'cradle',
         cacheMax:200,
+        layout: 'variable',
 
         styles:variableScrollerStyles,
         getItem:getVariableItem,
@@ -575,6 +580,7 @@ export const defaultAllContentTypeProperties = {
         runwaySize:5,
         cache:'cradle',
         cacheMax:200,
+        layout: 'variable',
 
         styles:variableScrollerStyles,
         getItem:getVariableItemPromise,
@@ -593,6 +599,7 @@ export const defaultAllContentTypeProperties = {
         runwaySize:5,
         cache:'cradle',
         cacheMax:200,
+        layout: 'variable',
 
         styles:variableScrollerStyles,
         getItem:getVariableItemDynamic,
