@@ -1,3 +1,4 @@
+// copyright (c) 2022 Henrik Bechmann, Toronto
 
 /*
 

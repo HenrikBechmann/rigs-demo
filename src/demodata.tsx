@@ -1,3 +1,5 @@
+// copyright (c) 2022 Henrik Bechmann, Toronto
+
 import React, {useRef, useState, useEffect} from 'react'
 
 import Scroller from 'react-infinite-grid-scroller'

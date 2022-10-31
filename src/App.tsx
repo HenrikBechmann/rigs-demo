@@ -1,9 +1,5 @@
 
-/*
-
-  TODO
-    - add estimated list size to test properties
-*/
+// copyright (c) 2022 Henrik Bechmann, Toronto
 
 import React, {useState, useEffect, useRef} from 'react';
 
