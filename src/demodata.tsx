@@ -1,4 +1,4 @@
-// copyright (c) 2022 Henrik Bechmann, Toronto
+// copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useRef, useState, useEffect} from 'react'
 
@@ -482,6 +482,7 @@ const nestedScrollerProperties = {
 export const defaultAllContentTypeProperties = {
     simple: {
         startingIndex:0,
+        estimatedListSize:200,
         orientation:'vertical',
         cellHeight:150,
         cellWidth:150,
@@ -491,13 +492,13 @@ export const defaultAllContentTypeProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        estimatedListSize:200,
         styles:simpleScrollerStyles,
         getItem:getSimpleItem,
         callbacks,
     },
     simplepromises: {
         startingIndex:0,
+        estimatedListSize:200,
         orientation:'vertical',
         cellHeight:150,
         cellWidth:150,
@@ -507,13 +508,13 @@ export const defaultAllContentTypeProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        estimatedListSize:200,
         styles:simpleScrollerStyles,
         getItem:getSimpleItemPromise,
         callbacks,
     },
     nested: {
         startingIndex:0,
+        estimatedListSize:400,
         orientation:'vertical',
         cellHeight:400,
         cellWidth:250,
@@ -523,13 +524,13 @@ export const defaultAllContentTypeProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        estimatedListSize:400,
         styles:nestedScrollerStyles,
         getItem:getNestedItem,
         callbacks,
     },
     nestedpromises: {
         startingIndex:0,
+        estimatedListSize:400,
         orientation:'vertical',
         cellHeight:400,
         cellWidth:250,
@@ -539,13 +540,13 @@ export const defaultAllContentTypeProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        estimatedListSize:400,
         styles:nestedScrollerStyles,
         getItem:getNestedItemPromise,
         callbacks,
     },
     variable: {
         startingIndex:0,
+        estimatedListSize:200,
         orientation:'vertical',
         cellHeight:320,
         cellWidth:250,
@@ -557,13 +558,13 @@ export const defaultAllContentTypeProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        estimatedListSize:200,
         styles:variableScrollerStyles,
         getItem:getVariableItem,
         callbacks,
     },
     variablepromises: {
         startingIndex:0,
+        estimatedListSize:200,
         orientation:'vertical',
         cellHeight:320,
         cellWidth:250,
@@ -575,13 +576,13 @@ export const defaultAllContentTypeProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        estimatedListSize:200,
         styles:variableScrollerStyles,
         getItem:getVariableItemPromise,
         callbacks,
     },
     variabledynamic: {
         startingIndex:0,
+        estimatedListSize:200,
         orientation:'vertical',
         cellHeight:320,
         cellWidth:250,
@@ -593,7 +594,6 @@ export const defaultAllContentTypeProperties = {
         cache:'cradle',
         cacheMax:200,
 
-        estimatedListSize:200,
         styles:variableScrollerStyles,
         getItem:getVariableItemDynamic,
         callbacks,

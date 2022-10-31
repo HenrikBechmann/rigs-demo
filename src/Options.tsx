@@ -1,4 +1,4 @@
-// copyright (c) 2022 Henrik Bechmann, Toronto
+// copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useState, useRef, useEffect} from 'react'
 
@@ -73,6 +73,7 @@ const errorMessages = {
     cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
     startingIndex:'blank, or integer greater than or equal to 0',
+    estimatedListSize:'integer: required, with minimum 0',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
@@ -169,6 +170,7 @@ const Options = ({
             cellMinHeight:false,
             cellMinWidth:false,
             startingIndex:false,
+            estimatedListSize:false,
             padding:false,
             gap:false,
             runwaySize:false,
@@ -245,6 +247,11 @@ const Options = ({
                 isInvalid = !minValue(value,0)
             }
             invalidFlags.startingIndex = isInvalid
+            return isInvalid
+        },
+        estimatedListSize:(value:string) => {
+            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            invalidFlags.estimatedListSize = isInvalid
             return isInvalid
         },
         padding:(value:string) => {
@@ -522,6 +529,16 @@ const Options = ({
             if (!isInvalidTests.startingIndex(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],startingIndex:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+            }
+            setEditContentTypeProperties({...editProperties})
+        },
+        estimatedListSize:(input:string) => {
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.estimatedListSize = input
+            if (!isInvalidTests.estimatedListSize(input)) {
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],estimatedListSize:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editProperties})
@@ -878,6 +895,33 @@ const Options = ({
                         Integer. This will only apply right after a content type change. It will 
                         set the starting index of the session for the content type. See also
                         'Go to index' in the 'Service functions: operations' section.
+                    </Text>
+
+                    <Heading size = 'xs'>Estimated list size</Heading>
+                    
+                    <FormControl isInvalid = {invalidFlags.estimatedListSize} >
+                        <HStack>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>estimatedListSize:</FormLabel>
+                            <NumberInput 
+                                value = {editContentTypeProperties.estimatedListSize} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.estimatedListSize}
+                                clampValueOnBlur = {false}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
+                        </InputGroup>
+                        </HStack>
+                        <FormErrorMessage>
+                            {errorMessages.estimatedListSize}
+                        </FormErrorMessage>
+                    </FormControl>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. This will only apply right after a content type change. It will 
+                        set the starting list size of the session for the content type. See also
+                        'Change virtual list size' in the 'Service functions: operations' section.
                     </Text>
 
                     <Heading size = 'xs'>Padding and gaps</Heading>
