@@ -45,7 +45,6 @@ const contentTitles:GenericObject = {
 
 }
 
-
 function App() {
 
   const [demoState, setDemoState] = useState('ready')
@@ -99,18 +98,9 @@ function App() {
   useEffect(()=>{
 
     switch (demoState) {
-      case 'openoptions': {
-        setDemoState('ready')
-        break
-      }
-      case 'openexplanations': {
-        setDemoState('ready')
-        break
-      }
-      case 'apply': {
-        setDemoState('ready')
-        break
-      }
+      case 'openoptions': 
+      case 'openexplanations':
+      case 'apply': 
       case 'resetall': {
         setDemoState('ready')
         break
@@ -125,12 +115,14 @@ function App() {
     <Box height = '100vh'><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr'>
 
       <Box padding = {[1,1,2]}>
+
         <Show above = 'sm'>
           <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>react-infinite-grid-scroller (RIGS) demo</Heading>
         </Show>
         <Show below = 'sm'>
           <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>RIGS scroller demo</Heading>
         </Show>
+
         <HStack align = 'center' justify = 'start'>
           <Button ref = {explanationsButtonRef} size = {['sm','sm','md']} onClick = {onOpenExplanations}>
             Explanations
@@ -142,8 +134,12 @@ function App() {
             <Image src="https://img.shields.io/badge/npm-1.0.0--Beta--2-brightgreen"/>
           </Link>
         </HStack>
-        <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}><i>Content:</i> {contentTitles[demoContentTypeRef.current]}</Text>
+
+        <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
+          <i>Content:</i> {contentTitles[demoContentTypeRef.current]}</Text>
+          
       </Box>
+
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
         <DemoScroller 
@@ -153,6 +149,7 @@ function App() {
       </Box>
 
     </Grid></Box>
+
     <Drawer
       isOpen={isOpenOptions}
       placement='right'
@@ -161,8 +158,11 @@ function App() {
       finalFocusRef={optionsButtonRef}
     >
       <DrawerOverlay />
+
       <DrawerContent>
+
         <DrawerCloseButton />
+
         <DrawerHeader borderBottom = '1px'>Scroller Options</DrawerHeader>
 
         <DrawerBody>
@@ -180,11 +180,13 @@ function App() {
 
             // static
             functionsObjectRef = { functionsObjectRef }
+
           />
 
         </DrawerBody>
 
         <DrawerFooter justifyContent = 'start' borderTop = '1px'>
+
           <HStack>
           <Button size = {['sm','sm','md']} onClick = {applyOptions}>
             Apply
@@ -196,9 +198,11 @@ function App() {
             Reset All
           </Button>
           </HStack>
+
         </DrawerFooter>
 
       </DrawerContent>
+
     </Drawer>
 
     <Drawer

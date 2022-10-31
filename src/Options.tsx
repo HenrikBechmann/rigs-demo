@@ -1,11 +1,5 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto
 
-/*
-
-    - border color to signify changed value, and error value
-
-*/
-
 import React, {useState, useRef, useEffect} from 'react'
 
 import {
@@ -131,7 +125,7 @@ const Options = ({
     const editOperationFunctionRef = useRef(sessionOperationFunctionRef.current)
     editOperationFunctionRef.current = editOperationFunction
 
-    // objects. The local values are used to obtain valid edits to the inherited values
+    // objects. The local values are used to assign valid edits to the inherited values
     const [editContentTypeProperties, setEditContentTypeProperties] = useState({...sessionAllContentTypePropertiesRef.current[editContentType]})
     const editContentTypePropertiesRef = useRef(editContentTypeProperties)
     editContentTypePropertiesRef.current = editContentTypeProperties
