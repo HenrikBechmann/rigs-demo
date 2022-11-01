@@ -65,6 +65,38 @@ const maxValue = (value:any, maxValue:any) => {
 
 // ------------------------[ static field data ]----------------------
 
+const sectionTitles:GenericObject = {
+  properties:'Properties for the selected content type',
+  callbacks:'Callbacks',
+  snapshots:'Service functions: snapshots',
+  operations:'Service functions: operations',
+}
+
+const fieldSections:GenericObject = {
+
+    cellHeight:'properties',
+    cellWidth:'properties',
+    cellMinHeight:'properties',
+    cellMinWidth:'properties',
+    startingIndex:'properties',
+    estimatedListSize:'properties',
+    padding:'properties',
+    gap:'properties',
+    runwaySize:'properties',
+    cacheMax:'properties',
+    scrolltoIndex:'operations',
+    listsize:'operations',
+    insertFrom:'operations',
+    insertRange:'operations',
+    removeFrom:'operations',
+    removeRange:'operations',
+    moveFrom:'operations',
+    moveRange:'operations',
+    moveTo:'operations',
+
+}
+
+
 // display error messages
 const errorMessages = { 
     // string selection, no errors
@@ -107,6 +139,7 @@ const Options = ({
     sessionOperationFunctionRef, 
     sessionFunctionPropertiesRef,
     functionsObjectRef,
+    functionsRef,
 
 }:GenericObject) => {
  
@@ -190,6 +223,27 @@ const Options = ({
     )
 
     const invalidFlags = invalidFlagsRef.current
+
+    const invalidSections = () => {
+        const sections = new Set<string>()
+        const errorfields = invalidFlagsRef.current
+        for (const field in invalidFlagsRef.current) {
+            if (errorfields[field]) {
+                sections.add(fieldSections[field])
+            }
+        }
+        const sectionSet = new Set()
+        sections.forEach((value) => {
+            sectionSet.add(sectionTitles[value])
+        }) 
+        return sectionSet
+    }
+
+    useEffect(()=>{
+        functionsRef.current = {
+            invalidSections
+        }
+    },[])
 
     // scroller function switch settings
     const functionEnabledSettingsRef = useRef<GenericObject>({
@@ -757,7 +811,7 @@ const Options = ({
                 <Heading as ='h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Properties for the selected content type
+                            {sectionTitles.properties}
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
@@ -1042,7 +1096,7 @@ const Options = ({
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Callbacks
+                            {sectionTitles.callbacks}
                         </Box>
                         <AccordionIcon />                        
                     </AccordionButton>
@@ -1174,7 +1228,7 @@ const Options = ({
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Service functions: snapshots
+                            {sectionTitles.snapshots}
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
@@ -1243,7 +1297,7 @@ const Options = ({
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Service functions: operations
+                            {sectionTitles.operations}
                         </Box>
                         <AccordionIcon />                        
                     </AccordionButton>

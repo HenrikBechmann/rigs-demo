@@ -8,6 +8,8 @@ import {
   ChakraProvider, 
   Box, HStack, Grid, Show,
   Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, DrawerFooter,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 
+  UnorderedList, ListItem,
   Heading, Image, Text,
   useDisclosure, Button, Link,
 
@@ -45,6 +47,37 @@ const contentTitles:GenericObject = {
 
 }
 
+const ErrorBox = (props:any) => {
+  const { invalidSections, isOpen, onClose } = props
+  const listitems:any[] = []
+  let count = 0
+  invalidSections.forEach((title:string)=>{
+    listitems.push(<ListItem key = {count++}>{title}</ListItem>)
+  })
+
+  return (
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>There are errors</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+          </ModalBody>
+            <Text ml = {10}>Please correct the errors in the following sections before proceeding.</Text>
+            <UnorderedList ml = {14}>
+              {listitems}
+            </UnorderedList>
+          <ModalFooter>
+            <Button onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
 function App() {
 
   const [demoState, setDemoState] = useState('ready')
@@ -77,6 +110,10 @@ function App() {
   const optionsButtonRef = useRef(null)
   const explanationsButtonRef = useRef(null)
 
+  // error handling
+  const functionsRef = useRef<GenericObject>({})
+  const {isOpen:isOpenErrors, onOpen:onOpenErrors, onClose:onCloseErrors } = useDisclosure()
+
   const showOptions = () => {
     sessionContentTypeRef.current = demoContentTypeRef.current
     sessionOperationFunctionRef.current = demoOperationFunctionRef.current
@@ -86,13 +123,21 @@ function App() {
     onOpenOptions()
   }
 
+  const invalidSectionsRef = useRef<any>(null)
+
   const applyOptions = () => {
     demoContentTypeRef.current = sessionContentTypeRef.current
     demoOperationFunctionRef.current = sessionOperationFunctionRef.current
     demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
     demoCallbackSettingsRef.current = {...sessionCallbackSettingsRef.current}
     demoFunctionPropertiesRef.current = {...sessionFunctionPropertiesRef.current}
-    onCloseOptions()
+
+    invalidSectionsRef.current = functionsRef.current.invalidSections()
+    if (invalidSectionsRef.current.size) {
+      onOpenErrors()
+    } else {
+      onCloseOptions()
+    }
   }
 
   const resetOptions = () => {
@@ -189,6 +234,7 @@ function App() {
 
             // static
             functionsObjectRef = { functionsObjectRef }
+            functionsRef = { functionsRef }
 
           />
 
@@ -232,6 +278,12 @@ function App() {
 
       </DrawerContent>
     </Drawer>
+
+    <ErrorBox 
+      isOpen = {isOpenErrors} 
+      invalidSections = {invalidSectionsRef.current}
+      onClose = {onCloseErrors}
+    />
 
     </ChakraProvider>
   )
