@@ -49,7 +49,7 @@ function App() {
 
   const [demoState, setDemoState] = useState('ready')
 
-  // baseline
+  // baseline - static
   const defaultContentType = 'simple'
   const defaultOperationFunction = ''
   // defaultAllContentTypeProperties imported above
@@ -63,7 +63,7 @@ function App() {
   const sessionCallbackSettingsRef = useRef<GenericObject>({})
   const sessionFunctionPropertiesRef = useRef<GenericObject>({})
 
-  // live demo control
+  // live demo control, initialized by baseline, updated by session data
   const demoContentTypeRef = useRef<string>(defaultContentType)
   const demoOperationFunctionRef = useRef(defaultOperationFunction)
   // demoAllContentTypePropertiesRef imported above
