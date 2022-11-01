@@ -10,8 +10,8 @@ import {
   Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, DrawerFooter,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 
   UnorderedList, ListItem,
-  Heading, Image, Text,
-  useDisclosure, Button, Link,
+  Heading, Image, Text, Code,
+  useDisclosure, Button, Link, useToast,
 
 } from '@chakra-ui/react'
 
@@ -79,6 +79,7 @@ const ErrorBox = (props:any) => {
     </>
   )
 }
+
 function App() {
 
   const [demoState, setDemoState] = useState('ready')
@@ -115,6 +116,8 @@ function App() {
   const functionsRef = useRef<GenericObject>({})
   const {isOpen:isOpenErrors, onOpen:onOpenErrors, onClose:onCloseErrors } = useDisclosure()
 
+  const functionToast = useToast()
+
   // buttons
   const showOptions = () => {
     sessionContentTypeRef.current = demoContentTypeRef.current
@@ -139,7 +142,25 @@ function App() {
       onOpenErrors()
     } else {
       onCloseOptions()
+      if (demoOperationFunctionRef.current) {
+        applyFunction()
+      }
     }
+  }
+
+  const applyFunction = () => {
+    functionToast({
+      title: 'API called:',
+      description: <div>{
+        getFunctionToastContent(
+          demoOperationFunctionRef.current, 
+          demoFunctionPropertiesRef.current,
+          functionsObjectRef.current)}
+      </div>,
+      status: 'success',
+      isClosable: true,
+    })
+    demoOperationFunctionRef.current = ''
   }
 
   const resetOptions = () => {
@@ -291,4 +312,132 @@ function App() {
   )
 }
 
-export default App;
+export default App
+
+// as side effect runs the requested function
+const getFunctionToastContent = (
+  functionindex:string, 
+  functionProperties:GenericObject,
+  functionObject:GenericObject) => {
+
+  let codeblock
+  let seeconsole = false
+  switch (functionindex) {
+    case 'goto': {
+      functionObject.scrollToIndex(functionProperties.scrolltoIndex)
+      codeblock = `functionObject.scrollToIndex(${functionProperties.scrolltoIndex})`
+      break
+    }
+    case 'listsize': {
+      functionObject.setListsize(functionProperties.listsize)
+      codeblock = `functionObject.setListsize(${functionProperties.listsize})`
+      break
+    }
+    case 'reload': {
+      functionObject.reload()
+      codeblock = `functionObject.reload()`
+      break
+    }
+    case 'insert': {
+      functionObject.insertIndex(
+        functionProperties.insertFrom, functionProperties.insertRange)
+      if (functionProperties.insertRange) {
+        codeblock = `functionObject.insertIndex(${functionProperties.insertFrom},${functionProperties.insertRange})`
+      } else {
+        codeblock = `functionObject.insertIndex(${functionProperties.insertFrom})`
+      }
+      seeconsole = true
+      break
+    }
+    case 'remove': {
+      functionObject.removeIndex(
+        functionProperties.removeFrom, functionProperties.removeRange)
+      if (functionProperties.removeRange) {
+        codeblock = `functionObject.removeIndex(${functionProperties.removeFrom},${functionProperties.removeRange})`
+      } else {
+        codeblock = `functionObject.removeIndex(${functionProperties.removeFrom})`
+      }
+      seeconsole = true
+      break
+    }
+    case 'move': {
+      functionObject.moveIndex(
+        functionProperties.moveTo, functionProperties.moveFrom, functionProperties.moveRange)
+      if (functionProperties.moveRange) {
+        codeblock = `functionObject.removeIndex(${functionProperties.moveTo},${functionProperties.moveFrom},${functionProperties.moveRange})`
+      } else {
+        codeblock = `functionObject.removeIndex(${functionProperties.moveTo},${functionProperties.moveFrom})`
+      }
+      seeconsole = true
+      break
+    }
+    case 'remap': {
+      // functionObject.remapIndexes
+      codeblock = `functionBlock.remapIndexes(indexMap)`
+      seeconsole = true
+      break
+    }
+    case 'clear':{
+      functionObject.clearCache()
+      codeblock = `functionObject.clearCache()`
+      break
+    }
+
+  }
+
+  return <>
+
+    <Code>{codeblock}</Code>
+    {seeconsole && <Text>See the browser console for feedback.</Text>}
+
+  </>
+}
+
+//     const remapindextest1 = () => {
+
+//         const cradleindexmap = scrollerFunctionsRef.current?.getCradleIndexMap()
+//         if (!cradleindexmap) return
+
+//         const cradleindexarray = Array.from(cradleindexmap)
+//         cradleindexarray.sort((a,b) => {
+//             const aval = a[0], bval = b[0]
+//             return aval - bval
+//         })
+
+//         const indexarray = cradleindexarray.map(item => item[0])
+//         const cacheItemIDarray = cradleindexarray.map(item => item[1])
+//         // console.log('test.controller indexarray, cacheItemIDarray',indexarray, cacheItemIDarray)
+//         cacheItemIDarray.reverse()
+
+//         const changeMap = new Map()
+
+//         // changeMap.set(3,10)
+//         // changeMap.set(5, undefined)
+//         // changeMap.set(6,2)
+//         // changeMap.set(11,2)
+//         // changeMap.set(20,15)
+//         // changeMap.set(300,8)
+//         // changeMap.set(20,400)
+//         // changeMap.set(22,"text")
+
+//         for (const i in indexarray) {
+//             // if (cacheItemIDarray[i]) {
+//                 changeMap.set(indexarray[i],cacheItemIDarray[i])
+//             // }
+//         }
+//         // console.log('testcontroller.changeMap', changeMap)
+//         if (scrollerFunctionsRef.current?.remapIndexes) {
+//             const returnarray = scrollerFunctionsRef.current.remapIndexes(changeMap)
+
+//             console.log('remapIndexes: \
+// [modifiedIndexesList, \
+// remappedIndexesList, \
+// deletedIndexesList, \
+// orphanedItemsIDList, \
+// orphanedIndexesList\
+// errorEntriesMap, \
+// changeMap]', 
+// returnarray)
+
+//         }
+//     }

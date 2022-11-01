@@ -77,7 +77,7 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
 
 }
 
-export const functionsObjectRef = {current:null as GenericObject | null}
+export const functionsObjectRef = {current:{} as GenericObject}
 
 const functionsCallback = (functions:GenericObject) => {
     functionsObjectRef.current = functions
