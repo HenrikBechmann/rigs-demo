@@ -152,7 +152,7 @@ function App() {
     functionToast({
       title: 'API called:',
       description: <div>{
-        getFunctionToastContent(
+        getFunctionToastContent( // runs the function as a side effect
           demoOperationFunctionRef.current, 
           demoFunctionPropertiesRef.current,
           functionsObjectRef.current)}
