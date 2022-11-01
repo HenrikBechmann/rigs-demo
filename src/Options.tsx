@@ -724,6 +724,7 @@ const Options = ({
             const editProperties = editFunctionPropertiesRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
+            console.log('onChangeFuncs.remapDemo: value', value)
             editProperties.remapDemo = value
             sessionFunctionPropertiesRef.current.remapDemo = value
             setEditFunctionProperties({...editProperties})
@@ -1624,8 +1625,6 @@ const Options = ({
                             onChange = {onChangeFuncs.remapDemo}
                         >
                             <option value="backwardsort">Backward sort</option>
-                            <option value="test2">Test 2</option>
-                            <option value="test3">Test 3</option>
                         </Select>
                     </FormControl>
 
@@ -1646,7 +1645,7 @@ const Options = ({
 
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
-                        items to the newly assigned indexes. We've included a few random tests that apply to 
+                        items to the newly assigned indexes. We've included a random test that applies to 
                         the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
                         items scroll out of scope.
                     </Text>

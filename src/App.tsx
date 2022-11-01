@@ -318,68 +318,76 @@ export default App
 const getFunctionToastContent = (
   functionindex:string, 
   functionProperties:GenericObject,
-  functionObject:GenericObject) => {
+  functionsObject:GenericObject) => {
 
   let codeblock
   let seeconsole = false
   switch (functionindex) {
     case 'goto': {
-      functionObject.scrollToIndex(functionProperties.scrolltoIndex)
-      codeblock = `functionObject.scrollToIndex(${functionProperties.scrolltoIndex})`
+      functionsObject.scrollToIndex(functionProperties.scrolltoIndex)
+      codeblock = `functionsObject.scrollToIndex(${functionProperties.scrolltoIndex})`
       break
     }
     case 'listsize': {
-      functionObject.setListsize(functionProperties.listsize)
-      codeblock = `functionObject.setListsize(${functionProperties.listsize})`
+      functionsObject.setListsize(functionProperties.listsize)
+      codeblock = `functionsObject.setListsize(${functionProperties.listsize})`
       break
     }
     case 'reload': {
-      functionObject.reload()
-      codeblock = `functionObject.reload()`
+      functionsObject.reload()
+      codeblock = `functionsObject.reload()`
       break
     }
     case 'insert': {
-      functionObject.insertIndex(
+      const result = functionsObject.insertIndex(
         functionProperties.insertFrom, functionProperties.insertRange)
+      console.log('[changeList, replaceList]',result)
       if (functionProperties.insertRange) {
-        codeblock = `functionObject.insertIndex(${functionProperties.insertFrom},${functionProperties.insertRange})`
+        codeblock = `functionsObject.insertIndex(${functionProperties.insertFrom},${functionProperties.insertRange})`
       } else {
-        codeblock = `functionObject.insertIndex(${functionProperties.insertFrom})`
+        codeblock = `functionsObject.insertIndex(${functionProperties.insertFrom})`
       }
       seeconsole = true
       break
     }
     case 'remove': {
-      functionObject.removeIndex(
+      const result = functionsObject.removeIndex(
         functionProperties.removeFrom, functionProperties.removeRange)
+      console.log('[changeList, replaceList]',result)
       if (functionProperties.removeRange) {
-        codeblock = `functionObject.removeIndex(${functionProperties.removeFrom},${functionProperties.removeRange})`
+        codeblock = `functionsObject.removeIndex(${functionProperties.removeFrom},${functionProperties.removeRange})`
       } else {
-        codeblock = `functionObject.removeIndex(${functionProperties.removeFrom})`
+        codeblock = `functionsObject.removeIndex(${functionProperties.removeFrom})`
       }
       seeconsole = true
       break
     }
     case 'move': {
-      functionObject.moveIndex(
+      const result = functionsObject.moveIndex(
         functionProperties.moveTo, functionProperties.moveFrom, functionProperties.moveRange)
       if (functionProperties.moveRange) {
-        codeblock = `functionObject.removeIndex(${functionProperties.moveTo},${functionProperties.moveFrom},${functionProperties.moveRange})`
+        codeblock = `functionsObject.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom},${functionProperties.moveRange})`
       } else {
-        codeblock = `functionObject.removeIndex(${functionProperties.moveTo},${functionProperties.moveFrom})`
+        codeblock = `functionsObject.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom})`
       }
+      console.log('processedIndexList', result)
       seeconsole = true
       break
     }
     case 'remap': {
-      // functionObject.remapIndexes
-      codeblock = `functionBlock.remapIndexes(indexMap)`
+      switch (functionProperties.remapDemo) {
+        case 'backwardsort':{
+          remapindex_backwardsort(functionsObject)
+          break
+        }
+      }
+      codeblock = `functionsObject.remapIndexes(changeMap)`
       seeconsole = true
       break
     }
     case 'clear':{
-      functionObject.clearCache()
-      codeblock = `functionObject.clearCache()`
+      functionsObject.clearCache()
+      codeblock = `functionsObject.clearCache()`
       break
     }
 
@@ -393,51 +401,36 @@ const getFunctionToastContent = (
   </>
 }
 
-//     const remapindextest1 = () => {
+const remapindex_backwardsort = (functionsObject:GenericObject) => {
 
-//         const cradleindexmap = scrollerFunctionsRef.current?.getCradleIndexMap()
-//         if (!cradleindexmap) return
+  const cradleindexmap = functionsObject.getCradleIndexMap()
+  if (!cradleindexmap) return
 
-//         const cradleindexarray = Array.from(cradleindexmap)
-//         cradleindexarray.sort((a,b) => {
-//             const aval = a[0], bval = b[0]
-//             return aval - bval
-//         })
+  const cradleindexarray:Array<number[]> = Array.from(cradleindexmap)
+  cradleindexarray.sort((a:number[],b:number[]) => {
+      const aval = a[0], bval = b[0]
+      return aval - bval
+  })
 
-//         const indexarray = cradleindexarray.map(item => item[0])
-//         const cacheItemIDarray = cradleindexarray.map(item => item[1])
-//         // console.log('test.controller indexarray, cacheItemIDarray',indexarray, cacheItemIDarray)
-//         cacheItemIDarray.reverse()
+  const indexarray = cradleindexarray.map((item:number[]) => item[0])
+  const cacheItemIDarray = cradleindexarray.map((item:number[]) => item[1])
+  cacheItemIDarray.reverse()
 
-//         const changeMap = new Map()
+  const changeMap = new Map()
 
-//         // changeMap.set(3,10)
-//         // changeMap.set(5, undefined)
-//         // changeMap.set(6,2)
-//         // changeMap.set(11,2)
-//         // changeMap.set(20,15)
-//         // changeMap.set(300,8)
-//         // changeMap.set(20,400)
-//         // changeMap.set(22,"text")
+  for (const i in indexarray) {
+    changeMap.set(indexarray[i],cacheItemIDarray[i])
+  }
+  const returnarray = functionsObject.remapIndexes(changeMap)
 
-//         for (const i in indexarray) {
-//             // if (cacheItemIDarray[i]) {
-//                 changeMap.set(indexarray[i],cacheItemIDarray[i])
-//             // }
-//         }
-//         // console.log('testcontroller.changeMap', changeMap)
-//         if (scrollerFunctionsRef.current?.remapIndexes) {
-//             const returnarray = scrollerFunctionsRef.current.remapIndexes(changeMap)
+  console.log(`remapIndexes:
+[modifiedIndexesList,
+remappedIndexesList,
+deletedIndexesList,
+orphanedItemsIDList,
+orphanedIndexesList,
+errorEntriesMap,
+changeMap]`, 
+  returnarray)
 
-//             console.log('remapIndexes: \
-// [modifiedIndexesList, \
-// remappedIndexesList, \
-// deletedIndexesList, \
-// orphanedItemsIDList, \
-// orphanedIndexesList\
-// errorEntriesMap, \
-// changeMap]', 
-// returnarray)
-
-//         }
-//     }
+}

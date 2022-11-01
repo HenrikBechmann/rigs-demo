@@ -700,7 +700,7 @@ export const defaultFunctionProperties:GenericObject = {
     moveFrom:'',
     moveRange:'',
     moveTo:'',
-    remapDemo:'',
+    remapDemo:'backwardsort',
   }
 
 
