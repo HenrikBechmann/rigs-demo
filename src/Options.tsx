@@ -1396,7 +1396,7 @@ const Options = ({
                     </Text>
 
                     <FormControl>
-                        <FormLabel size = 'sm'>Reload the cradle</FormLabel>
+                        <FormLabel size = 'sm'>Reload the cache</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='reload' fontSize = 'sm'>
                                 Enable
@@ -1408,7 +1408,7 @@ const Options = ({
                             />
                         </InputGroup>
                         <FormHelperText>
-                            This clears the cache reloads the cradle at its current position.
+                            This clears the and reloads the cache, and reloads the cradle at its current position.
                         </FormHelperText>
                     </FormControl>
 
@@ -1665,7 +1665,7 @@ const Options = ({
                     </FormControl>
 
                     <Text fontSize = 'sm' paddingBottom = {2}>
-                        This clears the cache (and therefore the cradle). Not very interesting.
+                        This clears the cache (and therefore the cradle). Not very interesting. See also 'Reload the cache'.
                     </Text>
 
                     </VStack>
