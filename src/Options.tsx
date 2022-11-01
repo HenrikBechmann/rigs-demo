@@ -837,6 +837,7 @@ const Options = ({
                 <AccordionPanel pb={4}><VStack alignItems = 'start'>
 
                     <Heading size = 'xs'>Base cell sizes</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl isInvalid = {invalidFlags.cellHeight}>
@@ -874,6 +875,7 @@ const Options = ({
                         </FormControl>
 
                     </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                        Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
                        <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
@@ -881,6 +883,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Minimum cell sizes</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
@@ -922,6 +925,7 @@ const Options = ({
                         </FormControl>
 
                     </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
                     </Text>
@@ -981,6 +985,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Padding and gaps</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                     <FormControl isInvalid = {invalidFlags.padding} >
@@ -1018,6 +1023,7 @@ const Options = ({
                     </FormControl>
 
                     </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
                         the space between cells.
@@ -1050,6 +1056,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Cache settings</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                     <FormControl>
@@ -1083,6 +1090,7 @@ const Options = ({
                     </FormControl>
 
                     </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2}>
                         <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
                         Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
@@ -1227,6 +1235,7 @@ const Options = ({
             </AccordionItem>
 
             <AccordionItem>
+
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
@@ -1237,6 +1246,7 @@ const Options = ({
                 </Heading>
 
                 <AccordionPanel pb={4}>
+
                     <Text mb = {2}>
                         Snapshots provide an on-demand view of what's in the cache and the cradle. Press the 
                         buttons below to see these lists printed to the browser console. An application can
@@ -1292,10 +1302,13 @@ const Options = ({
                     </FormControl>
 
                     </VStack>
+
                 </AccordionPanel>
+
             </AccordionItem>
 
             <AccordionItem>
+
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
@@ -1306,6 +1319,7 @@ const Options = ({
                 </Heading>
 
                 <AccordionPanel pb={4}>
+
                     <Text paddingBottom = {2} mb = {2} borderBottom = '1px'>
                         Perform these functions one at a time. Enable the function of choice, then hit the Apply
                         button. Most of these functions provide feedback in the browser console. The feedback can 
@@ -1315,6 +1329,7 @@ const Options = ({
                     <VStack alignItems = 'start'>
 
                     <Heading size = 'xs'>Scroll to</Heading>
+
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
@@ -1353,11 +1368,13 @@ const Options = ({
                         </FormControl>
 
                     </HStack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. Go to the specified index number in the virtual list.
                     </Text>
 
                     <Heading size = 'xs'>Change virtual list size</Heading>
+
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
@@ -1393,6 +1410,7 @@ const Options = ({
                         </FormControl>
 
                     </HStack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. Change the size of the scroller's virtual list.
                     </Text>
@@ -1415,6 +1433,7 @@ const Options = ({
                     </FormControl>
 
                     <Heading size = 'xs'>Insert indexes</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
@@ -1456,6 +1475,7 @@ const Options = ({
                         </FormControl>
 
                     </Stack>
+
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='insert' fontSize = 'sm'>
@@ -1475,6 +1495,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Remove indexes</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
@@ -1536,6 +1557,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Move indexes</Heading>
+
                     <Stack direction = {['column','row','row']} mb = {2}>
 
                     <FormControl 
@@ -1616,6 +1638,7 @@ const Options = ({
                     </Text> 
 
                     <Heading size = 'xs'>Remap indexes</Heading>
+
                     <Stack direction = {['column','row','row']} alignItems = 'baseline'>
 
                     <FormControl isDisabled = {disabledFlags.remapDemo}>
@@ -1669,6 +1692,7 @@ const Options = ({
                     </Text>
 
                     </VStack>
+                    
                 </AccordionPanel>
 
             </AccordionItem>
