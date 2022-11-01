@@ -153,7 +153,7 @@ const Options = ({
 
     // simple values
     const [editContentType, setEditContentType] = useState(sessionContentTypeRef.current)
-    const editContentTypeRef = useRef(sessionContentTypeRef.current)
+    // const editContentTypeRef = useRef(sessionContentTypeRef.current)
 
     const [editOperationFunction, setEditOperationFunction] = useState(sessionOperationFunctionRef.current)
     const editOperationFunctionRef = useRef(sessionOperationFunctionRef.current)
@@ -224,6 +224,7 @@ const Options = ({
 
     const invalidFlags = invalidFlagsRef.current
 
+    // test forwarded to host; returns text list of invalid section titles for display to user
     const invalidSections = () => {
         const sections = new Set<string>()
         const errorfields = invalidFlagsRef.current
@@ -778,7 +779,7 @@ const Options = ({
 
     <Box><VStack align = 'start' alignItems = 'stretch'>
 
-        <FormControl mb = {3}>
+        <FormControl  borderBottom = '1px solid black' paddingBottom = {3}>
 
             <FormLabel>Select Content Type</FormLabel>
 
@@ -802,6 +803,21 @@ const Options = ({
 
         </FormControl>
 
+        <FormControl borderBottom = '1px solid black'>
+            <Stack direction = {['column','row','row']} align = 'normal'>
+            <FormLabel size = 'xs'>Orientation</FormLabel>
+            <RadioGroup 
+                value = {editContentTypeProperties.orientation} 
+                onChange = {onChangeFuncs.orientation}
+            >
+                <HStack align = 'center'>
+                    <Radio value = 'vertical'>Vertical</Radio>
+                    <Radio value = 'horizontal'>Horizontal</Radio>
+                </HStack>
+            </RadioGroup>
+            </Stack>
+        </FormControl>
+
         <Heading as = 'h3' fontSize = 'md'>More Options</Heading>
 
         <Accordion allowMultiple>
@@ -818,21 +834,6 @@ const Options = ({
                 </Heading>
 
                 <AccordionPanel pb={4}><VStack alignItems = 'start'>
-
-                    <FormControl borderBottom = '1px'>
-                        <Stack direction = {['column','row','row']} align = 'normal'>
-                        <FormLabel size = 'xs'>Orientation</FormLabel>
-                        <RadioGroup 
-                            value = {editContentTypeProperties.orientation} 
-                            onChange = {onChangeFuncs.orientation}
-                        >
-                            <HStack align = 'center'>
-                                <Radio value = 'vertical'>Vertical</Radio>
-                                <Radio value = 'horizontal'>Horizontal</Radio>
-                            </HStack>
-                        </RadioGroup>
-                        </Stack>
-                    </FormControl>
 
                     <Heading size = 'xs'>Base cell sizes</Heading>
                     <Stack direction = {['column','row','row']}>
