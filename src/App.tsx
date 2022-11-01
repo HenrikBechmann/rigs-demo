@@ -49,6 +49,7 @@ const contentTitles:GenericObject = {
 
 const ErrorBox = (props:any) => {
   const { invalidSections, isOpen, onClose } = props
+  if (!isOpen) return null
   const listitems:any[] = []
   let count = 0
   invalidSections.forEach((title:string)=>{
@@ -59,15 +60,15 @@ const ErrorBox = (props:any) => {
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>There are errors</ModalHeader>
+        <ModalContent fontSize = {[9,9,14]}>
+          <ModalHeader >There are errors</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-          </ModalBody>
-            <Text ml = {10}>Please correct the errors in the following sections before proceeding.</Text>
-            <UnorderedList ml = {14}>
+            <Text>Please correct the errors in the following sections before proceeding.</Text>
+            <UnorderedList ml = {4}>
               {listitems}
             </UnorderedList>
+          </ModalBody >
           <ModalFooter>
             <Button onClick={onClose}>
               Close
@@ -114,6 +115,7 @@ function App() {
   const functionsRef = useRef<GenericObject>({})
   const {isOpen:isOpenErrors, onOpen:onOpenErrors, onClose:onCloseErrors } = useDisclosure()
 
+  // buttons
   const showOptions = () => {
     sessionContentTypeRef.current = demoContentTypeRef.current
     sessionOperationFunctionRef.current = demoOperationFunctionRef.current
