@@ -794,8 +794,8 @@ const Options = ({
                 <option value="variablecontent">Variable content</option>
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>
-                <option value="nestedcontent">Nested uniform scrollers</option>
-                <option value="nestedpromises">Nested uniform scroller promises</option>
+                <option value="nestedcontent">Nested scrollers</option>
+                <option value="nestedpromises">Nested scroller promises</option>
             </Select>
 
             <FormHelperText>
