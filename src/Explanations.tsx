@@ -8,9 +8,9 @@ import 'github-markdown-css'
 
 import {Box} from '@chakra-ui/react'
 
-const emitMarkdown = (markdown:string) => {
+const emitMarkdown = (markdown:string, key:string) => {
 
-    return <Box className = 'markdown-body' fontSize = 'sm'>
+    return <Box key = {key} className = 'markdown-body' fontSize = 'sm'>
         <ReactMarkdown children = {markdown} remarkPlugins = {[remarkGfm]} />
     </Box>
 
@@ -29,11 +29,23 @@ There are two ways to experiment with content sizing and configuration on a desk
 - zoom the browser window (Ctrl-minus or Ctrl-plus). Zooming down to 33% is interesting
 `
 
+const endnote = `
+For formal specs of the RIGS properties and API, see the [README file](https://github.com/HenrikBechmann/react-infinite-grid-scroller/blob/master/README.md).
+
+For RIGS source code on Github, see [here](https://github.com/HenrikBechmann/react-infinite-grid-scroller/tree/master/src).
+Start with InfiniteGridScroller.tsx.
+
+For the source code for this demo site (rigs-demo) see [here](https://github.com/HenrikBechmann/rigs-demo/tree/master/src).
+Start with App.tsx.
+`
+
 const Explanations = (props:any) => {
 
-    const introduction_md = emitMarkdown(introduction)
+    const introduction_md = emitMarkdown(introduction,'introduction')
 
-    return introduction_md
+    const endnote_md = emitMarkdown(endnote, 'endnote')
+
+    return <> {[introduction_md,endnote_md]} </>
 
 }
 
