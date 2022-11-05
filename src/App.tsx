@@ -23,7 +23,6 @@ import {
 
   defaultAllContentTypeProperties, 
   defaultCallbackSettings,
-  defaultFunctionProperties,
 
   demoAllContentTypePropertiesRef,
   demoCallbackSettingsRef, 
@@ -35,14 +34,27 @@ import {
 } from './demodata'
 
 
+const defaultFunctionProperties:GenericObject = {
+  gotoIndex:'',
+  listsize:'',
+  insertFrom:'',
+  insertRange:'',
+  removeFrom:'',
+  removeRange:'',
+  moveFrom:'',
+  moveRange:'',
+  moveTo:'',
+  remapDemo:'backwardsort',
+}
+
 const contentTitles:GenericObject = {
 
-  simple:"Simple uniform content",
+  simplecontent:"Simple uniform content",
   simplepromises:"Simple uniform promises",
-  variable:"Variable content",
+  variablecontent:"Variable content",
   variablepromises:"Variable promises",
   variabledynamic:"Variable dynamic",
-  nested:"Nested uniform scrollers",
+  nestedcontent:"Nested uniform scrollers",
   nestedpromises:"Nested uniform scroller promises",
 
 }
@@ -85,11 +97,11 @@ function App() {
   const [demoState, setDemoState] = useState('ready')
 
   // baseline - static
-  const defaultContentType = 'simple'
+  const defaultContentType = 'simplecontent'
   const defaultOperationFunction = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackSettings imported above
-  // defaultFunctionProperties imported above
+  // defaultFunctionProperties defined above
   
   // assigned from demo versions for edit
   const sessionContentTypeRef = useRef<string>('')

@@ -404,7 +404,7 @@ const Options = ({
         contentType:(value:string) => {
 
             let disabled
-            if (['variable','variablepromises','variabledynamic'].includes(value)) {
+            if (['variablecontent','variablepromises','variabledynamic'].includes(value)) {
 
                 disabled = false
                 isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
@@ -789,12 +789,12 @@ const Options = ({
                 value = {editContentType} 
                 onChange = {onChangeFuncs.contentType}
             >
-                <option value="simple">Simple uniform content</option>
+                <option value="simplecontent">Simple uniform content</option>
                 <option value="simplepromises">Simple uniform promises</option>
-                <option value="variable">Variable content</option>
+                <option value="variablecontent">Variable content</option>
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>
-                <option value="nested">Nested uniform scrollers</option>
+                <option value="nestedcontent">Nested uniform scrollers</option>
                 <option value="nestedpromises">Nested uniform scroller promises</option>
             </Select>
 

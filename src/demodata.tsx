@@ -4,13 +4,13 @@ import React, {useRef, useState, useEffect} from 'react'
 
 import Scroller from 'react-infinite-grid-scroller'
 
-// ----------------------------------[ types ]------------------------------
+/*
 
-export type GenericObject = {
-    [prop:string]:any
-}
+    CONTENT TYPES are defined just below the SCROLLER CALLBACKS section.
 
-// ==============================[ scroller callbacks ]=========================
+*/
+
+// ==============================[ SCROLLER CALLBACKS ]=========================
 
 export const defaultCallbackSettings = {
     referenceIndexCallback:false,
@@ -95,9 +95,9 @@ const callbacks = {
     repositioningFlagCallback,
 }
 
-// ==================================[ content type components ]==========================
+// ==================================[ CONTENT TYPES ]==========================
 
-// -----------------------------[ simple items ]------------------------
+// -----------------------------[ Simple uniform content ]------------------------
 
 const simpleScrollerStyles = {
 
@@ -124,7 +124,6 @@ const simpleComponentStyles = {
 
 const SimpleItem = (props:any) => {
 
-    // console.log('loading GenericItem', props)
     const originalindexRef = useRef(props.index)
 
     return <div style = {simpleComponentStyles.outer}>
@@ -146,6 +145,26 @@ const getSimpleItem = (index:number) => {
 
 }
 
+const simplecontent = {
+    startingIndex:0,
+    estimatedListSize:300,
+    orientation:'vertical',
+    cellHeight:150,
+    cellWidth:150,
+    padding:10,
+    gap:5,
+    runwaySize:4,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    styles:simpleScrollerStyles,
+    getItem:getSimpleItem,
+    callbacks,
+}
+
+// -----------------------------[ Simple uniform promises ]------------------------
+
 const getSimpleItemPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
@@ -158,7 +177,287 @@ const getSimpleItemPromise = (index:number) => {
 
 }
 
-// ---------------------------------[ nested items ]------------------
+const simplepromises = {
+    startingIndex:0,
+    estimatedListSize:300,
+    orientation:'vertical',
+    cellHeight:150,
+    cellWidth:150,
+    padding:10,
+    gap:5,
+    runwaySize:4,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    styles:simpleScrollerStyles,
+    getItem:getSimpleItemPromise,
+    callbacks,
+}
+
+// ------------------------[ variable content ]----------------------------
+
+const variableScrollerStyles = {
+
+}
+
+let variableComponentStyles = {
+    outer:{
+        backgroundColor:'white',
+        overflow:'scroll',
+    } as React.CSSProperties,
+    inner:{
+        padding:'3px',
+        border:'1px solid black',
+        borderRadius:'8px',
+        backgroundColor:'white', 
+    } as React.CSSProperties
+}
+
+// const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
+const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst.'
+
+const teststrings:string[] = []
+
+const getVariableTestString = (index:number) => {
+    if (!teststrings[index]) {
+        if ([0,1,51,52,196,197,198,199].includes(index)) {
+            teststrings[index] = 'TEST STRING' + index
+        } else if (index == 0) {
+            teststrings[index] =`${index}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
+        } else {
+            teststrings[index] =`${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+        }
+    }
+    return teststrings[index]
+}
+
+const VariableItem = (props:any) => {
+
+    const {
+
+        orientation,
+        cellWidth,
+        cellHeight
+
+    } = props.scrollerProperties.scrollerPropertiesRef.current
+
+    const orientationstyles = 
+        (orientation == 'vertical')?
+            {
+                maxHeight:cellHeight,
+                height:'',
+                maxWidth:'',
+                width:'100%',
+            }:
+            {
+                maxHeight:'',
+                height:'100%',
+                maxWidth:cellWidth,
+                width:'',
+            }
+
+    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+
+    return <div style = {outerstyles}>
+        <div style = {variableComponentStyles.inner}>{getVariableTestString(props.index)}</div>
+    </div>
+}
+
+const getVariableItem = (index:number) => {
+
+     return <VariableItem index = {index} scrollerProperties = {null}/>    
+
+}
+
+const variablecontent = {
+    startingIndex:0,
+    estimatedListSize:200,
+    orientation:'vertical',
+    cellHeight:320,
+    cellWidth:250,
+    cellMinHeight:25,
+    cellMinWidth:25,
+    padding:10,
+    gap:5,
+    runwaySize:5,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'variable',
+
+    styles:variableScrollerStyles,
+    getItem:getVariableItem,
+    callbacks,
+}
+// ------------------------[ variable promises ]----------------------------
+
+const getVariableItemPromise = (index:number) => {
+
+    return new Promise((resolve, reject) => {
+        setTimeout(()=> {
+
+            resolve(<VariableItem index = {index} scrollerProperties = {null}/>)
+
+        },400 + (Math.random() * 2000))
+    })
+
+}
+
+const variablepromises = {
+    startingIndex:0,
+    estimatedListSize:200,
+    orientation:'vertical',
+    cellHeight:320,
+    cellWidth:250,
+    cellMinHeight:25,
+    cellMinWidth:25,
+    padding:10,
+    gap:5,
+    runwaySize:5,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'variable',
+
+    styles:variableScrollerStyles,
+    getItem:getVariableItemPromise,
+    callbacks,
+}
+// ------------------------[ variable dynamic ]----------------------------
+
+const getTestStringDynamic = (index:number) => {
+
+    return `${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+
+}
+
+const VariableItemDynamic = (props:any) => {
+
+    const {
+
+        orientation,
+        cellWidth,
+        cellHeight
+
+    } = props.scrollerProperties.scrollerPropertiesRef.current
+
+    const orientationstyles = 
+        (orientation == 'vertical')?
+            {
+                maxHeight:cellHeight,
+                height:'',
+                maxWidth:'',
+                width:'100%',
+            }:
+            {
+                maxHeight:'',
+                height:'100%',
+                maxWidth:cellWidth,
+                width:'',
+            }
+
+    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+
+    const originalindexRef = useRef(props.index)
+
+    const intervalRef = useRef<NodeJS.Timer | null>(null)
+
+    const [teststring, setTeststring] = useState('test string')
+    const teststringRef = useRef<string>()
+    teststringRef.current = teststring
+    const iterationRef = useRef(0)
+
+    useEffect(()=>{
+        intervalRef.current = setInterval(() => {
+            iterationRef.current ++
+            const teststringinstance = getTestStringDynamic(props.index)
+            // console.log('iteration:', iterationRef.current )
+            setTeststring(teststringinstance)
+
+        },200 + (Math.random() * 2000))
+
+        return () => {
+            clearInterval(intervalRef.current as NodeJS.Timer)
+        }
+
+    },[])
+
+    return <div style = {outerstyles}>
+        <div style = {variableComponentStyles.inner}>{teststringRef.current}</div>
+    </div>
+
+}
+
+const getVariableItemDynamic = (index:number) => {
+
+     return <VariableItemDynamic index = {index} scrollerProperties = {null}/>    
+
+}
+
+const variabledynamic = {
+    startingIndex:0,
+    estimatedListSize:200,
+    orientation:'vertical',
+    cellHeight:320,
+    cellWidth:250,
+    cellMinHeight:25,
+    cellMinWidth:25,
+    padding:10,
+    gap:5,
+    runwaySize:5,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'variable',
+
+    styles:variableScrollerStyles,
+    getItem:getVariableItemDynamic,
+    callbacks,
+}
+// ---------------------------------[ nested uniform scrollers ]------------------
+
+const getNestedVariableTestString = (index:number) => {
+
+    const returnstring =`${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+
+    return returnstring
+}
+
+const VariableNestedItem = (props:any) => {
+
+    const {
+
+        orientation,
+        cellWidth,
+        cellHeight
+
+    } = props.scrollerProperties.scrollerPropertiesRef.current
+
+    const orientationstyles = 
+        (orientation == 'vertical')?
+            {
+                maxHeight:cellHeight,
+                height:'',
+                maxWidth:'',
+                width:'100%',
+            }:
+            {
+                maxHeight:'',
+                height:'100%',
+                maxWidth:cellWidth,
+                width:'',
+            }
+
+    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+
+    return <div style = {outerstyles}>
+        <div style = {variableComponentStyles.inner}>{getNestedVariableTestString(props.index)}</div>
+    </div>
+}
+
+const getEmbeddedVariableItem = (index:number) => {
+
+     return <VariableNestedItem index = {index} scrollerProperties = {null}/>    
+
+}
 
 const nestedScrollerStyles = {
 
@@ -302,6 +601,26 @@ const getNestedItem = (index:number) => {
 
 }
 
+const nestedcontent = {
+    startingIndex:0,
+    estimatedListSize:200,
+    orientation:'vertical',
+    cellHeight:400,
+    cellWidth:300,
+    padding:5,
+    gap:5,
+    runwaySize:3,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    styles:nestedScrollerStyles,
+    getItem:getNestedItem,
+    callbacks,
+}
+
+// ---------------------------------[ nested uniform scroller promises ]------------------
+
 const getNestedItemPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
@@ -319,203 +638,22 @@ const getNestedItemPromise = (index:number) => {
 
 }
 
-// ------------------------[ variable items ]----------------------------
+const nestedpromises = {
+    startingIndex:0,
+    estimatedListSize:200,
+    orientation:'vertical',
+    cellHeight:400,
+    cellWidth:300,
+    padding:5,
+    gap:5,
+    runwaySize:3,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
 
-const variableScrollerStyles = {
-
-}
-
-let variableComponentStyles = {
-    outer:{
-        backgroundColor:'white',
-        overflow:'scroll',
-    } as React.CSSProperties,
-    inner:{
-        padding:'3px',
-        border:'1px solid black',
-        borderRadius:'8px',
-        backgroundColor:'white', 
-    } as React.CSSProperties
-}
-
-const VariableItem = (props:any) => {
-
-    const {
-
-        orientation,
-        cellWidth,
-        cellHeight
-
-    } = props.scrollerProperties.scrollerPropertiesRef.current
-
-    const orientationstyles = 
-        (orientation == 'vertical')?
-            {
-                maxHeight:cellHeight,
-                height:'',
-                maxWidth:'',
-                width:'100%',
-            }:
-            {
-                maxHeight:'',
-                height:'100%',
-                maxWidth:cellWidth,
-                width:'',
-            }
-
-    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
-
-    return <div style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{getTestString(props.index)}</div>
-    </div>
-}
-
-const VariableNestedItem = (props:any) => {
-
-    const {
-
-        orientation,
-        cellWidth,
-        cellHeight
-
-    } = props.scrollerProperties.scrollerPropertiesRef.current
-
-    const orientationstyles = 
-        (orientation == 'vertical')?
-            {
-                maxHeight:cellHeight,
-                height:'',
-                maxWidth:'',
-                width:'100%',
-            }:
-            {
-                maxHeight:'',
-                height:'100%',
-                maxWidth:cellWidth,
-                width:'',
-            }
-
-    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
-
-    return <div style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{getNestedTestString(props.index)}</div>
-    </div>
-}
-
-const VariableItemDynamic = (props:any) => {
-
-    const {
-
-        orientation,
-        cellWidth,
-        cellHeight
-
-    } = props.scrollerProperties.scrollerPropertiesRef.current
-
-    const orientationstyles = 
-        (orientation == 'vertical')?
-            {
-                maxHeight:cellHeight,
-                height:'',
-                maxWidth:'',
-                width:'100%',
-            }:
-            {
-                maxHeight:'',
-                height:'100%',
-                maxWidth:cellWidth,
-                width:'',
-            }
-
-    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
-
-    const originalindexRef = useRef(props.index)
-
-    const intervalRef = useRef<NodeJS.Timer | null>(null)
-
-    const [teststring, setTeststring] = useState('test string')
-    const teststringRef = useRef<string>()
-    teststringRef.current = teststring
-    const iterationRef = useRef(0)
-
-    useEffect(()=>{
-        intervalRef.current = setInterval(() => {
-            iterationRef.current ++
-            const teststringinstance = getTestStringDynamic(props.index)
-            // console.log('iteration:', iterationRef.current )
-            setTeststring(teststringinstance)
-
-        },200 + (Math.random() * 2000))
-
-        return () => {
-            clearInterval(intervalRef.current as NodeJS.Timer)
-        }
-
-    },[])
-
-    return <div style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{teststringRef.current}</div>
-    </div>
-}
-
-// const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
-const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst.'
-
-const teststrings:string[] = []
-
-const getTestString = (index:number) => {
-    if (!teststrings[index]) {
-        if ([0,1,51,52,196,197,198,199].includes(index)) {
-            teststrings[index] = 'TEST STRING' + index
-        } else if (index == 0) {
-            teststrings[index] =`${index}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
-        } else {
-            teststrings[index] =`${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
-        }
-    }
-    return teststrings[index]
-}
-
-const getNestedTestString = (index:number) => {
-
-    const returnstring =`${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
-
-    return returnstring
-}
-
-const getTestStringDynamic = (index:number) => {
-
-    return `${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
-
-}
-
-const getVariableItem = (index:number) => {
-
-     return <VariableItem index = {index} scrollerProperties = {null}/>    
-
-}
-
-const getEmbeddedVariableItem = (index:number) => {
-
-     return <VariableNestedItem index = {index} scrollerProperties = {null}/>    
-
-}
-
-const getVariableItemPromise = (index:number) => {
-
-    return new Promise((resolve, reject) => {
-        setTimeout(()=> {
-
-            resolve(<VariableItem index = {index} scrollerProperties = {null}/>)
-
-        },400 + (Math.random() * 2000))
-    })
-
-}
-const getVariableItemDynamic = (index:number) => {
-
-     return <VariableItemDynamic index = {index} scrollerProperties = {null}/>    
-
+    styles:nestedScrollerStyles,
+    getItem:getNestedItemPromise,
+    callbacks,
 }
 
 // ======================================[ scroller properties ]===========================
@@ -561,146 +699,19 @@ const nestedVariableScrollerProperties = {
 }
 
 export const defaultAllContentTypeProperties = {
-    simple: {
-        startingIndex:0,
-        estimatedListSize:300,
-        orientation:'vertical',
-        cellHeight:150,
-        cellWidth:150,
-        padding:10,
-        gap:5,
-        runwaySize:4,
-        cache:'cradle',
-        cacheMax:200,
-        layout: 'uniform',
-
-        styles:simpleScrollerStyles,
-        getItem:getSimpleItem,
-        callbacks,
-    },
-    simplepromises: {
-        startingIndex:0,
-        estimatedListSize:300,
-        orientation:'vertical',
-        cellHeight:150,
-        cellWidth:150,
-        padding:10,
-        gap:5,
-        runwaySize:4,
-        cache:'cradle',
-        cacheMax:200,
-        layout: 'uniform',
-
-        styles:simpleScrollerStyles,
-        getItem:getSimpleItemPromise,
-        callbacks,
-    },
-    nested: {
-        startingIndex:0,
-        estimatedListSize:200,
-        orientation:'vertical',
-        cellHeight:400,
-        cellWidth:300,
-        padding:5,
-        gap:5,
-        runwaySize:3,
-        cache:'cradle',
-        cacheMax:200,
-        layout: 'uniform',
-
-        styles:nestedScrollerStyles,
-        getItem:getNestedItem,
-        callbacks,
-    },
-    nestedpromises: {
-        startingIndex:0,
-        estimatedListSize:200,
-        orientation:'vertical',
-        cellHeight:400,
-        cellWidth:300,
-        padding:5,
-        gap:5,
-        runwaySize:3,
-        cache:'cradle',
-        cacheMax:200,
-        layout: 'uniform',
-
-        styles:nestedScrollerStyles,
-        getItem:getNestedItemPromise,
-        callbacks,
-    },
-    variable: {
-        startingIndex:0,
-        estimatedListSize:200,
-        orientation:'vertical',
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:25,
-        cellMinWidth:25,
-        padding:10,
-        gap:5,
-        runwaySize:5,
-        cache:'cradle',
-        cacheMax:200,
-        layout: 'variable',
-
-        styles:variableScrollerStyles,
-        getItem:getVariableItem,
-        callbacks,
-    },
-    variablepromises: {
-        startingIndex:0,
-        estimatedListSize:200,
-        orientation:'vertical',
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:25,
-        cellMinWidth:25,
-        padding:10,
-        gap:5,
-        runwaySize:5,
-        cache:'cradle',
-        cacheMax:200,
-        layout: 'variable',
-
-        styles:variableScrollerStyles,
-        getItem:getVariableItemPromise,
-        callbacks,
-    },
-    variabledynamic: {
-        startingIndex:0,
-        estimatedListSize:200,
-        orientation:'vertical',
-        cellHeight:320,
-        cellWidth:250,
-        cellMinHeight:25,
-        cellMinWidth:25,
-        padding:10,
-        gap:5,
-        runwaySize:5,
-        cache:'cradle',
-        cacheMax:200,
-        layout: 'variable',
-
-        styles:variableScrollerStyles,
-        getItem:getVariableItemDynamic,
-        callbacks,
-    },
+    simplecontent,
+    simplepromises,
+    nestedcontent,
+    nestedpromises,
+    variablecontent,
+    variablepromises,
+    variabledynamic,
 }
 
 export const demoAllContentTypePropertiesRef = {current:{...defaultAllContentTypeProperties} as GenericObject}
 
-export const defaultFunctionProperties:GenericObject = {
-    gotoIndex:'',
-    listsize:'',
-    insertFrom:'',
-    insertRange:'',
-    removeFrom:'',
-    removeRange:'',
-    moveFrom:'',
-    moveRange:'',
-    moveTo:'',
-    remapDemo:'backwardsort',
-  }
+// ----------------------------------[ type definition ]----------------------------
 
-
+export type GenericObject = {
+    [prop:string]:any
+}
