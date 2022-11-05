@@ -27,12 +27,15 @@ There are two reasons for this website:
 - to provide a test environment for various platforms. If you see any issues, please report them 
 [here](https://github.com/HenrikBechmann/react-infinite-grid-scroller/issues)
 
-There are two ways to experiment with content sizing and configuration on a desktop device:
+There are several main ways to experiment with content sizing and configuration on a desktop device:
 
+- try out the various content types offered in the options drawer
 - change the size of the browser window
-- zoom the browser window (Ctrl-minus or Ctrl-plus). Zooming down to 33% is interesting
+- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for 100%). Zooming down to 33% is interesting
 
-RIGS works on any device that supports browsers.
+There are many options that can be set in the options drawer.
+
+RIGS (and this demo site) works on any device that supports modern browsers.
 
 See the *Documentation & Source Code* section for links to more information.
 `
@@ -71,6 +74,8 @@ Start at InfiniteGridScroller.tsx.
 
 For the source code for this demo site (rigs-demo) see [here](https://github.com/HenrikBechmann/rigs-demo/tree/master/src).
 Start at App.tsx.
+
+For the RIGS properties used to implement the content types of this demo, see the demodata.tsx file [here](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx)
 `
 
 const Explanations = (props:any) => {
