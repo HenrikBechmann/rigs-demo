@@ -5,13 +5,19 @@ import React, {useRef, useState, useEffect} from 'react'
 import Scroller from 'react-infinite-grid-scroller'
 
 /*
-
     CONTENT TYPES are defined just below the SCROLLER CALLBACKS section.
-
 */
 
 // ==============================[ SCROLLER CALLBACKS ]=========================
 
+/*
+    These scroller callbacks are sent to each of the five content types. They can be activated
+    in the Callbacks section of the demo Options drawer.
+*/
+
+// these settings are selected in the Callbacks section of the Options drawer
+// they control the firing of the callbacks. The demo callbacks, when activated, send feedback
+// to the browser console.
 export const defaultCallbackSettings = {
     referenceIndexCallback:false,
     repositioningIndexCallback:false,
@@ -22,7 +28,13 @@ export const defaultCallbackSettings = {
     repositioningFlagCallback:false,
 }
 
+// initialize the demo settings with the default settings. These can ba changed in
+// the Callbacks section of the Options drawer
 export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as GenericObject}
+
+
+// -----------------
+// the indivicual callbacks definitions follow...
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
@@ -77,11 +89,18 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
 
 }
 
+// the functions object is used by the Options drawer for the snapshots,
+// and by the main app for the operations functions selected in the Options drawer.
+// the functions are instantiated in the scroller, by the functionsCallback below
 export const functionsObjectRef = {current:{} as GenericObject}
 
+// the functions callback returns the funtions API to the caller
 const functionsCallback = (functions:GenericObject) => {
     functionsObjectRef.current = functions
 }
+
+// -----------------
+// The callbacks are bundled for inclusion in the various content type scroller properties below.
 
 // for properties
 const callbacks = {
@@ -99,10 +118,10 @@ const callbacks = {
 
 // -----------------------------[ Simple uniform content ]------------------------
 
-const simpleScrollerStyles = {
+// -----------------
+// content component definition
 
-}
-
+// styles for the simple uniform content components
 const simpleComponentStyles = {
     inner: {
         position:'absolute',
@@ -122,6 +141,7 @@ const simpleComponentStyles = {
     } as React.CSSProperties
 }
 
+// the simple uniform content component
 const SimpleItem = (props:any) => {
 
     const originalindexRef = useRef(props.index)
@@ -134,6 +154,10 @@ const SimpleItem = (props:any) => {
 
 }
 
+// -----------------
+// scroller property values for this content
+
+// the getItem function for simple uniform content
 const getSimpleItem = (index:number) => {
 
      if (index == 30) return Promise.reject(new Error('not found'))
@@ -145,6 +169,17 @@ const getSimpleItem = (index:number) => {
 
 }
 
+// scroller styles
+const simpleScrollerStyles = {
+
+}
+
+// placeholder messages
+const simplePlaceholderMessages = {
+
+}
+
+// properties for the simple content scroller
 const simplecontent = {
     startingIndex:0,
     estimatedListSize:300,
@@ -158,25 +193,35 @@ const simplecontent = {
     cacheMax:200,
     layout: 'uniform',
 
-    styles:simpleScrollerStyles,
     getItem:getSimpleItem,
+    styles:simpleScrollerStyles,
+    placeholderMessages: simplePlaceholderMessages,
     callbacks,
 }
 
 // -----------------------------[ Simple uniform promises ]------------------------
 
+// the simple content definitions are used for the promises, except for the getItem function
+
+// -----------------
+// substitute scroller property values for this content
+
+// the getItem function for simple uniform promises
 const getSimpleItemPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
+
         setTimeout(()=> {
 
             resolve(<SimpleItem index = {index} />)
 
         },400 + (Math.random() * 2000))
+
     })
 
 }
 
+// properties for the simple promises scroller
 const simplepromises = {
     startingIndex:0,
     estimatedListSize:300,
@@ -190,16 +235,16 @@ const simplepromises = {
     cacheMax:200,
     layout: 'uniform',
 
-    styles:simpleScrollerStyles,
     getItem:getSimpleItemPromise,
+    styles:simpleScrollerStyles,
+    placeholderMessages: simplePlaceholderMessages,
     callbacks,
 }
 
 // ------------------------[ variable content ]----------------------------
 
-const variableScrollerStyles = {
-
-}
+// -----------------
+// content component definition
 
 let variableComponentStyles = {
     outer:{
@@ -264,10 +309,21 @@ const VariableItem = (props:any) => {
     </div>
 }
 
+// -----------------
+// scroller property values for this content
+
 const getVariableItem = (index:number) => {
 
      return <VariableItem index = {index} scrollerProperties = {null}/>    
 
+}
+
+const variableScrollerStyles = {
+
+}
+
+const variablePlaceholderMessages = {
+    
 }
 
 const variablecontent = {
@@ -285,11 +341,15 @@ const variablecontent = {
     cacheMax:200,
     layout: 'variable',
 
-    styles:variableScrollerStyles,
     getItem:getVariableItem,
+    styles:variableScrollerStyles,
+    placeholderMessages: variablePlaceholderMessages,
     callbacks,
 }
 // ------------------------[ variable promises ]----------------------------
+
+// -----------------
+// replacement scroller property values for this content
 
 const getVariableItemPromise = (index:number) => {
 
@@ -318,13 +378,17 @@ const variablepromises = {
     cacheMax:200,
     layout: 'variable',
 
-    styles:variableScrollerStyles,
     getItem:getVariableItemPromise,
+    styles:variableScrollerStyles,
+    placeholderMessages: variablePlaceholderMessages,
     callbacks,
 }
 // ------------------------[ variable dynamic ]----------------------------
 
-const getTestStringDynamic = (index:number) => {
+// -----------------
+// content component definition
+
+const getDynamicTestString = (index:number) => {
 
     return `${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
 
@@ -369,7 +433,7 @@ const VariableItemDynamic = (props:any) => {
     useEffect(()=>{
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
-            const teststringinstance = getTestStringDynamic(props.index)
+            const teststringinstance = getDynamicTestString(props.index)
             // console.log('iteration:', iterationRef.current )
             setTeststring(teststringinstance)
 
@@ -386,6 +450,9 @@ const VariableItemDynamic = (props:any) => {
     </div>
 
 }
+
+// -----------------
+// scroller property values for this content
 
 const getVariableItemDynamic = (index:number) => {
 
@@ -408,11 +475,49 @@ const variabledynamic = {
     cacheMax:200,
     layout: 'variable',
 
-    styles:variableScrollerStyles,
     getItem:getVariableItemDynamic,
+    styles:variableScrollerStyles,
+    placeholderMessages: simplePlaceholderMessages,
     callbacks,
 }
 // ---------------------------------[ nested uniform scrollers ]------------------
+
+const nestedScrollerStyles = {
+
+}
+
+// -----------------
+// content component definition
+
+const nestedComponentStyles = {
+    container: {
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        backgroundColor:'beige',
+        height:'100%',
+        borderRadius:'8px',
+        border:'6px ridge gray',
+    } as React.CSSProperties,
+    header:{
+        padding:'3px',
+        backgroundColor:'silver',
+        border:'2p solid darkgray',
+    } as React.CSSProperties,
+    frame:{
+        position:'relative',
+        width:'100%',
+        backgroundColor:'beige',
+        flex:'1',
+    } as React.CSSProperties,
+    item:{
+        padding:'3px',
+        border:'1px solid green',
+        backgroundColor:'white',
+        height:'100%',
+        boxSizing:'border-box',
+    } as React.CSSProperties
+}
 
 const getNestedVariableTestString = (index:number) => {
 
@@ -457,40 +562,6 @@ const getEmbeddedVariableItem = (index:number) => {
 
      return <VariableNestedItem index = {index} scrollerProperties = {null}/>    
 
-}
-
-const nestedScrollerStyles = {
-
-}
-
-const nestedComponentStyles = {
-    container: {
-        display:'flex',
-        flexDirection:'column',
-        justifyContent:'flex-start',
-        backgroundColor:'beige',
-        height:'100%',
-        borderRadius:'8px',
-        border:'6px ridge gray',
-    } as React.CSSProperties,
-    header:{
-        padding:'3px',
-        backgroundColor:'silver',
-        border:'2p solid darkgray',
-    } as React.CSSProperties,
-    frame:{
-        position:'relative',
-        width:'100%',
-        backgroundColor:'beige',
-        flex:'1',
-    } as React.CSSProperties,
-    item:{
-        padding:'3px',
-        border:'1px solid green',
-        backgroundColor:'white',
-        height:'100%',
-        boxSizing:'border-box',
-    } as React.CSSProperties
 }
 
 const NestedItem = (props:any) => {
@@ -592,12 +663,57 @@ const getEmbeddedUniformItem = (index:any) => {
 
 }
 
+// -----------------
+// scroller property values for this content
+
 const getNestedItem = (index:number) => {
 
     return <NestedItem 
         index = {index} 
         scrollerProperties = {null}
     />
+
+}
+
+const nestedUniformScrollerProperties = {
+
+    startingIndex:0,
+    estimatedListSize:100,
+    orientation:'vertical',
+    cellHeight:40,
+    cellWidth:250,
+    padding:6,
+    gap:2,
+    runwaySize:4,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    getItem: getEmbeddedUniformItem,
+    styles:null,
+    placeholderMessages: null,
+    callbacks:null,
+
+}
+
+const nestedVariableScrollerProperties = {
+
+    startingIndex:0,
+    estimatedListSize:100,
+    orientation:'vertical',
+    cellHeight:300,
+    cellWidth:250,
+    padding:6,
+    gap:2,
+    runwaySize:3,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'variable',
+
+    getItem: getEmbeddedVariableItem,
+    styles:null,
+    placeholderMessages: null,
+    callbacks:null,
 
 }
 
@@ -614,12 +730,16 @@ const nestedcontent = {
     cacheMax:200,
     layout: 'uniform',
 
-    styles:nestedScrollerStyles,
     getItem:getNestedItem,
+    styles:nestedScrollerStyles,
+    placeholderMessages: null,
     callbacks,
 }
 
 // ---------------------------------[ nested uniform scroller promises ]------------------
+
+// -----------------
+// scroller property values for this content
 
 const getNestedItemPromise = (index:number) => {
 
@@ -651,52 +771,13 @@ const nestedpromises = {
     cacheMax:200,
     layout: 'uniform',
 
-    styles:nestedScrollerStyles,
     getItem:getNestedItemPromise,
+    styles:nestedScrollerStyles,
+    placeholderMessages: null,
     callbacks,
 }
 
-// ======================================[ scroller properties ]===========================
-
-const nestedUniformScrollerProperties = {
-
-    startingIndex:0,
-    estimatedListSize:100,
-    orientation:'vertical',
-    cellHeight:40,
-    cellWidth:250,
-    padding:6,
-    gap:2,
-    runwaySize:4,
-    cache:'cradle',
-    cacheMax:200,
-    layout: 'uniform',
-
-    getItem: getEmbeddedUniformItem,
-    styles:null,
-    callbacks:null,
-
-}
-
-const nestedVariableScrollerProperties = {
-
-    startingIndex:0,
-    estimatedListSize:100,
-    orientation:'vertical',
-    cellHeight:300,
-    cellWidth:250,
-    padding:6,
-    gap:2,
-    runwaySize:3,
-    cache:'cradle',
-    cacheMax:200,
-    layout: 'variable',
-
-    getItem: getEmbeddedVariableItem,
-    styles:null,
-    callbacks:null,
-
-}
+// ==============================[ consolidated scroller properties namespace ]=========================
 
 export const defaultAllContentTypeProperties = {
     simplecontent,
