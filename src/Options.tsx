@@ -1113,7 +1113,7 @@ const Options = ({
                 </Heading>
 
                 <AccordionPanel pb={4}>
-                    <Text mb = {2}>
+                    <Text fontSize = 'sm' mb = {2}>
                         On a desktop, these callbacks, when checked, will stream information about the scroller 
                         behaviour to the browser console. In an application the data can be used to enhance the 
                         user experience. Select the callbacks you want to activate.
@@ -1247,7 +1247,7 @@ const Options = ({
 
                 <AccordionPanel pb={4}>
 
-                    <Text mb = {2}>
+                    <Text fontSize = 'sm' mb = {2}>
                         Snapshots provide an on-demand view of what's in the cache and the cradle. Press the 
                         buttons below to see these lists printed to the browser console. An application can
                         use this data to verify and control cache management changes for drag-n-drop, sorting, 
@@ -1320,7 +1320,7 @@ const Options = ({
 
                 <AccordionPanel pb={4}>
 
-                    <Text paddingBottom = {2} mb = {2} borderBottom = '1px'>
+                    <Text fontSize = 'sm' paddingBottom = {2} mb = {2} borderBottom = '1px'>
                         Perform these functions one at a time. Enable the function of choice, then hit the Apply
                         button. Most of these functions provide feedback in the browser console. The feedback can 
                         be used by apps.
@@ -1415,8 +1415,8 @@ const Options = ({
                         Integer. Change the size of the scroller's virtual list.
                     </Text>
 
+                    <Heading size = 'xs'>Reload the cache</Heading>
                     <FormControl>
-                        <FormLabel size = 'sm'>Reload the cache</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='reload' fontSize = 'sm'>
                                 Enable
@@ -1427,10 +1427,10 @@ const Options = ({
                                 id='reload' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            This clears the and reloads the cache, and reloads the cradle at its current position.
-                        </FormHelperText>
                     </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        This clears the and reloads the cache, and reloads the cradle at its current position.
+                    </Text>
 
                     <Heading size = 'xs'>Insert indexes</Heading>
 
@@ -1673,8 +1673,8 @@ const Options = ({
                         items scroll out of scope.
                     </Text>
 
+                    <Heading size = 'xs'>Clear the cache</Heading>
                     <FormControl>
-                        <FormLabel size = 'sm'>Clear the cache</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='clear' fontSize = 'sm'>
                                 Enable
