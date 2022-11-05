@@ -65,6 +65,38 @@ const maxValue = (value:any, maxValue:any) => {
 
 // ------------------------[ static field data ]----------------------
 
+const sectionTitles:GenericObject = {
+  properties:'Properties for the selected content type',
+  callbacks:'Callbacks',
+  snapshots:'Service functions: snapshots',
+  operations:'Service functions: operations',
+}
+
+const fieldSections:GenericObject = {
+
+    cellHeight:'properties',
+    cellWidth:'properties',
+    cellMinHeight:'properties',
+    cellMinWidth:'properties',
+    startingIndex:'properties',
+    estimatedListSize:'properties',
+    padding:'properties',
+    gap:'properties',
+    runwaySize:'properties',
+    cacheMax:'properties',
+    scrolltoIndex:'operations',
+    listsize:'operations',
+    insertFrom:'operations',
+    insertRange:'operations',
+    removeFrom:'operations',
+    removeRange:'operations',
+    moveFrom:'operations',
+    moveRange:'operations',
+    moveTo:'operations',
+
+}
+
+
 // display error messages
 const errorMessages = { 
     // string selection, no errors
@@ -78,7 +110,7 @@ const errorMessages = {
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
     cacheMax:'blank, or integer greater than or equal to 0',
-    gotoIndex:'integer: required, greater than or equal to 0',
+    scrolltoIndex:'integer: required, greater than or equal to 0',
     listsize:'integer: required, greater than or equal to 0',
     insertFrom:'integer: required, greater than or equal to 0',
     insertRange:'blank, or integer greater than or equal to the "from" index',
@@ -90,7 +122,7 @@ const errorMessages = {
 }
 
 const dependentFields = [
-    'gotoIndex',
+    'scrolltoIndex',
     'listsize',
     'insertFrom', 'insertRange',
     'removeFrom', 'removeRange',
@@ -107,6 +139,7 @@ const Options = ({
     sessionOperationFunctionRef, 
     sessionFunctionPropertiesRef,
     functionsObjectRef,
+    functionsRef,
 
 }:GenericObject) => {
  
@@ -120,7 +153,7 @@ const Options = ({
 
     // simple values
     const [editContentType, setEditContentType] = useState(sessionContentTypeRef.current)
-    const editContentTypeRef = useRef(sessionContentTypeRef.current)
+    // const editContentTypeRef = useRef(sessionContentTypeRef.current)
 
     const [editOperationFunction, setEditOperationFunction] = useState(sessionOperationFunctionRef.current)
     const editOperationFunctionRef = useRef(sessionOperationFunctionRef.current)
@@ -145,7 +178,7 @@ const Options = ({
         {
             cellMinHeight:false,
             cellMinWidth:false,
-            gotoIndex:false,
+            scrolltoIndex:false,
             listsize:false,
             insertFrom:false,
             insertRange:false,
@@ -176,7 +209,7 @@ const Options = ({
             runwaySize:false,
             cache:false,
             cacheMax:false,
-            gotoIndex:false,
+            scrolltoIndex:false,
             listsize:false,
             insertFrom:false,
             insertRange:false,
@@ -190,6 +223,28 @@ const Options = ({
     )
 
     const invalidFlags = invalidFlagsRef.current
+
+    // test forwarded to host; returns text list of invalid section titles for display to user
+    const invalidSections = () => {
+        const sections = new Set<string>()
+        const errorfields = invalidFlagsRef.current
+        for (const field in invalidFlagsRef.current) {
+            if (errorfields[field]) {
+                sections.add(fieldSections[field])
+            }
+        }
+        const sectionSet = new Set()
+        sections.forEach((value) => {
+            sectionSet.add(sectionTitles[value])
+        }) 
+        return sectionSet
+    }
+
+    useEffect(()=>{
+        functionsRef.current = {
+            invalidSections
+        }
+    },[])
 
     // scroller function switch settings
     const functionEnabledSettingsRef = useRef<GenericObject>({
@@ -286,9 +341,9 @@ const Options = ({
             invalidFlags.cacheMax = isInvalid
             return isInvalid
         },
-        gotoIndex:(value:string) => {
+        scrolltoIndex:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.gotoIndex = isInvalid
+            invalidFlags.scrolltoIndex = isInvalid
             return isInvalid
         },
         listsize:(value:string) => {
@@ -349,7 +404,7 @@ const Options = ({
         contentType:(value:string) => {
 
             let disabled
-            if (['variable','variablepromises','variabledynamic'].includes(value)) {
+            if (['variablecontent','variablepromises','variabledynamic'].includes(value)) {
 
                 disabled = false
                 isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
@@ -380,8 +435,8 @@ const Options = ({
             if (service) {
                 switch (service) {
                     case 'goto':{
-                        disabledFlags.gotoIndex = false
-                        isInvalidTests.gotoIndex(editFunctionPropertiesRef.current.gotoIndex)
+                        disabledFlags.scrolltoIndex = false
+                        isInvalidTests.scrolltoIndex(editFunctionPropertiesRef.current.scrolltoIndex)
                         break
                     }
                     case 'listsize':{
@@ -593,11 +648,11 @@ const Options = ({
             }
             setEditContentTypeProperties({...editProperties})
         },
-        gotoIndex:(input:string) => {
+        scrolltoIndex:(input:string) => {
             const editProperties = editFunctionPropertiesRef.current
-            editProperties.gotoIndex = input
-            if (!isInvalidTests.gotoIndex(input)) {
-                sessionFunctionPropertiesRef.current.gotoIndex = input
+            editProperties.scrolltoIndex = input
+            if (!isInvalidTests.scrolltoIndex(input)) {
+                sessionFunctionPropertiesRef.current.scrolltoIndex = input
             }
             setEditFunctionProperties({...editProperties})
         },
@@ -669,6 +724,7 @@ const Options = ({
             const editProperties = editFunctionPropertiesRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
+            console.log('onChangeFuncs.remapDemo: value', value)
             editProperties.remapDemo = value
             sessionFunctionPropertiesRef.current.remapDemo = value
             setEditFunctionProperties({...editProperties})
@@ -724,7 +780,7 @@ const Options = ({
 
     <Box><VStack align = 'start' alignItems = 'stretch'>
 
-        <FormControl mb = {3}>
+        <FormControl  borderBottom = '1px solid black' paddingBottom = {3}>
 
             <FormLabel>Select Content Type</FormLabel>
 
@@ -733,19 +789,34 @@ const Options = ({
                 value = {editContentType} 
                 onChange = {onChangeFuncs.contentType}
             >
-                <option value="simple">Simple uniform content</option>
+                <option value="simplecontent">Simple uniform content</option>
                 <option value="simplepromises">Simple uniform promises</option>
-                <option value="variable">Variable content</option>
+                <option value="variablecontent">Variable content</option>
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>
-                <option value="nested">Nested uniform scrollers</option>
-                <option value="nestedpromises">Nested uniform scroller promises</option>
+                <option value="nestedcontent">Nested scrollers</option>
+                <option value="nestedpromises">Nested scroller promises</option>
             </Select>
 
             <FormHelperText>
                 Current content will be replaced on Apply.
             </FormHelperText>
 
+        </FormControl>
+
+        <FormControl borderBottom = '1px solid black'>
+            <Stack direction = {['column','row','row']} align = 'normal'>
+            <FormLabel size = 'xs'>Orientation</FormLabel>
+            <RadioGroup 
+                value = {editContentTypeProperties.orientation} 
+                onChange = {onChangeFuncs.orientation}
+            >
+                <HStack align = 'center'>
+                    <Radio value = 'vertical'>Vertical</Radio>
+                    <Radio value = 'horizontal'>Horizontal</Radio>
+                </HStack>
+            </RadioGroup>
+            </Stack>
         </FormControl>
 
         <Heading as = 'h3' fontSize = 'md'>More Options</Heading>
@@ -757,7 +828,7 @@ const Options = ({
                 <Heading as ='h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Properties for the selected content type
+                            {sectionTitles.properties}
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
@@ -765,22 +836,8 @@ const Options = ({
 
                 <AccordionPanel pb={4}><VStack alignItems = 'start'>
 
-                    <FormControl borderBottom = '1px'>
-                        <Stack direction = {['column','row','row']} align = 'normal'>
-                        <FormLabel size = 'xs'>Orientation</FormLabel>
-                        <RadioGroup 
-                            value = {editContentTypeProperties.orientation} 
-                            onChange = {onChangeFuncs.orientation}
-                        >
-                            <HStack align = 'center'>
-                                <Radio value = 'vertical'>Vertical</Radio>
-                                <Radio value = 'horizontal'>Horizontal</Radio>
-                            </HStack>
-                        </RadioGroup>
-                        </Stack>
-                    </FormControl>
-
                     <Heading size = 'xs'>Base cell sizes</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl isInvalid = {invalidFlags.cellHeight}>
@@ -818,6 +875,7 @@ const Options = ({
                         </FormControl>
 
                     </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                        Integers (pixels), required. <Code>cellHeight</Code> for vertical, and 
                        <Code>cellWidth</Code> for horizontal are exact for 'uniform' layout, maximum for 
@@ -825,6 +883,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Minimum cell sizes</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
@@ -866,6 +925,7 @@ const Options = ({
                         </FormControl>
 
                     </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
                     </Text>
@@ -925,6 +985,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Padding and gaps</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                     <FormControl isInvalid = {invalidFlags.padding} >
@@ -962,6 +1023,7 @@ const Options = ({
                     </FormControl>
 
                     </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
                         the space between cells.
@@ -994,6 +1056,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Cache settings</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                     <FormControl>
@@ -1027,6 +1090,7 @@ const Options = ({
                     </FormControl>
 
                     </Stack>
+
                     <Text fontSize = 'sm' paddingBottom = {2}>
                         <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
                         Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
@@ -1042,14 +1106,14 @@ const Options = ({
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Callbacks
+                            {sectionTitles.callbacks}
                         </Box>
                         <AccordionIcon />                        
                     </AccordionButton>
                 </Heading>
 
                 <AccordionPanel pb={4}>
-                    <Text mb = {2}>
+                    <Text fontSize = 'sm' mb = {2}>
                         On a desktop, these callbacks, when checked, will stream information about the scroller 
                         behaviour to the browser console. In an application the data can be used to enhance the 
                         user experience. Select the callbacks you want to activate.
@@ -1171,17 +1235,19 @@ const Options = ({
             </AccordionItem>
 
             <AccordionItem>
+
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Service functions: snapshots
+                            {sectionTitles.snapshots}
                         </Box>
                     <AccordionIcon />                        
                     </AccordionButton>
                 </Heading>
 
                 <AccordionPanel pb={4}>
-                    <Text mb = {2}>
+
+                    <Text fontSize = 'sm' mb = {2}>
                         Snapshots provide an on-demand view of what's in the cache and the cradle. Press the 
                         buttons below to see these lists printed to the browser console. An application can
                         use this data to verify and control cache management changes for drag-n-drop, sorting, 
@@ -1236,21 +1302,25 @@ const Options = ({
                     </FormControl>
 
                     </VStack>
+
                 </AccordionPanel>
+
             </AccordionItem>
 
             <AccordionItem>
+
                 <Heading as = 'h3'>
                     <AccordionButton bg = 'lightgray'>
                         <Box flex='1' textAlign='left'>
-                            Service functions: operations
+                            {sectionTitles.operations}
                         </Box>
                         <AccordionIcon />                        
                     </AccordionButton>
                 </Heading>
 
                 <AccordionPanel pb={4}>
-                    <Text paddingBottom = {2} mb = {2} borderBottom = '1px'>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} mb = {2} borderBottom = '1px'>
                         Perform these functions one at a time. Enable the function of choice, then hit the Apply
                         button. Most of these functions provide feedback in the browser console. The feedback can 
                         be used by apps.
@@ -1258,25 +1328,26 @@ const Options = ({
 
                     <VStack alignItems = 'start'>
 
-                    <Heading size = 'xs'>Go to</Heading>
+                    <Heading size = 'xs'>Scroll to</Heading>
+
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.gotoIndex}
-                            isInvalid = {invalidFlags.gotoIndex}>
+                            isDisabled = {disabledFlags.scrolltoIndex}
+                            isInvalid = {invalidFlags.scrolltoIndex}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
                                 <NumberInput 
-                                    value = {editFunctionProperties.gotoIndex} 
+                                    value = {editFunctionProperties.scrolltoIndex} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.gotoIndex}
+                                    onChange = {onChangeFuncs.scrolltoIndex}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
                                 </NumberInput>
                             </InputGroup>
                             <FormErrorMessage>
-                                {errorMessages.gotoIndex}
+                                {errorMessages.scrolltoIndex}
                             </FormErrorMessage>
                         </FormControl>
 
@@ -1297,11 +1368,13 @@ const Options = ({
                         </FormControl>
 
                     </HStack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. Go to the specified index number in the virtual list.
                     </Text>
 
                     <Heading size = 'xs'>Change virtual list size</Heading>
+
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
@@ -1337,12 +1410,13 @@ const Options = ({
                         </FormControl>
 
                     </HStack>
+
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. Change the size of the scroller's virtual list.
                     </Text>
 
+                    <Heading size = 'xs'>Reload the cache</Heading>
                     <FormControl>
-                        <FormLabel size = 'sm'>Reload the cradle</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='reload' fontSize = 'sm'>
                                 Enable
@@ -1353,12 +1427,13 @@ const Options = ({
                                 id='reload' 
                             />
                         </InputGroup>
-                        <FormHelperText>
-                            This clears the cache reloads the cradle at its current position.
-                        </FormHelperText>
                     </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        This clears the and reloads the cache, and reloads the cradle at its current position.
+                    </Text>
 
                     <Heading size = 'xs'>Insert indexes</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
@@ -1400,6 +1475,7 @@ const Options = ({
                         </FormControl>
 
                     </Stack>
+
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='insert' fontSize = 'sm'>
@@ -1419,6 +1495,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Remove indexes</Heading>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
@@ -1480,6 +1557,7 @@ const Options = ({
                     </Text>
 
                     <Heading size = 'xs'>Move indexes</Heading>
+
                     <Stack direction = {['column','row','row']} mb = {2}>
 
                     <FormControl 
@@ -1560,6 +1638,7 @@ const Options = ({
                     </Text> 
 
                     <Heading size = 'xs'>Remap indexes</Heading>
+
                     <Stack direction = {['column','row','row']} alignItems = 'baseline'>
 
                     <FormControl isDisabled = {disabledFlags.remapDemo}>
@@ -1569,8 +1648,6 @@ const Options = ({
                             onChange = {onChangeFuncs.remapDemo}
                         >
                             <option value="backwardsort">Backward sort</option>
-                            <option value="test2">Test 2</option>
-                            <option value="test3">Test 3</option>
                         </Select>
                     </FormControl>
 
@@ -1591,13 +1668,13 @@ const Options = ({
 
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
-                        items to the newly assigned indexes. We've included a few random tests that apply to 
+                        items to the newly assigned indexes. We've included a random test that applies to 
                         the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
                         items scroll out of scope.
                     </Text>
 
+                    <Heading size = 'xs'>Clear the cache</Heading>
                     <FormControl>
-                        <FormLabel size = 'sm'>Clear the cache</FormLabel>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
                             <FormLabel htmlFor='clear' fontSize = 'sm'>
                                 Enable
@@ -1611,10 +1688,11 @@ const Options = ({
                     </FormControl>
 
                     <Text fontSize = 'sm' paddingBottom = {2}>
-                        This clears the cache (and therefore the cradle). Not very interesting.
+                        This clears the cache (and therefore the cradle). Not very interesting. See also 'Reload the cache'.
                     </Text>
 
                     </VStack>
+                    
                 </AccordionPanel>
 
             </AccordionItem>
