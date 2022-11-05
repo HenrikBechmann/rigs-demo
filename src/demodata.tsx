@@ -102,7 +102,6 @@ const functionsCallback = (functions:GenericObject) => {
 // -----------------
 // The callbacks are bundled for inclusion in the various content type scroller properties below.
 
-// for properties
 const callbacks = {
     functionsCallback,
     referenceIndexCallback,
@@ -148,7 +147,7 @@ const SimpleItem = (props:any) => {
 
     return <div style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {originalindexRef.current}
+            {originalindexRef.current + 1}
         </div>
     </div>
 
@@ -160,7 +159,7 @@ const SimpleItem = (props:any) => {
 // the getItem function for simple uniform content
 const getSimpleItem = (index:number) => {
 
-     if (index == 30) return Promise.reject(new Error('not found'))
+     if (index == 30) return Promise.reject(new Error('not found for demo purposes'))
      if (index == 40) return 5
 
      const returnvalue = <SimpleItem index = {index} />
@@ -171,12 +170,15 @@ const getSimpleItem = (index:number) => {
 
 // scroller styles
 const simpleScrollerStyles = {
-
+    placeholdererrorframe: {
+        borderRadius:'8px',
+        backgroundColor:'pink',
+    },
 }
 
 // placeholder messages
 const simplePlaceholderMessages = {
-
+    invalid:'invalid component sent for demo purposes'
 }
 
 // properties for the simple content scroller
@@ -221,6 +223,14 @@ const getSimpleItemPromise = (index:number) => {
 
 }
 
+const simplePromisesScrollerStyles = {
+    placeholderframe: {
+        borderRadius:'8px',
+        backgroundColor:'palegreen',
+    },
+}
+
+
 // properties for the simple promises scroller
 const simplepromises = {
     startingIndex:0,
@@ -236,7 +246,7 @@ const simplepromises = {
     layout: 'uniform',
 
     getItem:getSimpleItemPromise,
-    styles:simpleScrollerStyles,
+    styles:simplePromisesScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
 }
@@ -267,11 +277,11 @@ const teststrings:string[] = []
 const getVariableTestString = (index:number) => {
     if (!teststrings[index]) {
         if ([0,1,51,52,196,197,198,199].includes(index)) {
-            teststrings[index] = 'TEST STRING' + index
+            teststrings[index] = 'TEST STRING ' + (index + 1)
         } else if (index == 0) {
-            teststrings[index] =`${index}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
+            teststrings[index] =`${index + 1}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
         } else {
-            teststrings[index] =`${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+            teststrings[index] =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
         }
     }
     return teststrings[index]
@@ -390,7 +400,7 @@ const variablepromises = {
 
 const getDynamicTestString = (index:number) => {
 
-    return `${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+    return `${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
 
 }
 
@@ -521,7 +531,7 @@ const nestedComponentStyles = {
 
 const getNestedVariableTestString = (index:number) => {
 
-    const returnstring =`${index}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+    const returnstring =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
 
     return returnstring
 }
@@ -629,7 +639,7 @@ const NestedItem = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedComponentStyles.container} >
         <div data-type = "list-header" style = {nestedComponentStyles.header} >
-            List #{index} of {listsize}
+            List #{index + 1} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedComponentStyles.frame}>
 
