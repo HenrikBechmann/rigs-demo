@@ -60,6 +60,7 @@ The motivation for RIGS was to have a scroller that supported all of:
 
 - both "heavy" and "light" cell content
 - both vertical and horizontal scrolling
+- both uniform and variable cell sizes
 - nested scrollers
 - API support for sorting, filtering, and drag-n-drop
 
