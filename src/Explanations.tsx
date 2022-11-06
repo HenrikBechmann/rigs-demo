@@ -84,7 +84,46 @@ Of course these content types are just samples. The main point of RIGS is to all
 content.
 `
 
-const properties_md = `
+const properties_md = `The RIGS demo properties available for edit in the _Options_ drawer include most of the 
+basic properties of the scroller. For more advanced options, see the _Documentation &amp; Source Code_ section.
+
+**Orientation** is the main property available. Note that RIGS maintains position in the virtual list when
+orientation is pivoted from vertical to horizontal or back.
+
+**cellHeight**, **cellWidth**, **minCellHeight**, and **minCellWidth** constrain the size and shape of the scroller
+cells. See the descriptions of _uniform_ and _variable_ layouts in the _About the Content Type options_ section
+for details on how these are applied.
+
+**padding** defines the border width around the (visible) cradle. The **gap** property defines the gap between cells, 
+both vertically and horizontally. Gaps do not apply at the beginning or end of rows or columns (controlled by 
+padding instead). Adjusting the background colour using the \`styles\` object (see the bottom of this panel) colors 
+the padding and gap spaces.
+
+**Starting index** is applied only on initial mounting of a scroller, or in this demo whenever the content type is
+changed. But see also the _Scroll To_ option in the _Service Function Operations options_ section.
+
+**Estimated list size** is applied only on initial mounting of a scroller, or in this demo whenever the content 
+type is changed. Subsequently the list size can be changed directly through the API (see the _Change virtual list 
+size_ option in the _Service Function Operations options_ section), or when a \`getItem\` call returns a \`null\` 
+(this becomes the new end-of-list), or when the list size is modified through the cache management API (again, see 
+the _Service Function Operations options_ section).
+
+The **Runway size** option sets the number of rows of cells that are instantiated _out of view_ at the start and 
+the end of the cradle. This gives the cradle some leeway to load cells before they come into view.
+
+**Cache settings** provide options for scroller caching. RIGS always keeps contents of the \`Cradle\` in the cache.
+In addition, the _keepload_ option keeps components in the cache as they are loaded, and _preload_ attempts to 
+load the entire virtual list into the cache. Both _keepload_ and _preload_ are constrained by \`cacheMax\`. Using
+\`cacheMax\`, the caching algorithm tries to maintain an equal weight of caching before and after the \`Cradle\`.
+Also note that _preload_ of nested scrollers partially loads the scroller components, but cannot load the contents 
+until displayed by the \`Cradle\`. The reason is that components in cache but not displayed lose their \`width\`, 
+\`height\`, \`scrollTop\`, and \`scrollLeft\` values. These values are needed by the Scroller for calculating 
+configurations.
+
+Note that the \`styles\` object provides options for adjusting non-structural styles of various components of the
+scroller. These have not been surfaced to users in this demo (although some have been used for demonstration purposes). See
+the formal specification (linked in the _Documentation &amp; Source Code_ panel) for details.
+
 `
 
 const callbacks_md = `
@@ -94,6 +133,9 @@ const snapshots_md = `
 `
 
 const operations_md = `
+`
+
+const performance_md = `
 `
 
 const motivation_md = `
@@ -129,6 +171,7 @@ const Explanations = (props:any) => {
         callbacks = emitMarkdown(properties_md),
         snapshots = emitMarkdown(snapshots_md),
         operations = emitMarkdown(operations_md),
+        performance = emitMarkdown(performance_md),
         motivation = emitMarkdown(motivation_md),
         documentation = emitMarkdown(documentation_md)
 
@@ -251,6 +294,23 @@ const Explanations = (props:any) => {
 
                 <AccordionPanel pb={4}>
                     {operations}
+                </AccordionPanel>
+
+            </AccordionItem>
+
+            <AccordionItem>
+
+                <Heading as ='h3'>
+                    <AccordionButton bg = 'lightgray'>
+                        <Box flex='1' textAlign='left'>
+                            Performance Optimization
+                        </Box>
+                    <AccordionIcon />                        
+                    </AccordionButton>
+                </Heading>
+
+                <AccordionPanel pb={4}>
+                    {performance}
                 </AccordionPanel>
 
             </AccordionItem>

@@ -930,6 +930,51 @@ const Options = ({
                         Integers (pixels). These only apply to variable layouts. Minimum 25, default 25.
                     </Text>
 
+                    <Heading size = 'xs'>Padding and gaps</Heading>
+
+                    <Stack direction = {['column','row','row']}>
+
+                    <FormControl isInvalid = {invalidFlags.padding} >
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>padding:</FormLabel>
+                            <NumberInput 
+                                value = {editContentTypeProperties.padding} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.padding}
+                                clampValueOnBlur = {false}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
+                        </InputGroup>
+                        <FormErrorMessage>
+                            {errorMessages.padding}
+                        </FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid = {invalidFlags.gap} >
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>gap:</FormLabel>
+                            <NumberInput 
+                                value = {editContentTypeProperties.gap} 
+                                size = 'sm'
+                                onChange = {onChangeFuncs.gap}
+                                clampValueOnBlur = {false}
+                            >
+                                <NumberInputField border = '2px' />
+                            </NumberInput>
+                        </InputGroup>
+                        <FormErrorMessage>
+                            {errorMessages.gap}
+                        </FormErrorMessage>
+                    </FormControl>
+
+                    </Stack>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
+                        the space between cells.
+                    </Text>
+
                     <Heading size = 'xs'>Starting index</Heading>
                     
                     <FormControl isInvalid = {invalidFlags.startingIndex} >
@@ -982,51 +1027,6 @@ const Options = ({
                         Integer. This will only apply right after a content type change. It will 
                         set the starting list size of the session for the content type. See also
                         'Change virtual list size' in the 'Service functions: operations' section.
-                    </Text>
-
-                    <Heading size = 'xs'>Padding and gaps</Heading>
-
-                    <Stack direction = {['column','row','row']}>
-
-                    <FormControl isInvalid = {invalidFlags.padding} >
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>padding:</FormLabel>
-                            <NumberInput 
-                                value = {editContentTypeProperties.padding} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.padding}
-                                clampValueOnBlur = {false}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        <FormErrorMessage>
-                            {errorMessages.padding}
-                        </FormErrorMessage>
-                    </FormControl>
-
-                    <FormControl isInvalid = {invalidFlags.gap} >
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>gap:</FormLabel>
-                            <NumberInput 
-                                value = {editContentTypeProperties.gap} 
-                                size = 'sm'
-                                onChange = {onChangeFuncs.gap}
-                                clampValueOnBlur = {false}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        <FormErrorMessage>
-                            {errorMessages.gap}
-                        </FormErrorMessage>
-                    </FormControl>
-
-                    </Stack>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
-                        the space between cells.
                     </Text>
 
                     <Heading size = 'xs'>Runway size</Heading>
