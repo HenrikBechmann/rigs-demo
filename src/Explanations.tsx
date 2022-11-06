@@ -29,18 +29,59 @@ There are two reasons for this website:
 
 There are several main ways to experiment with content sizing and configuration on a desktop device:
 
-- try out the various content types offered in the options drawer
+- try out the various content types offered in the _Options_ drawer
 - change the size of the browser window
-- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for 100%). Zooming down to 33% is interesting
+- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for reset to 100%). Zooming down to 33% is interesting
 
-There are many options that can be set in the options drawer.
+There are many options that can be set in the _Options_ drawer.
 
 RIGS (and this demo site) works on any device that supports modern browsers.
 
 See the *Documentation & Source Code* section for links to more information.
 `
 
+const key_design_ideas_md = `There are several key design ideas which allow RIGS to display "heavy", and variable, 
+components. The scroller:
+
+- immediately displays a _placeholder_ for cell content, which allows the system to wait for the loading of the
+permanent content
+- uses \`requestIdleCallback\` to fetch components, which allows for balancing initial displays and loading latency
+- splits the visible \`Cradle\` into two, whereby each half automatically "pushes" the cradle size in the right
+direction on loading cells, with minimal visible disruption
+- first loads all content into a cache (React \`portals\`) so that state is not lost when components are moved from
+one part of the \`Cradle\` to another during scrolling
+- provides for a _repositioning_ feature, such that if the \`Cradle\` is forced out of scope during scrolling, the 
+scroller automatically reverts to _repositioning_ mode, in which it informs the user of the current location of the 
+scroll in relation to the entire virtual list
+- provides a memory _cache_, such that components can optionally be retained in memory (limited by the \`maxCache\` 
+parameter) even when the content scrolls out of scope, to allow retention of the state of complex components.
+`
+
 const content_md = `
+For this demonstration, there are three types of content, plus a few variations. The source code for 
+the configurations of these content types can be viewed [here](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx).
+
+The three basic content types of this demo site are: 
+- simple uniform
+- variable
+- nested scrollers
+
+The variations include \`promises\` of all three which are randomly delayed for loading, plus a _dynamic_ version of the
+variable content type, in which every cell randomly, and continuously, loads new and different data. The scroller 
+still scrolls in these circumstances.
+
+The term _uniform_ is for the layout in which for vertical orientation, the cell height is fixed by the \`cellHeight\` 
+parameter, and the cell width is allocated evenly to the available viewport width, guided by the \`cellWidth\` parameter. 
+Similarly for horizontal orientation, the cell width is fixed by the \`cellWidth\` parameter, and the cell height is
+allocated evenly guided by the \`cellHeight\` parameter. The allocations are managed by the \`grid\` _fractional_ (\`fr\`)
+unit.
+
+The term _variable_ is for the layout in which for vertical orientation, the cell height can vary between the 
+\`cellMinHeight\` and \`cellHeight\` parameter values, and for horizontal orientation the cell width can
+vary between the \`cellMinWidth\` and \`cellWidth\` parameter values.
+
+Of course these content types are just samples. The main point of RIGS is to allow almost any kind of React Component 
+content.
 `
 
 const properties_md = `
@@ -56,7 +97,7 @@ const operations_md = `
 `
 
 const motivation_md = `
-The motivation for RIGS was to have a scroller that supported all of:
+The motivation for RIGS was to have a scroller that supports all of:
 
 - both "heavy" and "light" cell content
 - both vertical and horizontal scrolling
@@ -82,6 +123,7 @@ For the RIGS properties used to implement the content types of this demo, see th
 const Explanations = (props:any) => {
 
     const overview = emitMarkdown(overview_md),
+        key_design_ideas = emitMarkdown(key_design_ideas_md),
         content = emitMarkdown(content_md),
         properties = emitMarkdown(properties_md),
         callbacks = emitMarkdown(properties_md),
@@ -107,6 +149,23 @@ const Explanations = (props:any) => {
 
                 <AccordionPanel pb={4}>
                     {overview}
+                </AccordionPanel>
+
+            </AccordionItem>
+
+            <AccordionItem>
+
+                <Heading as ='h3'>
+                    <AccordionButton bg = 'lightgray'>
+                        <Box flex='1' textAlign='left'>
+                            Key Design Ideas
+                        </Box>
+                    <AccordionIcon />                        
+                    </AccordionButton>
+                </Heading>
+
+                <AccordionPanel pb={4}>
+                    {key_design_ideas}
                 </AccordionPanel>
 
             </AccordionItem>
