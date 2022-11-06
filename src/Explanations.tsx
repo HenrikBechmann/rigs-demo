@@ -121,8 +121,8 @@ until displayed by the \`Cradle\`. The reason is that components in cache but no
 configurations.
 
 Note that the \`styles\` object provides options for adjusting non-structural styles of various components of the
-scroller. These have not been surfaced to users in this demo (although some have been used for demonstration purposes). See
-the formal specification (linked in the _Documentation &amp; Source Code_ panel) for details.
+scroller. These have not been surfaced to users in this demo (although some have been used for demonstration purposes). 
+See the formal specification (linked in the _Documentation &amp; Source Code_ panel) for details.
 
 `
 
