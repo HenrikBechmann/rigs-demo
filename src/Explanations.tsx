@@ -276,14 +276,14 @@ Start at App.tsx.
 For the RIGS properties used to implement the content types of this demo, see the demodata.tsx file [here](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx)
 `
 
-const Explainer = ({explanation, children}:{explanation:JSX.Element, children:(string | JSX.Element)[]|string}) => {
+const Explainer = ({explanation, children:title}:{explanation:JSX.Element, children:(string | JSX.Element)[]|string}) => {
 
      return <AccordionItem>
 
         <Heading as ='h3'>
             <AccordionButton bg = 'lightgray'>
                 <Box flex='1' textAlign='left'>
-                    {children}
+                    {title}
                 </Box>
             <AccordionIcon />                        
             </AccordionButton>
