@@ -236,7 +236,8 @@ each operate on one or more indexes. \`Cradle\` content is synchronzed with thes
 These cache operation functions can each be tested in this demo, with the feedback returned to the browser console. 
 See the formal documentation linked in the _Documentation &amp; Source Code_ section for details.
 
-\`reload()\` clears and reloads the cache (and therefore the \`Cradle\`), and \`clearCache()\` simply clears the cache. Neither return any feedback.
+\`reload()\` clears and reloads the cache (and therefore the \`Cradle\`), and \`clearCache()\` simply clears the 
+cache. Neither return any feedback.
 `
 
 const performance_md = `
@@ -276,14 +277,14 @@ Start at App.tsx.
 For the RIGS properties used to implement the content types of this demo, see the demodata.tsx file [here](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx)
 `
 
-const Explainer = ({explanation, children}:{explanation:JSX.Element, children:(string | JSX.Element)[]|string}) => {
+const Explainer = ({explanation, children:title}:{explanation:JSX.Element, children:(string | JSX.Element)[]|string}) => {
 
      return <AccordionItem>
 
         <Heading as ='h3'>
             <AccordionButton bg = 'lightgray'>
                 <Box flex='1' textAlign='left'>
-                    {children}
+                    {title}
                 </Box>
             <AccordionIcon />                        
             </AccordionButton>
