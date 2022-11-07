@@ -26,7 +26,7 @@
     "react-dom": "^18.2.0"
   },
   "comments": {
-     "react-infinite-grid-scroller": "file:../react-infinite-grid-scroller",
+     "react-infinite-grid-scroller": "file:../react-infinite-grid-scroller"
   },
   "scripts": {
     "start": "react-scripts start",
