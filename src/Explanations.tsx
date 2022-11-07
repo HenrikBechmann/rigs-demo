@@ -236,7 +236,8 @@ each operate on one or more indexes. \`Cradle\` content is synchronzed with thes
 These cache operation functions can each be tested in this demo, with the feedback returned to the browser console. 
 See the formal documentation linked in the _Documentation &amp; Source Code_ section for details.
 
-\`reload()\` clears and reloads the cache (and therefore the \`Cradle\`), and \`clearCache()\` simply clears the cache. Neither return any feedback.
+\`reload()\` clears and reloads the cache (and therefore the \`Cradle\`), and \`clearCache()\` simply clears the 
+cache. Neither return any feedback.
 `
 
 const performance_md = `
