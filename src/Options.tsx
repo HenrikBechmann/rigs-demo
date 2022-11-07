@@ -1415,23 +1415,6 @@ const Options = ({
                         Integer. Change the size of the scroller's virtual list.
                     </Text>
 
-                    <Heading size = 'xs'>Reload the cache</Heading>
-                    <FormControl>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='reload' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
-                            <Switch 
-                                isChecked = {functionEnabledSettings.reload} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
-                                id='reload' 
-                            />
-                        </InputGroup>
-                    </FormControl>
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        This clears the and reloads the cache, and reloads the cradle at its current position.
-                    </Text>
-
                     <Heading size = 'xs'>Insert indexes</Heading>
 
                     <Stack direction = {['column','row','row']}>
@@ -1671,6 +1654,23 @@ const Options = ({
                         items to the newly assigned indexes. We've included a random test that applies to 
                         the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
                         items scroll out of scope.
+                    </Text>
+
+                    <Heading size = 'xs'>Reload the cache</Heading>
+                    <FormControl>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+                            <FormLabel htmlFor='reload' fontSize = 'sm'>
+                                Enable
+                            </FormLabel>
+                            <Switch 
+                                isChecked = {functionEnabledSettings.reload} 
+                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                id='reload' 
+                            />
+                        </InputGroup>
+                    </FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        This clears the and reloads the cache, and reloads the cradle at its current position.
                     </Text>
 
                     <Heading size = 'xs'>Clear the cache</Heading>
