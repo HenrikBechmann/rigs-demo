@@ -240,6 +240,16 @@ See the formal documentation linked in the _Documentation &amp; Source Code_ sec
 `
 
 const performance_md = `
+There are several tools available to optimize the performance of RIGS:
+- the design and "weight" of the components added to the scroller cells, as returned by \`getItem(...)\`
+- preloading components in your application before returning them to RIGS
+- the number of cells displayed in the viewport can make a big difference; the fewer, the faster
+- the \`runwaySize\` property can influence both the appearance and performance of the scroller
+- the \`cache\` strategy employed ("cradle", "keepload", or "preload") can effect the timing and latency of loads and
+reloads; the \`cacheMax\` size canc be set to constrain the cache to protect device memory
+- the \`IDLECALLBACK_TIMEOUT\` value can be set through the \`technical\` property, to modify the timeout of the
+\`requestIdleCallback\` function employed by the \`CellFrame\` component. A higher value allows more time for initial
+loading and painting, but can lead to longer latency periods.
 `
 
 const motivation_md = `
@@ -287,7 +297,7 @@ const Explainer = ({explanation, children}:{explanation:JSX.Element, children:(s
 
 }
 
-const Explanations = (props:any) => {
+const Explanations = () => {
 
     const overview = emitMarkdown(overview_md),
         key_design_ideas = emitMarkdown(key_design_ideas_md),
