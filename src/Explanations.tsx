@@ -198,7 +198,7 @@ a new \`itemID\` is assigned.
 of the current item, and \`value\` is an object containing the properties \`index\` (the index of the item), and
 \`component\` (the user component itself).
 
-the javascript \`Maps\` returned by \`getCacheIndexMap()\` and \`getCacheItemMap()\` can thus be correlated.
+The javascript \`Maps\` returned by \`getCacheIndexMap()\` and \`getCacheItemMap()\` can thus be correlated.
 
 \`getCradleIndexMap()\` returns a javascript \`Map\` of the current contents of the \`Cradle\`, in which \`key\` = the item's 
 \`index\` in the virtual list and \`value\` = the \`itemID\` of the user component. The \`Map\` returned by
@@ -208,9 +208,35 @@ For the purposes of this demo, these snapshots are returned to the browser conso
 
 The data returned by the snapshots can be used in conjunction with the RIGS API cache operations functions (see the 
 _About the Service Function Operations options_ section).
+
+Snapshot functions are acquired by including a \`functionsCallback\` function in the RIGS \`callbacks\` property. See
+the _About the Callbacks options_ section for more details.
 `
 
 const operations_md = `
+Operations functions are acquired by including a \`functionsCallback\` function in the RIGS \`callbacks\` property. See
+the _About the Callbacks options_ section for more details.
+
+\`scrollToIndex(...)\` allows the host to change the contents of the visible \`Cradle\`, by changing the ReferenceIndex 
+of the \`Cradle\` to the specified index.
+
+The \`setListsize(...)\` function allows the host to modify the size of the virtual list. If any cache or \`Cradle\` 
+items become out of scope as a result of this change they are removed from the cache, and the \`Cradle\` is moved as
+appropriate. The size of the virtual list is initially set with the \`estimatedListSize\` property. The size of the list
+can also be truncated by returning \`null\` from a \`getItem\` call. This will cause the list to be truncated to the 
+index value of the \`getItem\` call. Finally, the list size may be changed as a side effect of cache management calls 
+listed below.
+
+The following cache operation functions are provided for advanced interaction with the RIGS cache.
+
+\`insertIndex(...)\`, \`removeIndex(...)\`, \`moveIndex(...)\`, and \`remapIndexes(...)\` allow for direct manipulation
+of the cache to support sorting, filtering, and drag-n-drop. They each return data for feedback and control. They can 
+each operate on one or more indexes. \`Cradle\` content is synchronzed with these cache changes as appropriate. 
+
+These cache operation functions can each be tested in this demo, with the feedback returned to the browser console. 
+See the formal documentation linked in the _Documentation &amp; Source Code_ section for details.
+
+\`reload()\` clears and reloads the cache (and therefore the \`Cradle\`), and \`clearCache()\` simply clears the cache. Neither return any feedback.
 `
 
 const performance_md = `
