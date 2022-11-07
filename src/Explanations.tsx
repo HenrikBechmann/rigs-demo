@@ -15,7 +15,7 @@ import {
 const emitMarkdown = (markdown:string) => {
 
     return <Box className = 'markdown-body' fontSize = 'sm'>
-        <ReactMarkdown children = {markdown} remarkPlugins = {[remarkGfm]} />
+        <ReactMarkdown children = {markdown} remarkPlugins = {[remarkGfm]}/>
     </Box>
 
 }
@@ -40,7 +40,8 @@ RIGS (and this demo site) works on any device that supports modern browsers.
 See the *Documentation & Source Code* section for links to more information.
 `
 
-const key_design_ideas_md = `There are several key design ideas which allow RIGS to display "heavy", and variable, 
+const key_design_ideas_md = `
+There are several key design ideas which allow RIGS to display "heavy", and variable, 
 components. The scroller:
 
 - immediately displays a _placeholder_ for cell content, which allows the system to wait for the loading of the
@@ -84,7 +85,8 @@ Of course these content types are just samples. The main point of RIGS is to all
 content.
 `
 
-const properties_md = `The RIGS demo properties available for edit in the _Options_ drawer include most of the 
+const properties_md = `
+The RIGS demo properties available for edit in the _Options_ drawer include most of the 
 basic properties of the scroller. For more advanced options, see the _Documentation &amp; Source Code_ section.
 
 **Orientation** is the main property available. Note that RIGS maintains position in the virtual list when
@@ -123,10 +125,54 @@ configurations.
 Note that the \`styles\` object provides options for adjusting non-structural styles of various components of the
 scroller. These have not been surfaced to users in this demo (although some have been used for demonstration purposes). 
 See the formal specification (linked in the _Documentation &amp; Source Code_ panel) for details.
-
 `
 
 const callbacks_md = `
+Callbacks are functions provided by the host, and executed by RIGS to provide streaming feedback to the host. 
+
+In this demo, activating callbacks in the _Options_ drawer streams feedback to the browser console. Applications
+would typically use feedback to monitor and control advanced interactions with the user.
+
+Callbacks are sent to RIGS through the \`callbacks\` parameter like this:
+~~~
+const callbacks = {
+    functionsCallback, // obtain API functions
+    referenceIndexCallback, // current index at the Cradle axis
+    itemExceptionCallback, // information on failed getItem call
+    changeListsizeCallback, // list size has changed
+    deleteListCallback, // items have been deleted from the cache
+    repositioningFlagCallback, // repositioning has started/ended
+    repositioningIndexCallback, // current virtual repositioning index
+    preloadIndexCallback, // current index being preloaded
+}
+~~~
+See the formal documentation (linked in the _Documentation &amp; Source Code_ section) for details.
+
+Callbacks should be written as closures something like this (example from this site's demodata module):
+~~~
+const changeListsizeCallback = (newlistsize:number) => {
+    
+    demoCallbackSettingsRef.current.changeListsizeCallback && 
+        console.log('changeListsizeCallback: newlistsize', 
+            newlistsize)
+
+}
+~~~
+This example outputs feedback to the browser console if a flag has been set for the callback.
+
+The special callback \`functionsCallback\`, which acquires API functions from RIGS, should be written something 
+like this:
+~~~
+const functionsObjectRef = useRef(null)
+
+const functionsCallback = (functions) => {
+
+    functionsObjectRef.current = functions
+
+}
+~~~
+An activation flag for the \`functionsCallback\` is not included in the _Options_ drawer (as it is used 
+directly by the demo).
 `
 
 const snapshots_md = `
@@ -168,7 +214,7 @@ const Explanations = (props:any) => {
         key_design_ideas = emitMarkdown(key_design_ideas_md),
         content = emitMarkdown(content_md),
         properties = emitMarkdown(properties_md),
-        callbacks = emitMarkdown(properties_md),
+        callbacks = emitMarkdown(callbacks_md),
         snapshots = emitMarkdown(snapshots_md),
         operations = emitMarkdown(operations_md),
         performance = emitMarkdown(performance_md),
