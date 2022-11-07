@@ -176,6 +176,38 @@ directly by the demo).
 `
 
 const snapshots_md = `
+Snapshots provide support for advanced interactions with the RIGS cache. As the name suggests,
+they provide snapshots of the contents of the cache (containing both the visible and invisible content) and the 
+\`Cradle\` (containing the visible user content). 
+
+Keep in mind that RIGS maintains a sparse memory cache in which there
+is no guarantee of entries being contiguous. The \`Cradle\` on the other hand is guaranteed to hold contiguous
+entries by index position in the virtual list.
+
+The \`index\` is the position in the virtual list of the scroller (a virtual zero-based array).
+
+The \`itemID\` is a unique session ID of the user component, assigned by RIGS for the time the component is in the cache,
+regardless of its position in the virtual list (the position in the virtual list could change with use of the API functions).
+The \`itemID\` is retired when the component is released from the cache. If the same component returns to the cache, then
+a new \`itemID\` is assigned.
+
+\`getCacheIndexMap()\` returns a javascript \`Map\` of the current contents of the cache, in which \`key\` = the item's 
+\`index\` in the virtual list and \`value\` = the \`itemID\` of the user component.
+
+\`getCacheItemMap()\` returns a javascript \`Map\` of the current contents of the cache, in which \`key\` = the \`itemID\`
+of the current item, and \`value\` is an object containing the properties \`index\` (the index of the item), and
+\`component\` (the user component itself).
+
+the javascript \`Maps\` returned by \`getCacheIndexMap()\` and \`getCacheItemMap()\` can thus be correlated.
+
+\`getCradleIndexMap()\` returns a javascript \`Map\` of the current contents of the \`Cradle\`, in which \`key\` = the item's 
+\`index\` in the virtual list and \`value\` = the \`itemID\` of the user component. The \`Map\` returned by
+\`getCradleIndexMap()\` is thus a subset of the Map retured by \`getCacheIndexMap()\`.
+
+For the purposes of this demo, these snapshots are returned to the browser console.
+
+The data returned by the snapshots can be used in conjunction with the RIGS API cache operations functions (see the 
+_About the Service Function Operations options_ section).
 `
 
 const operations_md = `
@@ -208,6 +240,27 @@ Start at App.tsx.
 For the RIGS properties used to implement the content types of this demo, see the demodata.tsx file [here](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx)
 `
 
+const Explainer = ({explanation, children}:{explanation:JSX.Element, children:(string | JSX.Element)[]|string}) => {
+
+     return <AccordionItem>
+
+        <Heading as ='h3'>
+            <AccordionButton bg = 'lightgray'>
+                <Box flex='1' textAlign='left'>
+                    {children}
+                </Box>
+            <AccordionIcon />                        
+            </AccordionButton>
+        </Heading>
+
+        <AccordionPanel pb={4}>
+            {explanation}
+        </AccordionPanel>
+
+    </AccordionItem>
+
+}
+
 const Explanations = (props:any) => {
 
     const overview = emitMarkdown(overview_md),
@@ -223,181 +276,49 @@ const Explanations = (props:any) => {
 
     return (
 
-            <Accordion allowMultiple>
+    <Accordion allowMultiple>
 
-            <AccordionItem>
+        <Explainer explanation = {overview}>
+            Overview
+        </Explainer>
 
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            Overview
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
+        <Explainer explanation = {key_design_ideas}>
+            Key Design Ideas
+        </Explainer>
 
-                <AccordionPanel pb={4}>
-                    {overview}
-                </AccordionPanel>
+        <Explainer explanation = {content}>
+            About the <i>Content Type</i> options
+        </Explainer>
 
-            </AccordionItem>
+        <Explainer explanation = {properties}>
+            About the <i>Properties</i> options
+        </Explainer>
 
-            <AccordionItem>
+        <Explainer explanation = {callbacks}>
+            About the <i>Callbacks</i> options
+        </Explainer>
 
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            Key Design Ideas
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
+        <Explainer explanation = {snapshots}>
+            About the <i>Service Function Snapshots</i> options
+        </Explainer>
 
-                <AccordionPanel pb={4}>
-                    {key_design_ideas}
-                </AccordionPanel>
+        <Explainer explanation = {operations}>
+            About the <i>Service Function Operations</i> options
+        </Explainer>
 
-            </AccordionItem>
+        <Explainer explanation = {performance}>
+            Performance Optimization
+        </Explainer>
 
-            <AccordionItem>
+        <Explainer explanation = {motivation}>
+            Motivation
+        </Explainer>
 
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            About the <i>Content Type</i> options
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
+        <Explainer explanation = {documentation}>
+            Documentation &amp; Source Code
+        </Explainer>
 
-                <AccordionPanel pb={4}>
-                    {content}
-                </AccordionPanel>
-
-            </AccordionItem>
-
-            <AccordionItem>
-
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            About the <i>Properties</i> options
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
-
-                <AccordionPanel pb={4}>
-                    {properties}
-                </AccordionPanel>
-
-            </AccordionItem>
-
-            <AccordionItem>
-
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            About the <i>Callbacks</i> options
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
-
-                <AccordionPanel pb={4}>
-                    {callbacks}
-                </AccordionPanel>
-
-            </AccordionItem>
-
-            <AccordionItem>
-
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            About the <i>Service Function Snapshots</i> options
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
-
-                <AccordionPanel pb={4}>
-                    {snapshots}
-                </AccordionPanel>
-
-            </AccordionItem>
-
-            <AccordionItem>
-
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            About the <i>Service Function Operations</i> options
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
-
-                <AccordionPanel pb={4}>
-                    {operations}
-                </AccordionPanel>
-
-            </AccordionItem>
-
-            <AccordionItem>
-
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            Performance Optimization
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
-
-                <AccordionPanel pb={4}>
-                    {performance}
-                </AccordionPanel>
-
-            </AccordionItem>
-
-            <AccordionItem>
-
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            Motivation
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
-
-                <AccordionPanel pb={4}>
-                    {motivation}
-                </AccordionPanel>
-
-            </AccordionItem>
-
-            <AccordionItem>
-
-                <Heading as ='h3'>
-                    <AccordionButton bg = 'lightgray'>
-                        <Box flex='1' textAlign='left'>
-                            Documentation &amp; Source Code
-                        </Box>
-                    <AccordionIcon />                        
-                    </AccordionButton>
-                </Heading>
-
-                <AccordionPanel pb={4}>
-                    {documentation}
-                </AccordionPanel>
-
-            </AccordionItem>
-
-        </Accordion>
-
-    )
+    </Accordion>)
 
 }
 
