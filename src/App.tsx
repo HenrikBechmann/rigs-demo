@@ -225,7 +225,8 @@ function App() {
         </HStack>
 
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
-          <i>Content:</i> {contentTitles[demoContentTypeRef.current]}</Text>
+          <i>Content:</i> {contentTitles[demoContentTypeRef.current]},&nbsp; 
+          {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}</Text>
           
       </Box>
 
