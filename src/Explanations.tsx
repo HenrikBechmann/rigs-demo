@@ -31,7 +31,7 @@ There are several main ways to experiment with content sizing and configuration 
 
 - try out the various content types offered in the _Options_ drawer
 - change the size of the browser window
-- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for reset to 100%). Zooming down to 33% is interesting
+- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for reset to 100%). Zooming down to 50% or 33% are interesting
 
 There are many options that can be set in the _Options_ drawer.
 
