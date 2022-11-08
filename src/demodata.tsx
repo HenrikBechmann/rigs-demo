@@ -10,15 +10,17 @@ import Scroller from 'react-infinite-grid-scroller'
 
 // =============================================================================
 // ==============================[ SCROLLER CALLBACKS ]=========================
+// =============================================================================
 
 /*
-    These scroller callbacks are sent to each of the five content types. They can be activated
+    The scroller callbacks are sent to all five of the content types. They can be activated
     in the Callbacks section of the demo Options drawer.
 */
 
 // these settings are selected in the Callbacks section of the Options drawer
-// they control the firing of the callbacks. The demo callbacks, when activated, send feedback
+// They control the firing of the callbacks. The demo callbacks, when activated, send feedback
 // to the browser console.
+// The callback names are recognized by RIGS, and fired if found.
 export const defaultCallbackSettings = {
     referenceIndexCallback:false,
     repositioningIndexCallback:false,
@@ -29,8 +31,8 @@ export const defaultCallbackSettings = {
     repositioningFlagCallback:false,
 }
 
-// initialize the demo settings with the default settings. These can ba changed in
-// the Callbacks section of the Options drawer
+// initialize the demo settings with the default settings, and export to the App module. 
+// These settings can be changed in the Callbacks section of the Options drawer
 export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as GenericObject}
 
 
@@ -90,18 +92,20 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
 
 }
 
-// the functions object is used by the Options drawer for the snapshots,
+// The functions object is used by the Options drawer for the snapshot functions,
 // and by the main app for the operations functions selected in the Options drawer.
-// the functions are instantiated in the scroller, by the functionsCallback below
+// The functions are instantiated in the scroller on mounting, by the functionsCallback below
 export const functionsObjectRef = {current:{} as GenericObject}
 
-// the functions callback returns the funtions API to the caller
+// the functions callback returns the funtions API to the caller on mounting
 const functionsCallback = (functions:GenericObject) => {
+
     functionsObjectRef.current = functions
+
 }
 
 // -----------------
-// The callbacks are bundled for inclusion in the various content type scroller properties below.
+// The callbacks are bundled for inclusion in the various content type scroller properties following.
 
 const callbacks = {
     functionsCallback,
@@ -116,19 +120,19 @@ const callbacks = {
 
 // =============================================================================
 // ==================================[ CONTENT TYPES ]==========================
+// =============================================================================
 
 /*
 
     There is a section below for each content type. Each section consists of 
     - a first part to define the components to be sent to the scroller
-    - a second part to collect the property values to send to the scroller, to link to the component types
-
+    - a second part to assemble the property values to send to the scroller
 
     The left column is the list of seven content type choices on the Options page
-    The right column is the names of the objects 
-        holding the scroller properties for those content types
-        - you can search for those objects below to see how they are populated
-        - they are all assembled at the bottom of this page for control by the demo app
+    The right column is the names of the objects holding the scroller properties for those content types
+        - you can search for those property objects below to see how they are created
+        - all property objects are assembled in a namespace object at the bottom of this module 
+            for use by the demo app
 
     1. simplecontent:    simplecontentProperties,
     2. simplepromises:   simplepromisesProperties,
@@ -144,6 +148,7 @@ const callbacks = {
 
 // -----------------
 // simple uniform content component definition
+// -----------------
 
 // styles for the simple uniform content components
 const simpleComponentStyles = {
@@ -179,7 +184,8 @@ const SimpleItem = (props:any) => {
 }
 
 // -----------------
-// scroller property values for simple uniform content component
+// scroller property assembly for simple uniform content component
+// -----------------
 
 // the getItem function for simple uniform content
 const getSimpleItem = (index:number) => {
@@ -231,7 +237,8 @@ const simplecontentProperties = {
 // the simple content component definitions above are used for these promises, except for the following...
 
 // -----------------
-// substitute scroller property values for this content
+// scroller property values assembled for this content variant
+// -----------------
 
 // the getItem function for simple uniform promises
 const getSimpleItemPromise = (index:number) => {
@@ -280,6 +287,7 @@ const simplepromisesProperties = {
 
 // -----------------
 // variable content component definition
+// -----------------
 
 let variableComponentStyles = {
     outer:{
@@ -346,7 +354,8 @@ const VariableItem = (props:any) => {
 }
 
 // -----------------
-// scroller property values for variable content
+// scroller property values assembled for variable content
+// -----------------
 
 const getVariableItem = (index:number) => {
 
@@ -384,12 +393,13 @@ const variablecontentProperties = {
 }
 // =========================[ 4. variable promises ]================================
 
-// the variable component definitions are reused for the variable promises
+// the variable component definitions are reused for the variable promises variant
 
 // -----------------
-// replacement scroller property values for variable promises 
-//    - note the setTimeout function to simulate latency
+// scroller property values assembled for variable promises variant
+// -----------------
 
+// note the setTimeout function to simulate latency
 const getVariableItemPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
@@ -426,6 +436,7 @@ const variablepromisesProperties = {
 
 // -----------------
 // variable dynamic content component definition
+// -----------------
 
 const getDynamicTestString = (index:number) => {
 
@@ -491,7 +502,8 @@ const VariableItemDynamic = (props:any) => {
 }
 
 // -----------------
-// scroller property values for dynamic variable content
+// scroller property values assembled for dynamic variable content
+// -----------------
 
 const getVariableItemDynamic = (index:number) => {
 
@@ -522,10 +534,11 @@ const variabledynamicProperties = {
 // ======================[ 6. nested scrollers content (scroller of sub-scrollers) ]=========================
 
 // For this there is a scroller, that contains cells of scrollers (subscrollers)
-// The subscrollers come in two variants - variable content, and uniform content
+// The subscroller content comes in two variants - variable content, and uniform content
 
 // -----------------
-// nested scrollers cell content component definition
+// nested scrollers cell component definition
+// -----------------
 
 const nestedSubscrollerComponentStyles = {
     container: {
@@ -568,8 +581,8 @@ const SubscrollerComponent = (props:any) => {
 
     const properties = 
         (variant == 'uniform')?
-        nestedUniformSubscrollerProperties:
-        nestedVariableSubscrollerProperties
+            nestedUniformSubscrollerProperties:
+            nestedVariableSubscrollerProperties
 
     const {
         orientation, 
@@ -643,9 +656,11 @@ const SubscrollerComponent = (props:any) => {
 
 }
 
-// --------------------[ 6a. variable subscroller variant cell content ]-----------------------
+// --------------------[ 6a. subscoller variable cell content variant ]-----------------------
 
+// -----------------
 // content for variable subscroller variant
+// -----------------
 
 const getVariableNestedTestString = (index:number) => {
 
@@ -688,14 +703,15 @@ const VariableSubscrollerItem = (props:any) => {
     </div>
 }
 
+// -----------------
+// properties assembled for variable subscroller variant
+// -----------------
+
 const getVariableSubscrollerItem = (index:number) => {
 
      return <VariableSubscrollerItem index = {index} scrollerProperties = {null}/>    
 
 }
-
-// -----------------
-// properties for variable subscroller variant
 
 const nestedVariableSubscrollerProperties = {
 
@@ -718,10 +734,13 @@ const nestedVariableSubscrollerProperties = {
 
 }
 
-// -------------------[ 6b. uniform subscroller variant cell content ]-----------------
+// -------------------[ 6b. subscroller uniform  cell content variant ]-----------------
 
 // -----------------
-// uniform content variant subscroller component definition
+// component definition for uniform subscroller variant
+// (the component itself is a simple div, so is defined in the getUniformSubscrollerItem function below)
+// -----------------
+
 const uniformSubscrollerItemStyle = {
         padding:'3px',
         border:'1px solid green',
@@ -730,16 +749,15 @@ const uniformSubscrollerItemStyle = {
         boxSizing:'border-box',
     } as React.CSSProperties
 
-// uniform content variant scroller properties
+// -----------------
+// properties assembled for uniform subscroller variant
+// -----------------
 
 const getUniformSubscrollerItem = (index:any) => {
 
     return <div style = { uniformSubscrollerItemStyle}> Item {index} of this list </div>
 
 }
-
-// -----------------
-// properties for uniform subscroller variant
 
 const nestedUniformSubscrollerProperties = {
 
@@ -762,8 +780,11 @@ const nestedUniformSubscrollerProperties = {
 
 }
 
-// --------------------[ back to 6. scroller of subscrollers properties ]----------------------
-// scroller property values for the nested scroller
+// --------------------[ back to 6. - scroller of subscrollers properties ]----------------------
+
+// -----------------
+// scroller property values assembled for the nested scroller
+// -----------------
 
 const getSubscroller = (index:number) => {
 
@@ -800,8 +821,10 @@ const nestedcontentProperties = {
 // =======================[ 7. scroller of subscrollers content item promises ]========================
 
 // -----------------
-// replacement scroller property values for the nested scroller promises
+// scroller property values assembled for the nested scroller promises variant
+// -----------------
 
+// note the setTimeout
 const getNestedSubscrollerPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
@@ -840,6 +863,7 @@ const nestedpromisesProperties = {
 
 // ==============================[ consolidated scroller properties namespace ]=========================
 
+// this is exported for the App module to use
 export const defaultAllContentTypeProperties = {
     simplecontent:simplecontentProperties,
     simplepromises:simplepromisesProperties,
@@ -850,6 +874,7 @@ export const defaultAllContentTypeProperties = {
     nestedpromises:nestedpromisesProperties,
 }
 
+// this is exported for the App module to use
 export const demoAllContentTypePropertiesRef = {current:{...defaultAllContentTypeProperties} as GenericObject}
 
 // ----------------------------------[ type definition ]----------------------------
