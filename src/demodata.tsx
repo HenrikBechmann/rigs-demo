@@ -308,16 +308,17 @@ let variableComponentStyles = {
 const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst.'
 
 const getVariableTestString = (index:number) => {
+
     let teststr
-    // if (!teststrings[index]) {
-        if ([0,1,51,52,196,197,198,199].includes(index)) {
-            teststr = 'SHORT STRING ' + (index + 1) // short string
-        } else if (index == 0) {
-            teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
-        } else {
-            teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
-        }
-    // }
+
+    if ([0,1,51,52,196,197,198,199].includes(index)) {
+        teststr = 'SHORT STRING ' + (index + 1) // short string for demo
+    } else if (index == 0) {
+        teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
+    } else {
+        teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+    }
+
     return teststr
 }
 
