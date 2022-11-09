@@ -14,7 +14,7 @@
     "@types/node": "^18.11.9",
     "framer-motion": "^7.5.3",
     "github-markdown-css": "^5.1.0",
-    "react-infinite-grid-scroller": "file:../react-infinite-grid-scroller",
+    "react-infinite-grid-scroller": "^1.0.0-Beta-2.32",
     "react-markdown": "^8.0.3",
     "react-scripts": "5.0.1",
     "remark-gfm": "^3.0.1",
@@ -26,7 +26,7 @@
     "react-dom": "^18.2.0"
   },
   "comments": {
-    "react-infinite-grid-scroller": "^1.0.0-Beta-2.32"
+    "react-infinite-grid-scroller": "file:../react-infinite-grid-scroller"
   },
   "scripts": {
     "start": "react-scripts start",
