@@ -191,7 +191,7 @@ const SimpleItem = (props:any) => {
 const getSimpleItem = (index:number) => {
 
      if (index == 30) return Promise.reject(new Error('not found for demo purposes'))
-     if (index == 40) return 5
+     if (index == 40) return 5 // deliberate return of an invalid (non-React-component) content type for demo
 
      const component = <SimpleItem index = {index} />
 
@@ -240,7 +240,7 @@ const simplecontentProperties = {
 // scroller property values assembled for this content variant
 // -----------------
 
-// the getItem function for simple uniform promises
+// the getItem function for simple uniform promises; note the setTimeout
 const getSimpleItemPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
