@@ -37,7 +37,8 @@ export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as 
 
 
 // -----------------
-// the indivicual callbacks definitions follow...
+// the individual callbacks definitions follow...
+// -----------------
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
@@ -106,6 +107,7 @@ const functionsCallback = (functions:GenericObject) => {
 
 // -----------------
 // The callbacks are bundled for inclusion in the various content type scroller properties following.
+// -----------------
 
 const callbacks = {
     functionsCallback,
