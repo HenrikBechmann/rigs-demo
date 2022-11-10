@@ -251,6 +251,7 @@ reloads; the \`cacheMax\` size canc be set to constrain the cache to protect dev
 - the \`IDLECALLBACK_TIMEOUT\` value can be set through the \`technical\` property, to modify the timeout of the
 \`requestIdleCallback\` function employed by the \`CellFrame\` component. A higher value allows more time for initial
 loading and painting, but can lead to longer latency periods.
+- changing the \`CACHE_PARTITION_SIZE\` value (number of portals per partition) may have a marginal effect.
 `
 
 const motivation_md = `

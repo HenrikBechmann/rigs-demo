@@ -819,6 +819,7 @@ const nestedcontentProperties = {
     styles:nestedScrollerStyles,
     placeholderMessages: null,
     callbacks,
+    technical:{showAxis:true}
 }
 
 // =======================[ 7. scroller of subscrollers content item promises ]========================
