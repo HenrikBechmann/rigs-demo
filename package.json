@@ -2,7 +2,7 @@
   "name": "rigs-demo",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://henrikbechmann.github.io/rigs-demo",
+  "comment": "https://henrikbechmann.github.io/rigs-demo",
   "dependencies": {
     "@chakra-ui/react": "^2.3.5",
     "@emotion/react": "^11.10.4",
@@ -24,9 +24,6 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "comments": {
-    "react-infinite-grid-scroller": "^1.0.0-Beta-2.32"
   },
   "scripts": {
     "start": "react-scripts start",

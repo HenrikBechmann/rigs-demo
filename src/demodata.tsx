@@ -37,7 +37,8 @@ export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as 
 
 
 // -----------------
-// the indivicual callbacks definitions follow...
+// the individual callbacks definitions follow...
+// -----------------
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
@@ -106,6 +107,7 @@ const functionsCallback = (functions:GenericObject) => {
 
 // -----------------
 // The callbacks are bundled for inclusion in the various content type scroller properties following.
+// -----------------
 
 const callbacks = {
     functionsCallback,
@@ -191,7 +193,7 @@ const SimpleItem = (props:any) => {
 const getSimpleItem = (index:number) => {
 
      if (index == 30) return Promise.reject(new Error('not found for demo purposes'))
-     if (index == 40) return 5
+     if (index == 40) return 5 // deliberate return of an invalid (non-React-component) content type for demo
 
      const component = <SimpleItem index = {index} />
 
@@ -240,7 +242,7 @@ const simplecontentProperties = {
 // scroller property values assembled for this content variant
 // -----------------
 
-// the getItem function for simple uniform promises
+// the getItem function for simple uniform promises; note the setTimeout
 const getSimpleItemPromise = (index:number) => {
 
     return new Promise((resolve, reject) => {
@@ -306,16 +308,17 @@ let variableComponentStyles = {
 const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst.'
 
 const getVariableTestString = (index:number) => {
+
     let teststr
-    // if (!teststrings[index]) {
-        if ([0,1,51,52,196,197,198,199].includes(index)) {
-            teststr = 'SHORT STRING ' + (index + 1) // short string
-        } else if (index == 0) {
-            teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
-        } else {
-            teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
-        }
-    // }
+
+    if ([0,1,51,52,196,197,198,199].includes(index)) {
+        teststr = 'SHORT STRING ' + (index + 1) // short string for demo
+    } else if (index == 0) {
+        teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
+    } else {
+        teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+    }
+
     return teststr
 }
 
@@ -816,6 +819,7 @@ const nestedcontentProperties = {
     styles:nestedScrollerStyles,
     placeholderMessages: null,
     callbacks,
+    technical:{showAxis:true}
 }
 
 // =======================[ 7. scroller of subscrollers content item promises ]========================
