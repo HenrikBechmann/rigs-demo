@@ -393,7 +393,6 @@ const variablecontentProperties = {
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
-    technical:{showAxis:true}
 }
 // =========================[ 4. variable promises ]================================
 
