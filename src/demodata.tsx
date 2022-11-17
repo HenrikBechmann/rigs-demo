@@ -394,7 +394,7 @@ const variablecontentProperties = {
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
     technical: {
-        showAxis:true
+        showAxis:false
     }
 }
 // =========================[ 4. variable promises ]================================
