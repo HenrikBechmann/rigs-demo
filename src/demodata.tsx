@@ -217,7 +217,7 @@ const simplePlaceholderMessages = {
 // properties for the simple uniform content scroller
 const simplecontentProperties = {
     startingIndex:0,
-    estimatedListSize:300,
+    startingListSize:300,
     orientation:'vertical',
     cellHeight:150,
     cellWidth:150,
@@ -268,7 +268,7 @@ const simplePromisesScrollerStyles = {
 // properties for the simple promises scroller
 const simplepromisesProperties = {
     startingIndex:0,
-    estimatedListSize:300,
+    startingListSize:300,
     orientation:'vertical',
     cellHeight:150,
     cellWidth:150,
@@ -376,7 +376,7 @@ const variablePlaceholderMessages = {
 
 const variablecontentProperties = {
     startingIndex:0,
-    estimatedListSize:200,
+    startingListSize:200,
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -420,7 +420,7 @@ const getVariableItemPromise = (index:number) => {
 
 const variablepromisesProperties = {
     startingIndex:0,
-    estimatedListSize:200,
+    startingListSize:200,
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -519,7 +519,7 @@ const getVariableItemDynamic = (index:number) => {
 
 const variabledynamicProperties = {
     startingIndex:0,
-    estimatedListSize:200,
+    startingListSize:200,
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -598,7 +598,7 @@ const SubscrollerComponent = (props:any) => {
         cellWidth, 
         runwaySize, 
         startingIndex, 
-        estimatedListSize, 
+        startingListSize, 
         getItem, 
         cache,
         layout,
@@ -646,7 +646,7 @@ const SubscrollerComponent = (props:any) => {
                 cellHeight = {cellHeight}
                 cellWidth = {cellWidth}
                 runwaySize = {runwaySize}
-                estimatedListSize = {estimatedListSize}
+                startingListSize = {startingListSize}
                 startingIndex = {startingIndex}
                 getItem = {getItem}
                 callbacks = {null}
@@ -722,7 +722,7 @@ const getVariableSubscrollerItem = (index:number) => {
 const nestedVariableSubscrollerProperties = {
 
     startingIndex:0,
-    estimatedListSize:100,
+    startingListSize:100,
     orientation:'vertical',
     cellHeight:300,
     cellWidth:250,
@@ -768,7 +768,7 @@ const getUniformSubscrollerItem = (index:any) => {
 const nestedUniformSubscrollerProperties = {
 
     startingIndex:0,
-    estimatedListSize:100,
+    startingListSize:100,
     orientation:'vertical',
     cellHeight:40,
     cellWidth:250,
@@ -807,7 +807,7 @@ const nestedScrollerStyles = {
 
 const nestedcontentProperties = {
     startingIndex:0,
-    estimatedListSize:200,
+    startingListSize:200,
     orientation:'vertical',
     cellHeight:400,
     cellWidth:300,
@@ -851,7 +851,7 @@ const getNestedSubscrollerPromise = (index:number) => {
 
 const nestedpromisesProperties = {
     startingIndex:0,
-    estimatedListSize:200,
+    startingListSize:200,
     orientation:'vertical',
     cellHeight:400,
     cellWidth:300,
