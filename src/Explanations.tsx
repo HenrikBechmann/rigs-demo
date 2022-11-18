@@ -104,7 +104,7 @@ the padding and gap spaces.
 **Starting index** is applied only on initial mounting of a scroller, or in this demo whenever the content type is
 changed. But see also the _Scroll To_ option in the _Service Function Operations options_ section.
 
-**Estimated list size** is applied only on initial mounting of a scroller, or in this demo whenever the content 
+**Starting list size** is applied only on initial mounting of a scroller, or in this demo whenever the content 
 type is changed. Subsequently the list size can be changed directly through the API (see the _Change virtual list 
 size_ option in the _Service Function Operations options_ section), or when a \`getItem\` call returns a \`null\` 
 (this becomes the new end-of-list), or when the list size is modified through the cache management API (again, see 
@@ -222,7 +222,7 @@ of the \`Cradle\` to the specified index.
 
 The \`setListsize(...)\` function allows the host to modify the size of the virtual list. If any cache or \`Cradle\` 
 items become out of scope as a result of this change they are removed from the cache, and the \`Cradle\` is moved as
-appropriate. The size of the virtual list is initially set with the \`estimatedListSize\` property. The size of the list
+appropriate. The size of the virtual list is initially set with the \`startingListSize\` property. The size of the list
 can also be truncated by returning \`null\` from a \`getItem\` call. This will cause the list to be truncated to the 
 index value of the \`getItem\` call. Finally, the list size may be changed as a side effect of cache management calls 
 listed below.

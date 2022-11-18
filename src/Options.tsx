@@ -79,7 +79,7 @@ const fieldSections:GenericObject = {
     cellMinHeight:'properties',
     cellMinWidth:'properties',
     startingIndex:'properties',
-    estimatedListSize:'properties',
+    startingListSize:'properties',
     padding:'properties',
     gap:'properties',
     runwaySize:'properties',
@@ -105,7 +105,7 @@ const errorMessages = {
     cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
     startingIndex:'blank, or integer greater than or equal to 0',
-    estimatedListSize:'integer: required, with minimum 0',
+    startingListSize:'integer: required, with minimum 0',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
@@ -203,7 +203,7 @@ const Options = ({
             cellMinHeight:false,
             cellMinWidth:false,
             startingIndex:false,
-            estimatedListSize:false,
+            startingListSize:false,
             padding:false,
             gap:false,
             runwaySize:false,
@@ -304,9 +304,9 @@ const Options = ({
             invalidFlags.startingIndex = isInvalid
             return isInvalid
         },
-        estimatedListSize:(value:string) => {
+        startingListSize:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.estimatedListSize = isInvalid
+            invalidFlags.startingListSize = isInvalid
             return isInvalid
         },
         padding:(value:string) => {
@@ -588,12 +588,12 @@ const Options = ({
             }
             setEditContentTypeProperties({...editProperties})
         },
-        estimatedListSize:(input:string) => {
+        startingListSize:(input:string) => {
             const editProperties = editContentTypePropertiesRef.current
-            editProperties.estimatedListSize = input
-            if (!isInvalidTests.estimatedListSize(input)) {
+            editProperties.startingListSize = input
+            if (!isInvalidTests.startingListSize(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],estimatedListSize:input}
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],startingListSize:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editProperties})
@@ -1002,16 +1002,16 @@ const Options = ({
                         'Go to index' in the 'Service functions: operations' section.
                     </Text>
 
-                    <Heading size = 'xs'>Estimated list size</Heading>
+                    <Heading size = 'xs'>Starting list size</Heading>
                     
-                    <FormControl isInvalid = {invalidFlags.estimatedListSize} >
+                    <FormControl isInvalid = {invalidFlags.startingListSize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-                            <FormLabel fontSize = 'sm'>estimatedListSize:</FormLabel>
+                            <FormLabel fontSize = 'sm'>startingListSize:</FormLabel>
                             <NumberInput 
-                                value = {editContentTypeProperties.estimatedListSize} 
+                                value = {editContentTypeProperties.startingListSize} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.estimatedListSize}
+                                onChange = {onChangeFuncs.startingListSize}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1019,7 +1019,7 @@ const Options = ({
                         </InputGroup>
                         </HStack>
                         <FormErrorMessage>
-                            {errorMessages.estimatedListSize}
+                            {errorMessages.startingListSize}
                         </FormErrorMessage>
                     </FormControl>
 
