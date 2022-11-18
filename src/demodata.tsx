@@ -37,7 +37,7 @@ export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as 
 
 
 // -----------------
-// the individual callbacks definitions follow...
+// the individual callback definitions follow...
 // -----------------
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
@@ -106,7 +106,7 @@ const functionsCallback = (functions:GenericObject) => {
 }
 
 // -----------------
-// The callbacks are bundled for inclusion in the various content type scroller properties following.
+// The callbacks are bundled for inclusion in the various content type scroller property bundles following.
 // -----------------
 
 const callbacks = {
@@ -393,6 +393,9 @@ const variablecontentProperties = {
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
+    technical: {
+        showAxis:false
+    }
 }
 // =========================[ 4. variable promises ]================================
 
@@ -819,7 +822,7 @@ const nestedcontentProperties = {
     styles:nestedScrollerStyles,
     placeholderMessages: null,
     callbacks,
-    technical:{showAxis:true}
+    technical:{showAxis:false}
 }
 
 // =======================[ 7. scroller of subscrollers content item promises ]========================
