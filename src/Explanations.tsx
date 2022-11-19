@@ -67,9 +67,10 @@ The three basic content types of this demo site are:
 - variable
 - nested scrollers
 
-The variations include \`promises\` of all three which are randomly delayed for loading, plus a _dynamic_ version of the
-variable content type, in which every cell randomly, and continuously, loads new and different data. The scroller 
-still scrolls in these circumstances.
+The variations include \`promises\` of all three which are randomly delayed for loading. Also there is
+a _dynamic_ version of the variable content type, in which every cell randomly, and continuously, loads new and 
+different data, and an _oversized_ variable version which explores the effect of having cells that extend beyond 
+the boundaries of the viewport. The scroller still scrolls in all of these circumstances.
 
 The term _uniform_ is for the layout in which for vertical orientation, the cell height is fixed by the \`cellHeight\` 
 parameter, and the cell width is allocated evenly to the available viewport width, guided by the \`cellWidth\` parameter. 

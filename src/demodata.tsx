@@ -141,8 +141,9 @@ const callbacks = {
     3. variablecontent:  variablecontentProperties,
     4. variablepromises: variablecontentProperties,
     5. variabledynamic:  variabledynamicProperties,
-    6. nestedcontent:    nestedcontentProperties,
-    7. nestedpromises:   nestedpromisesProperties,
+    6. variableoversized: variableoversizedProperties,
+    7. nestedcontent:    nestedcontentProperties,
+    8. nestedpromises:   nestedpromisesProperties,
 
 */
 
@@ -537,7 +538,88 @@ const variabledynamicProperties = {
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
 }
-// ======================[ 6. nested scrollers content (scroller of sub-scrollers) ]=========================
+// ======================[ 6. variable oversized content ]=========================
+
+const oversizedteststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
+
+const getVariableOversizedTestString = (index:number) => {
+
+    let teststr
+
+    teststr =`${index + 1}: 'test string ' + ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
+
+    return teststr
+}
+
+const VariableOversizedItem = (props:any) => {
+
+    const testStringRef = useRef(getVariableOversizedTestString(props.index))
+
+    const {
+
+        orientation,
+        cellWidth,
+        cellHeight
+
+    } = props.scrollerProperties.scrollerPropertiesRef.current
+
+    const orientationstyles = 
+        (orientation == 'vertical')?
+            {
+                maxHeight:cellHeight,
+                height:'',
+                maxWidth:'',
+                width:'100%',
+            }:
+            {
+                maxHeight:'',
+                height:'100%',
+                maxWidth:cellWidth,
+                width:'',
+            }
+
+    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+
+    return <div style = {outerstyles}>
+        <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
+    </div>
+}
+
+// -----------------
+// scroller property values assembled for variable oversized content
+// -----------------
+
+const getVariableOversizedItem = (index:number) => {
+
+     return <VariableOversizedItem index = {index} scrollerProperties = {null}/>    
+
+}
+
+const variableoversizedProperties = {
+    startingIndex:0,
+    startingListSize:200,
+    orientation:'vertical',
+    cellHeight:800,
+    cellWidth:400,
+    cellMinHeight:300,
+    cellMinWidth:200,
+    padding:10,
+    gap:5,
+    runwaySize:5,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'variable',
+
+    getItem: getVariableOversizedItem,
+    styles: variableScrollerStyles,
+    placeholderMessages: variablePlaceholderMessages,
+    callbacks,
+    technical: {
+        showAxis:false
+    }
+}
+
+// ======================[ 7. nested scrollers content (scroller of sub-scrollers) ]=========================
 
 // For this there is a scroller, that contains cells of scrollers (subscrollers)
 // The subscroller content comes in two variants - variable content, and uniform content
@@ -662,7 +744,7 @@ const SubscrollerComponent = (props:any) => {
 
 }
 
-// --------------------[ 6a. subscoller variable cell content variant ]-----------------------
+// --------------------[ 7a. subscoller variable cell content variant ]-----------------------
 
 // -----------------
 // content for variable subscroller variant
@@ -740,7 +822,7 @@ const nestedVariableSubscrollerProperties = {
 
 }
 
-// -------------------[ 6b. subscroller uniform  cell content variant ]-----------------
+// -------------------[ 7b. subscroller uniform  cell content variant ]-----------------
 
 // -----------------
 // component definition for uniform subscroller variant
@@ -786,7 +868,7 @@ const nestedUniformSubscrollerProperties = {
 
 }
 
-// --------------------[ back to 6. - scroller of subscrollers properties ]----------------------
+// --------------------[ back to 7. - scroller of subscrollers properties ]----------------------
 
 // -----------------
 // scroller property values assembled for the nested scroller
@@ -825,7 +907,7 @@ const nestedcontentProperties = {
     technical:{showAxis:true}
 }
 
-// =======================[ 7. scroller of subscrollers content item promises ]========================
+// =======================[ 8. scroller of subscrollers content item promises ]========================
 
 // -----------------
 // scroller property values assembled for the nested scroller promises variant
@@ -877,6 +959,7 @@ export const defaultAllContentTypeProperties = {
     variablecontent:variablecontentProperties,
     variablepromises:variablecontentProperties,
     variabledynamic:variabledynamicProperties,
+    variableoversized:variableoversizedProperties,
     nestedcontent:nestedcontentProperties,
     nestedpromises:nestedpromisesProperties,
 }

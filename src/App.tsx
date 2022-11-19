@@ -54,6 +54,7 @@ const contentTitles:GenericObject = {
   variablecontent:"Variable content",
   variablepromises:"Variable promises",
   variabledynamic:"Variable dynamic",
+  variableoversized:"Variable oversized",
   nestedcontent:"Nested uniform scrollers",
   nestedpromises:"Nested uniform scroller promises",
 
