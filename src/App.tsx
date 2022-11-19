@@ -394,6 +394,10 @@ const getFunctionToastContent = (
           remapindex_backwardsort(functionsObject)
           break
         }
+        case 'replaceitems':{
+          remapindex_replaceItems(functionsObject)
+          break
+        }
       }
       codeblock = `functionsObject.remapIndexes(changeMap)`
       seeconsole = true
@@ -441,8 +445,52 @@ const remapindex_backwardsort = (functionsObject:GenericObject) => {
 [modifiedIndexesList,
 remappedIndexesList,
 deletedIndexesList,
-orphanedItemsIDList,
-orphanedIndexesList,
+ReplacedItemsList,
+deletedOrphanedItemsIDList,
+deletedOrphanedIndexesList,
+errorEntriesMap,
+changeMap]`, 
+  returnarray)
+
+}
+
+const remapindex_replaceItems = (functionsObject:GenericObject) => {
+
+  const cradleindexmap = functionsObject.getCradleIndexMap()
+  if (!cradleindexmap) return
+
+  const indexList = [...cradleindexmap.keys()]
+
+  const maxListPtr = indexList.length - 1
+
+  const changeMap = new Map()
+
+  let index = indexList[1]
+  changeMap.set(indexList[index], undefined)
+
+  if (maxListPtr >= 4) {
+    index = indexList[4]
+    changeMap.set(indexList[index], undefined)
+  }
+
+  index = indexList[0]
+  const lastptr = Math.min(4, maxListPtr)
+  let lastindex = indexList[lastptr]
+  const firstitemid = cradleindexmap.get(index)
+  const lastitemid = cradleindexmap.get(lastindex)
+
+  changeMap.set(index,lastitemid)
+  changeMap.set(lastindex, firstitemid)
+
+  const returnarray = functionsObject.remapIndexes(changeMap)
+
+  console.log(`remapIndexes:
+[modifiedIndexesList,
+remappedIndexesList,
+deletedIndexesList,
+ReplacedItemsList,
+deletedOrphanedItemsIDList,
+deletedOrphanedIndexesList,
 errorEntriesMap,
 changeMap]`, 
   returnarray)
