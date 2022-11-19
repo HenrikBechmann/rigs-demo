@@ -660,6 +660,7 @@ const SubscrollerComponent = (props:any) => {
 
     const { 
         index, 
+        itemID,
         scrollerProperties,
     } = props
 
@@ -717,7 +718,7 @@ const SubscrollerComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
         <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            List #{index} of {listsize}
+            [{index}]={itemID} List #{index + 1} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
 
@@ -753,7 +754,7 @@ const SubscrollerComponent = (props:any) => {
 
 const getVariableNestedTestString = (index:number, itemID:number) => {
 
-    const str =`${index}: test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+    const str =`${index + 1}:[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
     return str
 }
@@ -798,7 +799,7 @@ const VariableSubscrollerItem = (props:any) => {
 
 const getVariableSubscrollerItem = (index:number, itemID:number) => {
 
-     return <VariableSubscrollerItem index = {index} scrollerProperties = {null}/>    
+     return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
 
 }
 
@@ -844,7 +845,7 @@ const uniformSubscrollerItemStyle = {
 
 const getUniformSubscrollerItem = (index:any, itemID:number) => {
 
-    return <div style = { uniformSubscrollerItemStyle}> Item {index} of this list </div>
+    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID} Item {index + 1} of this list </div>
 
 }
 
@@ -879,6 +880,7 @@ const getSubscroller = (index:number, itemID:number) => {
 
     return <SubscrollerComponent 
         index = {index} 
+        itemID = {itemID}
         scrollerProperties = {null}
     />
 
@@ -923,6 +925,7 @@ const getNestedSubscrollerPromise = (index:number, itemID:number) => {
             resolve(
                 <SubscrollerComponent 
                     index = {index} 
+                    itemID = {itemID}
                     scrollerProperties = {null}
                 />
             )
