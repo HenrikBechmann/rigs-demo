@@ -139,7 +139,7 @@ const callbacks = {
     1. simplecontent:    simplecontentProperties,
     2. simplepromises:   simplepromisesProperties,
     3. variablecontent:  variablecontentProperties,
-    4. variablepromises: variablecontentProperties,
+    4. variablepromises: variablepromiseProperties,
     5. variabledynamic:  variabledynamicProperties,
     6. variableoversized: variableoversizedProperties,
     7. nestedcontent:    nestedcontentProperties,
@@ -180,7 +180,8 @@ const SimpleItem = (props:any) => {
 
     return <div style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {originalindexRef.current + 1}
+            {originalindexRef.current + 1}: {`list index ${props.index},`}<br/>
+            {`cache itemID ${props.itemID}`}
         </div>
     </div>
 
@@ -191,12 +192,12 @@ const SimpleItem = (props:any) => {
 // -----------------
 
 // the getItem function for simple uniform content
-const getSimpleItem = (index:number) => {
+const getSimpleItem = (index:number, itemID:number) => {
 
      if (index == 30) return Promise.reject(new Error('not found for demo purposes'))
      if (index == 40) return 5 // deliberate return of an invalid (non-React-component) content type for demo
 
-     const component = <SimpleItem index = {index} />
+     const component = <SimpleItem index = {index} itemID = {itemID} />
 
      return component
 
@@ -244,13 +245,13 @@ const simplecontentProperties = {
 // -----------------
 
 // the getItem function for simple uniform promises; note the setTimeout
-const getSimpleItemPromise = (index:number) => {
+const getSimpleItemPromise = (index:number, itemID:number) => {
 
     return new Promise((resolve, reject) => {
 
         setTimeout(()=> {
 
-            resolve(<SimpleItem index = {index} />)
+            resolve(<SimpleItem index = {index} itemID = {itemID}/>)
 
         },400 + (Math.random() * 2000))
 
@@ -308,16 +309,16 @@ let variableComponentStyles = {
 // const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
 const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst.'
 
-const getVariableTestString = (index:number) => {
+const getVariableTestString = (index:number, itemID:number) => {
 
     let teststr
 
     if ([0,1,51,52,196,197,198,199].includes(index)) {
-        teststr = 'SHORT STRING ' + (index + 1) // short string for demo
-    } else if (index == 0) {
-        teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,.5 * teststring.length)}`
+        teststr = 'SHORT STRING ' + (index + 1) + ` [${index}]=${itemID}`// short string for demo
+    } else if (index == 3) {
+        teststr =`${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,.5 * teststring.length)}`
     } else {
-        teststr =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+        teststr =`${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
     }
 
     return teststr
@@ -325,7 +326,7 @@ const getVariableTestString = (index:number) => {
 
 const VariableItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableTestString(props.index))
+    const testStringRef = useRef(getVariableTestString(props.index, props.itemID))
 
     const {
 
@@ -361,9 +362,9 @@ const VariableItem = (props:any) => {
 // scroller property values assembled for variable content
 // -----------------
 
-const getVariableItem = (index:number) => {
+const getVariableItem = (index:number, itemID:number) => {
 
-     return <VariableItem index = {index} scrollerProperties = {null}/>    
+     return <VariableItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
 
 }
 
@@ -407,19 +408,19 @@ const variablecontentProperties = {
 // -----------------
 
 // note the setTimeout function to simulate latency
-const getVariableItemPromise = (index:number) => {
+const getVariableItemPromise = (index:number, itemID:number) => {
 
     return new Promise((resolve, reject) => {
         setTimeout(()=> {
 
-            resolve(<VariableItem index = {index} scrollerProperties = {null}/>)
+            resolve(<VariableItem index = {index} itemID = {itemID} scrollerProperties = {null}/>)
 
-        },400 + (Math.random() * 2000))
+        },1000 + (Math.random() * 2000))
     })
 
 }
 
-const variablepromisesProperties = {
+const variablepromiseProperties = {
     startingIndex:0,
     startingListSize:200,
     orientation:'vertical',
@@ -445,9 +446,9 @@ const variablepromisesProperties = {
 // variable dynamic content component definition
 // -----------------
 
-const getDynamicTestString = (index:number) => {
+const getDynamicTestString = (index:number, itemID:number) => {
 
-    return `${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+    return `${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
 }
 
@@ -482,7 +483,7 @@ const VariableItemDynamic = (props:any) => {
 
     const intervalRef = useRef<NodeJS.Timer | null>(null)
 
-    const [teststring, setTeststring] = useState('test string')
+    const [teststring, setTeststring] = useState('placeholder')
     const teststringRef = useRef<string>()
     teststringRef.current = teststring
     const iterationRef = useRef(0)
@@ -490,7 +491,7 @@ const VariableItemDynamic = (props:any) => {
     useEffect(()=>{
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
-            const teststringinstance = getDynamicTestString(props.index)
+            const teststringinstance = getDynamicTestString(props.index, props.itemID)
             // console.log('iteration:', iterationRef.current )
             setTeststring(teststringinstance)
 
@@ -512,9 +513,9 @@ const VariableItemDynamic = (props:any) => {
 // scroller property values assembled for dynamic variable content
 // -----------------
 
-const getVariableItemDynamic = (index:number) => {
+const getVariableItemDynamic = (index:number, itemID:number) => {
 
-     return <VariableItemDynamic index = {index} scrollerProperties = {null}/>    
+     return <VariableItemDynamic index = {index} itemID = {itemID} scrollerProperties = {null}/>    
 
 }
 
@@ -542,18 +543,18 @@ const variabledynamicProperties = {
 
 const oversizedteststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
 
-const getVariableOversizedTestString = (index:number) => {
+const getVariableOversizedTestString = (index:number, itemID:number) => {
 
     let teststr
 
-    teststr =`${index + 1}: 'test string ' + ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
+    teststr =`${index}: [${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
 
     return teststr
 }
 
 const VariableOversizedItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableOversizedTestString(props.index))
+    const testStringRef = useRef(getVariableOversizedTestString(props.index, props.itemID))
 
     const {
 
@@ -589,9 +590,9 @@ const VariableOversizedItem = (props:any) => {
 // scroller property values assembled for variable oversized content
 // -----------------
 
-const getVariableOversizedItem = (index:number) => {
+const getVariableOversizedItem = (index:number, itemID:number) => {
 
-     return <VariableOversizedItem index = {index} scrollerProperties = {null}/>    
+     return <VariableOversizedItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
 
 }
 
@@ -659,6 +660,7 @@ const SubscrollerComponent = (props:any) => {
 
     const { 
         index, 
+        itemID,
         scrollerProperties,
     } = props
 
@@ -716,7 +718,7 @@ const SubscrollerComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
         <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            List #{index + 1} of {listsize}
+            [{index}]={itemID} List #{index + 1} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
 
@@ -750,16 +752,16 @@ const SubscrollerComponent = (props:any) => {
 // content for variable subscroller variant
 // -----------------
 
-const getVariableNestedTestString = (index:number) => {
+const getVariableNestedTestString = (index:number, itemID:number) => {
 
-    const str =`${index + 1}: 'test string ' + ${teststring.substr(0,Math.random() * teststring.length)}`
+    const str =`${index + 1}:[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
     return str
 }
 
 const VariableSubscrollerItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableNestedTestString(props.index))
+    const testStringRef = useRef(getVariableNestedTestString(props.index, props.itemID))
 
     const {
 
@@ -795,9 +797,9 @@ const VariableSubscrollerItem = (props:any) => {
 // properties assembled for variable subscroller variant
 // -----------------
 
-const getVariableSubscrollerItem = (index:number) => {
+const getVariableSubscrollerItem = (index:number, itemID:number) => {
 
-     return <VariableSubscrollerItem index = {index} scrollerProperties = {null}/>    
+     return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
 
 }
 
@@ -841,9 +843,9 @@ const uniformSubscrollerItemStyle = {
 // properties assembled for uniform subscroller variant
 // -----------------
 
-const getUniformSubscrollerItem = (index:any) => {
+const getUniformSubscrollerItem = (index:any, itemID:number) => {
 
-    return <div style = { uniformSubscrollerItemStyle}> Item {index} of this list </div>
+    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID} Item {index + 1} of this list </div>
 
 }
 
@@ -874,10 +876,11 @@ const nestedUniformSubscrollerProperties = {
 // scroller property values assembled for the nested scroller
 // -----------------
 
-const getSubscroller = (index:number) => {
+const getSubscroller = (index:number, itemID:number) => {
 
     return <SubscrollerComponent 
         index = {index} 
+        itemID = {itemID}
         scrollerProperties = {null}
     />
 
@@ -914,7 +917,7 @@ const nestedcontentProperties = {
 // -----------------
 
 // note the setTimeout
-const getNestedSubscrollerPromise = (index:number) => {
+const getNestedSubscrollerPromise = (index:number, itemID:number) => {
 
     return new Promise((resolve, reject) => {
         setTimeout(()=> {
@@ -922,6 +925,7 @@ const getNestedSubscrollerPromise = (index:number) => {
             resolve(
                 <SubscrollerComponent 
                     index = {index} 
+                    itemID = {itemID}
                     scrollerProperties = {null}
                 />
             )
@@ -957,7 +961,7 @@ export const defaultAllContentTypeProperties = {
     simplecontent:simplecontentProperties,
     simplepromises:simplepromisesProperties,
     variablecontent:variablecontentProperties,
-    variablepromises:variablecontentProperties,
+    variablepromises:variablepromiseProperties,
     variabledynamic:variabledynamicProperties,
     variableoversized:variableoversizedProperties,
     nestedcontent:nestedcontentProperties,
