@@ -724,7 +724,6 @@ const Options = ({
             const editProperties = editFunctionPropertiesRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
-            console.log('onChangeFuncs.remapDemo: value', value)
             editProperties.remapDemo = value
             sessionFunctionPropertiesRef.current.remapDemo = value
             setEditFunctionProperties({...editProperties})
@@ -1632,6 +1631,7 @@ const Options = ({
                             onChange = {onChangeFuncs.remapDemo}
                         >
                             <option value="backwardsort">Backward sort</option>
+                            <option value="replaceitems">Replace items</option>
                         </Select>
                     </FormControl>
 
