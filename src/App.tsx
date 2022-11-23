@@ -466,11 +466,11 @@ const remapindex_replaceItems = (functionsObject:GenericObject) => {
   const changeMap = new Map()
 
   let index = indexList[1]
-  changeMap.set(indexList[index], undefined)
+  changeMap.set(index, undefined)
 
   if (maxListPtr >= 4) {
     index = indexList[4]
-    changeMap.set(indexList[index], undefined)
+    changeMap.set(index, undefined)
   }
 
   index = indexList[0]
