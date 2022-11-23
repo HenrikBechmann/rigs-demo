@@ -465,14 +465,16 @@ const remapindex_replaceItems = (functionsObject:GenericObject) => {
 
   const changeMap = new Map()
 
+  // replace two items
   let index = indexList[1]
   changeMap.set(index, undefined)
 
-  if (maxListPtr >= 4) {
-    index = indexList[4]
+  if (maxListPtr >= 5) {
+    index = indexList[5]
     changeMap.set(index, undefined)
   }
 
+  // swap two items
   index = indexList[0]
   const lastptr = Math.min(4, maxListPtr)
   let lastindex = indexList[lastptr]
@@ -488,7 +490,7 @@ const remapindex_replaceItems = (functionsObject:GenericObject) => {
 [modifiedIndexesList,
 remappedIndexesList,
 deletedIndexesList,
-ReplacedItemsList,
+indexesOfReplacedItemsList,
 deletedOrphanedItemsIDList,
 deletedOrphanedIndexesList,
 errorEntriesMap,
