@@ -170,7 +170,6 @@ const Options = ({
     const editFunctionPropertiesRef = useRef(editFunctionProperties)
     editFunctionPropertiesRef.current = editFunctionProperties
 
-
     // --------------------------------[ internal mutable field data ]-----------------------------
 
     // disabled controls
@@ -1624,9 +1623,9 @@ const Options = ({
 
                     <Stack direction = {['column','row','row']} alignItems = 'baseline'>
 
-                    <FormControl isDisabled = {disabledFlags.remapDemo}>
-                        <Select 
-                            value = {editContentTypeProperties.remapDemo} 
+                    <FormControl isDisabled = {disabledFlags.remapDemo} width = 'xs'>
+                        <Select
+                            value = {editFunctionProperties.remapDemo} 
                             size = 'sm'
                             onChange = {onChangeFuncs.remapDemo}
                         >

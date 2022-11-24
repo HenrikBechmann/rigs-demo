@@ -492,7 +492,6 @@ const VariableItemDynamic = (props:any) => {
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
             const teststringinstance = getDynamicTestString(props.index, props.itemID)
-            // console.log('iteration:', iterationRef.current )
             setTeststring(teststringinstance)
 
         },200 + (Math.random() * 2000))
