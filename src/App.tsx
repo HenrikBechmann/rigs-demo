@@ -221,7 +221,7 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.0.0--Beta--3-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-1.0.0--Beta--4-brightgreen"/>
           </Link>
         </HStack>
 
