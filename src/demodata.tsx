@@ -234,6 +234,9 @@ const simplecontentProperties = {
     styles: simpleScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
+    technical: {
+        showAxis:false
+    }
 }
 
 // ============================[ 2. Simple uniform promises ]==============================
@@ -663,7 +666,7 @@ const SubscrollerComponent = (props:any) => {
         scrollerProperties,
     } = props
 
-    const variant = 
+    const variant =
         ((index % 2) == 0)?
         'uniform':
         'variable'
@@ -906,7 +909,9 @@ const nestedcontentProperties = {
     styles:nestedScrollerStyles,
     placeholderMessages: null,
     callbacks,
-    technical:{showAxis:false}
+    technical:{
+        showAxis:false
+    }
 }
 
 // =======================[ 8. scroller of subscrollers content item promises ]========================

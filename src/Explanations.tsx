@@ -72,6 +72,12 @@ a _dynamic_ version of the variable content type, in which every cell randomly, 
 different data. Finally there is an _oversized_ variable version which explores the effect of having cells that can
 extend beyond the boundaries of the viewport. The scroller still scrolls in all of these circumstances.
 
+Each of the content type items shows the virtual list (zero based) \`index\` number, and the transient scroller cache
+\`itemID\` number. You'll notice that with caching limited to the scope of the \`Cradle\` (the default 'cradle' 
+caching including the visible cells plus the 'runway' cells), the \`itemID\` changes when the cells leave and return to 
+the \`Cradle\` scope. If the caching is set to 'keepload' or 'preload' on the other hand, the itemID will not change 
+(unless the cells move outside the scope defined by \`cacheMax\`).
+
 The term _uniform_ is for the layout in which for vertical orientation, the cell height is fixed by the \`cellHeight\` 
 parameter, and the cell width is allocated evenly to the available viewport width, guided by the \`cellWidth\` parameter. 
 Similarly for horizontal orientation, the cell width is fixed by the \`cellWidth\` parameter, and the cell height is
