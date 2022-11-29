@@ -93,6 +93,18 @@ const ErrorBox = (props:any) => {
   )
 }
 
+const isSafariIOS = () => {
+  
+    const
+        is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
+        is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
+
+    return ( is_ios && is_safari ) 
+
+}
+
+console.log('is iOS Safari:',isSafariIOS())
+
 function App() {
 
   const [demoState, setDemoState] = useState('ready')
@@ -224,11 +236,10 @@ function App() {
             <Image src="https://img.shields.io/badge/npm-1.0.0--Beta--4-brightgreen"/>
           </Link>
         </HStack>
-
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
           <i>Content:</i> {contentTitles[demoContentTypeRef.current]},&nbsp; 
-          {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}</Text>
-          
+          {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}</Text>          
+        {isSafariIOS() && <Text fontSize = {[9,9,14]}><i>* iOS Safari only supports 'uniform' (not 'variable') cells.</i></Text>}
       </Box>
 
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
