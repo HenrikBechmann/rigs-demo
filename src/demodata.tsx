@@ -178,7 +178,7 @@ const SimpleItem = (props:any) => {
 
     const originalindexRef = useRef(props.index)
 
-    return <div style = {simpleComponentStyles.outer}>
+    return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
             {originalindexRef.current + 1}: {`list index ${props.index},`}<br/>
             {`cache itemID ${props.itemID}`}
@@ -356,7 +356,7 @@ const VariableItem = (props:any) => {
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
 
-    return <div style = {outerstyles}>
+    return <div data-type = 'variable-content' style = {outerstyles}>
         <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
     </div>
 }
@@ -505,7 +505,7 @@ const VariableItemDynamic = (props:any) => {
 
     },[])
 
-    return <div style = {outerstyles}>
+    return <div data-type = 'variable-dynamic' style = {outerstyles}>
         <div style = {variableComponentStyles.inner}>{teststringRef.current}</div>
     </div>
 
@@ -583,7 +583,7 @@ const VariableOversizedItem = (props:any) => {
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
 
-    return <div style = {outerstyles}>
+    return <div data-type = 'variable-oversized' style = {outerstyles}>
         <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
     </div>
 }
@@ -790,7 +790,7 @@ const VariableSubscrollerItem = (props:any) => {
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
 
-    return <div style = {outerstyles}>
+    return <div data-type = 'variable-subscroller' style = {outerstyles}>
         <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
     </div>
 }
