@@ -103,8 +103,6 @@ const isSafariIOS = () => {
 
 }
 
-console.log('is iOS Safari:',isSafariIOS())
-
 function App() {
 
   const [demoState, setDemoState] = useState('ready')

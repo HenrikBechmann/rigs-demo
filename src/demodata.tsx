@@ -359,10 +359,9 @@ const VariableItem = (props:any) => {
     // ------------------------[ handle scroll position recovery ]---------------------
 
     // define required data repo
-    const scrollerElementRef = useRef<any>(null)
-    const scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0})
-    const isCachedRef = useRef(false)
-    const wasCachedRef = useRef(false)
+    const scrollerElementRef = useRef<any>(null),
+        scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0}),
+        wasCachedRef = useRef(false)
 
     // define the scroll event handler
     const scrollerEventHandler = (event:React.UIEvent<HTMLElement>) => {
@@ -384,11 +383,13 @@ const VariableItem = (props:any) => {
     // register the scroll event handler
     useEffect(()=>{
 
-        scrollerElementRef.current.addEventListener('scroll', scrollerEventHandler)
+        const scrollerElement = scrollerElementRef.current
+
+        scrollerElement.addEventListener('scroll', scrollerEventHandler)
 
         // unmount
         return () => {
-            scrollerElementRef.current.removeEventListener('scroll', scrollerEventHandler)
+            scrollerElement.removeEventListener('scroll', scrollerEventHandler)
         }
 
     },[])
@@ -403,8 +404,7 @@ const VariableItem = (props:any) => {
 
         if (isCached != wasCachedRef.current) { // there's been a change
 
-            wasCachedRef.current = isCachedRef.current
-            isCachedRef.current = isCached
+            wasCachedRef.current = isCached
 
             if (!isCached) { // restore scroll positions
 
