@@ -239,7 +239,7 @@ function App() {
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
           <i>Content:</i> {contentTitles[demoContentTypeRef.current]},&nbsp; 
           {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}</Text>          
-        {isSafariIOS() && <Text fontSize = {[9,9,14]}><i>* RIGS on iOS Safari only supports 'uniform' (not 'variable') cells.</i></Text>}
+        {isSafariIOS() && <Text fontSize = {[9,9,14]}><i>* RIGS on iOS Safari only supports 'uniform' (not 'variable') cells</i></Text>}
       </Box>
 
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
