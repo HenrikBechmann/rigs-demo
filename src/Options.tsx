@@ -805,7 +805,9 @@ const Options = ({
 
         <FormControl borderBottom = '1px solid black'>
             <Stack direction = {['column','row','row']} align = 'normal'>
+
             <FormLabel size = 'xs'>Orientation</FormLabel>
+
             <RadioGroup 
                 value = {editContentTypeProperties.orientation} 
                 onChange = {onChangeFuncs.orientation}
@@ -841,7 +843,9 @@ const Options = ({
 
                         <FormControl isInvalid = {invalidFlags.cellHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
+
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellHeight} 
                                     size = 'sm'
@@ -858,7 +862,9 @@ const Options = ({
 
                         <FormControl isInvalid = {invalidFlags.cellWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
+
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellWidth} 
                                     size = 'sm'
@@ -889,7 +895,9 @@ const Options = ({
                             isDisabled = {disabledFlags.cellMinHeight}
                             isInvalid = {invalidFlags.cellMinHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
+
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellMinHeight} 
                                     size = 'sm'
@@ -908,7 +916,9 @@ const Options = ({
                             isDisabled = {disabledFlags.cellMinHeight}
                             isInvalid = {invalidFlags.cellMinWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
+
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellMinWidth} 
                                     size = 'sm'
@@ -935,7 +945,9 @@ const Options = ({
 
                     <FormControl isInvalid = {invalidFlags.padding} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
+
                             <NumberInput 
                                 value = {editContentTypeProperties.padding} 
                                 size = 'sm'
@@ -952,7 +964,9 @@ const Options = ({
 
                     <FormControl isInvalid = {invalidFlags.gap} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
+
                             <NumberInput 
                                 value = {editContentTypeProperties.gap} 
                                 size = 'sm'
@@ -979,7 +993,9 @@ const Options = ({
                     <FormControl isInvalid = {invalidFlags.startingIndex} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>startingIndex:</FormLabel>
+
                             <NumberInput 
                                 value = {editContentTypeProperties.startingIndex} 
                                 size = 'sm'
@@ -1006,7 +1022,9 @@ const Options = ({
                     <FormControl isInvalid = {invalidFlags.startingListSize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>startingListSize:</FormLabel>
+
                             <NumberInput 
                                 value = {editContentTypeProperties.startingListSize} 
                                 size = 'sm'
@@ -1033,7 +1051,9 @@ const Options = ({
                     <FormControl isInvalid = {invalidFlags.runwaySize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>runwaySize:</FormLabel>
+
                             <NumberInput 
                                 value = {editContentTypeProperties.runwaySize} 
                                 size = 'sm'
@@ -1073,7 +1093,9 @@ const Options = ({
 
                     <FormControl isInvalid = {invalidFlags.cacheMax}>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
+
                             <NumberInput 
                                 value = {editContentTypeProperties.cacheMax} 
                                 size = 'sm'
@@ -1335,7 +1357,9 @@ const Options = ({
                             isDisabled = {disabledFlags.scrolltoIndex}
                             isInvalid = {invalidFlags.scrolltoIndex}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
+
                                 <NumberInput 
                                     value = {editFunctionProperties.scrolltoIndex} 
                                     size = 'sm'
@@ -1352,9 +1376,9 @@ const Options = ({
 
                         <FormControl>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                                <FormLabel htmlFor='goto' fontSize = 'sm'>
-                                    Enable
-                                </FormLabel>
+
+                                <FormLabel htmlFor='goto' fontSize = 'sm'>Enable</FormLabel>
+
                                 <Switch 
                                     isChecked = {functionEnabledSettings.goto} 
                                     onChange = {onChangeFuncs.onChangeEnabler} 
@@ -1380,7 +1404,9 @@ const Options = ({
                             isDisabled = {disabledFlags.listsize}
                             isInvalid = {invalidFlags.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
+
                                 <NumberInput 
                                     value = {editFunctionProperties.listsize} 
                                     size = 'sm'
@@ -1397,9 +1423,9 @@ const Options = ({
 
                         <FormControl>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                                <FormLabel htmlFor='listsize' fontSize = 'sm'>
-                                    Enable
-                                </FormLabel>
+
+                                <FormLabel htmlFor='listsize' fontSize = 'sm'>Enable</FormLabel>
+
                                 <Switch 
                                     isChecked = {functionEnabledSettings.listsize} 
                                     onChange = {onChangeFuncs.onChangeEnabler} 
@@ -1422,7 +1448,9 @@ const Options = ({
                             isDisabled = {disabledFlags.insertFrom}
                             isInvalid = {invalidFlags.insertFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
+
                                 <NumberInput 
                                     value = {editFunctionProperties.insertFrom} 
                                     size = 'sm'
@@ -1441,7 +1469,9 @@ const Options = ({
                             isDisabled = {disabledFlags.insertRange}
                             isInvalid = {invalidFlags.insertRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
+
                                 <NumberInput 
                                     value = {editFunctionProperties.insertRange} 
                                     size = 'sm'
@@ -1460,9 +1490,9 @@ const Options = ({
 
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='insert' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
+
+                            <FormLabel htmlFor='insert' fontSize = 'sm'>Enable</FormLabel>
+
                             <Switch 
                                 isChecked = {functionEnabledSettings.insert} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
@@ -1484,7 +1514,9 @@ const Options = ({
                             isDisabled = {disabledFlags.removeFrom}
                             isInvalid = {invalidFlags.removeFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
+
                                 <NumberInput 
                                     value = {editFunctionProperties.removeFrom} 
                                     size = 'sm'
@@ -1503,7 +1535,9 @@ const Options = ({
                             isDisabled = {disabledFlags.removeRange}
                             isInvalid = {invalidFlags.removeRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
+
                                 <NumberInput 
                                     value = {editFunctionProperties.removeRange} 
                                     size = 'sm'
@@ -1522,9 +1556,9 @@ const Options = ({
 
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='remove' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
+
+                            <FormLabel htmlFor='remove' fontSize = 'sm'>Enable</FormLabel>
+
                             <Switch 
                                 isChecked = {functionEnabledSettings.remove} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
@@ -1546,7 +1580,9 @@ const Options = ({
                         isDisabled = {disabledFlags.moveFrom}
                         isInvalid = {invalidFlags.moveFrom} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
+
                             <NumberInput 
                                 value = {editFunctionProperties.moveFrom} 
                                 size = 'sm'
@@ -1565,7 +1601,9 @@ const Options = ({
                         isDisabled = {disabledFlags.moveRange}
                         isInvalid = {invalidFlags.moveRange} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
+
                             <NumberInput 
                                 value = {editFunctionProperties.moveRange} 
                                 size = 'sm'
@@ -1586,7 +1624,9 @@ const Options = ({
                         isDisabled = {disabledFlags.moveTo}
                         isInvalid = {invalidFlags.moveTo} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
+
                             <NumberInput 
                                 value = {editFunctionProperties.moveTo} 
                                 size = 'sm'
@@ -1603,9 +1643,9 @@ const Options = ({
 
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='move' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
+
+                            <FormLabel htmlFor='move' fontSize = 'sm'>Enable</FormLabel>
+
                             <Switch 
                                 isChecked = {functionEnabledSettings.move} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
@@ -1636,9 +1676,9 @@ const Options = ({
 
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='remap' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
+
+                            <FormLabel htmlFor='remap' fontSize = 'sm'>Enable</FormLabel>
+
                             <Switch 
                                 isChecked = {functionEnabledSettings.remap} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
@@ -1659,9 +1699,9 @@ const Options = ({
                     <Heading size = 'xs'>Reload the cache</Heading>
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='reload' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
+
+                            <FormLabel htmlFor='reload' fontSize = 'sm'>Enable</FormLabel>
+
                             <Switch 
                                 isChecked = {functionEnabledSettings.reload} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
@@ -1676,9 +1716,9 @@ const Options = ({
                     <Heading size = 'xs'>Clear the cache</Heading>
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-                            <FormLabel htmlFor='clear' fontSize = 'sm'>
-                                Enable
-                            </FormLabel>
+
+                            <FormLabel htmlFor='clear' fontSize = 'sm'>Enable</FormLabel>
+                            
                             <Switch 
                                 isChecked = {functionEnabledSettings.clear} 
                                 onChange = {onChangeFuncs.onChangeEnabler} 
