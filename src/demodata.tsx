@@ -236,7 +236,7 @@ const simplecontentProperties = {
     callbacks,
     technical: {
         showAxis:false
-    }
+    },
 }
 
 // ============================[ 2. Simple uniform promises ]==============================
@@ -288,6 +288,9 @@ const simplepromisesProperties = {
     styles: simplePromisesScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
+    technical: {
+        showAxis:false
+    },
 }
 
 // ==========================[ 3. variable content ]============================
@@ -467,7 +470,7 @@ const variablecontentProperties = {
     callbacks,
     technical: {
         showAxis:false
-    }
+    },
 }
 // =========================[ 4. variable promises ]================================
 
@@ -509,6 +512,9 @@ const variablepromiseProperties = {
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
+    technical: {
+        showAxis:false
+    },
 }
 // ===========================[ 5. variable dynamic ]===============================
 
@@ -607,6 +613,9 @@ const variabledynamicProperties = {
     styles: variableScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
+    technical: {
+        showAxis:false
+    },
 }
 // ======================[ 6. variable oversized content ]=========================
 
@@ -752,7 +761,7 @@ const variableoversizedProperties = {
     callbacks,
     technical: {
         showAxis:false
-    }
+    },
 }
 
 // ======================[ 7. nested scrollers content (scroller of sub-scrollers) ]=========================
@@ -956,6 +965,9 @@ const nestedVariableSubscrollerProperties = {
     styles:null,
     placeholderMessages: null,
     callbacks:null,
+    technical: {
+        showAxis:false
+    },
 
 }
 
@@ -1002,6 +1014,9 @@ const nestedUniformSubscrollerProperties = {
     styles:null,
     placeholderMessages: null,
     callbacks:null,
+    technical: {
+        showAxis:false
+    },
 
 }
 
@@ -1044,7 +1059,7 @@ const nestedcontentProperties = {
     callbacks,
     technical:{
         showAxis:false
-    }
+    },
 }
 
 // =======================[ 8. scroller of subscrollers content item promises ]========================
@@ -1089,6 +1104,9 @@ const nestedpromisesProperties = {
     styles:nestedScrollerStyles,
     placeholderMessages: null,
     callbacks,
+    technical: {
+        showAxis:false
+    },
 }
 
 // ==============================[ consolidated scroller properties namespace ]=========================

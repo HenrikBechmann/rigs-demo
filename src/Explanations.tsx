@@ -129,6 +129,13 @@ until displayed by the \`Cradle\`. The reason is that components in cache but no
 \`height\`, \`scrollTop\`, and \`scrollLeft\` values. These values are needed by the Scroller for calculating 
 configurations.
 
+**Show axis** when checked shows a red line where the \`Cradle\` axis is. This is for debug and instruction purposes
+only. There is a CSS grid on either side of the axis. As the user scrolls, the \`Cradle\` moves cells from one side of 
+the axis to the other to maintain the relative position of the axis, and to maintain the illusion of a continuous stream 
+of cells. As well as moving cells, the \`Cradle\` adds and removes cells from the ends of the \`Cradle\` to maintain 
+a constant number of instantiated cells in the \`Cradle\`. The axis allows changes of grid content to 'push' the length of
+the cradle away from the axis to maintain stable positioning for the user.
+
 Note that the \`styles\` object provides options for adjusting non-structural styles of various components of the
 scroller. These have not been surfaced to users in this demo (although some have been used for demonstration purposes). 
 See the formal specification (linked in the _Documentation &amp; Source Code_ panel) for details.
