@@ -488,6 +488,16 @@ const Options = ({
     // display on change functions
     const onChangeFuncs = {
 
+        showAxis:(event:React.ChangeEvent) => {
+            const target = event.target as HTMLInputElement
+            const value = target.checked
+
+            const editProperties = editContentTypePropertiesRef.current
+            editProperties.technical.showAxis = value
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current].technicalshowAxis = value
+            setEditContentTypeProperties({...editProperties})
+        },
+
         // update scroller service function switch settings
         onChangeEnabler:(event:React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
@@ -1112,11 +1122,27 @@ const Options = ({
 
                     </Stack>
 
-                    <Text fontSize = 'sm' paddingBottom = {2}>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         <Code>cacheMax</Code>:integer is ignored for 'cradle' cache setting. 
                         Otherwise, very high settings can degrade performance. <Code>cacheMax</Code> blank 
                         or zero is ignored.
                     </Text>
+
+                    <Heading size = 'xs'>Show axis</Heading>
+
+                    <FormControl>
+                        <Checkbox 
+                            isChecked = {editContentTypeProperties.technical.showAxis} 
+                            size = 'sm'
+                            mt = {2}
+                            onChange = {onChangeFuncs.showAxis}
+                        >
+                            Show axis
+                        </Checkbox>
+                        <FormHelperText>
+                            For debug and instruction only. There is a CSS grid on either side of the axis.
+                        </FormHelperText>
+                    </FormControl>
 
                 </VStack></AccordionPanel>
 
