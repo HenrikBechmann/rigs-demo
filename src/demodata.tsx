@@ -205,6 +205,9 @@ const getSimpleItem = (index:number, itemID:number) => {
 
 // scroller styles
 const simpleScrollerStyles = {
+    viewport:{
+        overscrollBehavior:'none'
+    },
     placeholdererrorframe: {
         borderRadius:'8px',
         backgroundColor:'pink',
@@ -263,6 +266,9 @@ const getSimpleItemPromise = (index:number, itemID:number) => {
 }
 
 const simplePromisesScrollerStyles = {
+    viewport:{
+        overscrollBehavior:'none'
+    },
     placeholderframe: {
         borderRadius:'8px',
         backgroundColor:'palegreen',
@@ -442,7 +448,9 @@ const getVariableItem = (index:number, itemID:number) => {
 }
 
 const variableScrollerStyles = {
-
+    viewport:{
+        overscrollBehavior:'none'
+    },
 }
 
 const variablePlaceholderMessages = {
@@ -1037,7 +1045,9 @@ const getSubscroller = (index:number, itemID:number) => {
 }
 
 const nestedScrollerStyles = {
-
+    viewport:{
+        overscrollBehavior:'none'
+    },
 }
 
 const nestedcontentProperties = {
