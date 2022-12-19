@@ -2,7 +2,7 @@
   "name": "rigs-demo",
   "version": "1.0.0",
   "private": true,
-  "comment": "https://henrikbechmann.github.io/rigs-demo",
+  "homepage": "https://henrikbechmann.github.io/rigs-demo",
   "dependencies": {
     "@chakra-ui/react": "^2.3.5",
     "@emotion/react": "^11.10.4",
