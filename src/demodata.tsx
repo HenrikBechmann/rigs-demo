@@ -633,7 +633,7 @@ const getVariableOversizedTestString = (index:number, itemID:number) => {
 
     let teststr
 
-    teststr =`${index}: [${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
+    teststr =`${index + 1}: [${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
 
     return teststr
 }
