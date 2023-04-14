@@ -180,7 +180,7 @@ const SimpleItem = (props:any) => {
 
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {originalindexRef.current + 1}: {`list index ${props.index},`}<br/>
+            {originalindexRef.current + 1}: {`list index ${props.scrollerProperties.cellFrameDataRef.current.index},`}<br/>
             {`cache itemID ${props.itemID}`}
         </div>
     </div>
@@ -197,7 +197,7 @@ const getSimpleItem = (index:number, itemID:number) => {
      if (index == 30) return Promise.reject(new Error('not found for demo purposes'))
      if (index == 40) return 5 // deliberate return of an invalid (non-React-component) content type for demo
 
-     const component = <SimpleItem index = {index} itemID = {itemID} />
+     const component = <SimpleItem index = {index} itemID = {itemID} scrollerProperties = {null} />
 
      return component
 

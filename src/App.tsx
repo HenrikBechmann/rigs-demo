@@ -353,7 +353,7 @@ const getFunctionToastContent = (
     case 'insert': {
       const result = functionsObject.insertIndex(
         functionProperties.insertFrom, functionProperties.insertRange)
-      console.log('[changeList, replaceList]',result)
+      console.log('[changeList, replaceList, removeList]',result)
       if (functionProperties.insertRange) {
         codeblock = `functionsObject.insertIndex(${functionProperties.insertFrom},${functionProperties.insertRange})`
       } else {
@@ -365,7 +365,7 @@ const getFunctionToastContent = (
     case 'remove': {
       const result = functionsObject.removeIndex(
         functionProperties.removeFrom, functionProperties.removeRange)
-      console.log('[changeList, replaceList]',result)
+      console.log('[changeList, replaceList, removeList]',result)
       if (functionProperties.removeRange) {
         codeblock = `functionsObject.removeIndex(${functionProperties.removeFrom},${functionProperties.removeRange})`
       } else {
