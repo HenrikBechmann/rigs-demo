@@ -180,7 +180,7 @@ const SimpleItem = (props:any) => {
 
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {originalindexRef.current + 1}: {`list index ${props.scrollerProperties.cellFrameDataRef.current.index},`}<br/>
+            {originalindexRef.current + 1}: {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
             {`cache itemID ${props.itemID}`}
         </div>
     </div>
