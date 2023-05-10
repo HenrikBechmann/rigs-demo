@@ -563,7 +563,7 @@ const VariableItemDynamic = (props:any) => {
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
 
-    const originalindexRef = useRef(props.index)
+    // const originalindexRef = useRef(props.index)
 
     const intervalRef = useRef<NodeJS.Timer | null>(null)
 
@@ -827,7 +827,7 @@ const SubscrollerComponent = (props:any) => {
             nestedVariableSubscrollerProperties
 
     const {
-        orientation, 
+        // orientation, 
         gap, 
         padding, 
         cellHeight, 
