@@ -178,8 +178,6 @@ const SimpleItem = (props:any) => {
 
     const originalindexRef = useRef(props.index)
 
-    console.log('SimpleItem props',props)
-
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
             {originalindexRef.current + 1}: {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
