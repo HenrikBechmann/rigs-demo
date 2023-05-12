@@ -178,6 +178,8 @@ const SimpleItem = (props:any) => {
 
     const originalindexRef = useRef(props.index)
 
+    console.log('SimpleItem props',props)
+
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
             {originalindexRef.current + 1}: {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
@@ -257,7 +259,7 @@ const getSimpleItemPromise = (index:number, itemID:number) => {
 
         setTimeout(()=> {
 
-            resolve(<SimpleItem index = {index} itemID = {itemID}/>)
+            resolve(<SimpleItem index = {index} itemID = {itemID} scrollerProperties = {null}/>)
 
         },400 + (Math.random() * 2000))
 
