@@ -257,7 +257,7 @@ const getSimpleItemPromise = (index:number, itemID:number) => {
 
         setTimeout(()=> {
 
-            resolve(<SimpleItem index = {index} itemID = {itemID}/>)
+            resolve(<SimpleItem index = {index} itemID = {itemID} scrollerProperties = {null} />)
 
         },400 + (Math.random() * 2000))
 
