@@ -1245,7 +1245,7 @@ const sharedcacheProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getSubscroller,
+    getItem:getSharedCacheSubscroller,
     styles:nestedScrollerStyles,
     placeholderMessages: null,
     callbacks,
