@@ -57,6 +57,7 @@ const contentTitles:GenericObject = {
   variableoversized:"Variable oversized",
   nestedcontent:"Nested uniform scrollers",
   nestedpromises:"Nested uniform scroller promises",
+  sharedcache:"Shared cache (experimental)",
 
 }
 

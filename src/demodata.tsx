@@ -144,6 +144,7 @@ const callbacks = {
     6. variableoversized: variableoversizedProperties,
     7. nestedcontent:    nestedcontentProperties,
     8. nestedpromises:   nestedpromisesProperties,
+    9. sharedcache:      sharedcacheProperties
 
 */
 
@@ -1119,6 +1120,140 @@ const nestedpromisesProperties = {
     },
 }
 
+// --------------------[ 9. - scroller of shared cache properties ]----------------------
+
+
+const SharedCacheComponent = (props:any) => {
+
+    const [testState, setTestState] = useState('setup')
+    const testStateRef = useRef<string|null>(null)
+    testStateRef.current = testState
+
+    const { 
+        index, 
+        itemID,
+        scrollerProperties,
+        cacheAPI,
+    } = props
+
+    const properties = nestedUniformSubscrollerProperties
+
+    const {
+        // orientation, 
+        gap, 
+        padding, 
+        cellHeight, 
+        cellWidth, 
+        runwaySize, 
+        startingIndex, 
+        startingListSize, 
+        getItem, 
+        cache,
+        layout,
+    } = properties
+
+    const { scrollerPropertiesRef } = scrollerProperties
+
+    const dynamicorientationRef = useRef<null | string>(null)
+
+    useEffect(() =>{
+
+        const { orientation } = scrollerPropertiesRef.current
+        dynamicorientationRef.current = 
+            (orientation == 'vertical')?
+                'horizontal':
+                'vertical'
+
+    },[scrollerPropertiesRef.current.orientation])
+
+    const { listsize } = scrollerPropertiesRef.current
+
+    useEffect(()=>{
+
+        switch (testState) {
+            case 'setup':
+            case 'revised': {
+                setTestState('ready')
+                break
+            }
+        }
+
+    },[testState])
+
+    return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
+        <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
+            [{index}]={itemID} List #{index + 1} of {listsize}
+        </div>
+        <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
+
+            <Scroller 
+                orientation = { dynamicorientationRef.current } 
+                cache = { cache }
+                gap = {gap}
+                padding = {padding}
+                cellHeight = {cellHeight}
+                cellWidth = {cellWidth}
+                runwaySize = {runwaySize}
+                startingListSize = {startingListSize}
+                startingIndex = {startingIndex}
+                getItem = {getItem}
+                callbacks = {null}
+                placeholder = {null}
+                styles = { null }
+                layout = { layout }
+                scrollerProperties = { scrollerProperties }
+                cacheAPI = {cacheAPI}
+            />
+
+        </div>
+
+    </div>
+
+}
+
+// -----------------
+// scroller property values assembled for the nested scroller
+// -----------------
+
+const getSharedCacheSubscroller = (index:number, itemID:number) => {
+
+    return <SharedCacheComponent 
+        index = {index} 
+        itemID = {itemID}
+        scrollerProperties = {null}
+        cacheAPI = {null}
+    />
+
+}
+
+const sharedcacheScrollerStyles = {
+    viewport:{
+        overscrollBehavior:'none'
+    },
+}
+
+const sharedcacheProperties = {
+    startingIndex:0,
+    startingListSize:200,
+    orientation:'vertical',
+    cellHeight:400,
+    cellWidth:300,
+    padding:5,
+    gap:5,
+    runwaySize:3,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    getItem:getSubscroller,
+    styles:nestedScrollerStyles,
+    placeholderMessages: null,
+    callbacks,
+    technical:{
+        showAxis:false
+    },
+}
+
 // ==============================[ consolidated scroller properties namespace ]=========================
 
 // this is exported for the App module to use
@@ -1131,6 +1266,7 @@ export const defaultAllContentTypeProperties = {
     variableoversized:variableoversizedProperties,
     nestedcontent:nestedcontentProperties,
     nestedpromises:nestedpromisesProperties,
+    sharedcache:sharedcacheProperties,
 }
 
 // this is exported for the App module to use
