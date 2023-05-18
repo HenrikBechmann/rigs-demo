@@ -1,6 +1,6 @@
 {
   "name": "rigs-demo",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "homepage": "https://henrikbechmann.github.io/rigs-demo",
   "dependencies": {
@@ -11,10 +11,10 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.4.0",
-    "@types/node": "^18.11.9",
+    "@types/node": "^20.1.1",
     "framer-motion": "^10.0.1",
     "github-markdown-css": "^5.1.0",
-    "react-infinite-grid-scroller": "^1.0.4",
+    "react-infinite-grid-scroller": "^1.0.5",
     "react-markdown": "^8.0.3",
     "react-scripts": "5.0.1",
     "remark-gfm": "^3.0.1",

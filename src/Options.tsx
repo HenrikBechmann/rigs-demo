@@ -805,6 +805,7 @@ const Options = ({
                 <option value="variableoversized">Variable oversized</option>
                 <option value="nestedcontent">Nested scrollers</option>
                 <option value="nestedpromises">Nested scroller promises</option>
+                <option value="sharedcache">Shared cache (experimental)</option>
             </Select>
 
             <FormHelperText>
