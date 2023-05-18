@@ -1,6 +1,6 @@
 {
   "name": "rigs-demo",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "comment": "https://henrikbechmann.github.io/rigs-demo",
   "dependencies": {
