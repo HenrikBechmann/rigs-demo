@@ -57,6 +57,7 @@ const contentTitles:GenericObject = {
   variableoversized:"Variable oversized",
   nestedcontent:"Nested uniform scrollers",
   nestedpromises:"Nested uniform scroller promises",
+  sharedcache:"Shared cache (experimental)",
 
 }
 
@@ -221,7 +222,7 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.0.4-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-1.0.5-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
