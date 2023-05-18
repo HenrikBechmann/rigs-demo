@@ -89,6 +89,9 @@ The term _variable_ is for the layout in which for vertical orientation, the cel
 \`cellMinHeight\` and \`cellHeight\` parameter values, and for horizontal orientation the cell width can
 vary between the \`cellMinWidth\` and \`cellWidth\` parameter values.
 
+There is also a *shared cache (experimental)* content type which shares cache for all visible scrollers. This
+has no operational effect.
+
 Of course these content types are just samples. The main point of RIGS is to allow almost any kind of React Component 
 content.
 `
