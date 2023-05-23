@@ -855,7 +855,7 @@ const SubscrollerComponent = (props:any) => {
 
     },[scrollerPropertiesRef.current.orientation])
 
-    const listsize = scrollerPropertiesRef.current.virtualListProperties.ref
+    const listsize = scrollerPropertiesRef.current.virtualListProps.ref
 
     useEffect(()=>{
 
@@ -1166,7 +1166,7 @@ const SharedCacheComponent = (props:any) => {
 
     },[scrollerPropertiesRef.current.orientation])
 
-    const listsize = scrollerPropertiesRef.current.virtualListProperties.size
+    const listsize = scrollerPropertiesRef.current.virtualListProps.size
 
     useEffect(()=>{
 
