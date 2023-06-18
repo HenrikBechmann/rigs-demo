@@ -855,7 +855,7 @@ const SubscrollerComponent = (props:any) => {
 
     },[scrollerPropertiesRef.current.orientation])
 
-    const listsize = scrollerPropertiesRef.current.virtualListProps.ref
+    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
 
     useEffect(()=>{
 
@@ -871,7 +871,7 @@ const SubscrollerComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
         <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            [{index}]={itemID} List #{index + 1} of {listsize}
+            [{index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
 
@@ -1166,7 +1166,9 @@ const SharedCacheComponent = (props:any) => {
 
     },[scrollerPropertiesRef.current.orientation])
 
-    const listsize = scrollerPropertiesRef.current.virtualListProps.size
+    console.log('scrollerPropertiesRef', scrollerPropertiesRef)
+
+    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
 
     useEffect(()=>{
 
@@ -1182,7 +1184,7 @@ const SharedCacheComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
         <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            [{index}]={itemID} List #{index + 1} of {listsize}
+            [{index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
 
