@@ -181,7 +181,7 @@ const SimpleItem = (props:any) => {
 
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {originalindexRef.current + 1}: {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
+            {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
             {`cache itemID ${props.itemID}`}
         </div>
     </div>
@@ -327,11 +327,11 @@ const getVariableTestString = (index:number, itemID:number) => {
     let teststr
 
     if ([0,1,51,52,196,197,198,199].includes(index)) {
-        teststr = 'SHORT STRING ' + (index + 1) + ` [${index}]=${itemID}`// short string for demo
+        teststr = 'SHORT STRING ' + ` [${index}]=${itemID}`// short string for demo
     } else if (index == 3) {
-        teststr =`${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,.5 * teststring.length)}`
+        teststr =`[${index}]=${itemID} test string => ${teststring.substr(0,.5 * teststring.length)}`
     } else {
-        teststr =`${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+        teststr =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
     }
 
     return teststr
@@ -533,7 +533,7 @@ const variablepromiseProperties = {
 
 const getDynamicTestString = (index:number, itemID:number) => {
 
-    return `${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+    return `[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
 }
 
@@ -634,7 +634,7 @@ const getVariableOversizedTestString = (index:number, itemID:number) => {
 
     let teststr
 
-    teststr =`${index + 1}: [${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
+    teststr =`[${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
 
     return teststr
 }
@@ -907,7 +907,7 @@ const SubscrollerComponent = (props:any) => {
 
 const getVariableNestedTestString = (index:number, itemID:number) => {
 
-    const str =`${index + 1}:[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+    const str =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
     return str
 }
@@ -1001,7 +1001,7 @@ const uniformSubscrollerItemStyle = {
 
 const getUniformSubscrollerItem = (index:any, itemID:number) => {
 
-    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID} Item {index + 1} of this list </div>
+    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID}</div>
 
 }
 
@@ -1165,8 +1165,6 @@ const SharedCacheComponent = (props:any) => {
                 'vertical'
 
     },[scrollerPropertiesRef.current.orientation])
-
-    console.log('scrollerPropertiesRef', scrollerPropertiesRef)
 
     const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
 
