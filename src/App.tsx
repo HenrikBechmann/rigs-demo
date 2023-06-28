@@ -119,6 +119,8 @@ function App() {
   // demoCallbackSettingsRef imported above
   const demoFunctionPropertiesRef = useRef<GenericObject>({...defaultFunctionProperties})
 
+  const indexRangeRef = useRef([])
+
   // drawer management
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
   const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
@@ -127,7 +129,7 @@ function App() {
   const explanationsButtonRef = useRef(null)
 
   // error handling
-  const functionsRef = useRef<GenericObject>({})
+  const optionsAPIRef = useRef<GenericObject>({})
   const {isOpen:isOpenErrors, onOpen:onOpenErrors, onClose:onCloseErrors } = useDisclosure()
 
   const functionToast = useToast()
@@ -151,7 +153,7 @@ function App() {
     demoCallbackSettingsRef.current = {...sessionCallbackSettingsRef.current}
     demoFunctionPropertiesRef.current = {...sessionFunctionPropertiesRef.current}
 
-    invalidSectionsRef.current = functionsRef.current.invalidSections()
+    invalidSectionsRef.current = optionsAPIRef.current.invalidSections()
     if (invalidSectionsRef.current.size) {
       onOpenErrors()
     } else {
@@ -222,12 +224,13 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.0.5-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-1.1.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
           <i>Content:</i> {contentTitles[demoContentTypeRef.current]},&nbsp; 
-          {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}</Text>          
+          {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}, 
+          range:[{indexRangeRef.current[0]},{indexRangeRef.current[1]}]</Text>          
       </Box>
 
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
@@ -270,7 +273,7 @@ function App() {
 
             // static
             functionsObjectRef = { functionsObjectRef }
-            functionsRef = { functionsRef }
+            optionsAPIRef = { optionsAPIRef }
 
           />
 

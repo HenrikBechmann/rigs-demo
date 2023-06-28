@@ -139,7 +139,7 @@ const Options = ({
     sessionOperationFunctionRef, 
     sessionFunctionPropertiesRef,
     functionsObjectRef,
-    functionsRef,
+    optionsAPIRef,
 
 }:GenericObject) => {
  
@@ -240,7 +240,7 @@ const Options = ({
     }
 
     useEffect(()=>{
-        functionsRef.current = {
+        optionsAPIRef.current = {
             invalidSections
         }
     },[])
