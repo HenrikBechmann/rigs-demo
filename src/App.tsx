@@ -188,6 +188,12 @@ function App() {
     onCloseOptions()
   }
 
+  useEffect(() => {
+
+    console.log('functionsObjectRef',functionsObjectRef)
+
+  },[])
+
   useEffect(()=>{
 
     switch (demoState) {

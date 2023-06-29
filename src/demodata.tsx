@@ -27,6 +27,7 @@ export const defaultCallbackSettings = {
     preloadIndexCallback:false,
     itemExceptionCallback:false,
     changeListsizeCallback:false,
+    changeIndexRangeCallback:false,
     deleteListCallback:false,
     repositioningFlagCallback:false,
 }
@@ -101,6 +102,7 @@ export const functionsObjectRef = {current:{} as GenericObject}
 // the functions callback returns the funtions API to the caller on mounting
 const functionsCallback = (functions:GenericObject) => {
 
+    console.log('setting functions object')
     functionsObjectRef.current = functions
 
 }
