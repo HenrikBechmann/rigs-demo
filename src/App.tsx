@@ -251,7 +251,7 @@ function App() {
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
           <i>Content:</i> {contentTitles[demoContentTypeRef.current]},&nbsp; 
           {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}, 
-          range:[{indexRangeRef.current[0]},{indexRangeRef.current[1]}]</Text>          
+          range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}]</Text>          
       </Box>
 
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >

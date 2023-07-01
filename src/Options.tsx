@@ -148,6 +148,10 @@ const Options = ({
     // inherited scroller service functions
     const functionsObject = functionsObjectRef.current
 
+    const indexRangeRef = useRef([])
+    const props = functionsObjectRef.current.getPropertiesSnapshot()
+    const indexRange = indexRangeRef.current = props.virtualListProps.range
+
     // component state
     const [optionsState, setOptionsState] = useState('initialize-dependencies')
 
