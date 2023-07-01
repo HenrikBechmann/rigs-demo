@@ -99,10 +99,11 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
 // The functions are instantiated in the scroller on mounting, by the functionsCallback below
 export const functionsObjectRef = {current:{} as GenericObject}
 
+// export const indexRangeRef = {current:[]}
+
 // the functions callback returns the funtions API to the caller on mounting
 const functionsCallback = (functions:GenericObject) => {
 
-    console.log('setting functions object')
     functionsObjectRef.current = functions
 
 }

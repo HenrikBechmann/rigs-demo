@@ -29,6 +29,8 @@ import {
 
   functionsObjectRef,
 
+  // indexRangeRef,
+
   GenericObject, // type
 
 } from './demodata'
@@ -96,7 +98,7 @@ const ErrorBox = (props:any) => {
 
 function App() {
 
-  const [demoState, setDemoState] = useState('ready')
+  const [demoState, setDemoState] = useState('setup')
 
   // baseline - static
   const defaultContentType = 'simplecontent'
@@ -104,6 +106,8 @@ function App() {
   // defaultAllContentTypeProperties imported above
   // defaultCallbackSettings imported above
   // defaultFunctionProperties defined above
+
+  const indexRangeRef = useRef([])
   
   // assigned from demo versions for edit
   const sessionContentTypeRef = useRef<string>('')
@@ -119,7 +123,7 @@ function App() {
   // demoCallbackSettingsRef imported above
   const demoFunctionPropertiesRef = useRef<GenericObject>({...defaultFunctionProperties})
 
-  const indexRangeRef = useRef([])
+  // const indexRangeRef = useRef([])
 
   // drawer management
   const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
@@ -162,6 +166,7 @@ function App() {
         applyFunction()
       }
     }
+    setDemoState('apply')
   }
 
   const applyFunction = () => {
@@ -186,23 +191,33 @@ function App() {
     demoCallbackSettingsRef.current = {...defaultCallbackSettings}
     demoFunctionPropertiesRef.current = {...defaultFunctionProperties}
     onCloseOptions()
+    setDemoState('resetall')
   }
-
-  useEffect(() => {
-
-    console.log('functionsObjectRef',functionsObjectRef)
-
-  },[])
 
   useEffect(()=>{
 
     switch (demoState) {
-      case 'openoptions': 
-      case 'openexplanations':
+      case 'setup':
       case 'apply': 
       case 'resetall': {
+
+        setTimeout(()=>{ // load scroller, get functions and indexRange
+
+          const props = functionsObjectRef.current.getPropertiesSnapshot()
+          indexRangeRef.current = props.virtualListProps.range
+          setDemoState('ready') 
+
+        },1)
+        break
+
+      }
+
+      case 'openoptions': 
+      case 'openexplanations':{
+
         setDemoState('ready')
         break
+
       }
     }
 
