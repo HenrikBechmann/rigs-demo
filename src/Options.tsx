@@ -104,21 +104,21 @@ const errorMessages = {
     cellWidth:'integer: cellWidth is required with minimum 25',
     cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
-    startingIndex:'blank, or integer greater than or equal to 0',
+    startingIndex:'blank, or integer greater than or equal to listlowindex',
     startingListSize:'integer: required, with minimum 0',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
     cacheMax:'blank, or integer greater than or equal to 0',
-    scrolltoIndex:'integer: required, greater than or equal to 0',
+    scrolltoIndex:'integer: required, greater than or equal to listlowindex',
     listsize:'integer: required, greater than or equal to 0',
-    insertFrom:'integer: required, greater than or equal to 0',
+    insertFrom:'integer: required, greater than or equal to listlowindex',
     insertRange:'blank, or integer greater than or equal to the "from" index',
-    removeFrom:'integer: required, greater than or equal to 0',
+    removeFrom:'integer: required, greater than or equal to listlowindex',
     removeRange:'blank, or integer greater than or equal to the "from" index',
-    moveFrom:'integer: required, greater than or equal to 0',
+    moveFrom:'integer: required, greater than or equal to listlowindex',
     moveRange:'blank, or integer greater than or equal to the "from" index',
-    moveTo:'integer: required, greater than or equal to 0',
+    moveTo:'integer: required, greater than or equal to listlowindex',
 }
 
 const dependentFields = [
@@ -150,7 +150,8 @@ const Options = ({
 
     const indexRangeRef = useRef([])
     const props = functionsObjectRef.current.getPropertiesSnapshot()
-    const indexRange = indexRangeRef.current = props.virtualListProps.range
+    indexRangeRef.current = props.virtualListProps.range
+    const [listlowindex, listhighindex] = indexRangeRef.current
 
     // component state
     const [optionsState, setOptionsState] = useState('initialize-dependencies')
@@ -302,7 +303,7 @@ const Options = ({
         startingIndex:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,0)
+                isInvalid = !minValue(value,listlowindex)
             }
             invalidFlags.startingIndex = isInvalid
             return isInvalid
@@ -345,7 +346,7 @@ const Options = ({
             return isInvalid
         },
         scrolltoIndex:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
             invalidFlags.scrolltoIndex = isInvalid
             return isInvalid
         },
@@ -355,7 +356,7 @@ const Options = ({
             return isInvalid
         },
         insertFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
             invalidFlags.insertFrom = isInvalid
             isInvalidTests.insertRange(editFunctionPropertiesRef.current.insertRange)
             return isInvalid
@@ -369,7 +370,7 @@ const Options = ({
             return isInvalid
         },
         removeFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
             invalidFlags.removeFrom = isInvalid
             isInvalidTests.removeRange(editFunctionPropertiesRef.current.removeRange)
             return isInvalid
@@ -383,7 +384,7 @@ const Options = ({
             return isInvalid
         },
         moveFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
             invalidFlags.moveFrom = isInvalid
             isInvalidTests.moveRange(editFunctionPropertiesRef.current.moveRange)
             return isInvalid
@@ -397,7 +398,7 @@ const Options = ({
             return isInvalid
         },
         moveTo:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
             invalidFlags.moveTo = isInvalid
             return isInvalid
         },
@@ -813,7 +814,8 @@ const Options = ({
             </Select>
 
             <FormHelperText>
-                Current content will be replaced on Apply.
+                Current content will be replaced on Apply.<br/>
+                Current list index range [lowindex,highindex] is [{listlowindex},{listhighindex}]
             </FormHelperText>
 
         </FormControl>
