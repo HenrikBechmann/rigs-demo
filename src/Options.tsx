@@ -112,6 +112,8 @@ const errorMessages = {
     cacheMax:'blank, or integer greater than or equal to 0',
     scrolltoIndex:'integer: required, greater than or equal to listlowindex',
     listsize:'integer: required, greater than or equal to 0',
+    listLowIndex:'integer: required',
+    listHighIndex:'integer:required, greater than or equal to low index',
     insertFrom:'integer: required, greater than or equal to listlowindex',
     insertRange:'blank, or integer greater than or equal to the "from" index',
     removeFrom:'integer: required, greater than or equal to listlowindex',
@@ -124,6 +126,7 @@ const errorMessages = {
 const dependentFields = [
     'scrolltoIndex',
     'listsize',
+    'listLowIndex','listHighIndex',
     'insertFrom', 'insertRange',
     'removeFrom', 'removeRange',
     'moveFrom', 'moveRange', 'moveTo',
@@ -184,6 +187,8 @@ const Options = ({
             cellMinWidth:false,
             scrolltoIndex:false,
             listsize:false,
+            listLowIndex:false,
+            listHighIndex:false,
             insertFrom:false,
             insertRange:false,
             removeFrom:false,
@@ -215,6 +220,8 @@ const Options = ({
             cacheMax:false,
             scrolltoIndex:false,
             listsize:false,
+            listLowIndex:false,
+            listHighIndex:false,
             insertFrom:false,
             insertRange:false,
             removeFrom:false,
@@ -254,6 +261,7 @@ const Options = ({
     const functionEnabledSettingsRef = useRef<GenericObject>({
         goto:false,
         listsize:false,
+        listrange:false,
         reload:false,
         insert:false,
         remove:false,
@@ -353,6 +361,20 @@ const Options = ({
         listsize:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, 0))
             invalidFlags.listsize = isInvalid
+            return isInvalid
+        },
+        listLowIndex:(value:string) => {
+            const isInvalid = !isInteger(value)
+            invalidFlags.listLowIndex = isInvalid
+            isInvalidTests.listHighIndex(editFunctionPropertiesRef.current.listHighIndex)
+            return isInvalid
+        },
+        listHighIndex:(value:string) => {
+            let isInvalid = !isInteger(value)
+            if (!isInvalid) {
+                isInvalid = !minValue(value,editFunctionPropertiesRef.current.insertFrom)
+            }
+            invalidFlags.listHighIndex = isInvalid
             return isInvalid
         },
         insertFrom:(value:string) => {
@@ -675,6 +697,22 @@ const Options = ({
             editProperties.listsize = input
             if (!isInvalidTests.listsize(input)) {
                 sessionFunctionPropertiesRef.current.listsize = input
+            }
+            setEditFunctionProperties({...editProperties})
+        },
+        listLowIndex:(input:string) => {
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.listLowIndex = input
+            if (!isInvalidTests.listLowIndex(input)) {
+                sessionFunctionPropertiesRef.current.listLowIndex = input
+            }
+            setEditFunctionProperties({...editProperties})
+        },
+        listHighIndex:(input:string) => {
+            const editProperties = editFunctionPropertiesRef.current
+            editProperties.listHighIndex = input
+            if (!isInvalidTests.listHighIndex(input)) {
+                sessionFunctionPropertiesRef.current.listHighIndex = input
             }
             setEditFunctionProperties({...editProperties})
         },
@@ -1471,6 +1509,72 @@ const Options = ({
 
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. Change the size of the scroller's virtual list.
+                    </Text>
+
+                    <Heading size = 'xs'>Change virtual list range</Heading>
+
+                    <Stack direction = {['column','row','row']}>
+
+                        <FormControl 
+                            isDisabled = {disabledFlags.listLowIndex}
+                            isInvalid = {invalidFlags.listLowIndex} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>low index:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editFunctionProperties.listLowIndex} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.listLowIndex}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.listLowIndex}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl 
+                            isDisabled = {disabledFlags.listHighIndex}
+                            isInvalid = {invalidFlags.listHighIndex} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>high index:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editFunctionProperties.listHighIndex} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.listHighIndex}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.listHighIndex}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                    </Stack>
+
+                    <FormControl>
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+
+                            <FormLabel htmlFor='listrange' fontSize = 'sm'>Enable</FormLabel>
+
+                            <Switch 
+                                isChecked = {functionEnabledSettings.listrange} 
+                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                id='listrange' 
+                            />
+                        </InputGroup>
+                    </FormControl>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integers. Set low and high indexes. high index must be greater than or equal to  
+                        low index.
                     </Text>
 
                     <Heading size = 'xs'>Insert indexes</Heading>

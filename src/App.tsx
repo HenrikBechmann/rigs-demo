@@ -39,6 +39,8 @@ import {
 const defaultFunctionProperties:GenericObject = {
   gotoIndex:'',
   listsize:'',
+  listLowIndex:'',
+  listHighIndex:'',
   insertFrom:'',
   insertRange:'',
   removeFrom:'',
