@@ -11,7 +11,8 @@ import {
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 
   UnorderedList, ListItem,
   Heading, Image, Text, Code,
-  useDisclosure, Button, Link, useToast,
+  Button, Link,
+  useDisclosure, useToast,
 
 } from '@chakra-ui/react'
 
@@ -19,24 +20,24 @@ import Explanations from './Explanations'
 import Options from './Options'
 import DemoScroller from './DemoScroller'
 
+// default -> demo <-> session <-> edit
+
 import { 
 
   defaultAllContentTypeProperties, 
-  defaultCallbackSettings,
-
   demoAllContentTypePropertiesRef,
-  demoCallbackSettingsRef, 
 
-  functionsObjectRef,
+  defaultCallbackFlags,
+  demoCallbackFlagsRef, 
 
-  // indexRangeRef,
+  functionsAPIRef,
 
   GenericObject, // type
 
 } from './demodata'
 
 
-const defaultFunctionProperties:GenericObject = {
+const defaultAPIFunctionArguments:GenericObject = {
   gotoIndex:'',
   listsize:'',
   listLowIndex:'',
@@ -45,9 +46,9 @@ const defaultFunctionProperties:GenericObject = {
   insertRange:'',
   removeFrom:'',
   removeRange:'',
+  moveTo:'',
   moveFrom:'',
   moveRange:'',
-  moveTo:'',
   remapDemo:'backwardsort',
 }
 
@@ -103,33 +104,34 @@ function App() {
   const [demoState, setDemoState] = useState('setup')
 
   // baseline - static
-  const defaultContentType = 'simplecontent'
-  const defaultOperationFunction = ''
+  const defaultContentTypeSelector = 'simplecontent'
+  const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
-  // defaultCallbackSettings imported above
-  // defaultFunctionProperties defined above
+  // defaultCallbackFlags imported above
+  // defaultAPIFunctionArguments defined above
 
   const indexRangeRef = useRef([])
   
   // assigned from demo versions for edit
-  const sessionContentTypeRef = useRef<string>('')
-  const sessionOperationFunctionRef = useRef<string>('')
-  const sessionAllContentTypePropertiesRef = useRef<GenericObject>({})
-  const sessionCallbackSettingsRef = useRef<GenericObject>({})
-  const sessionFunctionPropertiesRef = useRef<GenericObject>({})
+  const 
+      sessionContentTypeSelectorRef = useRef<string>(''),
+      sessionOperationFunctionSelectorRef = useRef<string>(''),
+      sessionAllContentTypePropertiesRef = useRef<GenericObject>({}),
+      sessionCallbackFlagsRef = useRef<GenericObject>({}),
+      sessionAPIFunctionArgumentsRef = useRef<GenericObject>({})
 
   // live demo control, initialized by baseline, updated by session data
-  const demoContentTypeRef = useRef<string>(defaultContentType)
-  const demoOperationFunctionRef = useRef(defaultOperationFunction)
-  // demoAllContentTypePropertiesRef imported above
-  // demoCallbackSettingsRef imported above
-  const demoFunctionPropertiesRef = useRef<GenericObject>({...defaultFunctionProperties})
-
-  // const indexRangeRef = useRef([])
+  const 
+      demoContentTypeSelectorRef = useRef<string>(defaultContentTypeSelector),
+      demoOperationFunctionSelectorRef = useRef(defaultOperationFunctionSelector),
+      // demoAllContentTypePropertiesRef imported above
+      // demoCallbackFlagsRef imported above
+      demoAPIFunctionArgumentsRef = useRef<GenericObject>({...defaultAPIFunctionArguments})
 
   // drawer management
-  const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
-  const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
+  const 
+      { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure(),
+      { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
 
   const optionsButtonRef = useRef(null)
   const explanationsButtonRef = useRef(null)
@@ -142,29 +144,29 @@ function App() {
 
   // buttons
   const showOptions = () => {
-    sessionContentTypeRef.current = demoContentTypeRef.current
-    sessionOperationFunctionRef.current = demoOperationFunctionRef.current
+    sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
+    sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
     sessionAllContentTypePropertiesRef.current = {...demoAllContentTypePropertiesRef.current}
-    sessionCallbackSettingsRef.current = {...demoCallbackSettingsRef.current}
-    sessionFunctionPropertiesRef.current = {...demoFunctionPropertiesRef.current}
+    sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
+    sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
     onOpenOptions()
   }
 
   const invalidSectionsRef = useRef<any>(null)
 
   const applyOptions = () => {
-    demoContentTypeRef.current = sessionContentTypeRef.current
-    demoOperationFunctionRef.current = sessionOperationFunctionRef.current
+    demoContentTypeSelectorRef.current = sessionContentTypeSelectorRef.current
+    demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
     demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
-    demoCallbackSettingsRef.current = {...sessionCallbackSettingsRef.current}
-    demoFunctionPropertiesRef.current = {...sessionFunctionPropertiesRef.current}
+    demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
+    demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
 
-    invalidSectionsRef.current = optionsAPIRef.current.invalidSections()
+    invalidSectionsRef.current = optionsAPIRef.current.getInvalidSections()
     if (invalidSectionsRef.current.size) {
       onOpenErrors()
     } else {
       onCloseOptions()
-      if (demoOperationFunctionRef.current) {
+      if (demoOperationFunctionSelectorRef.current) {
         applyFunction()
       }
     }
@@ -176,22 +178,22 @@ function App() {
       title: 'API called:',
       description: <div>{
         getFunctionToastContent( // runs the function as a side effect
-          demoOperationFunctionRef.current, 
-          demoFunctionPropertiesRef.current,
-          functionsObjectRef.current)}
+          demoOperationFunctionSelectorRef.current, 
+          demoAPIFunctionArgumentsRef.current,
+          functionsAPIRef.current)}
       </div>,
       status: 'success',
       isClosable: true,
     })
-    demoOperationFunctionRef.current = ''
+    demoOperationFunctionSelectorRef.current = ''
   }
 
   const resetOptions = () => {
-    demoContentTypeRef.current = defaultContentType
-    demoOperationFunctionRef.current = defaultOperationFunction
+    demoContentTypeSelectorRef.current = defaultContentTypeSelector
+    demoOperationFunctionSelectorRef.current = defaultOperationFunctionSelector
     demoAllContentTypePropertiesRef.current = {...defaultAllContentTypeProperties}
-    demoCallbackSettingsRef.current = {...defaultCallbackSettings}
-    demoFunctionPropertiesRef.current = {...defaultFunctionProperties}
+    demoCallbackFlagsRef.current = {...defaultCallbackFlags}
+    demoAPIFunctionArgumentsRef.current = {...defaultAPIFunctionArguments}
     onCloseOptions()
     setDemoState('resetall')
   }
@@ -203,9 +205,9 @@ function App() {
       case 'apply': 
       case 'resetall': {
 
-        setTimeout(()=>{ // load scroller, get functions and indexRange
+        setTimeout(()=>{ // allow load scroller, get functions and indexRange
 
-          const props = functionsObjectRef.current.getPropertiesSnapshot()
+          const props = functionsAPIRef.current.getPropertiesSnapshot()
           indexRangeRef.current = props.virtualListProps.range
           setDemoState('ready') 
 
@@ -251,15 +253,15 @@ function App() {
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
-          <i>Content:</i> {contentTitles[demoContentTypeRef.current]},&nbsp; 
-          {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}, 
+          <i>Content:</i> {contentTitles[demoContentTypeSelectorRef.current]},&nbsp; 
+          {demoAllContentTypePropertiesRef.current[demoContentTypeSelectorRef.current].orientation}, 
           range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}]</Text>          
       </Box>
 
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
         <DemoScroller 
-          demoContentType = {demoContentTypeRef.current} 
+          demoContentType = {demoContentTypeSelectorRef.current} 
           demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} />
 
       </Box>
@@ -286,16 +288,16 @@ function App() {
           <Options 
 
             // simple values
-            sessionContentTypeRef = { sessionContentTypeRef }
-            sessionOperationFunctionRef = { sessionOperationFunctionRef }
+            sessionContentTypeSelectorRef = { sessionContentTypeSelectorRef }
+            sessionOperationFunctionSelectorRef = { sessionOperationFunctionSelectorRef }
 
             // dynamic ref objects
             sessionAllContentTypePropertiesRef = { sessionAllContentTypePropertiesRef } 
-            sessionCallbackSettingsRef = { sessionCallbackSettingsRef }
-            sessionFunctionPropertiesRef = { sessionFunctionPropertiesRef }
+            sessionCallbackFlagsRef = { sessionCallbackFlagsRef }
+            sessionAPIFunctionArgumentsRef = { sessionAPIFunctionArgumentsRef }
 
             // static
-            functionsObjectRef = { functionsObjectRef }
+            functionsAPIRef = { functionsAPIRef }
             optionsAPIRef = { optionsAPIRef }
 
           />
@@ -357,57 +359,57 @@ export default App
 const getFunctionToastContent = (
   functionindex:string, 
   functionProperties:GenericObject,
-  functionsObject:GenericObject) => {
+  functionsAPI:GenericObject) => {
 
   let codeblock
   let seeconsole = false
   switch (functionindex) {
     case 'goto': {
-      functionsObject.scrollToIndex(functionProperties.scrolltoIndex)
-      codeblock = `functionsObject.scrollToIndex(${functionProperties.scrolltoIndex})`
+      functionsAPI.scrollToIndex(functionProperties.scrolltoIndex)
+      codeblock = `functionsAPI.scrollToIndex(${functionProperties.scrolltoIndex})`
       break
     }
     case 'listsize': {
-      functionsObject.setListsize(functionProperties.listsize)
-      codeblock = `functionsObject.setListsize(${functionProperties.listsize})`
+      functionsAPI.setListsize(functionProperties.listsize)
+      codeblock = `functionsAPI.setListsize(${functionProperties.listsize})`
       break
     }
     case 'reload': {
-      functionsObject.reload()
-      codeblock = `functionsObject.reload()`
+      functionsAPI.reload()
+      codeblock = `functionsAPI.reload()`
       break
     }
     case 'insert': {
-      const result = functionsObject.insertIndex(
+      const result = functionsAPI.insertIndex(
         functionProperties.insertFrom, functionProperties.insertRange)
       console.log('[changeList, replaceList, removeList]',result)
       if (functionProperties.insertRange) {
-        codeblock = `functionsObject.insertIndex(${functionProperties.insertFrom},${functionProperties.insertRange})`
+        codeblock = `functionsAPI.insertIndex(${functionProperties.insertFrom},${functionProperties.insertRange})`
       } else {
-        codeblock = `functionsObject.insertIndex(${functionProperties.insertFrom})`
+        codeblock = `functionsAPI.insertIndex(${functionProperties.insertFrom})`
       }
       seeconsole = true
       break
     }
     case 'remove': {
-      const result = functionsObject.removeIndex(
+      const result = functionsAPI.removeIndex(
         functionProperties.removeFrom, functionProperties.removeRange)
       console.log('[changeList, replaceList, removeList]',result)
       if (functionProperties.removeRange) {
-        codeblock = `functionsObject.removeIndex(${functionProperties.removeFrom},${functionProperties.removeRange})`
+        codeblock = `functionsAPI.removeIndex(${functionProperties.removeFrom},${functionProperties.removeRange})`
       } else {
-        codeblock = `functionsObject.removeIndex(${functionProperties.removeFrom})`
+        codeblock = `functionsAPI.removeIndex(${functionProperties.removeFrom})`
       }
       seeconsole = true
       break
     }
     case 'move': {
-      const result = functionsObject.moveIndex(
+      const result = functionsAPI.moveIndex(
         functionProperties.moveTo, functionProperties.moveFrom, functionProperties.moveRange)
       if (functionProperties.moveRange) {
-        codeblock = `functionsObject.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom},${functionProperties.moveRange})`
+        codeblock = `functionsAPI.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom},${functionProperties.moveRange})`
       } else {
-        codeblock = `functionsObject.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom})`
+        codeblock = `functionsAPI.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom})`
       }
       console.log('processedIndexList', result)
       seeconsole = true
@@ -416,21 +418,21 @@ const getFunctionToastContent = (
     case 'remap': {
       switch (functionProperties.remapDemo) {
         case 'backwardsort':{
-          remapindex_backwardsort(functionsObject)
+          remapindex_backwardsort(functionsAPI)
           break
         }
         case 'replaceitems':{
-          remapindex_replaceItems(functionsObject)
+          remapindex_replaceItems(functionsAPI)
           break
         }
       }
-      codeblock = `functionsObject.remapIndexes(changeMap)`
+      codeblock = `functionsAPI.remapIndexes(changeMap)`
       seeconsole = true
       break
     }
     case 'clear':{
-      functionsObject.clearCache()
-      codeblock = `functionsObject.clearCache()`
+      functionsAPI.clearCache()
+      codeblock = `functionsAPI.clearCache()`
       break
     }
 
@@ -444,9 +446,9 @@ const getFunctionToastContent = (
   </>
 }
 
-const remapindex_backwardsort = (functionsObject:GenericObject) => {
+const remapindex_backwardsort = (functionsAPI:GenericObject) => {
 
-  const cradleindexmap = functionsObject.getCradleIndexMap()
+  const cradleindexmap = functionsAPI.getCradleIndexMap()
   if (!cradleindexmap) return
 
   const cradleindexarray:Array<number[]> = Array.from(cradleindexmap)
@@ -464,7 +466,7 @@ const remapindex_backwardsort = (functionsObject:GenericObject) => {
   for (const i in indexarray) {
     changeMap.set(indexarray[i],cacheItemIDarray[i])
   }
-  const returnarray = functionsObject.remapIndexes(changeMap)
+  const returnarray = functionsAPI.remapIndexes(changeMap)
 
   console.log(`remapIndexes:
 [modifiedIndexesList,
@@ -479,9 +481,9 @@ changeMap]`,
 
 }
 
-const remapindex_replaceItems = (functionsObject:GenericObject) => {
+const remapindex_replaceItems = (functionsAPI:GenericObject) => {
 
-  const cradleindexmap = functionsObject.getCradleIndexMap()
+  const cradleindexmap = functionsAPI.getCradleIndexMap()
   if (!cradleindexmap) return
 
   const indexList = [...cradleindexmap.keys()]
@@ -509,7 +511,7 @@ const remapindex_replaceItems = (functionsObject:GenericObject) => {
   changeMap.set(index,lastitemid)
   changeMap.set(lastindex, firstitemid)
 
-  const returnarray = functionsObject.remapIndexes(changeMap)
+  const returnarray = functionsAPI.remapIndexes(changeMap)
 
   console.log(`remapIndexes:
 [modifiedIndexesList,

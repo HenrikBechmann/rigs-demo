@@ -21,7 +21,7 @@ import Scroller from 'react-infinite-grid-scroller'
 // They control the firing of the callbacks. The demo callbacks, when activated, send feedback
 // to the browser console.
 // The callback names are recognized by RIGS, and fired if found.
-export const defaultCallbackSettings = {
+export const defaultCallbackFlags = {
     referenceIndexCallback:false,
     repositioningIndexCallback:false,
     preloadIndexCallback:false,
@@ -34,7 +34,7 @@ export const defaultCallbackSettings = {
 
 // initialize the demo settings with the default settings, and export to the App module. 
 // These settings can be changed in the Callbacks section of the Options drawer
-export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as GenericObject}
+export const demoCallbackFlagsRef = {current:{...defaultCallbackFlags} as GenericObject}
 
 
 // -----------------
@@ -43,28 +43,28 @@ export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as 
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
-    demoCallbackSettingsRef.current.referenceIndexCallback && 
+    demoCallbackFlagsRef.current.referenceIndexCallback && 
         console.log('referenceIndexCallback: index, location, cradleState',
             index, location, cradleState)
    
 }
 const preloadIndexCallback = (index:number) => {
     
-    demoCallbackSettingsRef.current.preloadIndexCallback && 
+    demoCallbackFlagsRef.current.preloadIndexCallback && 
         console.log('preloadIndexCallback: index', 
             index)
 
 }
 const deleteListCallback = (reason:string, deleteList:number[]) => {
     
-    demoCallbackSettingsRef.current.deleteListCallback && 
+    demoCallbackFlagsRef.current.deleteListCallback && 
         console.log('deleteListCallback: reason, deleteList',
             reason, deleteList)
 
 }
 const repositioningIndexCallback = (index:number) => {
     
-    demoCallbackSettingsRef.current.repositioningIndexCallback && 
+    demoCallbackFlagsRef.current.repositioningIndexCallback && 
         console.log('repositioningIndexCallback: index',
             index)
 
@@ -72,7 +72,7 @@ const repositioningIndexCallback = (index:number) => {
 
 const repositioningFlagCallback = (flag:boolean) => {
     
-    demoCallbackSettingsRef.current.repositioningFlagCallback && 
+    demoCallbackFlagsRef.current.repositioningFlagCallback && 
         console.log('repositioningFlagCallback: index',
             flag)
 
@@ -80,7 +80,7 @@ const repositioningFlagCallback = (flag:boolean) => {
 
 const changeListsizeCallback = (newlistsize:number) => {
     
-    demoCallbackSettingsRef.current.changeListsizeCallback && 
+    demoCallbackFlagsRef.current.changeListsizeCallback && 
         console.log('changeListsizeCallback: newlistsize', 
             newlistsize)
 
@@ -88,7 +88,7 @@ const changeListsizeCallback = (newlistsize:number) => {
 
 const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
     
-    demoCallbackSettingsRef.current.itemExceptionCallback && 
+    demoCallbackFlagsRef.current.itemExceptionCallback && 
         console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
             index, itemID, returnvalue, location, error)
 
@@ -97,14 +97,14 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
 // The functions object is used by the Options drawer for the snapshot functions,
 // and by the main app for the operations functions selected in the Options drawer.
 // The functions are instantiated in the scroller on mounting, by the functionsCallback below
-export const functionsObjectRef = {current:{} as GenericObject}
+export const functionsAPIRef = {current:{} as GenericObject}
 
 // export const indexRangeRef = {current:[]}
 
 // the functions callback returns the funtions API to the caller on mounting
 const functionsCallback = (functions:GenericObject) => {
 
-    functionsObjectRef.current = functions
+    functionsAPIRef.current = functions
 
 }
 

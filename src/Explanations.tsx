@@ -170,7 +170,7 @@ Callbacks should be written as closures something like this (example from this s
 ~~~
 const changeListsizeCallback = (newlistsize:number) => {
     
-    demoCallbackSettingsRef.current.changeListsizeCallback && 
+    demoCallbackFlagsRef.current.changeListsizeCallback && 
         console.log('changeListsizeCallback: newlistsize', 
             newlistsize)
 
@@ -181,11 +181,11 @@ This example outputs feedback to the browser console if a flag has been set for 
 The special callback \`functionsCallback\`, which acquires API functions from RIGS, should be written something 
 like this:
 ~~~
-const functionsObjectRef = useRef(null)
+const functionsAPIRef = useRef(null)
 
 const functionsCallback = (functions) => {
 
-    functionsObjectRef.current = functions
+    functionsAPIRef.current = functions
 
 }
 ~~~

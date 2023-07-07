@@ -86,6 +86,8 @@ const fieldSections:GenericObject = {
     cacheMax:'properties',
     scrolltoIndex:'operations',
     listsize:'operations',
+    listLowIndex:'operations',
+    listHighIndex:'operations',
     insertFrom:'operations',
     insertRange:'operations',
     removeFrom:'operations',
@@ -106,6 +108,8 @@ const errorMessages = {
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
     startingIndex:'blank, or integer greater than or equal to listlowindex',
     startingListSize:'integer: required, with minimum 0',
+    startingListLowIndex:'integer: optional',
+    startingListHighIndex:'integer: optional, must be greater than or equal to low index if present',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
@@ -133,15 +137,15 @@ const dependentFields = [
     'remapDemo',
 ]
 
-// Options component; almost 40 fields
+// Options component; about 40 fields
 const Options = ({
 
     sessionAllContentTypePropertiesRef, 
-    sessionContentTypeRef, 
-    sessionCallbackSettingsRef, 
-    sessionOperationFunctionRef, 
-    sessionFunctionPropertiesRef,
-    functionsObjectRef,
+    sessionContentTypeSelectorRef, 
+    sessionCallbackFlagsRef, 
+    sessionOperationFunctionSelectorRef, 
+    sessionAPIFunctionArgumentsRef,
+    functionsAPIRef,
     optionsAPIRef,
 
 }:GenericObject) => {
@@ -149,10 +153,10 @@ const Options = ({
     // -------------------------[ state updates ]------------------------
 
     // inherited scroller service functions
-    const functionsObject = functionsObjectRef.current
+    const functionsAPI = functionsAPIRef.current
 
     const indexRangeRef = useRef([])
-    const props = functionsObjectRef.current.getPropertiesSnapshot()
+    const props = functionsAPIRef.current.getPropertiesSnapshot()
     indexRangeRef.current = props.virtualListProps.range
     const [listlowindex, listhighindex] = indexRangeRef.current
 
@@ -160,11 +164,11 @@ const Options = ({
     const [optionsState, setOptionsState] = useState('initialize-dependencies')
 
     // simple values
-    const [editContentType, setEditContentType] = useState(sessionContentTypeRef.current)
-    // const editContentTypeRef = useRef(sessionContentTypeRef.current)
+    const [editContentType, setEditContentType] = useState(sessionContentTypeSelectorRef.current)
+    // const editContentTypeRef = useRef(sessionContentTypeSelectorRef.current)
 
-    const [editOperationFunction, setEditOperationFunction] = useState(sessionOperationFunctionRef.current)
-    const editOperationFunctionRef = useRef(sessionOperationFunctionRef.current)
+    const [editOperationFunction, setEditOperationFunction] = useState(sessionOperationFunctionSelectorRef.current)
+    const editOperationFunctionRef = useRef(sessionOperationFunctionSelectorRef.current)
     editOperationFunctionRef.current = editOperationFunction
 
     // objects. The local values are used to assign valid edits to the inherited values
@@ -172,11 +176,11 @@ const Options = ({
     const editContentTypePropertiesRef = useRef(editContentTypeProperties)
     editContentTypePropertiesRef.current = editContentTypeProperties
 
-    const [editCallbackSettings, setEditCallbackSettings] = useState({...sessionCallbackSettingsRef.current})
+    const [editCallbackSettings, setEditCallbackSettings] = useState({...sessionCallbackFlagsRef.current})
     
-    const [editFunctionProperties, setEditFunctionProperties] = useState({...sessionFunctionPropertiesRef.current})
-    const editFunctionPropertiesRef = useRef(editFunctionProperties)
-    editFunctionPropertiesRef.current = editFunctionProperties
+    const [editAPIFunctionArguments, setEditAPIFunctionArguments] = useState({...sessionAPIFunctionArgumentsRef.current})
+    const editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments)
+    editAPIFunctionArgumentsRef.current = editAPIFunctionArguments
 
     // --------------------------------[ internal mutable field data ]-----------------------------
 
@@ -236,7 +240,7 @@ const Options = ({
     const invalidFlags = invalidFlagsRef.current
 
     // test forwarded to host; returns text list of invalid section titles for display to user
-    const invalidSections = () => {
+    const getInvalidSections = () => {
         const sections = new Set<string>()
         const errorfields = invalidFlagsRef.current
         for (const field in invalidFlagsRef.current) {
@@ -253,7 +257,7 @@ const Options = ({
 
     useEffect(()=>{
         optionsAPIRef.current = {
-            invalidSections
+            getInvalidSections
         }
     },[])
 
@@ -366,13 +370,13 @@ const Options = ({
         listLowIndex:(value:string) => {
             const isInvalid = !isInteger(value)
             invalidFlags.listLowIndex = isInvalid
-            isInvalidTests.listHighIndex(editFunctionPropertiesRef.current.listHighIndex)
+            isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
             return isInvalid
         },
         listHighIndex:(value:string) => {
             let isInvalid = !isInteger(value)
             if (!isInvalid) {
-                isInvalid = !minValue(value,editFunctionPropertiesRef.current.insertFrom)
+                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.insertFrom)
             }
             invalidFlags.listHighIndex = isInvalid
             return isInvalid
@@ -380,13 +384,13 @@ const Options = ({
         insertFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
             invalidFlags.insertFrom = isInvalid
-            isInvalidTests.insertRange(editFunctionPropertiesRef.current.insertRange)
+            isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
             return isInvalid
         },
         insertRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editFunctionPropertiesRef.current.insertFrom)
+                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.insertFrom)
             }
             invalidFlags.insertRange = isInvalid
             return isInvalid
@@ -394,13 +398,13 @@ const Options = ({
         removeFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
             invalidFlags.removeFrom = isInvalid
-            isInvalidTests.removeRange(editFunctionPropertiesRef.current.removeRange)
+            isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
             return isInvalid
         },
         removeRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editFunctionPropertiesRef.current.removeFrom)
+                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.removeFrom)
             }
             invalidFlags.removeRange = isInvalid
             return isInvalid
@@ -408,13 +412,13 @@ const Options = ({
         moveFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
             invalidFlags.moveFrom = isInvalid
-            isInvalidTests.moveRange(editFunctionPropertiesRef.current.moveRange)
+            isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
             return isInvalid
         },
         moveRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editFunctionPropertiesRef.current.moveFrom)
+                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.moveFrom)
             }
             invalidFlags.moveRange = isInvalid
             return isInvalid
@@ -426,7 +430,7 @@ const Options = ({
         },
     }
 
-    const dependencyFuncs = {
+    const updateDependenciesFunctions = {
         contentType:(value:string) => {
 
             let disabled
@@ -455,19 +459,19 @@ const Options = ({
                 disabledFlags[field] = true
                 if (invalidFlags[field]) {
                     invalidFlags[field] = false
-                    editFunctionPropertiesRef.current[field] = sessionFunctionPropertiesRef.current[field]
+                    editAPIFunctionArgumentsRef.current[field] = sessionAPIFunctionArgumentsRef.current[field]
                 }
             }
             if (service) {
                 switch (service) {
                     case 'goto':{
                         disabledFlags.scrolltoIndex = false
-                        isInvalidTests.scrolltoIndex(editFunctionPropertiesRef.current.scrolltoIndex)
+                        isInvalidTests.scrolltoIndex(editAPIFunctionArgumentsRef.current.scrolltoIndex)
                         break
                     }
                     case 'listsize':{
                         disabledFlags.listsize = false
-                        isInvalidTests.listsize(editFunctionPropertiesRef.current.listsize)
+                        isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
                         break
                     }
                     case 'reload':{
@@ -477,24 +481,24 @@ const Options = ({
                     case 'insert':{
                         disabledFlags.insertFrom = false
                         disabledFlags.insertRange = false
-                        isInvalidTests.insertFrom(editFunctionPropertiesRef.current.insertFrom)
-                        isInvalidTests.insertRange(editFunctionPropertiesRef.current.insertRange)
+                        isInvalidTests.insertFrom(editAPIFunctionArgumentsRef.current.insertFrom)
+                        isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
                         break
                     }
                     case 'remove':{
                         disabledFlags.removeFrom = false
                         disabledFlags.removeRange = false
-                        isInvalidTests.removeFrom(editFunctionPropertiesRef.current.removeFrom)
-                        isInvalidTests.removeRange(editFunctionPropertiesRef.current.removeRange)
+                        isInvalidTests.removeFrom(editAPIFunctionArgumentsRef.current.removeFrom)
+                        isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
                         break
                     }
                     case 'move':{
                         disabledFlags.moveFrom = false
                         disabledFlags.moveRange = false
                         disabledFlags.moveTo = false
-                        isInvalidTests.moveFrom(editFunctionPropertiesRef.current.moveFrom)
-                        isInvalidTests.moveRange(editFunctionPropertiesRef.current.moveRange)
-                        isInvalidTests.moveTo(editFunctionPropertiesRef.current.moveTo)
+                        isInvalidTests.moveFrom(editAPIFunctionArgumentsRef.current.moveFrom)
+                        isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
+                        isInvalidTests.moveTo(editAPIFunctionArgumentsRef.current.moveTo)
                         break
                     }
                     case 'remap':{
@@ -507,7 +511,7 @@ const Options = ({
                     }
                 }
             }
-            setEditFunctionProperties({...editFunctionPropertiesRef.current})
+            setEditAPIFunctionArguments({...editAPIFunctionArgumentsRef.current})
         }
 
     }
@@ -519,10 +523,10 @@ const Options = ({
             const target = event.target as HTMLInputElement
             const value = target.checked
 
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.technical.showAxis = value
-            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current].technicalshowAxis = value
-            setEditContentTypeProperties({...editProperties})
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.technical.showAxis = value
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current].technicalshowAxis = value
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
 
         // update scroller service function switch settings
@@ -538,7 +542,7 @@ const Options = ({
                 enablerValue?
                     enablerID:
                     ''
-            sessionOperationFunctionRef.current = opfunc
+            sessionOperationFunctionSelectorRef.current = opfunc
             setEditOperationFunction(opfunc)
             setOptionsState('prepare-to-update-function-dependencies')
         },
@@ -547,10 +551,10 @@ const Options = ({
         contentType:(event:React.ChangeEvent) => {
             const target = event.target as HTMLSelectElement
             const value = target.value
-            sessionContentTypeRef.current = value
+            sessionContentTypeSelectorRef.current = value
             // change property set to correspond with content type
             setEditContentTypeProperties({...sessionAllContentTypePropertiesRef.current[value]})
-            sessionContentTypeRef.current = value
+            sessionContentTypeSelectorRef.current = value
             setEditContentType(value)
             setOptionsState('prepare-to-update-content-dependencies')
         },
@@ -560,238 +564,241 @@ const Options = ({
             const target = event.target as HTMLInputElement
             const callbackID = target.id
             const callbackValue = target.checked
-            const callbackSettings = sessionCallbackSettingsRef.current
+            const callbackSettings = sessionCallbackFlagsRef.current
             callbackSettings[callbackID] = callbackValue
             setEditCallbackSettings({...callbackSettings})            
         },
 
         // individual values
         orientation:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.orientation = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.orientation = input
             const newSessionProperties = 
-                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],orientation:input}
-            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
-            setEditContentTypeProperties({...editProperties})
+                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],orientation:input}
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         cellHeight:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cellHeight = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.cellHeight = input
             if (!isInvalidTests.cellHeight(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellHeight:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellHeight:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         cellWidth:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cellWidth = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.cellWidth = input
             if (!isInvalidTests.cellWidth(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellWidth:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellWidth:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         cellMinHeight:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cellMinHeight = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.cellMinHeight = input
             if (!isInvalidTests.cellMinHeight(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellMinHeight:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellMinHeight:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         cellMinWidth:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cellMinWidth = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.cellMinWidth = input
             if (!isInvalidTests.cellMinWidth(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellMinWidth:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellMinWidth:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         startingIndex:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.startingIndex = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.startingIndex = input
             if (!isInvalidTests.startingIndex(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],startingIndex:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingIndex:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         startingListSize:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.startingListSize = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.startingListSize = input
             if (!isInvalidTests.startingListSize(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],startingListSize:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         padding:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.padding = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.padding = input
             if (!isInvalidTests.padding(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],padding:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],padding:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         gap:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.gap = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.gap = input
             if (!isInvalidTests.gap(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],gap:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],gap:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         runwaySize:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.runwaySize = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.runwaySize = input
             if (!isInvalidTests.runwaySize(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],runwaySize:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],runwaySize:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         cache:(event:React.ChangeEvent) => {
-            const editProperties = editContentTypePropertiesRef.current
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
-            editProperties.cache = value
+            editAPIFunctionArguments.cache = value
             const newDisplayValues = 
-                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cache:value}
-            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newDisplayValues
-            setEditContentTypeProperties({...editProperties})
+                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cache:value}
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newDisplayValues
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         cacheMax:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cacheMax = input
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.cacheMax = input
             if (!isInvalidTests.cacheMax(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cacheMax:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cacheMax:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         scrolltoIndex:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.scrolltoIndex = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.scrolltoIndex = input
             if (!isInvalidTests.scrolltoIndex(input)) {
-                sessionFunctionPropertiesRef.current.scrolltoIndex = input
+                sessionAPIFunctionArgumentsRef.current.scrolltoIndex = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         listsize:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.listsize = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.listsize = input
             if (!isInvalidTests.listsize(input)) {
-                sessionFunctionPropertiesRef.current.listsize = input
+                sessionAPIFunctionArgumentsRef.current.listsize = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         listLowIndex:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.listLowIndex = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.listLowIndex = input
             if (!isInvalidTests.listLowIndex(input)) {
-                sessionFunctionPropertiesRef.current.listLowIndex = input
+                sessionAPIFunctionArgumentsRef.current.listLowIndex = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         listHighIndex:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.listHighIndex = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.listHighIndex = input
             if (!isInvalidTests.listHighIndex(input)) {
-                sessionFunctionPropertiesRef.current.listHighIndex = input
+                sessionAPIFunctionArgumentsRef.current.listHighIndex = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         insertFrom:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.insertFrom = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.insertFrom = input
             if (!isInvalidTests.insertFrom(input)) {
-                sessionFunctionPropertiesRef.current.insertFrom = input
+                sessionAPIFunctionArgumentsRef.current.insertFrom = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         insertRange:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.insertRange = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.insertRange = input
             if (!isInvalidTests.insertRange(input)) {
-                sessionFunctionPropertiesRef.current.insertRange = input
+                sessionAPIFunctionArgumentsRef.current.insertRange = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         removeFrom:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.removeFrom = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.removeFrom = input
             if (!isInvalidTests.removeFrom(input)) {
-                sessionFunctionPropertiesRef.current.removeFrom = input
+                sessionAPIFunctionArgumentsRef.current.removeFrom = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         removeRange:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.removeRange = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.removeRange = input
             if (!isInvalidTests.removeRange(input)) {
-                sessionFunctionPropertiesRef.current.removeRange = input
+                sessionAPIFunctionArgumentsRef.current.removeRange = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         moveFrom:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.moveFrom = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.moveFrom = input
             if (!isInvalidTests.moveFrom(input)) {
-                sessionFunctionPropertiesRef.current.moveFrom = input
+                sessionAPIFunctionArgumentsRef.current.moveFrom = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         moveRange:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.moveRange = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.moveRange = input
             if (!isInvalidTests.moveRange(input)) {
-                sessionFunctionPropertiesRef.current.moveRange = input
+                sessionAPIFunctionArgumentsRef.current.moveRange = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         moveTo:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.moveTo = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.moveTo = input
             if (!isInvalidTests.moveTo(input)) {
-                sessionFunctionPropertiesRef.current.moveTo = input
+                sessionAPIFunctionArgumentsRef.current.moveTo = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         remapDemo:(event:React.ChangeEvent) => {
-            const editProperties = editFunctionPropertiesRef.current
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
-            editProperties.remapDemo = value
-            sessionFunctionPropertiesRef.current.remapDemo = value
-            setEditFunctionProperties({...editProperties})
+            editAPIFunctionArguments.remapDemo = value
+            sessionAPIFunctionArgumentsRef.current.remapDemo = value
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
     }
 
     const serviceFuncs = {
         getCacheIndexMap: () => {
-            console.log('cacheIndexMap =',functionsObject.getCacheIndexMap())
+            console.log('cacheIndexMap =',functionsAPI.getCacheIndexMap())
         },
         getCacheItemMap: () => {
-            console.log('cacheItemMap =',functionsObject.getCacheItemMap())
+            console.log('cacheItemMap =',functionsAPI.getCacheItemMap())
         },
         getCradleIndexMap: () => {
-            console.log('cradleIndexMap =',functionsObject.getCradleIndexMap())
+            console.log('cradleIndexMap =',functionsAPI.getCradleIndexMap())
         },
+        getPropertiesSnapshot: () => {
+            console.log('properties =',functionsAPI.getPropertiesSnapshot())
+        }
     }
 
     // --------------------------[ state change control ]------------------
@@ -799,8 +806,8 @@ const Options = ({
     useEffect(()=>{
         switch (optionsState) {
             case 'initialize-dependencies': {
-                dependencyFuncs.contentType(sessionContentTypeRef.current)
-                dependencyFuncs.serviceFunctions(sessionOperationFunctionRef.current)
+                updateDependenciesFunctions.contentType(sessionContentTypeSelectorRef.current)
+                updateDependenciesFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
                 setOptionsState('ready')
                 break
             }
@@ -809,7 +816,7 @@ const Options = ({
                 break
             }
             case 'update-content-dependencies': {
-                dependencyFuncs.contentType(sessionContentTypeRef.current)
+                updateDependenciesFunctions.contentType(sessionContentTypeSelectorRef.current)
                 setOptionsState('ready')
                 break
             }
@@ -818,12 +825,12 @@ const Options = ({
                 break
             }
             case 'update-function-dependencies': {
-                dependencyFuncs.serviceFunctions(sessionOperationFunctionRef.current)
+                updateDependenciesFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
                 setOptionsState('ready')
                 break
             }
         }
-    },[optionsState, dependencyFuncs])
+    },[optionsState, updateDependenciesFunctions])
 
     // ------------------------------[ render ]------------------------------
     
@@ -1432,7 +1439,7 @@ const Options = ({
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.scrolltoIndex} 
+                                    value = {editAPIFunctionArguments.scrolltoIndex} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.scrolltoIndex}
                                     clampValueOnBlur = {false}
@@ -1479,7 +1486,7 @@ const Options = ({
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.listsize} 
+                                    value = {editAPIFunctionArguments.listsize} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.listsize}
                                     clampValueOnBlur = {false}
@@ -1523,7 +1530,7 @@ const Options = ({
                                 <FormLabel fontSize = 'sm'>low index:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.listLowIndex} 
+                                    value = {editAPIFunctionArguments.listLowIndex} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.listLowIndex}
                                     clampValueOnBlur = {false}
@@ -1544,7 +1551,7 @@ const Options = ({
                                 <FormLabel fontSize = 'sm'>high index:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.listHighIndex} 
+                                    value = {editAPIFunctionArguments.listHighIndex} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.listHighIndex}
                                     clampValueOnBlur = {false}
@@ -1589,7 +1596,7 @@ const Options = ({
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.insertFrom} 
+                                    value = {editAPIFunctionArguments.insertFrom} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.insertFrom}
                                     clampValueOnBlur = {false}
@@ -1610,7 +1617,7 @@ const Options = ({
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.insertRange} 
+                                    value = {editAPIFunctionArguments.insertRange} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.insertRange}
                                     clampValueOnBlur = {false}
@@ -1655,7 +1662,7 @@ const Options = ({
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.removeFrom} 
+                                    value = {editAPIFunctionArguments.removeFrom} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.removeFrom}
                                     clampValueOnBlur = {false}
@@ -1676,7 +1683,7 @@ const Options = ({
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.removeRange} 
+                                    value = {editAPIFunctionArguments.removeRange} 
                                     size = 'sm'
                                     onChange = {onChangeFuncs.removeRange}
                                     clampValueOnBlur = {false}
@@ -1721,7 +1728,7 @@ const Options = ({
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
 
                             <NumberInput 
-                                value = {editFunctionProperties.moveFrom} 
+                                value = {editAPIFunctionArguments.moveFrom} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveFrom}
                                 clampValueOnBlur = {false}
@@ -1742,7 +1749,7 @@ const Options = ({
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
 
                             <NumberInput 
-                                value = {editFunctionProperties.moveRange} 
+                                value = {editAPIFunctionArguments.moveRange} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveRange}
                                 clampValueOnBlur = {false}
@@ -1765,7 +1772,7 @@ const Options = ({
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
 
                             <NumberInput 
-                                value = {editFunctionProperties.moveTo} 
+                                value = {editAPIFunctionArguments.moveTo} 
                                 size = 'sm'
                                 onChange = {onChangeFuncs.moveTo}
                                 clampValueOnBlur = {false}
@@ -1802,7 +1809,7 @@ const Options = ({
 
                     <FormControl isDisabled = {disabledFlags.remapDemo} width = 'xs'>
                         <Select
-                            value = {editFunctionProperties.remapDemo} 
+                            value = {editAPIFunctionArguments.remapDemo} 
                             size = 'sm'
                             onChange = {onChangeFuncs.remapDemo}
                         >
