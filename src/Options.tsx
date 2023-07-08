@@ -385,7 +385,7 @@ const Options = ({
         listHighIndex:(value:string) => {
             let isInvalid = !isInteger(value)
             if (!isInvalid) {
-                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.insertFrom)
+                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.listLowIndex)
             }
             invalidFlags.listHighIndex = isInvalid
             return isInvalid
@@ -481,6 +481,13 @@ const Options = ({
                     case 'listsize':{
                         disabledFlags.listsize = false
                         isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
+                        break
+                    }
+                    case 'listrange':{
+                        disabledFlags.listLowIndex = false
+                        disabledFlags.listHighIndex = false
+                        isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
+                        isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
                         break
                     }
                     case 'reload':{

@@ -399,8 +399,8 @@ const getFunctionToastContent = (
       break
     }
     case 'listrange': {
-      functionsAPI.setListRange(APIFunctionArguments.listLowIndex, APIFunctionArguments.listHighIndex)
-      codeblock = `functionsAPI.setListRange(${APIFunctionArguments.listLowIndex},${APIFunctionArguments.listHighIndex})`
+      functionsAPI.setListRange([APIFunctionArguments.listLowIndex, APIFunctionArguments.listHighIndex])
+      codeblock = `functionsAPI.setListRange([${APIFunctionArguments.listLowIndex},${APIFunctionArguments.listHighIndex}])`
       break
     }
     case 'reload': {
