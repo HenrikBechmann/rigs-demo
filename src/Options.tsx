@@ -41,23 +41,23 @@ const isInteger = (value:any) => {
 
 }
 
-const minValue = (value:any, minValue:any) => {
+const compareValueMinValue = (compareValue:any, compareValueMinValue:any) => {
 
-    if (!isInteger(value) || !isInteger(minValue)) return false
+    if (!isInteger(compareValue) || !isInteger(compareValueMinValue)) return false
 
-    const testvalue = +value
-    const testMinValue = +minValue
+    const testvalue = +compareValue
+    const testMinValue = +compareValueMinValue
 
     return testvalue >= testMinValue
 
 }
 
-const maxValue = (value:any, maxValue:any) => {
+const compareValueMaxValue = (compareValue:any, compareValueMaxValue:any) => {
 
-    if (!isInteger(value) || !isInteger(maxValue)) return false
+    if (!isInteger(compareValue) || !isInteger(compareValueMaxValue)) return false
 
-    const testvalue = +value
-    const testMaxValue = +maxValue
+    const testvalue = +compareValue
+    const testMaxValue = +compareValueMaxValue
 
     return testvalue <= testMaxValue
 
@@ -290,7 +290,7 @@ const Options = ({
     // display value error check functions
     const isInvalidTests = {
         cellHeight:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 25))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 25))
             invalidFlags.cellHeight = isInvalid
             if (!disabledFlags.cellMinHeight) {
                 isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
@@ -298,7 +298,7 @@ const Options = ({
             return isInvalid
         },
         cellWidth:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 25))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 25))
             invalidFlags.cellWidth = isInvalid
             if (!disabledFlags.cellMinWidth) {
                 isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
@@ -308,7 +308,7 @@ const Options = ({
         cellMinHeight:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellHeight)))
+                isInvalid = (!compareValueMinValue(value,25) || !(compareValueMaxValue(value, editContentTypePropertiesRef.current.cellHeight)))
             }
             invalidFlags.cellMinHeight = isInvalid
             return isInvalid
@@ -316,7 +316,7 @@ const Options = ({
         cellMinWidth:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellWidth)))
+                isInvalid = (!compareValueMinValue(value,25) || !(compareValueMaxValue(value, editContentTypePropertiesRef.current.cellWidth)))
             }
             invalidFlags.cellMinWidth = isInvalid
             return isInvalid
@@ -324,20 +324,20 @@ const Options = ({
         startingIndex:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,listlowindex)
+                isInvalid = !compareValueMinValue(value,listlowindex)
             }
             invalidFlags.startingIndex = isInvalid
             return isInvalid
         },
         startingListSize:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
             invalidFlags.startingListSize = isInvalid
             return isInvalid
         },
         padding:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,0)
+                isInvalid = !compareValueMinValue(value,0)
             }
             invalidFlags.padding = isInvalid
             return isInvalid
@@ -345,7 +345,7 @@ const Options = ({
         gap:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,0)
+                isInvalid = !compareValueMinValue(value,0)
             }
             invalidFlags.gap = isInvalid
             return isInvalid
@@ -353,7 +353,7 @@ const Options = ({
         runwaySize:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,1)
+                isInvalid = !compareValueMinValue(value,1)
             }
             invalidFlags.runwaySize = isInvalid
             return isInvalid
@@ -361,18 +361,18 @@ const Options = ({
         cacheMax:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,0)
+                isInvalid = !compareValueMinValue(value,0)
             }
             invalidFlags.cacheMax = isInvalid
             return isInvalid
         },
         scrolltoIndex:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
             invalidFlags.scrolltoIndex = isInvalid
             return isInvalid
         },
         listsize:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
             invalidFlags.listsize = isInvalid
             return isInvalid
         },
@@ -385,13 +385,13 @@ const Options = ({
         listHighIndex:(value:string) => {
             let isInvalid = !isInteger(value)
             if (!isInvalid) {
-                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.listLowIndex)
+                isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.listLowIndex)
             }
             invalidFlags.listHighIndex = isInvalid
             return isInvalid
         },
         insertFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
             invalidFlags.insertFrom = isInvalid
             isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
             return isInvalid
@@ -399,13 +399,13 @@ const Options = ({
         insertRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.insertFrom)
+                isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.insertFrom)
             }
             invalidFlags.insertRange = isInvalid
             return isInvalid
         },
         removeFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
             invalidFlags.removeFrom = isInvalid
             isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
             return isInvalid
@@ -413,13 +413,13 @@ const Options = ({
         removeRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.removeFrom)
+                isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.removeFrom)
             }
             invalidFlags.removeRange = isInvalid
             return isInvalid
         },
         moveFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
             invalidFlags.moveFrom = isInvalid
             isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
             return isInvalid
@@ -427,13 +427,13 @@ const Options = ({
         moveRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editAPIFunctionArgumentsRef.current.moveFrom)
+                isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.moveFrom)
             }
             invalidFlags.moveRange = isInvalid
             return isInvalid
         },
         moveTo:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, listlowindex))
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
             invalidFlags.moveTo = isInvalid
             return isInvalid
         },
