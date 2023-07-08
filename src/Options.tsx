@@ -140,11 +140,14 @@ const dependentFields = [
 // Options component; about 40 fields
 const Options = ({
 
-    sessionAllContentTypePropertiesRef, 
     sessionContentTypeSelectorRef, 
+    sessionAllContentTypePropertiesRef, 
+
     sessionCallbackFlagsRef, 
+
     sessionOperationFunctionSelectorRef, 
     sessionAPIFunctionArgumentsRef,
+
     functionsAPIRef,
     optionsAPIRef,
 
@@ -156,27 +159,29 @@ const Options = ({
     const functionsAPI = functionsAPIRef.current
 
     const indexRangeRef = useRef([])
-    const props = functionsAPIRef.current.getPropertiesSnapshot()
-    indexRangeRef.current = props.virtualListProps.range
+    const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+    indexRangeRef.current = scrollerProps.virtualListProps.range
     const [listlowindex, listhighindex] = indexRangeRef.current
 
     // component state
     const [optionsState, setOptionsState] = useState('initialize-dependencies')
 
     // simple values
-    const [editContentType, setEditContentType] = useState(sessionContentTypeSelectorRef.current)
-    // const editContentTypeRef = useRef(sessionContentTypeSelectorRef.current)
+    const [editContentTypeSelector, setEditContentTypeSelector] = useState(sessionContentTypeSelectorRef.current)
 
-    const [editOperationFunction, setEditOperationFunction] = useState(sessionOperationFunctionSelectorRef.current)
-    const editOperationFunctionRef = useRef(sessionOperationFunctionSelectorRef.current)
-    editOperationFunctionRef.current = editOperationFunction
+    const [editOperationFunctionSelector, setEditOperationFunctionSelector] = 
+        useState(sessionOperationFunctionSelectorRef.current)
+
+    const editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current)
+    editOperationFunctionSelectorRef.current = editOperationFunctionSelector
 
     // objects. The local values are used to assign valid edits to the inherited values
-    const [editContentTypeProperties, setEditContentTypeProperties] = useState({...sessionAllContentTypePropertiesRef.current[editContentType]})
+    const [editContentTypeProperties, setEditContentTypeProperties] = 
+        useState({...sessionAllContentTypePropertiesRef.current[editContentTypeSelector]})
     const editContentTypePropertiesRef = useRef(editContentTypeProperties)
     editContentTypePropertiesRef.current = editContentTypeProperties
 
-    const [editCallbackSettings, setEditCallbackSettings] = useState({...sessionCallbackFlagsRef.current})
+    const [editCallbackFlags, setEditCallbackFlags] = useState({...sessionCallbackFlagsRef.current})
     
     const [editAPIFunctionArguments, setEditAPIFunctionArguments] = useState({...sessionAPIFunctionArgumentsRef.current})
     const editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments)
@@ -241,6 +246,7 @@ const Options = ({
 
     // test forwarded to host; returns text list of invalid section titles for display to user
     const getInvalidSections = () => {
+
         const sections = new Set<string>()
         const errorfields = invalidFlagsRef.current
         for (const field in invalidFlagsRef.current) {
@@ -253,12 +259,15 @@ const Options = ({
             sectionSet.add(sectionTitles[value])
         }) 
         return sectionSet
+
     }
 
     useEffect(()=>{
+
         optionsAPIRef.current = {
             getInvalidSections
         }
+        
     },[])
 
     // scroller function switch settings
@@ -543,7 +552,7 @@ const Options = ({
                     enablerID:
                     ''
             sessionOperationFunctionSelectorRef.current = opfunc
-            setEditOperationFunction(opfunc)
+            setEditOperationFunctionSelector(opfunc)
             setOptionsState('prepare-to-update-function-dependencies')
         },
 
@@ -555,7 +564,7 @@ const Options = ({
             // change property set to correspond with content type
             setEditContentTypeProperties({...sessionAllContentTypePropertiesRef.current[value]})
             sessionContentTypeSelectorRef.current = value
-            setEditContentType(value)
+            setEditContentTypeSelector(value)
             setOptionsState('prepare-to-update-content-dependencies')
         },
 
@@ -566,7 +575,7 @@ const Options = ({
             const callbackValue = target.checked
             const callbackSettings = sessionCallbackFlagsRef.current
             callbackSettings[callbackID] = callbackValue
-            setEditCallbackSettings({...callbackSettings})            
+            setEditCallbackFlags({...callbackSettings})            
         },
 
         // individual values
@@ -844,7 +853,7 @@ const Options = ({
 
             <Select 
                 size = 'md'
-                value = {editContentType} 
+                value = {editContentTypeSelector} 
                 onChange = {onChangeFuncs.contentType}
             >
                 <option value="simplecontent">Simple uniform content</option>
@@ -1222,7 +1231,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.referenceIndexCallback} 
+                            isChecked = {editCallbackFlags.referenceIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'referenceIndexCallback'
@@ -1237,7 +1246,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.preloadIndexCallback} 
+                            isChecked = {editCallbackFlags.preloadIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'preloadIndexCallback'
@@ -1252,7 +1261,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.itemExceptionCallback} 
+                            isChecked = {editCallbackFlags.itemExceptionCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'itemExceptionCallback'
@@ -1267,7 +1276,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.repositioningFlagCallback} 
+                            isChecked = {editCallbackFlags.repositioningFlagCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningFlagCallback'
@@ -1283,7 +1292,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.repositioningIndexCallback} 
+                            isChecked = {editCallbackFlags.repositioningIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningIndexCallback'
@@ -1298,7 +1307,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.changeListsizeCallback} 
+                            isChecked = {editCallbackFlags.changeListsizeCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'changeListsizeCallback'
@@ -1313,7 +1322,7 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.deleteListCallback} 
+                            isChecked = {editCallbackFlags.deleteListCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'deleteListCallback'

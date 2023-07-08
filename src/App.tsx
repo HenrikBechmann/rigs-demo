@@ -67,8 +67,10 @@ const contentTitles:GenericObject = {
 }
 
 const ErrorBox = (props:any) => {
+
   const { invalidSections, isOpen, onClose } = props
   if (!isOpen) return null
+
   const listitems:any[] = []
   let count = 0
   invalidSections.forEach((title:string)=>{
@@ -76,27 +78,26 @@ const ErrorBox = (props:any) => {
   })
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent fontSize = {[9,9,14]}>
-          <ModalHeader >There are errors</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>Please correct the errors in the following sections before proceeding.</Text>
-            <UnorderedList ml = {4}>
-              {listitems}
-            </UnorderedList>
-          </ModalBody >
-          <ModalFooter>
-            <Button onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent fontSize = {[9,9,14]}>
+        <ModalHeader >There are errors</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Text>Please correct the errors in the following sections before proceeding.</Text>
+          <UnorderedList ml = {4}>
+            {listitems}
+          </UnorderedList>
+        </ModalBody >
+        <ModalFooter>
+          <Button onClick={onClose}>
+            Close
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   )
+
 }
 
 function App() {
@@ -142,19 +143,23 @@ function App() {
 
   const functionToast = useToast()
 
+  const invalidSectionsRef = useRef<any>(null)
+
   // buttons
   const showOptions = () => {
+
     sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
     sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
     sessionAllContentTypePropertiesRef.current = {...demoAllContentTypePropertiesRef.current}
     sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
     sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
+
     onOpenOptions()
+
   }
 
-  const invalidSectionsRef = useRef<any>(null)
-
   const applyOptions = () => {
+
     demoContentTypeSelectorRef.current = sessionContentTypeSelectorRef.current
     demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
     demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
@@ -162,40 +167,59 @@ function App() {
     demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
 
     invalidSectionsRef.current = optionsAPIRef.current.getInvalidSections()
+
     if (invalidSectionsRef.current.size) {
+
       onOpenErrors()
+
     } else {
+
       onCloseOptions()
+
       if (demoOperationFunctionSelectorRef.current) {
         applyFunction()
       }
+
     }
+
     setDemoState('apply')
+
   }
 
   const applyFunction = () => {
+
     functionToast({
       title: 'API called:',
       description: <div>{
+
         getFunctionToastContent( // runs the function as a side effect
+
           demoOperationFunctionSelectorRef.current, 
           demoAPIFunctionArgumentsRef.current,
-          functionsAPIRef.current)}
-      </div>,
+          functionsAPIRef.current)
+
+        }</div>,
+
       status: 'success',
       isClosable: true,
     })
+
     demoOperationFunctionSelectorRef.current = ''
+
   }
 
   const resetOptions = () => {
+
     demoContentTypeSelectorRef.current = defaultContentTypeSelector
     demoOperationFunctionSelectorRef.current = defaultOperationFunctionSelector
     demoAllContentTypePropertiesRef.current = {...defaultAllContentTypeProperties}
     demoCallbackFlagsRef.current = {...defaultCallbackFlags}
     demoAPIFunctionArgumentsRef.current = {...defaultAPIFunctionArguments}
+
     onCloseOptions()
+
     setDemoState('resetall')
+    
   }
 
   useEffect(()=>{
@@ -205,7 +229,7 @@ function App() {
       case 'apply': 
       case 'resetall': {
 
-        setTimeout(()=>{ // allow load scroller, get functions and indexRange
+        setTimeout(()=>{ // allow cycle for load scroller, get functions and indexRange
 
           const props = functionsAPIRef.current.getPropertiesSnapshot()
           indexRangeRef.current = props.virtualListProps.range
@@ -296,7 +320,7 @@ function App() {
             sessionCallbackFlagsRef = { sessionCallbackFlagsRef }
             sessionAPIFunctionArgumentsRef = { sessionAPIFunctionArgumentsRef }
 
-            // static
+            // functions
             functionsAPIRef = { functionsAPIRef }
             optionsAPIRef = { optionsAPIRef }
 
