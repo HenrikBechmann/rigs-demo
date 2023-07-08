@@ -381,21 +381,26 @@ export default App
 
 // as side effect runs the requested function
 const getFunctionToastContent = (
-  functionindex:string, 
-  functionProperties:GenericObject,
+  functionSelector:string, 
+  APIFunctionArguments:GenericObject,
   functionsAPI:GenericObject) => {
 
   let codeblock
   let seeconsole = false
-  switch (functionindex) {
+  switch (functionSelector) {
     case 'goto': {
-      functionsAPI.scrollToIndex(functionProperties.scrolltoIndex)
-      codeblock = `functionsAPI.scrollToIndex(${functionProperties.scrolltoIndex})`
+      functionsAPI.scrollToIndex(APIFunctionArguments.scrolltoIndex)
+      codeblock = `functionsAPI.scrollToIndex(${APIFunctionArguments.scrolltoIndex})`
       break
     }
     case 'listsize': {
-      functionsAPI.setListsize(functionProperties.listsize)
-      codeblock = `functionsAPI.setListsize(${functionProperties.listsize})`
+      functionsAPI.setListSize(APIFunctionArguments.listsize)
+      codeblock = `functionsAPI.setListSize(${APIFunctionArguments.listsize})`
+      break
+    }
+    case 'listrange': {
+      functionsAPI.setListRange(APIFunctionArguments.listLowIndex, APIFunctionArguments.listHighIndex)
+      codeblock = `functionsAPI.setListRange(${APIFunctionArguments.listLowIndex},${APIFunctionArguments.listHighIndex})`
       break
     }
     case 'reload': {
@@ -405,42 +410,42 @@ const getFunctionToastContent = (
     }
     case 'insert': {
       const result = functionsAPI.insertIndex(
-        functionProperties.insertFrom, functionProperties.insertRange)
+        APIFunctionArguments.insertFrom, APIFunctionArguments.insertRange)
       console.log('[changeList, replaceList, removeList]',result)
-      if (functionProperties.insertRange) {
-        codeblock = `functionsAPI.insertIndex(${functionProperties.insertFrom},${functionProperties.insertRange})`
+      if (APIFunctionArguments.insertRange) {
+        codeblock = `functionsAPI.insertIndex(${APIFunctionArguments.insertFrom},${APIFunctionArguments.insertRange})`
       } else {
-        codeblock = `functionsAPI.insertIndex(${functionProperties.insertFrom})`
+        codeblock = `functionsAPI.insertIndex(${APIFunctionArguments.insertFrom})`
       }
       seeconsole = true
       break
     }
     case 'remove': {
       const result = functionsAPI.removeIndex(
-        functionProperties.removeFrom, functionProperties.removeRange)
+        APIFunctionArguments.removeFrom, APIFunctionArguments.removeRange)
       console.log('[changeList, replaceList, removeList]',result)
-      if (functionProperties.removeRange) {
-        codeblock = `functionsAPI.removeIndex(${functionProperties.removeFrom},${functionProperties.removeRange})`
+      if (APIFunctionArguments.removeRange) {
+        codeblock = `functionsAPI.removeIndex(${APIFunctionArguments.removeFrom},${APIFunctionArguments.removeRange})`
       } else {
-        codeblock = `functionsAPI.removeIndex(${functionProperties.removeFrom})`
+        codeblock = `functionsAPI.removeIndex(${APIFunctionArguments.removeFrom})`
       }
       seeconsole = true
       break
     }
     case 'move': {
       const result = functionsAPI.moveIndex(
-        functionProperties.moveTo, functionProperties.moveFrom, functionProperties.moveRange)
-      if (functionProperties.moveRange) {
-        codeblock = `functionsAPI.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom},${functionProperties.moveRange})`
+        APIFunctionArguments.moveTo, APIFunctionArguments.moveFrom, APIFunctionArguments.moveRange)
+      if (APIFunctionArguments.moveRange) {
+        codeblock = `functionsAPI.moveIndex(${APIFunctionArguments.moveTo},${APIFunctionArguments.moveFrom},${APIFunctionArguments.moveRange})`
       } else {
-        codeblock = `functionsAPI.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom})`
+        codeblock = `functionsAPI.moveIndex(${APIFunctionArguments.moveTo},${APIFunctionArguments.moveFrom})`
       }
       console.log('processedIndexList', result)
       seeconsole = true
       break
     }
     case 'remap': {
-      switch (functionProperties.remapDemo) {
+      switch (APIFunctionArguments.remapDemo) {
         case 'backwardsort':{
           remapindex_backwardsort(functionsAPI)
           break
