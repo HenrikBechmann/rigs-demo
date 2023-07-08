@@ -285,7 +285,7 @@ function App() {
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
         <DemoScroller 
-          demoContentType = {demoContentTypeSelectorRef.current} 
+          demoContentTypeSelector = {demoContentTypeSelectorRef.current} 
           demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} />
 
       </Box>
