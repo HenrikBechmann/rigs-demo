@@ -1320,10 +1320,25 @@ const Options = ({
                             id = 'changeListSizeCallback'
                             onChange = {onChangeFuncs.callbackSettings}
                         >
-                            Listsize change
+                            List size change
                         </Checkbox>
                         <FormHelperText>
                             Reports change to list size for any standard reason.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Checkbox 
+                            isChecked = {editCallbackFlags.changeListRangeCallback} 
+                            size = 'sm'
+                            mt = {2}
+                            id = 'changeListRangeCallback'
+                            onChange = {onChangeFuncs.callbackSettings}
+                        >
+                            List range change
+                        </Checkbox>
+                        <FormHelperText>
+                            Reports change to list range for any standard reason.
                         </FormHelperText>
                     </FormControl>
 
