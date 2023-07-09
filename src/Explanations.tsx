@@ -157,7 +157,8 @@ const callbacks = {
     functionsCallback, // obtain API functions
     referenceIndexCallback, // current index at the Cradle axis
     itemExceptionCallback, // information on failed getItem call
-    changeListsizeCallback, // list size has changed
+    changeListSizeCallback, // list size has changed
+    changeListRangeCallback, // list range has changed
     deleteListCallback, // items have been deleted from the cache
     repositioningFlagCallback, // repositioning has started/ended
     repositioningIndexCallback, // current virtual repositioning index
@@ -168,10 +169,10 @@ See the formal documentation (linked in the _Documentation &amp; Source Code_ se
 
 Callbacks should be written as closures something like this (example from this site's demodata module):
 ~~~
-const changeListsizeCallback = (newlistsize:number) => {
+const changeListSizeCallback = (newlistsize:number) => {
     
-    demoCallbackFlagsRef.current.changeListsizeCallback && 
-        console.log('changeListsizeCallback: newlistsize', 
+    demoCallbackFlagsRef.current.changeListSizeCallback && 
+        console.log('changeListSizeCallback: newlistsize', 
             newlistsize)
 
 }

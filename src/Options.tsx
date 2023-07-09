@@ -1314,10 +1314,10 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackFlags.changeListsizeCallback} 
+                            isChecked = {editCallbackFlags.changeListSizeCallback} 
                             size = 'sm'
                             mt = {2}
-                            id = 'changeListsizeCallback'
+                            id = 'changeListSizeCallback'
                             onChange = {onChangeFuncs.callbackSettings}
                         >
                             Listsize change

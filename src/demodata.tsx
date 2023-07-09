@@ -26,8 +26,8 @@ export const defaultCallbackFlags = {
     repositioningIndexCallback:false,
     preloadIndexCallback:false,
     itemExceptionCallback:false,
-    changeListsizeCallback:false,
-    changeIndexRangeCallback:false,
+    changeListSizeCallback:false,
+    changeListRangeCallback:false,
     deleteListCallback:false,
     repositioningFlagCallback:false,
 }
@@ -78,11 +78,19 @@ const repositioningFlagCallback = (flag:boolean) => {
 
 }
 
-const changeListsizeCallback = (newlistsize:number) => {
+const changeListSizeCallback = (newlistsize:number) => {
     
     demoCallbackFlagsRef.current.changeListsizeCallback && 
-        console.log('changeListsizeCallback: newlistsize', 
+        console.log('changeListSizeCallback: newlistsize', 
             newlistsize)
+
+}
+
+const changeListRangeCallback = (newlistrange:number) => {
+    
+    demoCallbackFlagsRef.current.changeListRangeCallback && 
+        console.log('changeListRangeCallback: newlistsize', 
+            newlistrange)
 
 }
 
@@ -116,7 +124,8 @@ const callbacks = {
     repositioningIndexCallback,
     preloadIndexCallback,
     itemExceptionCallback,
-    changeListsizeCallback,
+    changeListSizeCallback,
+    changeListRangeCallback,
     deleteListCallback,
     repositioningFlagCallback,
 }
