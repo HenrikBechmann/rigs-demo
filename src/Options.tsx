@@ -45,10 +45,10 @@ const compareValueMinValue = (compareValue:any, minValue:any) => {
 
     if (!isInteger(compareValue) || !isInteger(minValue)) return false
 
-    const testvalue = +compareValue
+    const testCompareValue = +compareValue
     const testMinValue = +minValue
 
-    return testvalue >= testMinValue
+    return testCompareValue >= testMinValue
 
 }
 
@@ -56,10 +56,10 @@ const compareValueMaxValue = (compareValue:any, maxValue:any) => {
 
     if (!isInteger(compareValue) || !isInteger(maxValue)) return false
 
-    const testvalue = +compareValue
+    const testCompareValue = +compareValue
     const testMaxValue = +maxValue
 
-    return testvalue <= testMaxValue
+    return testCompareValue <= testMaxValue
 
 }
 
@@ -110,8 +110,8 @@ const errorMessages = {
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
     startingIndex:'blank, or integer greater than or equal to listlowindex',
     startingListSize:'integer: required, with minimum 0',
-    startingLowIndex:'integer: optional, must be less than or equal to high index if present',
-    startingHighIndex:'integer: optional, must be greater than or equal to low index if present',
+    startingLowIndex:'integer: must be less than or equal to high index',
+    startingHighIndex:'integer: must be greater than or equal to low index',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
@@ -129,7 +129,7 @@ const errorMessages = {
     moveTo:'integer: required, greater than or equal to listlowindex',
 }
 
-const dependentFields = [
+const dependentOperationFields = [
     'scrolltoIndex',
     'listsize',
     'listLowIndex','listHighIndex',
@@ -339,14 +339,58 @@ const Options = ({
             return isInvalid
         },
         startingLowIndex:(value:string) => {
-            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
+
+            let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingHighIndex))
+            invalidFlags.startingLowIndex = isInvalid
+            if (!isInvalid) return (isInvalid)
+
+            isInvalid = isBlank(value) && !isBlank(editContentTypePropertiesRef.current.startingHighIndex)
+            invalidFlags.startingLowIndex = isInvalid
+            if (isInvalid) return isInvalid
+
+            isInvalid = isBlank(editContentTypePropertiesRef.current.startingHighIndex)
+            invalidFlags.startingLowIndex = isInvalid
+            if (isInvalid) return isInvalid
+
+            isInvalid = !isInteger(value)
+            invalidFlags.startingLowIndex = isInvalid
+            if (isInvalid) return isInvalid
+
+            isInvalid = !isInteger(editContentTypePropertiesRef.current.startingHighIndex)
+            invalidFlags.startingLowIndex = isInvalid
+            if (isInvalid) return isInvalid
+
+            isInvalid = !compareValueMinValue(editContentTypePropertiesRef.current.startingHighIndex,value)
             invalidFlags.startingLowIndex = isInvalid
             return isInvalid
+
         },
         startingHighIndex:(value:string) => {
-            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
+
+            let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingLowIndex))
+            invalidFlags.startingHighIndex = isInvalid
+            if (!isInvalid) return (isInvalid)
+
+            isInvalid = isBlank(value) && !isBlank(editContentTypePropertiesRef.current.startingLowIndex)
+            invalidFlags.startingHighIndex = isInvalid
+            if (isInvalid) return isInvalid
+
+            isInvalid = isBlank(editContentTypePropertiesRef.current.startingLowIndex)
+            invalidFlags.startingHighIndex = isInvalid
+            if (isInvalid) return isInvalid
+
+            isInvalid = !isInteger(value)
+            invalidFlags.startingHighIndex = isInvalid
+            if (isInvalid) return isInvalid
+
+            isInvalid = !isInteger(editContentTypePropertiesRef.current.startingLowIndex)
+            invalidFlags.startingHighIndex = isInvalid
+            if (isInvalid) return isInvalid
+
+            isInvalid = !compareValueMaxValue(editContentTypePropertiesRef.current.startingLowIndex, value)
             invalidFlags.startingHighIndex = isInvalid
             return isInvalid
+
         },
         padding:(value:string) => {
             let isInvalid = false
@@ -478,7 +522,7 @@ const Options = ({
         serviceFunctions: (service:string) => {
 
             // disable all, and reset error conditions
-            for (const field of dependentFields) {
+            for (const field of dependentOperationFields) {
                 disabledFlags[field] = true
                 if (invalidFlags[field]) {
                     invalidFlags[field] = false
@@ -677,6 +721,7 @@ const Options = ({
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editContentTypeProperties})
+            isInvalidTests.startingHighIndex(editContentTypeProperties.startingHighIndex)
         },
         startingHighIndex:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
@@ -686,7 +731,8 @@ const Options = ({
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingHighIndex:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
+            isInvalidTests.startingLowIndex(editContentTypeProperties.startingLowIndex)
         },
         padding:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
@@ -884,6 +930,7 @@ const Options = ({
 
     // ------------------------------[ render ]------------------------------
     
+
     return (
 
     <Box><VStack align = 'start' alignItems = 'stretch'>
@@ -1206,8 +1253,9 @@ const Options = ({
                     </Stack>
 
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integer. This will only apply right after a content type change. It will 
-                        set the starting list range of the session for the content type. See also
+                        Integers. Either both or neither of <i>lowIndex</i> and <i>highIndex</i> must be set.&nbsp;
+                        <i>Starting list range</i> if set will only apply right after a content type change. 
+                        It will set the starting list range of the session for the content type. See also
                         'Change virtual list range' in the 'Service functions: operations' section.
                     </Text>
 
