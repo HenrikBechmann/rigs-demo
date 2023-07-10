@@ -108,8 +108,8 @@ const errorMessages = {
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
     startingIndex:'blank, or integer greater than or equal to listlowindex',
     startingListSize:'integer: required, with minimum 0',
-    startingListLowIndex:'integer: optional',
-    startingListHighIndex:'integer: optional, must be greater than or equal to low index if present',
+    startingLowIndex:'integer: optional',
+    startingHighIndex:'integer: optional, must be greater than or equal to low index if present',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
@@ -654,6 +654,26 @@ const Options = ({
             }
             setEditContentTypeProperties({...editAPIFunctionArguments})
         },
+        startingLowIndex:(input:string) => {
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.startingListSize = input
+            if (!isInvalidTests.startingListSize(input)) {
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            }
+            setEditContentTypeProperties({...editAPIFunctionArguments})
+        },
+        startingHighIndex:(input:string) => {
+            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            editAPIFunctionArguments.startingListSize = input
+            if (!isInvalidTests.startingListSize(input)) {
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            }
+            setEditContentTypeProperties({...editAPIFunctionArguments})
+        },
         padding:(input:string) => {
             const editAPIFunctionArguments = editContentTypePropertiesRef.current
             editAPIFunctionArguments.padding = input
@@ -1121,7 +1141,60 @@ const Options = ({
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. This will only apply right after a content type change. It will 
                         set the starting list size of the session for the content type. See also
-                        'Change virtual list size' in the 'Service functions: operations' section.
+                        'Change virtual list size' in the 'Service functions: operations' section. 
+                        Ignored if 'Starting list range' is set.
+                    </Text>
+
+                    <Heading size = 'xs'>Starting list range</Heading>
+
+                    <Stack direction = {['column','row','row']}>
+                    
+                        <FormControl isInvalid = {invalidFlags.startingLowIndex} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>lowIndex:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editContentTypeProperties.startingLowIndex} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.startingLowIndex}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+
+                            <FormErrorMessage>
+                                {errorMessages.startingLowIndex}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl isInvalid = {invalidFlags.startingHighIndex} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>highIndex:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editContentTypeProperties.startingHighIndex} 
+                                    size = 'sm'
+                                    onChange = {onChangeFuncs.startingHighIndex}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+
+                            <FormErrorMessage>
+                                {errorMessages.startingHighIndex}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                    </Stack>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. This will only apply right after a content type change. It will 
+                        set the starting list range of the session for the content type. See also
+                        'Change virtual list range' in the 'Service functions: operations' section.
                     </Text>
 
                     <Heading size = 'xs'>Runway size</Heading>
