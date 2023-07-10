@@ -340,12 +340,12 @@ const Options = ({
         },
         startingLowIndex:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
-            invalidFlags.startingListSize = isInvalid
+            invalidFlags.startingLowIndex = isInvalid
             return isInvalid
         },
         startingHighIndex:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
-            invalidFlags.startingListSize = isInvalid
+            invalidFlags.startingHighIndex = isInvalid
             return isInvalid
         },
         padding:(value:string) => {
@@ -670,10 +670,10 @@ const Options = ({
         },
         startingLowIndex:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
-            editContentTypeProperties.startingHighIndex = input
-            if (!isInvalidTests.startingListSize(input)) {
+            editContentTypeProperties.startingLowIndex = input
+            if (!isInvalidTests.startingLowIndex(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingHighIndex:input}
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingLowIndex:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editContentTypeProperties})
@@ -681,7 +681,7 @@ const Options = ({
         startingHighIndex:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
             editContentTypeProperties.startingHighIndex = input
-            if (!isInvalidTests.startingListSize(input)) {
+            if (!isInvalidTests.startingHighIndex(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingHighIndex:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
