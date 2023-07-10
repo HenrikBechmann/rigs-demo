@@ -1338,7 +1338,7 @@ const Options = ({
                             List range change
                         </Checkbox>
                         <FormHelperText>
-                            Reports change to list range (lowindex -> highindex) for any standard reason.
+                            Reports change to list range (lowindex -&gt; highindex) for any standard reason.
                         </FormHelperText>
                     </FormControl>
 
