@@ -341,26 +341,21 @@ const Options = ({
         startingLowIndex:(value:string) => {
 
             let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingHighIndex))
-            invalidFlags.startingLowIndex = isInvalid
-            if (!isInvalid) return (isInvalid)
+            if (!isInvalid) {
+                invalidFlags.startingLowIndex = isInvalid
+                return (isInvalid)
+            }
 
             isInvalid = isBlank(value) && !isBlank(editContentTypePropertiesRef.current.startingHighIndex)
-            invalidFlags.startingLowIndex = isInvalid
-            if (isInvalid) return isInvalid
 
-            isInvalid = isBlank(editContentTypePropertiesRef.current.startingHighIndex)
-            invalidFlags.startingLowIndex = isInvalid
-            if (isInvalid) return isInvalid
+            !isInvalid && (isInvalid = isBlank(editContentTypePropertiesRef.current.startingHighIndex))
 
-            isInvalid = !isInteger(value)
-            invalidFlags.startingLowIndex = isInvalid
-            if (isInvalid) return isInvalid
+            !isInvalid && (isInvalid = !isInteger(value))
 
-            isInvalid = !isInteger(editContentTypePropertiesRef.current.startingHighIndex)
-            invalidFlags.startingLowIndex = isInvalid
-            if (isInvalid) return isInvalid
+            !isInvalid && (isInvalid = !isInteger(editContentTypePropertiesRef.current.startingHighIndex))
 
-            isInvalid = !compareValueMinValue(editContentTypePropertiesRef.current.startingHighIndex,value)
+            !isInvalid && (isInvalid = !compareValueMinValue(editContentTypePropertiesRef.current.startingHighIndex,value))
+
             invalidFlags.startingLowIndex = isInvalid
             return isInvalid
 
@@ -368,26 +363,21 @@ const Options = ({
         startingHighIndex:(value:string) => {
 
             let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingLowIndex))
-            invalidFlags.startingHighIndex = isInvalid
-            if (!isInvalid) return (isInvalid)
+            if (!isInvalid) {
+                invalidFlags.startingHighIndex = isInvalid
+                return (isInvalid)
+            }
 
             isInvalid = isBlank(value) && !isBlank(editContentTypePropertiesRef.current.startingLowIndex)
-            invalidFlags.startingHighIndex = isInvalid
-            if (isInvalid) return isInvalid
 
-            isInvalid = isBlank(editContentTypePropertiesRef.current.startingLowIndex)
-            invalidFlags.startingHighIndex = isInvalid
-            if (isInvalid) return isInvalid
+            !isInvalid && (isInvalid = isBlank(editContentTypePropertiesRef.current.startingLowIndex))
 
-            isInvalid = !isInteger(value)
-            invalidFlags.startingHighIndex = isInvalid
-            if (isInvalid) return isInvalid
+            !isInvalid && (isInvalid = !isInteger(value))
 
-            isInvalid = !isInteger(editContentTypePropertiesRef.current.startingLowIndex)
-            invalidFlags.startingHighIndex = isInvalid
-            if (isInvalid) return isInvalid
+            !isInvalid && (isInvalid = !isInteger(editContentTypePropertiesRef.current.startingLowIndex))
 
-            isInvalid = !compareValueMaxValue(editContentTypePropertiesRef.current.startingLowIndex, value)
+            !isInvalid && (isInvalid = !compareValueMaxValue(editContentTypePropertiesRef.current.startingLowIndex, value))
+
             invalidFlags.startingHighIndex = isInvalid
             return isInvalid
 
