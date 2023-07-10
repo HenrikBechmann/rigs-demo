@@ -80,6 +80,8 @@ const fieldSections:GenericObject = {
     cellMinWidth:'properties',
     startingIndex:'properties',
     startingListSize:'properties',
+    StartingLowIndex:'properties',
+    startingHighIndex:'properties',
     padding:'properties',
     gap:'properties',
     runwaySize:'properties',
@@ -108,7 +110,7 @@ const errorMessages = {
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
     startingIndex:'blank, or integer greater than or equal to listlowindex',
     startingListSize:'integer: required, with minimum 0',
-    startingLowIndex:'integer: optional',
+    startingLowIndex:'integer: optional, must be less than or equal to high index if present',
     startingHighIndex:'integer: optional, must be greater than or equal to low index if present',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
@@ -222,6 +224,8 @@ const Options = ({
             cellMinWidth:false,
             startingIndex:false,
             startingListSize:false,
+            startingLowIndex:false,
+            startingHighIndex:false,
             padding:false,
             gap:false,
             runwaySize:false,
@@ -330,6 +334,16 @@ const Options = ({
             return isInvalid
         },
         startingListSize:(value:string) => {
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
+            invalidFlags.startingListSize = isInvalid
+            return isInvalid
+        },
+        startingLowIndex:(value:string) => {
+            const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
+            invalidFlags.startingListSize = isInvalid
+            return isInvalid
+        },
+        startingHighIndex:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
             invalidFlags.startingListSize = isInvalid
             return isInvalid
@@ -539,10 +553,10 @@ const Options = ({
             const target = event.target as HTMLInputElement
             const value = target.checked
 
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.technical.showAxis = value
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.technical.showAxis = value
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current].technicalshowAxis = value
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
 
         // update scroller service function switch settings
@@ -587,142 +601,142 @@ const Options = ({
 
         // individual values
         orientation:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.orientation = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.orientation = input
             const newSessionProperties = 
                 {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],orientation:input}
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cellHeight:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.cellHeight = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cellHeight = input
             if (!isInvalidTests.cellHeight(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellHeight:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cellWidth:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.cellWidth = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cellWidth = input
             if (!isInvalidTests.cellWidth(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellWidth:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cellMinHeight:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.cellMinHeight = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cellMinHeight = input
             if (!isInvalidTests.cellMinHeight(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellMinHeight:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cellMinWidth:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.cellMinWidth = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cellMinWidth = input
             if (!isInvalidTests.cellMinWidth(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellMinWidth:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         startingIndex:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.startingIndex = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.startingIndex = input
             if (!isInvalidTests.startingIndex(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingIndex:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         startingListSize:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.startingListSize = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.startingListSize = input
             if (!isInvalidTests.startingListSize(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         startingLowIndex:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.startingListSize = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.startingHighIndex = input
             if (!isInvalidTests.startingListSize(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingHighIndex:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         startingHighIndex:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.startingListSize = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.startingHighIndex = input
             if (!isInvalidTests.startingListSize(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingHighIndex:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editAPIFunctionArguments})
         },
         padding:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.padding = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.padding = input
             if (!isInvalidTests.padding(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],padding:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         gap:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.gap = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.gap = input
             if (!isInvalidTests.gap(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],gap:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         runwaySize:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.runwaySize = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.runwaySize = input
             if (!isInvalidTests.runwaySize(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],runwaySize:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cache:(event:React.ChangeEvent) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
+            const editContentTypeProperties = editContentTypePropertiesRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
-            editAPIFunctionArguments.cache = value
+            editContentTypeProperties.cache = value
             const newDisplayValues = 
                 {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cache:value}
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newDisplayValues
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cacheMax:(input:string) => {
-            const editAPIFunctionArguments = editContentTypePropertiesRef.current
-            editAPIFunctionArguments.cacheMax = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cacheMax = input
             if (!isInvalidTests.cacheMax(input)) {
                 const newSessionProperties = 
                     {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cacheMax:input}
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editAPIFunctionArguments})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         scrolltoIndex:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
