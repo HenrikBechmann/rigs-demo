@@ -234,6 +234,7 @@ const simplePlaceholderMessages = {
 const simplecontentProperties = {
     startingIndex:0,
     startingListSize:300,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:150,
     cellWidth:150,
@@ -291,6 +292,7 @@ const simplePromisesScrollerStyles = {
 const simplepromisesProperties = {
     startingIndex:0,
     startingListSize:300,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:150,
     cellWidth:150,
@@ -471,6 +473,7 @@ const variablePlaceholderMessages = {
 const variablecontentProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -515,6 +518,7 @@ const getVariableItemPromise = (index:number, itemID:number) => {
 const variablepromiseProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -616,6 +620,7 @@ const getVariableItemDynamic = (index:number, itemID:number) => {
 const variabledynamicProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -762,6 +767,7 @@ const getVariableOversizedItem = (index:number, itemID:number) => {
 const variableoversizedProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:800,
     cellWidth:400,
@@ -845,7 +851,8 @@ const SubscrollerComponent = (props:any) => {
         cellWidth, 
         runwaySize, 
         startingIndex, 
-        startingListSize, 
+        startingListSize,
+        startingListRange, 
         getItem, 
         cache,
         layout,
@@ -894,6 +901,7 @@ const SubscrollerComponent = (props:any) => {
                 cellWidth = {cellWidth}
                 runwaySize = {runwaySize}
                 startingListSize = {startingListSize}
+                startingListRange = {startingListRange}
                 startingIndex = {startingIndex}
                 getItem = {getItem}
                 callbacks = {null}
@@ -970,6 +978,7 @@ const nestedVariableSubscrollerProperties = {
 
     startingIndex:0,
     startingListSize:100,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:300,
     cellWidth:250,
@@ -1019,6 +1028,7 @@ const nestedUniformSubscrollerProperties = {
 
     startingIndex:0,
     startingListSize:100,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:40,
     cellWidth:250,
@@ -1064,6 +1074,7 @@ const nestedScrollerStyles = {
 const nestedcontentProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:400,
     cellWidth:300,
@@ -1111,6 +1122,7 @@ const getNestedSubscrollerPromise = (index:number, itemID:number) => {
 const nestedpromisesProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:400,
     cellWidth:300,
@@ -1157,6 +1169,7 @@ const SharedCacheComponent = (props:any) => {
         runwaySize, 
         startingIndex, 
         startingListSize, 
+        startingListRange,
         getItem, 
         cache,
         layout,
@@ -1205,6 +1218,7 @@ const SharedCacheComponent = (props:any) => {
                 cellWidth = {cellWidth}
                 runwaySize = {runwaySize}
                 startingListSize = {startingListSize}
+                startingListRange = {startingListRange}
                 startingIndex = {startingIndex}
                 getItem = {getItem}
                 callbacks = {null}
@@ -1245,6 +1259,7 @@ const sharedcacheScrollerStyles = {
 const sharedcacheProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:400,
     cellWidth:300,
