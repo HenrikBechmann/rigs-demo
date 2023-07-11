@@ -145,7 +145,24 @@ function App() {
 
   const invalidSectionsRef = useRef<any>(null)
 
-  // buttons
+  // ---- map properties
+  const mapDemoToSessionProperties = (demoProperties:GenericObject, typeSelector:string) => {
+
+    const properties:GenericObject = demoProperties
+
+    return properties
+
+  }
+
+  const mapSessionToDemoProperties = (sessionProperties:GenericObject, typeSelector:string) => {
+
+    const properties:GenericObject = sessionProperties
+
+    return properties
+
+  }
+
+  // ---- buttons resonse
   const showOptions = () => {
 
     sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
@@ -156,14 +173,6 @@ function App() {
     sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
 
     onOpenOptions()
-
-  }
-
-  const mapDemoToSessionProperties = (demoProperties:GenericObject, typeSelector:string) => {
-
-    const properties:GenericObject = demoProperties
-
-    return properties
 
   }
 
@@ -193,14 +202,6 @@ function App() {
     }
 
     setDemoState('apply')
-
-  }
-
-  const mapSessionToDemoProperties = (sessionProperties:GenericObject, typeSelector:string) => {
-
-    const properties:GenericObject = sessionProperties
-
-    return properties
 
   }
 
