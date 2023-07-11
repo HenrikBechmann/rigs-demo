@@ -1,5 +1,8 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
 
+// TODO: update functionsAPI with change of contentType selection?
+// TODO: map properties from session to edit here
+
 import React, {useState, useRef, useEffect} from 'react'
 
 import {
