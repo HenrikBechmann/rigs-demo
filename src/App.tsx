@@ -150,7 +150,8 @@ function App() {
 
     sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
     sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
-    sessionAllContentTypePropertiesRef.current = {...demoAllContentTypePropertiesRef.current}
+    sessionAllContentTypePropertiesRef.current = 
+      mapDemoToSessionProperties({...demoAllContentTypePropertiesRef.current},demoContentTypeSelectorRef.current)
     sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
     sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
 
@@ -158,11 +159,20 @@ function App() {
 
   }
 
+  const mapDemoToSessionProperties = (demoProperties:GenericObject, typeSelector:string) => {
+
+    const properties:GenericObject = demoProperties
+
+    return properties
+
+  }
+
   const applyOptions = () => {
 
     demoContentTypeSelectorRef.current = sessionContentTypeSelectorRef.current
     demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
-    demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
+    demoAllContentTypePropertiesRef.current = 
+      mapSessionToDemoProperties({...sessionAllContentTypePropertiesRef.current},sessionContentTypeSelectorRef.current)
     demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
     demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
 
@@ -183,6 +193,14 @@ function App() {
     }
 
     setDemoState('apply')
+
+  }
+
+  const mapSessionToDemoProperties = (sessionProperties:GenericObject, typeSelector:string) => {
+
+    const properties:GenericObject = sessionProperties
+
+    return properties
 
   }
 
