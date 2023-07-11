@@ -162,7 +162,7 @@ function App() {
 
   }
 
-  // ---- buttons resonse
+  // ---- buttons response
   const showOptions = () => {
 
     sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
