@@ -83,7 +83,7 @@ const fieldSections:GenericObject = {
     cellMinWidth:'properties',
     startingIndex:'properties',
     startingListSize:'properties',
-    StartingLowIndex:'properties',
+    startingLowIndex:'properties',
     startingHighIndex:'properties',
     padding:'properties',
     gap:'properties',
@@ -164,9 +164,8 @@ const Options = ({
     // inherited scroller service functions
     const functionsAPI = functionsAPIRef.current
 
-    const 
-        indexRangeRef = useRef([]),
-        scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+    const indexRangeRef = useRef([])
+    const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
     
     indexRangeRef.current = scrollerProps.virtualListProps.range
     const [listlowindex, listhighindex] = indexRangeRef.current
