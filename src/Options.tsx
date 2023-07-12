@@ -142,6 +142,7 @@ const dependentOperationFields = [
     'remapDemo',
 ]
 
+// ----------------------------------------------------
 // Options component; about 40 fields
 const Options = ({
 
@@ -163,8 +164,10 @@ const Options = ({
     // inherited scroller service functions
     const functionsAPI = functionsAPIRef.current
 
-    const indexRangeRef = useRef([])
-    const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+    const 
+        indexRangeRef = useRef([]),
+        scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+    
     indexRangeRef.current = scrollerProps.virtualListProps.range
     const [listlowindex, listhighindex] = indexRangeRef.current
 
@@ -268,14 +271,6 @@ const Options = ({
         return sectionSet
 
     }
-
-    useEffect(()=>{
-
-        optionsAPIRef.current = {
-            getInvalidSections
-        }
-        
-    },[])
 
     // scroller function switch settings
     const functionEnabledSettingsRef = useRef<GenericObject>({
@@ -490,101 +485,8 @@ const Options = ({
         },
     }
 
-    const updateDependenciesFunctions = {
-        contentType:(value:string) => {
-
-            let disabled
-            if (['variablecontent','variablepromises','variabledynamic','variableoversized'].includes(value)) {
-
-                disabled = false
-                isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
-                isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
-
-            } else {
-
-                disabled = true
-                invalidFlags.cellMinHeight = 
-                    invalidFlags.cellMinWidth = false
-
-            }
-
-            disabledFlags.cellMinHeight =
-                disabledFlags.cellMinWidth = disabled
-
-        },
-        serviceFunctions: (service:string) => {
-
-            // disable all, and reset error conditions
-            for (const field of dependentOperationFields) {
-                disabledFlags[field] = true
-                if (invalidFlags[field]) {
-                    invalidFlags[field] = false
-                    editAPIFunctionArgumentsRef.current[field] = sessionAPIFunctionArgumentsRef.current[field]
-                }
-            }
-            if (service) {
-                switch (service) {
-                    case 'goto':{
-                        disabledFlags.scrolltoIndex = false
-                        isInvalidTests.scrolltoIndex(editAPIFunctionArgumentsRef.current.scrolltoIndex)
-                        break
-                    }
-                    case 'listsize':{
-                        disabledFlags.listsize = false
-                        isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
-                        break
-                    }
-                    case 'listrange':{
-                        disabledFlags.listLowIndex = false
-                        disabledFlags.listHighIndex = false
-                        isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
-                        isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
-                        break
-                    }
-                    case 'reload':{
-
-                        break
-                    }
-                    case 'insert':{
-                        disabledFlags.insertFrom = false
-                        disabledFlags.insertRange = false
-                        isInvalidTests.insertFrom(editAPIFunctionArgumentsRef.current.insertFrom)
-                        isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
-                        break
-                    }
-                    case 'remove':{
-                        disabledFlags.removeFrom = false
-                        disabledFlags.removeRange = false
-                        isInvalidTests.removeFrom(editAPIFunctionArgumentsRef.current.removeFrom)
-                        isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
-                        break
-                    }
-                    case 'move':{
-                        disabledFlags.moveFrom = false
-                        disabledFlags.moveRange = false
-                        disabledFlags.moveTo = false
-                        isInvalidTests.moveFrom(editAPIFunctionArgumentsRef.current.moveFrom)
-                        isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
-                        isInvalidTests.moveTo(editAPIFunctionArgumentsRef.current.moveTo)
-                        break
-                    }
-                    case 'remap':{
-                        disabledFlags.remapDemo = false
-                        break
-                    }
-                    case 'clear':{
-
-                        break
-                    }
-                }
-            }
-            setEditAPIFunctionArguments({...editAPIFunctionArgumentsRef.current})
-        }
-
-    }
-
     // display on change functions
-    const onChangeFuncs = {
+    const onChangeFunctions = {
 
         showAxis:(event:React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
@@ -875,7 +777,7 @@ const Options = ({
         },
     }
 
-    const serviceFuncs = {
+    const serviceFunctions = {
         getCacheIndexMap: () => {
             console.log('cacheIndexMap =',functionsAPI.getCacheIndexMap())
         },
@@ -891,6 +793,107 @@ const Options = ({
     }
 
     // --------------------------[ state change control ]------------------
+
+    useEffect(()=>{
+
+        optionsAPIRef.current = {
+            getInvalidSections
+        }
+        
+    },[])
+
+    const updateDependenciesFunctions = {
+        contentType:(value:string) => {
+
+            let disabled
+            if (['variablecontent','variablepromises','variabledynamic','variableoversized'].includes(value)) {
+
+                disabled = false
+                isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
+                isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
+
+            } else {
+
+                disabled = true
+                invalidFlags.cellMinHeight = 
+                    invalidFlags.cellMinWidth = false
+
+            }
+
+            disabledFlags.cellMinHeight =
+                disabledFlags.cellMinWidth = disabled
+
+        },
+        serviceFunctions: (service:string) => {
+
+            // disable all, and reset error conditions
+            for (const field of dependentOperationFields) {
+                disabledFlags[field] = true
+                if (invalidFlags[field]) {
+                    invalidFlags[field] = false
+                    editAPIFunctionArgumentsRef.current[field] = sessionAPIFunctionArgumentsRef.current[field]
+                }
+            }
+            if (service) {
+                switch (service) {
+                    case 'goto':{
+                        disabledFlags.scrolltoIndex = false
+                        isInvalidTests.scrolltoIndex(editAPIFunctionArgumentsRef.current.scrolltoIndex)
+                        break
+                    }
+                    case 'listsize':{
+                        disabledFlags.listsize = false
+                        isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
+                        break
+                    }
+                    case 'listrange':{
+                        disabledFlags.listLowIndex = false
+                        disabledFlags.listHighIndex = false
+                        isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
+                        isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+                        break
+                    }
+                    case 'reload':{
+
+                        break
+                    }
+                    case 'insert':{
+                        disabledFlags.insertFrom = false
+                        disabledFlags.insertRange = false
+                        isInvalidTests.insertFrom(editAPIFunctionArgumentsRef.current.insertFrom)
+                        isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
+                        break
+                    }
+                    case 'remove':{
+                        disabledFlags.removeFrom = false
+                        disabledFlags.removeRange = false
+                        isInvalidTests.removeFrom(editAPIFunctionArgumentsRef.current.removeFrom)
+                        isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
+                        break
+                    }
+                    case 'move':{
+                        disabledFlags.moveFrom = false
+                        disabledFlags.moveRange = false
+                        disabledFlags.moveTo = false
+                        isInvalidTests.moveFrom(editAPIFunctionArgumentsRef.current.moveFrom)
+                        isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
+                        isInvalidTests.moveTo(editAPIFunctionArgumentsRef.current.moveTo)
+                        break
+                    }
+                    case 'remap':{
+                        disabledFlags.remapDemo = false
+                        break
+                    }
+                    case 'clear':{
+
+                        break
+                    }
+                }
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArgumentsRef.current})
+        }
+
+    }
 
     useEffect(()=>{
         switch (optionsState) {
@@ -919,7 +922,7 @@ const Options = ({
                 break
             }
         }
-    },[optionsState])
+    },[optionsState, updateDependenciesFunctions])
 
     // ------------------------------[ render ]------------------------------
     
@@ -935,7 +938,7 @@ const Options = ({
             <Select 
                 size = 'md'
                 value = {editContentTypeSelector} 
-                onChange = {onChangeFuncs.contentType}
+                onChange = {onChangeFunctions.contentType}
             >
                 <option value="simplecontent">Simple uniform content</option>
                 <option value="simplepromises">Simple uniform promises</option>
@@ -962,7 +965,7 @@ const Options = ({
 
             <RadioGroup 
                 value = {editContentTypeProperties.orientation} 
-                onChange = {onChangeFuncs.orientation}
+                onChange = {onChangeFunctions.orientation}
             >
                 <HStack align = 'center'>
                     <Radio value = 'vertical'>Vertical</Radio>
@@ -1001,7 +1004,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellHeight} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.cellHeight}
+                                    onChange = {onChangeFunctions.cellHeight}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1020,7 +1023,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellWidth} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.cellWidth}
+                                    onChange = {onChangeFunctions.cellWidth}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1053,7 +1056,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellMinHeight} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.cellMinHeight}
+                                    onChange = {onChangeFunctions.cellMinHeight}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1074,7 +1077,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellMinWidth} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.cellMinWidth}
+                                    onChange = {onChangeFunctions.cellMinWidth}
                                     clampValueOnBlur = {false}
                                 >
                                         <NumberInputField border = '2px' />
@@ -1103,7 +1106,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.padding} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.padding}
+                                onChange = {onChangeFunctions.padding}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1122,7 +1125,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.gap} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.gap}
+                                onChange = {onChangeFunctions.gap}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1151,7 +1154,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.startingIndex} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.startingIndex}
+                                onChange = {onChangeFunctions.startingIndex}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1180,7 +1183,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.startingListSize} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.startingListSize}
+                                onChange = {onChangeFunctions.startingListSize}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1211,7 +1214,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.startingLowIndex} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.startingLowIndex}
+                                    onChange = {onChangeFunctions.startingLowIndex}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1231,7 +1234,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.startingHighIndex} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.startingHighIndex}
+                                    onChange = {onChangeFunctions.startingHighIndex}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1263,7 +1266,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.runwaySize} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.runwaySize}
+                                onChange = {onChangeFunctions.runwaySize}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1289,7 +1292,7 @@ const Options = ({
                             value = {editContentTypeProperties.cache} 
                             flexGrow = {.8} 
                             size = 'sm'
-                            onChange = {onChangeFuncs.cache}
+                            onChange = {onChangeFunctions.cache}
                         >
                             <option value="cradle">cradle</option>
                             <option value="keepload">keep load</option>
@@ -1305,7 +1308,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.cacheMax} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.cacheMax}
+                                onChange = {onChangeFunctions.cacheMax}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1331,7 +1334,7 @@ const Options = ({
                             isChecked = {editContentTypeProperties.technical.showAxis} 
                             size = 'sm'
                             mt = {2}
-                            onChange = {onChangeFuncs.showAxis}
+                            onChange = {onChangeFunctions.showAxis}
                         >
                             Show axis
                         </Checkbox>
@@ -1370,7 +1373,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'referenceIndexCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Reference index
                         </Checkbox>
@@ -1385,7 +1388,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'preloadIndexCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Preload Index
                         </Checkbox>
@@ -1400,7 +1403,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'itemExceptionCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Item Exceptions
                         </Checkbox>
@@ -1415,7 +1418,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningFlagCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             isRepositioning Notification
                         </Checkbox>
@@ -1431,7 +1434,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningIndexCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Repositioning Index
                         </Checkbox>
@@ -1446,7 +1449,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'changeListSizeCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             List size change
                         </Checkbox>
@@ -1461,7 +1464,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'changeListRangeCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             List range change
                         </Checkbox>
@@ -1476,7 +1479,7 @@ const Options = ({
                             size = 'sm'
                             mt = {2}
                             id = 'deleteListCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Deleted List
                         </Checkbox>
@@ -1519,7 +1522,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFuncs.getCacheIndexMap}
+                            onClick = {serviceFunctions.getCacheIndexMap}
                         >
                                 Get Cache Index Map
                         </Button>
@@ -1534,7 +1537,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFuncs.getCacheItemMap}
+                            onClick = {serviceFunctions.getCacheItemMap}
                         >
                             Get Cache Item Map
                         </Button>
@@ -1549,7 +1552,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFuncs.getCradleIndexMap}
+                            onClick = {serviceFunctions.getCradleIndexMap}
                         >
                             Get Cradle Index Map
                         </Button>
@@ -1600,7 +1603,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editAPIFunctionArguments.scrolltoIndex} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.scrolltoIndex}
+                                    onChange = {onChangeFunctions.scrolltoIndex}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1618,7 +1621,7 @@ const Options = ({
 
                                 <Switch 
                                     isChecked = {functionEnabledSettings.goto} 
-                                    onChange = {onChangeFuncs.onChangeEnabler} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
                                     id='goto' 
                                 />
                             </InputGroup>
@@ -1647,7 +1650,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editAPIFunctionArguments.listsize} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.listsize}
+                                    onChange = {onChangeFunctions.listsize}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1665,7 +1668,7 @@ const Options = ({
 
                                 <Switch 
                                     isChecked = {functionEnabledSettings.listsize} 
-                                    onChange = {onChangeFuncs.onChangeEnabler} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
                                     id='listsize' 
                                 />
                             </InputGroup>
@@ -1691,7 +1694,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editAPIFunctionArguments.listLowIndex} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.listLowIndex}
+                                    onChange = {onChangeFunctions.listLowIndex}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1712,7 +1715,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editAPIFunctionArguments.listHighIndex} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.listHighIndex}
+                                    onChange = {onChangeFunctions.listHighIndex}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1732,7 +1735,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.listrange} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='listrange' 
                             />
                         </InputGroup>
@@ -1757,7 +1760,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editAPIFunctionArguments.insertFrom} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.insertFrom}
+                                    onChange = {onChangeFunctions.insertFrom}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1778,7 +1781,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editAPIFunctionArguments.insertRange} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.insertRange}
+                                    onChange = {onChangeFunctions.insertRange}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1798,7 +1801,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.insert} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='insert' 
                             />
                         </InputGroup>
@@ -1823,7 +1826,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editAPIFunctionArguments.removeFrom} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.removeFrom}
+                                    onChange = {onChangeFunctions.removeFrom}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1844,7 +1847,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editAPIFunctionArguments.removeRange} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.removeRange}
+                                    onChange = {onChangeFunctions.removeRange}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1864,7 +1867,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.remove} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='remove' 
                             />
                         </InputGroup>
@@ -1889,7 +1892,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editAPIFunctionArguments.moveFrom} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.moveFrom}
+                                onChange = {onChangeFunctions.moveFrom}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1910,7 +1913,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editAPIFunctionArguments.moveRange} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.moveRange}
+                                onChange = {onChangeFunctions.moveRange}
                                 clampValueOnBlur = {false}
                            >
                                 <NumberInputField border = '2px' />
@@ -1933,7 +1936,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editAPIFunctionArguments.moveTo} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.moveTo}
+                                onChange = {onChangeFunctions.moveTo}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1951,7 +1954,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.move} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='move' 
                             />
                         </InputGroup>
@@ -1970,7 +1973,7 @@ const Options = ({
                         <Select
                             value = {editAPIFunctionArguments.remapDemo} 
                             size = 'sm'
-                            onChange = {onChangeFuncs.remapDemo}
+                            onChange = {onChangeFunctions.remapDemo}
                         >
                             <option value="backwardsort">Backward sort</option>
                             <option value="replaceitems">Replace items</option>
@@ -1984,7 +1987,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.remap} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='remap' 
                             />
                         </InputGroup>
@@ -2007,7 +2010,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.reload} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='reload' 
                             />
                         </InputGroup>
@@ -2024,7 +2027,7 @@ const Options = ({
                             
                             <Switch 
                                 isChecked = {functionEnabledSettings.clear} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='clear' 
                             />
                         </InputGroup>
