@@ -165,13 +165,10 @@ const Options = ({
     const functionsAPI = functionsAPIRef.current
 
     const indexRangeRef = useRef([])
-    const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
-    
-    indexRangeRef.current = scrollerProps.virtualListProps.range
     const [listlowindex, listhighindex] = indexRangeRef.current
 
     // component state
-    const [optionsState, setOptionsState] = useState('initializedependencies')
+    const [optionsState, setOptionsState] = useState('setup')
 
     // simple values
     const [editContentTypeSelector, setEditContentTypeSelector] = useState(sessionContentTypeSelectorRef.current)
@@ -512,7 +509,7 @@ const Options = ({
                     ''
             sessionOperationFunctionSelectorRef.current = opfunc
             setEditOperationFunctionSelector(opfunc)
-            setOptionsState('preparetoupdatefunctiondependencies')
+            setOptionsState('preparenewoperationfunctionselector')
         },
 
         // contentType global switch
@@ -524,7 +521,7 @@ const Options = ({
             setEditContentTypeProperties({...sessionAllContentTypePropertiesRef.current[value]})
             sessionContentTypeSelectorRef.current = value
             setEditContentTypeSelector(value)
-            setOptionsState('preparetoupdatecontentdependencies')
+            setOptionsState('preparenewcontenttype')
         },
 
         // callback handling
@@ -896,26 +893,30 @@ const Options = ({
 
     useEffect(()=>{
         switch (optionsState) {
-            case 'initializedependencies': {
+            case 'setup': {
+                const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+                indexRangeRef.current = scrollerProps.virtualListProps.range
+
                 updateDependenciesFunctions.contentType(sessionContentTypeSelectorRef.current)
                 updateDependenciesFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
                 setOptionsState('ready')
                 break
             }
-            case 'preparetoupdatecontentdependencies': {
-                setOptionsState('updatecontentdependencies')
+
+            case 'preparenewcontenttype': {
+                setOptionsState('updatenewcontenttype')
                 break
             }
-            case 'updatecontentdependencies': {
+            case 'updatenewcontenttype': {
                 updateDependenciesFunctions.contentType(sessionContentTypeSelectorRef.current)
                 setOptionsState('ready')
                 break
             }
-            case 'preparetoupdatefunctiondependencies': {
-                setOptionsState('updatefunctiondependencies')
+            case 'preparenewoperationfunctionselector': {
+                setOptionsState('updatenewoperationfunctionselector')
                 break
             }
-            case 'updatefunctiondependencies': {
+            case 'updatenewoperationfunctionselector': {
                 updateDependenciesFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
                 setOptionsState('ready')
                 break
