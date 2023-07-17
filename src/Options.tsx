@@ -164,7 +164,7 @@ const Options = ({
     // inherited scroller service functions
     const functionsAPI = functionsAPIRef.current
 
-    const indexRangeRef = useRef([])
+    const indexRangeRef = useRef<number[]>([])
     const [listlowindex, listhighindex] = indexRangeRef.current
 
     // component state
@@ -509,7 +509,7 @@ const Options = ({
                     ''
             sessionOperationFunctionSelectorRef.current = opfunc
             setEditOperationFunctionSelector(opfunc)
-            setOptionsState('preparenewoperationfunctionselector')
+            setOptionsState('preparenewopfunctionselector')
         },
 
         // contentType global switch
@@ -788,16 +788,6 @@ const Options = ({
         }
     }
 
-    // --------------------------[ state change control ]------------------
-
-    useEffect(()=>{
-
-        optionsAPIRef.current = {
-            getInvalidSections
-        }
-        
-    },[])
-
     const updateDependenciesFunctions = {
         contentType:(value:string) => {
 
@@ -891,9 +881,32 @@ const Options = ({
 
     }
 
+    const updateIndexRange = () => {
+
+        const contentTypeProperties = 
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current]
+        if (contentTypeProperties.startingListRange) {
+            indexRangeRef.current = contentTypeProperties.startingListRange
+        } else {
+            indexRangeRef.current = [0, contentTypeProperties.startingListSize]
+        }
+
+    }
+
+    // --------------------------[ state change control ]------------------
+
+    useEffect(()=>{
+
+        optionsAPIRef.current = {
+            getInvalidSections
+        }
+        
+    },[])
+
     useEffect(()=>{
         switch (optionsState) {
             case 'setup': {
+
                 const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
                 indexRangeRef.current = scrollerProps.virtualListProps.range
 
@@ -901,25 +914,34 @@ const Options = ({
                 updateDependenciesFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
                 setOptionsState('ready')
                 break
+
             }
 
             case 'preparenewcontenttype': {
-                setOptionsState('updatenewcontenttype')
+                updateIndexRange()
+                setOptionsState('newcontenttype')
                 break
+
             }
-            case 'updatenewcontenttype': {
+            case 'newcontenttype': {
+
                 updateDependenciesFunctions.contentType(sessionContentTypeSelectorRef.current)
                 setOptionsState('ready')
                 break
+
             }
-            case 'preparenewoperationfunctionselector': {
-                setOptionsState('updatenewoperationfunctionselector')
+            case 'preparenewopfunctionselector': {
+
+                setOptionsState('newopfunctionselector')
                 break
+
             }
-            case 'updatenewoperationfunctionselector': {
+            case 'newopfunctionselector': {
+
                 updateDependenciesFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
                 setOptionsState('ready')
                 break
+
             }
         }
     },[optionsState, updateDependenciesFunctions])
