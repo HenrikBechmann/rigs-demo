@@ -473,7 +473,7 @@ const variablePlaceholderMessages = {
 const variablecontentProperties = {
     startingIndex:0,
     startingListSize:200,
-    startingListRange:[-60,60],
+    // startingListRange:[-60,60],
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,

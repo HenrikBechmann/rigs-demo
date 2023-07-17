@@ -167,6 +167,8 @@ const Options = ({
     const indexRangeRef = useRef<number[]>([])
     const [listlowindex, listhighindex] = indexRangeRef.current
 
+    const originalContentTypeSelectorRef = useRef(sessionContentTypeSelectorRef.current)
+
     // component state
     const [optionsState, setOptionsState] = useState('setup')
 
@@ -882,6 +884,15 @@ const Options = ({
     }
 
     const updateIndexRange = () => {
+
+        if (originalContentTypeSelectorRef.current == sessionContentTypeSelectorRef.current) {
+
+            const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+            indexRangeRef.current = scrollerProps.virtualListProps.range
+
+            return
+
+        }
 
         const contentTypeProperties = 
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current]
