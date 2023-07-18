@@ -42,6 +42,8 @@ const defaultAPIFunctionArguments:GenericObject = {
   listsize:'',
   listLowIndex:'',
   listHighIndex:'',
+  prependCount:'',
+  appendCount:'',
   insertFrom:'',
   insertRange:'',
   removeFrom:'',
@@ -401,6 +403,16 @@ const getFunctionToastContent = (
     case 'listrange': {
       functionsAPI.setListRange([APIFunctionArguments.listLowIndex, APIFunctionArguments.listHighIndex])
       codeblock = `functionsAPI.setListRange([${APIFunctionArguments.listLowIndex},${APIFunctionArguments.listHighIndex}])`
+      break
+    }
+    case 'prependCount': {
+      functionsAPI.prependIndexCount(APIFunctionArguments.prependCount)
+      codeblock = `functionsAPI.prependIndexCount([${APIFunctionArguments.prependCount})`
+      break
+    }
+    case 'appendCount': {
+      functionsAPI.appendIndexCount(APIFunctionArguments.appendCount)
+      codeblock = `functionsAPI.appendIndexCount([${APIFunctionArguments.appendCount})`
       break
     }
     case 'reload': {

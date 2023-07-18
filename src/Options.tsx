@@ -91,6 +91,8 @@ const fieldSections:GenericObject = {
     cacheMax:'properties',
     scrolltoIndex:'operations',
     listsize:'operations',
+    prependCount:'operations',
+    appendCount:'operations',
     listLowIndex:'operations',
     listHighIndex:'operations',
     insertFrom:'operations',
@@ -123,6 +125,8 @@ const errorMessages = {
     listsize:'integer: required, greater than or equal to 0',
     listLowIndex:'integer: required',
     listHighIndex:'integer:required, greater than or equal to low index',
+    prependCount:'integer:required, greater than or equal to 0',
+    appendCount:'integer:required, greater than or equal to 0',
     insertFrom:'integer: required, greater than or equal to listlowindex',
     insertRange:'blank, or integer greater than or equal to the "from" index',
     removeFrom:'integer: required, greater than or equal to listlowindex',
@@ -135,6 +139,7 @@ const errorMessages = {
 const dependentOperationFields = [
     'scrolltoIndex',
     'listsize',
+    'prependCount','appendCount',
     'listLowIndex','listHighIndex',
     'insertFrom', 'insertRange',
     'removeFrom', 'removeRange',
@@ -204,6 +209,8 @@ const Options = ({
             listsize:false,
             listLowIndex:false,
             listHighIndex:false,
+            prependCount:false,
+            appendCount:false,
             insertFrom:false,
             insertRange:false,
             removeFrom:false,
@@ -239,6 +246,8 @@ const Options = ({
             listsize:false,
             listLowIndex:false,
             listHighIndex:false,
+            prependCount:false,
+            appendCount:false,
             insertFrom:false,
             insertRange:false,
             removeFrom:false,
@@ -274,6 +283,8 @@ const Options = ({
     const functionEnabledSettingsRef = useRef<GenericObject>({
         goto:false,
         listsize:false,
+        prependCount:false,
+        appendCount:false,
         listrange:false,
         reload:false,
         insert:false,
@@ -432,6 +443,16 @@ const Options = ({
                 isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.listLowIndex)
             }
             invalidFlags.listHighIndex = isInvalid
+            return isInvalid
+        },
+        prependCount:(value:string) => {
+            const isInvalid = ((!isInteger(value)) || (!compareValueMinValue(value, 0)) )
+            invalidFlags.prependCount = isInvalid
+            return isInvalid
+        },
+        appendCount:(value:string) => {
+            const isInvalid = ((!isInteger(value)) || (!compareValueMinValue(value, 0)) )
+            invalidFlags.appendCount = isInvalid
             return isInvalid
         },
         insertFrom:(value:string) => {
@@ -709,6 +730,22 @@ const Options = ({
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
+        prependCount:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.prependCount = input
+            if (!isInvalidTests.prependCount(input)) {
+                sessionAPIFunctionArgumentsRef.current.prependCount = input
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
+        appendCount:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.appendCount = input
+            if (!isInvalidTests.appendCount(input)) {
+                sessionAPIFunctionArgumentsRef.current.appendCount = input
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
         insertFrom:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             editAPIFunctionArguments.insertFrom = input
@@ -832,6 +869,16 @@ const Options = ({
                     case 'listsize':{
                         disabledFlags.listsize = false
                         isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
+                        break
+                    }
+                    case 'prependCount':{
+                        disabledFlags.prependCount = false
+                        isInvalidTests.prependCount(editAPIFunctionArgumentsRef.current.prependCount)
+                        break
+                    }
+                    case 'appendCount':{
+                        disabledFlags.appendCount = false
+                        isInvalidTests.appendCount(editAPIFunctionArgumentsRef.current.appendCount)
                         break
                     }
                     case 'listrange':{
@@ -1777,6 +1824,94 @@ const Options = ({
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integers. Set low and high indexes. high index must be greater than or equal to  
                         low index.
+                    </Text>
+
+                    <Heading size = 'xs'>prepend index count to list range</Heading>
+
+                    <HStack alignItems = 'baseline'>
+
+                        <FormControl 
+                            isDisabled = {disabledFlags.prependCount}
+                            isInvalid = {invalidFlags.prependCount} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>count:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editAPIFunctionArguments.prependCount} 
+                                    size = 'sm'
+                                    onChange = {onChangeFunctions.prependCount}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.prependCount}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+
+                                <FormLabel htmlFor='prependCount' fontSize = 'sm'>Enable</FormLabel>
+
+                                <Switch 
+                                    isChecked = {functionEnabledSettings.prependCount} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
+                                    id='prependCount' 
+                                />
+                            </InputGroup>
+                        </FormControl>
+
+                    </HStack>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. Prepend indexes to the virtual list.
+                    </Text>
+
+                    <Heading size = 'xs'>append index count to list range</Heading>
+
+                    <HStack alignItems = 'baseline'>
+
+                        <FormControl 
+                            isDisabled = {disabledFlags.appendCount}
+                            isInvalid = {invalidFlags.appendCount} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>count:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editAPIFunctionArguments.appendCount} 
+                                    size = 'sm'
+                                    onChange = {onChangeFunctions.appendCount}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.appendCount}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+
+                                <FormLabel htmlFor='appendCount' fontSize = 'sm'>Enable</FormLabel>
+
+                                <Switch 
+                                    isChecked = {functionEnabledSettings.appendCount} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
+                                    id='appendCount' 
+                                />
+                            </InputGroup>
+                        </FormControl>
+
+                    </HStack>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. Append indexes to the virtual list.
                     </Text>
 
                     <Heading size = 'xs'>Insert indexes</Heading>
