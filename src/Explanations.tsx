@@ -253,14 +253,14 @@ can also be truncated by returning \`null\` from a \`getItem\` call. This will c
 index value of the \`getItem\` call. Finally, the list size may be changed as a side effect of cache management calls 
 listed below.
 
-\`setListRange\` optionally takes an array of two numbers \`[lowindex, highindex]\`, being the \`lowindex\` and 
+\`setListRange(...)\` optionally takes an array of two numbers \`[lowindex, highindex]\`, being the \`lowindex\` and 
 \`highindex\` of the virtual list. \`lowindex\` must be <= \`highindex\`, but both can be positive or negative 
 integers. \`setListRange\` if present supercedes \`startingListSize\`. If \`setListRange\` is given an empty array 
 (\`[]\`) it creates an empty virtual list.
 
-\`prependIndexCount\` takes a positive integer for the number of indexes to add to the start of the virtual list.
+\`prependIndexCount(...)\` takes a positive integer for the number of indexes to add to the start of the virtual list.
 
-\`appendIndexCount\` takes a positive integer for the number of indexes to add to the end of the virtual list.
+\`appendIndexCount(...)\` takes a positive integer for the number of indexes to add to the end of the virtual list.
 
 The following cache operation functions are provided for advanced interaction with the RIGS cache.
 
