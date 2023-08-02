@@ -187,7 +187,7 @@ const simpleComponentStyles = {
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
-    const originalindexRef = useRef(props.index)
+    // const originalindexRef = useRef(props.index)
 
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
@@ -1271,7 +1271,7 @@ const sharedcacheProperties = {
     layout: 'uniform',
 
     getItem:getSharedCacheSubscroller,
-    styles:nestedScrollerStyles,
+    styles:sharedcacheScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical:{

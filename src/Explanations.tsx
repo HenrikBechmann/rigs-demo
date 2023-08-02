@@ -203,7 +203,7 @@ directly by the demo).
 const snapshots_md = `
 Snapshots provide support for advanced interactions with the RIGS cache. As the name suggests,
 they provide snapshots of the contents of the cache (containing both the visible and invisible content) and the 
-\`Cradle\` (containing the visible user content). \'getPropertiesSnapshot\' gets the current properties of the scroller.'
+\`Cradle\` (containing the visible user content). \`getPropertiesSnapshot\` gets the current properties of the scroller.'
 
 Keep in mind that RIGS maintains a sparse memory cache in which there
 is no guarantee of entries being contiguous. The \`Cradle\` on the other hand is guaranteed to hold contiguous

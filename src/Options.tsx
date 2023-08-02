@@ -40,7 +40,7 @@ const isInteger = (value:any) => {
 
     const test = +value
 
-    return (isNumber(value) && (Math.floor(test) == test))
+    return (isNumber(value) && (Math.floor(test) === test))
 
 }
 
@@ -932,7 +932,7 @@ const Options = ({
 
     const updateIndexRange = () => {
 
-        if (originalContentTypeSelectorRef.current == sessionContentTypeSelectorRef.current) {
+        if (originalContentTypeSelectorRef.current === sessionContentTypeSelectorRef.current) {
 
             const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
             indexRangeRef.current = scrollerProps.virtualListProps.range
