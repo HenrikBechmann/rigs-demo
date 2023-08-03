@@ -146,11 +146,33 @@ const mapAllPropertiesSessionToDemo = (
   demoAllProperties:GenericObject
 ) => {
 
-  const workingAllProperties = {...sessionAllProperties}
+    const workingAllProperties = {...demoAllProperties}
 
-  Object.assign(demoAllProperties,workingAllProperties)
+    for (const typeSelector in demoAllProperties) {
 
-  return demoAllProperties
+        const workingTypeProperties = {...sessionAllProperties[typeSelector]}
+        const rangePropertyType = workingTypeProperties.rangePropertyType
+        const {startingLowIndex, startingHighIndex} = workingTypeProperties
+        if (rangePropertyType == 'rangepropertyvalues') {
+            if (startingLowIndex && startingHighIndex) {
+                workingTypeProperties.startingListRange = [+startingLowIndex, +startingHighIndex]
+            } else {
+                workingTypeProperties.startingListRange = null
+            }
+        } else {
+                workingTypeProperties.startingListRange = []
+        }
+
+        delete workingTypeProperties.rangePropertyType
+        delete workingTypeProperties.startingLowIndex
+        delete workingTypeProperties.startingHighIndex
+        workingAllProperties[typeSelector] = workingTypeProperties
+ 
+    }
+
+    Object.assign(demoAllProperties,workingAllProperties)
+
+    return demoAllProperties
 
 }
 
