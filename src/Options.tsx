@@ -633,7 +633,7 @@ const Options = ({
             const newSessionProperties = 
                 {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],rangePropertyType:input}
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
-
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         startingLowIndex:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
@@ -1353,7 +1353,7 @@ const Options = ({
 
                     <Radio value = 'emptyrangeproperty'>Empty Virtual List</Radio>
 
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px' color = {'gray'}>
                         This selection will send an empty range array to the scroller, creating an empty virtual list.&nbsp;
                         It will only apply right after a content type change. 
                         See also 'Change virtual list range' in the 'Service functions: operations' section.

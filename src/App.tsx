@@ -107,11 +107,37 @@ const mapAllPropertiesDemoToSession = (
   sessionAllProperties:GenericObject
 ) => {
 
-  const workingAllProperties = {...demoAllProperties}
+    const workingAllProperties = {...sessionAllProperties}
 
-  Object.assign(sessionAllProperties, workingAllProperties)
+    for (const typeSelector in demoAllProperties) {
 
-  return sessionAllProperties
+        const workingTypeProperties = {...demoAllProperties[typeSelector]}
+        const startingListRange = workingTypeProperties.startingListRange
+        if (startingListRange) {
+            if (startingListRange.length == 0) {
+                workingTypeProperties.rangePropertyType = 'emptyrangeproperty'
+                workingTypeProperties.startingLowIndex = ''
+                workingTypeProperties.startingHighIndex = ''
+            } else {
+                const [lowindex, highindex] = startingListRange
+                workingTypeProperties.rangePropertyType = 'rangepropertyvalues'
+                workingTypeProperties.startingLowIndex = lowindex
+                workingTypeProperties.startingHighIndex = highindex
+            }
+        } else {
+            workingTypeProperties.rangePropertyType = 'rangepropertyvalues'
+            workingTypeProperties.startingLowIndex = ''
+            workingTypeProperties.startingHighIndex = ''
+        }
+
+        delete workingTypeProperties.startingListRange
+        workingAllProperties[typeSelector] = workingTypeProperties
+ 
+    }
+
+    Object.assign(sessionAllProperties, workingAllProperties)
+
+    return sessionAllProperties
 
 }
 
@@ -183,7 +209,6 @@ function App() {
         demoAllContentTypePropertiesRef.current,
         sessionAllContentTypePropertiesRef.current
      )
-    // sessionAllContentTypePropertiesRef.current = {...demoAllContentTypePropertiesRef.current}
     sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
     sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
 
@@ -200,7 +225,6 @@ function App() {
         sessionAllContentTypePropertiesRef.current,
         demoAllContentTypePropertiesRef.current
      )
-    // demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
     demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
     demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
 
