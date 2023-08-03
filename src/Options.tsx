@@ -83,6 +83,7 @@ const fieldSections:GenericObject = {
     cellMinWidth:'properties',
     startingIndex:'properties',
     startingListSize:'properties',
+    rangePropertyType:'properties',
     startingLowIndex:'properties',
     startingHighIndex:'properties',
     padding:'properties',
@@ -625,6 +626,14 @@ const Options = ({
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editContentTypeProperties})
+        },
+        rangePropertyType:(input:string) => {
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.rangePropertyType = input
+            const newSessionProperties = 
+                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],rangePropertyType:input}
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+
         },
         startingLowIndex:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
@@ -1284,6 +1293,13 @@ const Options = ({
 
                     <Heading size = 'xs'>Starting list range</Heading>
 
+            <RadioGroup 
+                value = {editContentTypeProperties.rangePropertyType} 
+                onChange = {onChangeFunctions.rangePropertyType}
+            >
+                <VStack align = 'start'>
+                    <Radio value = 'rangepropertyvalues'>Range Values</Radio>
+
                     <Stack direction = {['column','row','row']}>
                     
                         <FormControl isInvalid = {invalidFlags.startingLowIndex} >
@@ -1328,12 +1344,22 @@ const Options = ({
 
                     </Stack>
 
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                    <Text fontSize = 'sm' paddingBottom = {2}>
                         Integers. Either both or neither of <i>lowIndex</i> and <i>highIndex</i> must be set.&nbsp;
                         <i>Starting list range</i> if set will only apply right after a content type change. 
                         It will set the starting list range of the session for the content type. See also
                         'Change virtual list range' in the 'Service functions: operations' section.
                     </Text>
+
+                    <Radio value = 'emptyrangeproperty'>Empty Virtual List</Radio>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        This selection will send an empty range array to the scroller, creating an empty virtual list.&nbsp;
+                        It will only apply right after a content type change. 
+                        See also 'Change virtual list range' in the 'Service functions: operations' section.
+                    </Text>
+                </VStack>
+            </RadioGroup>
 
                     <Heading size = 'xs'>Runway size</Heading>
                     

@@ -102,6 +102,32 @@ const ErrorBox = (props:any) => {
 
 }
 
+const mapAllPropertiesDemoToSession = (
+  demoAllProperties:GenericObject, 
+  sessionAllProperties:GenericObject
+) => {
+
+  const workingAllProperties = {...demoAllProperties}
+
+  Object.assign(sessionAllProperties, workingAllProperties)
+
+  return sessionAllProperties
+
+}
+
+const mapAllPropertiesSessionToDemo = (
+  sessionAllProperties:GenericObject, 
+  demoAllProperties:GenericObject
+) => {
+
+  const workingAllProperties = {...sessionAllProperties}
+
+  Object.assign(demoAllProperties,workingAllProperties)
+
+  return demoAllProperties
+
+}
+
 function App() {
 
   const [demoState, setDemoState] = useState('setup')
@@ -152,7 +178,12 @@ function App() {
 
     sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
     sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
-    sessionAllContentTypePropertiesRef.current = {...demoAllContentTypePropertiesRef.current}
+    sessionAllContentTypePropertiesRef.current = 
+      mapAllPropertiesDemoToSession(
+        demoAllContentTypePropertiesRef.current,
+        sessionAllContentTypePropertiesRef.current
+     )
+    // sessionAllContentTypePropertiesRef.current = {...demoAllContentTypePropertiesRef.current}
     sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
     sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
 
@@ -164,7 +195,12 @@ function App() {
 
     demoContentTypeSelectorRef.current = sessionContentTypeSelectorRef.current
     demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
-    demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
+    demoAllContentTypePropertiesRef.current = 
+      mapAllPropertiesSessionToDemo(
+        sessionAllContentTypePropertiesRef.current,
+        demoAllContentTypePropertiesRef.current
+     )
+    // demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
     demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
     demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
 
