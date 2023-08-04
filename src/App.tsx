@@ -121,8 +121,8 @@ const mapAllPropertiesDemoToSession = (
             } else {
                 const [lowindex, highindex] = startingListRange
                 workingTypeProperties.rangePropertyType = 'rangepropertyvalues'
-                workingTypeProperties.startingLowIndex = lowindex
-                workingTypeProperties.startingHighIndex = highindex
+                workingTypeProperties.startingLowIndex = lowindex + ''
+                workingTypeProperties.startingHighIndex = highindex + ''
             }
         } else {
             workingTypeProperties.rangePropertyType = 'rangepropertyvalues'
@@ -154,7 +154,7 @@ const mapAllPropertiesSessionToDemo = (
         const rangePropertyType = workingTypeProperties.rangePropertyType
         const {startingLowIndex, startingHighIndex} = workingTypeProperties
         if (rangePropertyType == 'rangepropertyvalues') {
-            if (startingLowIndex && startingHighIndex) {
+            if (startingLowIndex && startingHighIndex) { // strings
                 workingTypeProperties.startingListRange = [+startingLowIndex, +startingHighIndex]
             } else {
                 workingTypeProperties.startingListRange = null

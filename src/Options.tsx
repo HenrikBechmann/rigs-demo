@@ -137,7 +137,17 @@ const errorMessages = {
     moveTo:'integer: required, greater than or equal to listlowindex',
 }
 
-const dependentOperationFields = [
+const textColors = {
+    rangepropertyvalues:'gray',
+    emptyrangeproperty:'gray',
+}
+
+const propertyDisabledFlags = {
+    startingLowIndex:false,
+    startingHighIndex:false,
+}
+
+const dependentServiceFields = [
     'scrolltoIndex',
     'listsize',
     'prependCount','appendCount',
@@ -351,7 +361,7 @@ const Options = ({
             let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingHighIndex))
             if (!isInvalid) {
                 invalidFlags.startingLowIndex = isInvalid
-                return (isInvalid)
+                return isInvalid
             }
 
             isInvalid = isBlank(value) && !isBlank(editContentTypePropertiesRef.current.startingHighIndex)
@@ -373,7 +383,7 @@ const Options = ({
             let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingLowIndex))
             if (!isInvalid) {
                 invalidFlags.startingHighIndex = isInvalid
-                return (isInvalid)
+                return isInvalid
             }
 
             isInvalid = isBlank(value) && !isBlank(editContentTypePropertiesRef.current.startingLowIndex)
@@ -633,6 +643,7 @@ const Options = ({
             const newSessionProperties = 
                 {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],rangePropertyType:input}
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            updateFieldAccessFunctions.propertyFields(sessionContentTypeSelectorRef.current)
             setEditContentTypeProperties({...editContentTypeProperties})
         },
         startingLowIndex:(input:string) => {
@@ -836,11 +847,11 @@ const Options = ({
         }
     }
 
-    const updateDependenciesFunctions = {
-        contentType:(value:string) => {
+    const updateFieldAccessFunctions = {
+        contentType:(contentSelection:string) => {
 
             let disabled
-            if (['variablecontent','variablepromises','variabledynamic','variableoversized'].includes(value)) {
+            if (['variablecontent','variablepromises','variabledynamic','variableoversized'].includes(contentSelection)) {
 
                 disabled = false
                 isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
@@ -858,10 +869,36 @@ const Options = ({
                 disabledFlags.cellMinWidth = disabled
 
         },
+        propertyFields: (contentSelection:string) => {
+            if (sessionAllContentTypePropertiesRef.current[contentSelection].rangePropertyType == 
+                'rangepropertyvalues') {
+                propertyDisabledFlags.startingLowIndex = false
+                propertyDisabledFlags.startingHighIndex = false
+                textColors.rangepropertyvalues = 'black'
+                textColors.emptyrangeproperty = 'gray'
+            } else {
+                if (isInvalidTests.startingLowIndex(
+                    editContentTypePropertiesRef.current.startingLowIndex) ||
+                    isInvalidTests.startingHighIndex(
+                    editContentTypePropertiesRef.current.startingHighIndex)) {
+
+                    editContentTypePropertiesRef.current.startingLowIndex = 
+                        sessionAllContentTypePropertiesRef.current[contentSelection].startingLowIndex
+                    editContentTypePropertiesRef.current.startingHighIndex = 
+                        sessionAllContentTypePropertiesRef.current[contentSelection].startingHighIndex
+                    invalidFlagsRef.current.startingLowIndex = false
+                    invalidFlagsRef.current.startingHighIndex = false
+                }
+                propertyDisabledFlags.startingLowIndex = true
+                propertyDisabledFlags.startingHighIndex = true
+                textColors.rangepropertyvalues = 'gray'
+                textColors.emptyrangeproperty = 'black'
+            }
+        },
         serviceFunctions: (service:string) => {
 
             // disable all, and reset error conditions
-            for (const field of dependentOperationFields) {
+            for (const field of dependentServiceFields) {
                 disabledFlags[field] = true
                 if (invalidFlags[field]) {
                     invalidFlags[field] = false
@@ -977,8 +1014,11 @@ const Options = ({
                 const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
                 indexRangeRef.current = scrollerProps.virtualListProps.range
 
-                updateDependenciesFunctions.contentType(sessionContentTypeSelectorRef.current)
-                updateDependenciesFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
+                const contentSelection = sessionContentTypeSelectorRef.current
+
+                updateFieldAccessFunctions.contentType(contentSelection)
+                updateFieldAccessFunctions.serviceFunctions(contentSelection)
+                updateFieldAccessFunctions.propertyFields(contentSelection)
                 setOptionsState('ready')
                 break
 
@@ -992,7 +1032,10 @@ const Options = ({
             }
             case 'newcontenttype': {
 
-                updateDependenciesFunctions.contentType(sessionContentTypeSelectorRef.current)
+                const contentSelection = sessionContentTypeSelectorRef.current
+
+                updateFieldAccessFunctions.contentType(contentSelection)
+                updateFieldAccessFunctions.propertyFields(contentSelection)
                 setOptionsState('ready')
                 break
 
@@ -1005,13 +1048,13 @@ const Options = ({
             }
             case 'newopfunctionselector': {
 
-                updateDependenciesFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
+                updateFieldAccessFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
                 setOptionsState('ready')
                 break
 
             }
         }
-    },[optionsState, updateDependenciesFunctions])
+    },[optionsState, updateFieldAccessFunctions])
 
     // ------------------------------[ render ]------------------------------
     
@@ -1302,7 +1345,10 @@ const Options = ({
 
                     <Stack direction = {['column','row','row']}>
                     
-                        <FormControl isInvalid = {invalidFlags.startingLowIndex} >
+                        <FormControl 
+                            isInvalid = {invalidFlags.startingLowIndex} 
+                            isDisabled = {propertyDisabledFlags.startingLowIndex}
+                        >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>lowIndex:</FormLabel>
@@ -1322,7 +1368,10 @@ const Options = ({
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl isInvalid = {invalidFlags.startingHighIndex} >
+                        <FormControl 
+                            isInvalid = {invalidFlags.startingHighIndex} 
+                            isDisabled = {propertyDisabledFlags.startingHighIndex}
+                        >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>highIndex:</FormLabel>
@@ -1344,7 +1393,7 @@ const Options = ({
 
                     </Stack>
 
-                    <Text fontSize = 'sm' paddingBottom = {2}>
+                    <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangepropertyvalues}>
                         Integers. Either both or neither of <i>lowIndex</i> and <i>highIndex</i> must be set.&nbsp;
                         <i>Starting list range</i> if set will only apply right after a content type change. 
                         It will set the starting list range of the session for the content type. See also
@@ -1353,7 +1402,7 @@ const Options = ({
 
                     <Radio value = 'emptyrangeproperty'>Empty Virtual List</Radio>
 
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px' color = {'gray'}>
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px' color = {textColors.emptyrangeproperty}>
                         This selection will send an empty range array to the scroller, creating an empty virtual list.&nbsp;
                         It will only apply right after a content type change. 
                         See also 'Change virtual list range' in the 'Service functions: operations' section.
