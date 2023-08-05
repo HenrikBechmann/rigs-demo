@@ -763,6 +763,24 @@ const Options = ({
             editAPIFunctionArguments.rangeAPIType = input
             sessionAPIFunctionArgumentsRef.current.rangeAPIType = input
             updateFieldAccessFunctions.rangeAPI()
+
+            if (input == 'emptyrangeAPI') {
+                disabledFlags.listLowIndex = true
+                disabledFlags.listHighIndex = true
+                if (invalidFlags.listLowIndex) {
+                    invalidFlags.listLowIndex = false
+                    editAPIFunctionArgumentsRef.current.listLowIndex = sessionAPIFunctionArgumentsRef.current.listLowIndex
+                }
+                if (invalidFlags.listHighIndex) {
+                    invalidFlags.listHighIndex = false
+                    editAPIFunctionArgumentsRef.current.listHighIndex = sessionAPIFunctionArgumentsRef.current.listHighIndex
+                }
+            } else {
+                disabledFlags.listLowIndex = false
+                disabledFlags.listHighIndex = false
+                isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
+                isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+            }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         prependCount:(input:string) => {
@@ -961,11 +979,13 @@ const Options = ({
                         break
                     }
                     case 'listrange':{
-                        disabledFlags.listLowIndex = false
-                        disabledFlags.listHighIndex = false
                         disabledFlags.rangeAPIType = false
-                        isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
-                        isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+                        if (editAPIFunctionArgumentsRef.current.rangeAPIType == 'rangeAPIvalues') {
+                            disabledFlags.listLowIndex = false
+                            disabledFlags.listHighIndex = false
+                            isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
+                            isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+                        }
                         break
                     }
                     case 'reload':{
