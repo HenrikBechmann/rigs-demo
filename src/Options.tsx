@@ -1061,6 +1061,7 @@ const Options = ({
         
     },[])
 
+    // state management
     useEffect(()=>{
         switch (optionsState) {
             case 'setup': {
@@ -1392,79 +1393,79 @@ const Options = ({
 
                     <Heading size = 'xs'>Starting list range</Heading>
 
-            <RadioGroup 
-                value = {editContentTypeProperties.rangePropertyType} 
-                onChange = {onChangeFunctions.rangePropertyType}
-            >
-                <VStack align = 'start'>
-                    <Radio value = 'rangepropertyvalues'>Range Values</Radio>
+                    <RadioGroup 
+                        value = {editContentTypeProperties.rangePropertyType} 
+                        onChange = {onChangeFunctions.rangePropertyType}
+                    >
+                        <VStack align = 'start'>
+                            <Radio value = 'rangepropertyvalues'>Range Values</Radio>
 
-                    <Stack direction = {['column','row','row']}>
-                    
-                        <FormControl 
-                            isInvalid = {invalidFlags.startingLowIndex} 
-                            isDisabled = {propertyDisabledFlags.startingLowIndex}
-                        >
-                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-
-                                <FormLabel fontSize = 'sm'>lowIndex:</FormLabel>
-
-                                <NumberInput 
-                                    value = {editContentTypeProperties.startingLowIndex} 
-                                    size = 'sm'
-                                    onChange = {onChangeFunctions.startingLowIndex}
-                                    clampValueOnBlur = {false}
+                            <Stack direction = {['column','row','row']}>
+                            
+                                <FormControl 
+                                    isInvalid = {invalidFlags.startingLowIndex} 
+                                    isDisabled = {propertyDisabledFlags.startingLowIndex}
                                 >
-                                    <NumberInputField border = '2px' />
-                                </NumberInput>
-                            </InputGroup>
+                                    <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
-                            <FormErrorMessage>
-                                {errorMessages.startingLowIndex}
-                            </FormErrorMessage>
-                        </FormControl>
+                                        <FormLabel fontSize = 'sm'>lowIndex:</FormLabel>
 
-                        <FormControl 
-                            isInvalid = {invalidFlags.startingHighIndex} 
-                            isDisabled = {propertyDisabledFlags.startingHighIndex}
-                        >
-                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                        <NumberInput 
+                                            value = {editContentTypeProperties.startingLowIndex} 
+                                            size = 'sm'
+                                            onChange = {onChangeFunctions.startingLowIndex}
+                                            clampValueOnBlur = {false}
+                                        >
+                                            <NumberInputField border = '2px' />
+                                        </NumberInput>
+                                    </InputGroup>
 
-                                <FormLabel fontSize = 'sm'>highIndex:</FormLabel>
+                                    <FormErrorMessage>
+                                        {errorMessages.startingLowIndex}
+                                    </FormErrorMessage>
+                                </FormControl>
 
-                                <NumberInput 
-                                    value = {editContentTypeProperties.startingHighIndex} 
-                                    size = 'sm'
-                                    onChange = {onChangeFunctions.startingHighIndex}
-                                    clampValueOnBlur = {false}
+                                <FormControl 
+                                    isInvalid = {invalidFlags.startingHighIndex} 
+                                    isDisabled = {propertyDisabledFlags.startingHighIndex}
                                 >
-                                    <NumberInputField border = '2px' />
-                                </NumberInput>
-                            </InputGroup>
+                                    <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
-                            <FormErrorMessage>
-                                {errorMessages.startingHighIndex}
-                            </FormErrorMessage>
-                        </FormControl>
+                                        <FormLabel fontSize = 'sm'>highIndex:</FormLabel>
 
-                    </Stack>
+                                        <NumberInput 
+                                            value = {editContentTypeProperties.startingHighIndex} 
+                                            size = 'sm'
+                                            onChange = {onChangeFunctions.startingHighIndex}
+                                            clampValueOnBlur = {false}
+                                        >
+                                            <NumberInputField border = '2px' />
+                                        </NumberInput>
+                                    </InputGroup>
 
-                    <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangepropertyvalues}>
-                        Integers. Either both or neither of <i>lowIndex</i> and <i>highIndex</i> must be set.&nbsp;
-                        <i>Starting list range</i> if set will only apply right after a content type change. 
-                        It will set the starting list range of the session for the content type. See also
-                        'Change virtual list range' in the 'Service functions: operations' section.
-                    </Text>
+                                    <FormErrorMessage>
+                                        {errorMessages.startingHighIndex}
+                                    </FormErrorMessage>
+                                </FormControl>
 
-                    <Radio value = 'emptyrangeproperty'>Empty Virtual List</Radio>
+                            </Stack>
 
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px' color = {textColors.emptyrangeproperty}>
-                        This selection will send an empty range array to the scroller, creating an empty virtual list.&nbsp;
-                        It will only apply right after a content type change. 
-                        See also 'Change virtual list range' in the 'Service functions: operations' section.
-                    </Text>
-                </VStack>
-            </RadioGroup>
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangepropertyvalues}>
+                                Integers. Either both or neither of <i>lowIndex</i> and <i>highIndex</i> must be set.&nbsp;
+                                <i>Starting list range</i> if set will only apply right after a content type change. 
+                                It will set the starting list range of the session for the content type. See also
+                                'Change virtual list range' in the 'Service functions: operations' section.
+                            </Text>
+
+                            <Radio value = 'emptyrangeproperty'>Empty Virtual List</Radio>
+
+                            <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px' color = {textColors.emptyrangeproperty}>
+                                This selection will send an empty range array to the scroller, creating an empty virtual list.&nbsp;
+                                It will only apply right after a content type change. 
+                                See also 'Change virtual list range' in the 'Service functions: operations' section.
+                            </Text>
+                        </VStack>
+                    </RadioGroup>
 
                     <Heading size = 'xs'>Runway size</Heading>
                     
@@ -1554,7 +1555,8 @@ const Options = ({
                         </FormHelperText>
                     </FormControl>
 
-                </VStack></AccordionPanel>
+                    </VStack>
+                </AccordionPanel>
 
             </AccordionItem>
 
@@ -1893,72 +1895,72 @@ const Options = ({
 
                     <Heading size = 'xs'>Change virtual list range</Heading>
 
-            <RadioGroup 
-                value = {editAPIFunctionArguments.rangeAPIType} 
-                onChange = {onChangeFunctions.rangeAPIType}
-                isDisabled = {disabledFlags.rangeAPIType}
-            >
-                <VStack align = 'start'>
-                    <Radio value = 'rangeAPIvalues'>Range Values</Radio>
+                    <RadioGroup 
+                        value = {editAPIFunctionArguments.rangeAPIType} 
+                        onChange = {onChangeFunctions.rangeAPIType}
+                        isDisabled = {disabledFlags.rangeAPIType}
+                    >
+                        <VStack align = 'start'>
+                            <Radio value = 'rangeAPIvalues'>Range Values</Radio>
 
-                    <Stack direction = {['column','row','row']}>
+                            <Stack direction = {['column','row','row']}>
 
-                        <FormControl 
-                            isDisabled = {disabledFlags.listLowIndex}
-                            isInvalid = {invalidFlags.listLowIndex} >
-                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormControl 
+                                    isDisabled = {disabledFlags.listLowIndex}
+                                    isInvalid = {invalidFlags.listLowIndex} >
+                                    <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
-                                <FormLabel fontSize = 'sm'>low index:</FormLabel>
+                                        <FormLabel fontSize = 'sm'>low index:</FormLabel>
 
-                                <NumberInput 
-                                    value = {editAPIFunctionArguments.listLowIndex} 
-                                    size = 'sm'
-                                    onChange = {onChangeFunctions.listLowIndex}
-                                    clampValueOnBlur = {false}
-                                >
-                                    <NumberInputField border = '2px' />
-                                </NumberInput>
-                            </InputGroup>
-                            <FormErrorMessage>
-                                {errorMessages.listLowIndex}
-                            </FormErrorMessage>
-                        </FormControl>
+                                        <NumberInput 
+                                            value = {editAPIFunctionArguments.listLowIndex} 
+                                            size = 'sm'
+                                            onChange = {onChangeFunctions.listLowIndex}
+                                            clampValueOnBlur = {false}
+                                        >
+                                            <NumberInputField border = '2px' />
+                                        </NumberInput>
+                                    </InputGroup>
+                                    <FormErrorMessage>
+                                        {errorMessages.listLowIndex}
+                                    </FormErrorMessage>
+                                </FormControl>
 
-                        <FormControl 
-                            isDisabled = {disabledFlags.listHighIndex}
-                            isInvalid = {invalidFlags.listHighIndex} >
-                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+                                <FormControl 
+                                    isDisabled = {disabledFlags.listHighIndex}
+                                    isInvalid = {invalidFlags.listHighIndex} >
+                                    <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
-                                <FormLabel fontSize = 'sm'>high index:</FormLabel>
+                                        <FormLabel fontSize = 'sm'>high index:</FormLabel>
 
-                                <NumberInput 
-                                    value = {editAPIFunctionArguments.listHighIndex} 
-                                    size = 'sm'
-                                    onChange = {onChangeFunctions.listHighIndex}
-                                    clampValueOnBlur = {false}
-                                >
-                                    <NumberInputField border = '2px' />
-                                </NumberInput>
-                            </InputGroup>
-                            <FormErrorMessage>
-                                {errorMessages.listHighIndex}
-                            </FormErrorMessage>
-                        </FormControl>
+                                        <NumberInput 
+                                            value = {editAPIFunctionArguments.listHighIndex} 
+                                            size = 'sm'
+                                            onChange = {onChangeFunctions.listHighIndex}
+                                            clampValueOnBlur = {false}
+                                        >
+                                            <NumberInputField border = '2px' />
+                                        </NumberInput>
+                                    </InputGroup>
+                                    <FormErrorMessage>
+                                        {errorMessages.listHighIndex}
+                                    </FormErrorMessage>
+                                </FormControl>
 
-                    </Stack>
+                            </Stack>
 
-                    <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangeAPIvalues}>
-                        Integers. Set low and high indexes. high index must be greater than or equal to  
-                        low index.
-                    </Text>
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangeAPIvalues}>
+                                Integers. Set low and high indexes. high index must be greater than or equal to  
+                                low index.
+                            </Text>
 
-                    <Radio value = 'emptyrangeAPI'>Empty Virtual List</Radio>
+                            <Radio value = 'emptyrangeAPI'>Empty Virtual List</Radio>
 
-                    <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.emptyrangeAPI}>
-                        This selection will send an empty range array to the scroller, creating an empty virtual list.
-                    </Text>
-                </VStack>
-            </RadioGroup>
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.emptyrangeAPI}>
+                                This selection will send an empty range array to the scroller, creating an empty virtual list.
+                            </Text>
+                        </VStack>
+                    </RadioGroup>
 
                     <FormControl borderBottom = '1px' >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>

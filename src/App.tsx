@@ -484,8 +484,13 @@ const getFunctionToastContent = (
       break
     }
     case 'listrange': {
-      functionsAPI.setListRange([APIFunctionArguments.listLowIndex, APIFunctionArguments.listHighIndex])
-      codeblock = `functionsAPI.setListRange([${APIFunctionArguments.listLowIndex},${APIFunctionArguments.listHighIndex}])`
+      if (APIFunctionArguments.rangeAPIType == 'rangeAPIvalues') {
+          functionsAPI.setListRange([APIFunctionArguments.listLowIndex, APIFunctionArguments.listHighIndex])
+          codeblock = `functionsAPI.setListRange([${APIFunctionArguments.listLowIndex},${APIFunctionArguments.listHighIndex}])`
+      } else {
+          functionsAPI.setListRange([])
+          codeblock = `functionsAPI.setListRange([])`
+      }
       break
     }
     case 'prependCount': {
