@@ -166,7 +166,7 @@ const Options = ({
 
 }:GenericObject) => {
  
-    // -------------------------[ state updates ]------------------------
+    // -------------------------[ component state updates ]------------------------
 
     // inherited scroller service functions
     const functionsAPI = functionsAPIRef.current
@@ -865,7 +865,7 @@ const Options = ({
         },
     }
 
-    const APISnapshots = {
+    const APISnapshotFunctions = {
         getCacheIndexMap: () => {
             console.log('cacheIndexMap =',functionsAPI.getCacheIndexMap())
         },
@@ -1735,7 +1735,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {APISnapshots.getCacheIndexMap}
+                            onClick = {APISnapshotFunctions.getCacheIndexMap}
                         >
                                 Get Cache Index Map
                         </Button>
@@ -1750,7 +1750,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {APISnapshots.getCacheItemMap}
+                            onClick = {APISnapshotFunctions.getCacheItemMap}
                         >
                             Get Cache Item Map
                         </Button>
@@ -1765,13 +1765,27 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {APISnapshots.getCradleIndexMap}
+                            onClick = {APISnapshotFunctions.getCradleIndexMap}
                         >
                             Get Cradle Index Map
                         </Button>
                         <FormHelperText>
                             snapshot (javascript <Code>Map</Code>) of cradle <Code>index</Code> (=key) to 
                             scroller-assigned session <Code>itemID</Code> (=value) map.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Button 
+                            size = 'sm' 
+                            mt = {2} 
+                            type = 'button'
+                            onClick = {APISnapshotFunctions.getPropertiesSnapshot}
+                        >
+                            Get Properties Snapshot
+                        </Button>
+                        <FormHelperText>
+                            snapshot of scroller properties.
                         </FormHelperText>
                     </FormControl>
 

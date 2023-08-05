@@ -230,6 +230,9 @@ The javascript \`Maps\` returned by \`getCacheIndexMap()\` and \`getCacheItemMap
 \`index\` in the virtual list and \`value\` = the \`itemID\` of the user component. The \`Map\` returned by
 \`getCradleIndexMap()\` is thus a subset of the Map retured by \`getCacheIndexMap()\`.
 
+\`getPropertiesSnapshot()\` gives the object that holding scroller properties that is returned to scroller hosts and 
+scroller children when invoked.
+
 For the purposes of this demo, these snapshots are returned to the browser console.
 
 The data returned by the snapshots can be used in conjunction with the RIGS API cache operations functions (see the 
