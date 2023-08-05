@@ -202,14 +202,14 @@ const Options = ({
 
     // --------------------------------[ internal mutable field data ]-----------------------------
 
-    const textColorsRef = useRef({
+    const rangeTextColorsRef = useRef({
         rangepropertyvalues:'gray',
         emptyrangeproperty:'gray',
         rangeAPIvalues:'gray',
         emptyrangeAPI:'gray',
     })
 
-    const textColors = textColorsRef.current
+    const rangeTextColors = rangeTextColorsRef.current
 
     const propertyDisabledFlagsRef = useRef({
         startingLowIndex:false,
@@ -219,7 +219,7 @@ const Options = ({
     const propertyDisabledFlags = propertyDisabledFlagsRef.current
 
     // disabled controls
-    const disabledFlagsRef = useRef<GenericObject>(
+    const APIdisabledFlagsRef = useRef<GenericObject>(
         {
             cellMinHeight:false,
             cellMinWidth:false,
@@ -241,10 +241,10 @@ const Options = ({
         }
     )
 
-    const disabledFlags = disabledFlagsRef.current
+    const APIdisabledFlags = APIdisabledFlagsRef.current
 
     // invalid flags
-    const invalidFlagsRef = useRef<GenericObject>(
+    const invalidFieldFlagsRef = useRef<GenericObject>(
         {
             contentType:false,
             orientation:false,
@@ -278,14 +278,14 @@ const Options = ({
         }
     )
 
-    const invalidFlags = invalidFlagsRef.current
+    const invalidFieldFlags = invalidFieldFlagsRef.current
 
     // test forwarded to host; returns text list of invalid section titles for display to user
     const getInvalidSections = () => {
 
         const sections = new Set<string>()
-        const errorfields = invalidFlagsRef.current
-        for (const field in invalidFlagsRef.current) {
+        const errorfields = invalidFieldFlagsRef.current
+        for (const field in invalidFieldFlagsRef.current) {
             if (errorfields[field]) {
                 sections.add(fieldSections[field])
             }
@@ -315,22 +315,22 @@ const Options = ({
 
     const functionEnabledSettings = functionEnabledSettingsRef.current
 
-    // -----------------------------------[ field functions ]------------------------------
+    // -----------------------------------[ field management functions ]------------------------------
 
     // display value error check functions
     const isInvalidTests = {
         cellHeight:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 25))
-            invalidFlags.cellHeight = isInvalid
-            if (!disabledFlags.cellMinHeight) {
+            invalidFieldFlags.cellHeight = isInvalid
+            if (!APIdisabledFlags.cellMinHeight) {
                 isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
             }
             return isInvalid
         },
         cellWidth:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 25))
-            invalidFlags.cellWidth = isInvalid
-            if (!disabledFlags.cellMinWidth) {
+            invalidFieldFlags.cellWidth = isInvalid
+            if (!APIdisabledFlags.cellMinWidth) {
                 isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
             }
             return isInvalid
@@ -340,7 +340,7 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = (!compareValueMinValue(value,25) || !(compareValueMaxValue(value, editContentTypePropertiesRef.current.cellHeight)))
             }
-            invalidFlags.cellMinHeight = isInvalid
+            invalidFieldFlags.cellMinHeight = isInvalid
             return isInvalid
         },
         cellMinWidth:(value:string) => {
@@ -348,7 +348,7 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = (!compareValueMinValue(value,25) || !(compareValueMaxValue(value, editContentTypePropertiesRef.current.cellWidth)))
             }
-            invalidFlags.cellMinWidth = isInvalid
+            invalidFieldFlags.cellMinWidth = isInvalid
             return isInvalid
         },
         startingIndex:(value:string) => {
@@ -356,19 +356,19 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = !compareValueMinValue(value,listlowindex)
             }
-            invalidFlags.startingIndex = isInvalid
+            invalidFieldFlags.startingIndex = isInvalid
             return isInvalid
         },
         startingListSize:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
-            invalidFlags.startingListSize = isInvalid
+            invalidFieldFlags.startingListSize = isInvalid
             return isInvalid
         },
         startingLowIndex:(value:string) => {
 
             let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingHighIndex))
             if (!isInvalid) {
-                invalidFlags.startingLowIndex = isInvalid
+                invalidFieldFlags.startingLowIndex = isInvalid
                 return isInvalid
             }
 
@@ -382,7 +382,7 @@ const Options = ({
 
             !isInvalid && (isInvalid = !compareValueMinValue(editContentTypePropertiesRef.current.startingHighIndex,value))
 
-            invalidFlags.startingLowIndex = isInvalid
+            invalidFieldFlags.startingLowIndex = isInvalid
             return isInvalid
 
         },
@@ -390,7 +390,7 @@ const Options = ({
 
             let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingLowIndex))
             if (!isInvalid) {
-                invalidFlags.startingHighIndex = isInvalid
+                invalidFieldFlags.startingHighIndex = isInvalid
                 return isInvalid
             }
 
@@ -404,7 +404,7 @@ const Options = ({
 
             !isInvalid && (isInvalid = !compareValueMaxValue(editContentTypePropertiesRef.current.startingLowIndex, value))
 
-            invalidFlags.startingHighIndex = isInvalid
+            invalidFieldFlags.startingHighIndex = isInvalid
             return isInvalid
 
         },
@@ -413,7 +413,7 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = !compareValueMinValue(value,0)
             }
-            invalidFlags.padding = isInvalid
+            invalidFieldFlags.padding = isInvalid
             return isInvalid
         },
         gap:(value:string) => {
@@ -421,7 +421,7 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = !compareValueMinValue(value,0)
             }
-            invalidFlags.gap = isInvalid
+            invalidFieldFlags.gap = isInvalid
             return isInvalid
         },
         runwaySize:(value:string) => {
@@ -429,7 +429,7 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = !compareValueMinValue(value,1)
             }
-            invalidFlags.runwaySize = isInvalid
+            invalidFieldFlags.runwaySize = isInvalid
             return isInvalid
         },
         cacheMax:(value:string) => {
@@ -437,22 +437,22 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = !compareValueMinValue(value,0)
             }
-            invalidFlags.cacheMax = isInvalid
+            invalidFieldFlags.cacheMax = isInvalid
             return isInvalid
         },
         scrolltoIndex:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
-            invalidFlags.scrolltoIndex = isInvalid
+            invalidFieldFlags.scrolltoIndex = isInvalid
             return isInvalid
         },
         listsize:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, 0))
-            invalidFlags.listsize = isInvalid
+            invalidFieldFlags.listsize = isInvalid
             return isInvalid
         },
         listLowIndex:(value:string) => {
             const isInvalid = !isInteger(value)
-            invalidFlags.listLowIndex = isInvalid
+            invalidFieldFlags.listLowIndex = isInvalid
             isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
             return isInvalid
         },
@@ -461,22 +461,22 @@ const Options = ({
             if (!isInvalid) {
                 isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.listLowIndex)
             }
-            invalidFlags.listHighIndex = isInvalid
+            invalidFieldFlags.listHighIndex = isInvalid
             return isInvalid
         },
         prependCount:(value:string) => {
             const isInvalid = ((!isInteger(value)) || (!compareValueMinValue(value, 0)) )
-            invalidFlags.prependCount = isInvalid
+            invalidFieldFlags.prependCount = isInvalid
             return isInvalid
         },
         appendCount:(value:string) => {
             const isInvalid = ((!isInteger(value)) || (!compareValueMinValue(value, 0)) )
-            invalidFlags.appendCount = isInvalid
+            invalidFieldFlags.appendCount = isInvalid
             return isInvalid
         },
         insertFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
-            invalidFlags.insertFrom = isInvalid
+            invalidFieldFlags.insertFrom = isInvalid
             isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
             return isInvalid
         },
@@ -485,12 +485,12 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.insertFrom)
             }
-            invalidFlags.insertRange = isInvalid
+            invalidFieldFlags.insertRange = isInvalid
             return isInvalid
         },
         removeFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
-            invalidFlags.removeFrom = isInvalid
+            invalidFieldFlags.removeFrom = isInvalid
             isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
             return isInvalid
         },
@@ -499,12 +499,12 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.removeFrom)
             }
-            invalidFlags.removeRange = isInvalid
+            invalidFieldFlags.removeRange = isInvalid
             return isInvalid
         },
         moveFrom:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
-            invalidFlags.moveFrom = isInvalid
+            invalidFieldFlags.moveFrom = isInvalid
             isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
             return isInvalid
         },
@@ -513,12 +513,12 @@ const Options = ({
             if (!isBlank(value)) {
                 isInvalid = !compareValueMinValue(value,editAPIFunctionArgumentsRef.current.moveFrom)
             }
-            invalidFlags.moveRange = isInvalid
+            invalidFieldFlags.moveRange = isInvalid
             return isInvalid
         },
         moveTo:(value:string) => {
             const isInvalid = (!isInteger(value) || !compareValueMinValue(value, listlowindex))
-            invalidFlags.moveTo = isInvalid
+            invalidFieldFlags.moveTo = isInvalid
             return isInvalid
         },
     }
@@ -765,19 +765,19 @@ const Options = ({
             updateFieldAccessFunctions.rangeAPI()
 
             if (input == 'emptyrangeAPI') {
-                disabledFlags.listLowIndex = true
-                disabledFlags.listHighIndex = true
-                if (invalidFlags.listLowIndex) {
-                    invalidFlags.listLowIndex = false
+                APIdisabledFlags.listLowIndex = true
+                APIdisabledFlags.listHighIndex = true
+                if (invalidFieldFlags.listLowIndex) {
+                    invalidFieldFlags.listLowIndex = false
                     editAPIFunctionArgumentsRef.current.listLowIndex = sessionAPIFunctionArgumentsRef.current.listLowIndex
                 }
-                if (invalidFlags.listHighIndex) {
-                    invalidFlags.listHighIndex = false
+                if (invalidFieldFlags.listHighIndex) {
+                    invalidFieldFlags.listHighIndex = false
                     editAPIFunctionArgumentsRef.current.listHighIndex = sessionAPIFunctionArgumentsRef.current.listHighIndex
                 }
             } else {
-                disabledFlags.listLowIndex = false
-                disabledFlags.listHighIndex = false
+                APIdisabledFlags.listLowIndex = false
+                APIdisabledFlags.listHighIndex = false
                 isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
                 isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
             }
@@ -893,13 +893,13 @@ const Options = ({
             } else {
 
                 disabled = true
-                invalidFlags.cellMinHeight = 
-                    invalidFlags.cellMinWidth = false
+                invalidFieldFlags.cellMinHeight = 
+                    invalidFieldFlags.cellMinWidth = false
 
             }
 
-            disabledFlags.cellMinHeight =
-                disabledFlags.cellMinWidth = disabled
+            APIdisabledFlags.cellMinHeight =
+                APIdisabledFlags.cellMinWidth = disabled
 
         },
         propertyFields: (contentSelection:string) => {
@@ -907,8 +907,8 @@ const Options = ({
                 'rangepropertyvalues') {
                 propertyDisabledFlags.startingLowIndex = false
                 propertyDisabledFlags.startingHighIndex = false
-                textColors.rangepropertyvalues = 'black'
-                textColors.emptyrangeproperty = 'gray'
+                rangeTextColors.rangepropertyvalues = 'black'
+                rangeTextColors.emptyrangeproperty = 'gray'
             } else {
                 if (isInvalidTests.startingLowIndex(
                     editContentTypePropertiesRef.current.startingLowIndex) ||
@@ -919,29 +919,29 @@ const Options = ({
                         sessionAllContentTypePropertiesRef.current[contentSelection].startingLowIndex
                     editContentTypePropertiesRef.current.startingHighIndex = 
                         sessionAllContentTypePropertiesRef.current[contentSelection].startingHighIndex
-                    invalidFlagsRef.current.startingLowIndex = false
-                    invalidFlagsRef.current.startingHighIndex = false
+                    invalidFieldFlagsRef.current.startingLowIndex = false
+                    invalidFieldFlagsRef.current.startingHighIndex = false
                 }
                 propertyDisabledFlags.startingLowIndex = true
                 propertyDisabledFlags.startingHighIndex = true
-                textColors.rangepropertyvalues = 'gray'
-                textColors.emptyrangeproperty = 'black'
+                rangeTextColors.rangepropertyvalues = 'gray'
+                rangeTextColors.emptyrangeproperty = 'black'
             }
         },
         rangeAPI:() => {
             if (!functionEnabledSettings.listrange) {
-                textColors.rangeAPIvalues = 'gray'
-                textColors.emptyrangeAPI = 'gray'
-                textColors.rangeAPIvalues = 'gray'
-                textColors.emptyrangeAPI = 'gray'
+                rangeTextColors.rangeAPIvalues = 'gray'
+                rangeTextColors.emptyrangeAPI = 'gray'
+                rangeTextColors.rangeAPIvalues = 'gray'
+                rangeTextColors.emptyrangeAPI = 'gray'
             } else {
                 if (sessionAPIFunctionArgumentsRef.current.rangeAPIType == 
                     'rangeAPIvalues') {
-                    textColors.rangeAPIvalues = 'black'
-                    textColors.emptyrangeAPI = 'gray'
+                    rangeTextColors.rangeAPIvalues = 'black'
+                    rangeTextColors.emptyrangeAPI = 'gray'
                 } else {
-                    textColors.rangeAPIvalues = 'gray'
-                    textColors.emptyrangeAPI = 'black'
+                    rangeTextColors.rangeAPIvalues = 'gray'
+                    rangeTextColors.emptyrangeAPI = 'black'
                 }
             }
 
@@ -950,39 +950,39 @@ const Options = ({
 
             // disable all, and reset error conditions
             for (const field of dependentAPIFields) {
-                disabledFlags[field] = true
-                if (invalidFlags[field]) {
-                    invalidFlags[field] = false
+                APIdisabledFlags[field] = true
+                if (invalidFieldFlags[field]) {
+                    invalidFieldFlags[field] = false
                     editAPIFunctionArgumentsRef.current[field] = sessionAPIFunctionArgumentsRef.current[field]
                 }
             }
             if (service) {
                 switch (service) {
                     case 'goto':{
-                        disabledFlags.scrolltoIndex = false
+                        APIdisabledFlags.scrolltoIndex = false
                         isInvalidTests.scrolltoIndex(editAPIFunctionArgumentsRef.current.scrolltoIndex)
                         break
                     }
                     case 'listsize':{
-                        disabledFlags.listsize = false
+                        APIdisabledFlags.listsize = false
                         isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
                         break
                     }
                     case 'prependCount':{
-                        disabledFlags.prependCount = false
+                        APIdisabledFlags.prependCount = false
                         isInvalidTests.prependCount(editAPIFunctionArgumentsRef.current.prependCount)
                         break
                     }
                     case 'appendCount':{
-                        disabledFlags.appendCount = false
+                        APIdisabledFlags.appendCount = false
                         isInvalidTests.appendCount(editAPIFunctionArgumentsRef.current.appendCount)
                         break
                     }
                     case 'listrange':{
-                        disabledFlags.rangeAPIType = false
+                        APIdisabledFlags.rangeAPIType = false
                         if (editAPIFunctionArgumentsRef.current.rangeAPIType == 'rangeAPIvalues') {
-                            disabledFlags.listLowIndex = false
-                            disabledFlags.listHighIndex = false
+                            APIdisabledFlags.listLowIndex = false
+                            APIdisabledFlags.listHighIndex = false
                             isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
                             isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
                         }
@@ -993,30 +993,30 @@ const Options = ({
                         break
                     }
                     case 'insert':{
-                        disabledFlags.insertFrom = false
-                        disabledFlags.insertRange = false
+                        APIdisabledFlags.insertFrom = false
+                        APIdisabledFlags.insertRange = false
                         isInvalidTests.insertFrom(editAPIFunctionArgumentsRef.current.insertFrom)
                         isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
                         break
                     }
                     case 'remove':{
-                        disabledFlags.removeFrom = false
-                        disabledFlags.removeRange = false
+                        APIdisabledFlags.removeFrom = false
+                        APIdisabledFlags.removeRange = false
                         isInvalidTests.removeFrom(editAPIFunctionArgumentsRef.current.removeFrom)
                         isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
                         break
                     }
                     case 'move':{
-                        disabledFlags.moveFrom = false
-                        disabledFlags.moveRange = false
-                        disabledFlags.moveTo = false
+                        APIdisabledFlags.moveFrom = false
+                        APIdisabledFlags.moveRange = false
+                        APIdisabledFlags.moveTo = false
                         isInvalidTests.moveFrom(editAPIFunctionArgumentsRef.current.moveFrom)
                         isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
                         isInvalidTests.moveTo(editAPIFunctionArgumentsRef.current.moveTo)
                         break
                     }
                     case 'remap':{
-                        disabledFlags.remapDemo = false
+                        APIdisabledFlags.remapDemo = false
                         break
                     }
                     case 'clear':{
@@ -1030,7 +1030,7 @@ const Options = ({
 
     }
 
-    const updateIndexRange = () => {
+    const updateIndexRange = () => { // for change of content type
 
         if (originalContentTypeSelectorRef.current === sessionContentTypeSelectorRef.current) {
 
@@ -1185,7 +1185,7 @@ const Options = ({
 
                     <Stack direction = {['column','row','row']}>
 
-                        <FormControl isInvalid = {invalidFlags.cellHeight}>
+                        <FormControl isInvalid = {invalidFieldFlags.cellHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
@@ -1204,7 +1204,7 @@ const Options = ({
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl isInvalid = {invalidFlags.cellWidth}>
+                        <FormControl isInvalid = {invalidFieldFlags.cellWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
@@ -1236,8 +1236,8 @@ const Options = ({
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.cellMinHeight}
-                            isInvalid = {invalidFlags.cellMinHeight}>
+                            isDisabled = {APIdisabledFlags.cellMinHeight}
+                            isInvalid = {invalidFieldFlags.cellMinHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
@@ -1257,8 +1257,8 @@ const Options = ({
                         </FormControl>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.cellMinHeight}
-                            isInvalid = {invalidFlags.cellMinWidth}>
+                            isDisabled = {APIdisabledFlags.cellMinHeight}
+                            isInvalid = {invalidFieldFlags.cellMinWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
@@ -1287,7 +1287,7 @@ const Options = ({
 
                     <Stack direction = {['column','row','row']}>
 
-                    <FormControl isInvalid = {invalidFlags.padding} >
+                    <FormControl isInvalid = {invalidFieldFlags.padding} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
@@ -1306,7 +1306,7 @@ const Options = ({
                         </FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isInvalid = {invalidFlags.gap} >
+                    <FormControl isInvalid = {invalidFieldFlags.gap} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
@@ -1334,7 +1334,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Starting index</Heading>
                     
-                    <FormControl isInvalid = {invalidFlags.startingIndex} >
+                    <FormControl isInvalid = {invalidFieldFlags.startingIndex} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
@@ -1363,7 +1363,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Starting list size</Heading>
                     
-                    <FormControl isInvalid = {invalidFlags.startingListSize} >
+                    <FormControl isInvalid = {invalidFieldFlags.startingListSize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
@@ -1403,7 +1403,7 @@ const Options = ({
                             <Stack direction = {['column','row','row']}>
                             
                                 <FormControl 
-                                    isInvalid = {invalidFlags.startingLowIndex} 
+                                    isInvalid = {invalidFieldFlags.startingLowIndex} 
                                     isDisabled = {propertyDisabledFlags.startingLowIndex}
                                 >
                                     <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
@@ -1426,7 +1426,7 @@ const Options = ({
                                 </FormControl>
 
                                 <FormControl 
-                                    isInvalid = {invalidFlags.startingHighIndex} 
+                                    isInvalid = {invalidFieldFlags.startingHighIndex} 
                                     isDisabled = {propertyDisabledFlags.startingHighIndex}
                                 >
                                     <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
@@ -1450,7 +1450,7 @@ const Options = ({
 
                             </Stack>
 
-                            <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangepropertyvalues}>
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {rangeTextColors.rangepropertyvalues}>
                                 Integers. Either both or neither of <i>lowIndex</i> and <i>highIndex</i> must be set.&nbsp;
                                 <i>Starting list range</i> if set will only apply right after a content type change. 
                                 It will set the starting list range of the session for the content type. See also
@@ -1459,7 +1459,7 @@ const Options = ({
 
                             <Radio value = 'emptyrangeproperty'>Empty Virtual List</Radio>
 
-                            <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px' color = {textColors.emptyrangeproperty}>
+                            <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px' color = {rangeTextColors.emptyrangeproperty}>
                                 This selection will send an empty range array to the scroller, creating an empty virtual list.&nbsp;
                                 It will only apply right after a content type change. 
                                 See also 'Change virtual list range' in the 'Service functions: operations' section.
@@ -1469,7 +1469,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Runway size</Heading>
                     
-                    <FormControl isInvalid = {invalidFlags.runwaySize} >
+                    <FormControl isInvalid = {invalidFieldFlags.runwaySize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
@@ -1512,7 +1512,7 @@ const Options = ({
                         </Select>
                     </FormControl>
 
-                    <FormControl isInvalid = {invalidFlags.cacheMax}>
+                    <FormControl isInvalid = {invalidFieldFlags.cacheMax}>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
@@ -1821,8 +1821,8 @@ const Options = ({
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.scrolltoIndex}
-                            isInvalid = {invalidFlags.scrolltoIndex}>
+                            isDisabled = {APIdisabledFlags.scrolltoIndex}
+                            isInvalid = {invalidFieldFlags.scrolltoIndex}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
@@ -1868,8 +1868,8 @@ const Options = ({
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.listsize}
-                            isInvalid = {invalidFlags.listsize} >
+                            isDisabled = {APIdisabledFlags.listsize}
+                            isInvalid = {invalidFieldFlags.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
@@ -1912,7 +1912,7 @@ const Options = ({
                     <RadioGroup 
                         value = {editAPIFunctionArguments.rangeAPIType} 
                         onChange = {onChangeFunctions.rangeAPIType}
-                        isDisabled = {disabledFlags.rangeAPIType}
+                        isDisabled = {APIdisabledFlags.rangeAPIType}
                     >
                         <VStack align = 'start'>
                             <Radio value = 'rangeAPIvalues'>Range Values</Radio>
@@ -1920,8 +1920,8 @@ const Options = ({
                             <Stack direction = {['column','row','row']}>
 
                                 <FormControl 
-                                    isDisabled = {disabledFlags.listLowIndex}
-                                    isInvalid = {invalidFlags.listLowIndex} >
+                                    isDisabled = {APIdisabledFlags.listLowIndex}
+                                    isInvalid = {invalidFieldFlags.listLowIndex} >
                                     <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                         <FormLabel fontSize = 'sm'>low index:</FormLabel>
@@ -1941,8 +1941,8 @@ const Options = ({
                                 </FormControl>
 
                                 <FormControl 
-                                    isDisabled = {disabledFlags.listHighIndex}
-                                    isInvalid = {invalidFlags.listHighIndex} >
+                                    isDisabled = {APIdisabledFlags.listHighIndex}
+                                    isInvalid = {invalidFieldFlags.listHighIndex} >
                                     <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                         <FormLabel fontSize = 'sm'>high index:</FormLabel>
@@ -1963,14 +1963,14 @@ const Options = ({
 
                             </Stack>
 
-                            <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangeAPIvalues}>
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {rangeTextColors.rangeAPIvalues}>
                                 Integers. Set low and high indexes. high index must be greater than or equal to  
                                 low index.
                             </Text>
 
                             <Radio value = 'emptyrangeAPI'>Empty Virtual List</Radio>
 
-                            <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.emptyrangeAPI}>
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {rangeTextColors.emptyrangeAPI}>
                                 This selection will send an empty range array to the scroller, creating an empty virtual list.
                             </Text>
                         </VStack>
@@ -1994,8 +1994,8 @@ const Options = ({
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.prependCount}
-                            isInvalid = {invalidFlags.prependCount} >
+                            isDisabled = {APIdisabledFlags.prependCount}
+                            isInvalid = {invalidFieldFlags.prependCount} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>count:</FormLabel>
@@ -2038,8 +2038,8 @@ const Options = ({
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.appendCount}
-                            isInvalid = {invalidFlags.appendCount} >
+                            isDisabled = {APIdisabledFlags.appendCount}
+                            isInvalid = {invalidFieldFlags.appendCount} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>count:</FormLabel>
@@ -2082,8 +2082,8 @@ const Options = ({
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.insertFrom}
-                            isInvalid = {invalidFlags.insertFrom} >
+                            isDisabled = {APIdisabledFlags.insertFrom}
+                            isInvalid = {invalidFieldFlags.insertFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
@@ -2103,8 +2103,8 @@ const Options = ({
                         </FormControl>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.insertRange}
-                            isInvalid = {invalidFlags.insertRange} >
+                            isDisabled = {APIdisabledFlags.insertRange}
+                            isInvalid = {invalidFieldFlags.insertRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
@@ -2148,8 +2148,8 @@ const Options = ({
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.removeFrom}
-                            isInvalid = {invalidFlags.removeFrom} >
+                            isDisabled = {APIdisabledFlags.removeFrom}
+                            isInvalid = {invalidFieldFlags.removeFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
@@ -2169,8 +2169,8 @@ const Options = ({
                         </FormControl>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.removeRange}
-                            isInvalid = {invalidFlags.removeRange} >
+                            isDisabled = {APIdisabledFlags.removeRange}
+                            isInvalid = {invalidFieldFlags.removeRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
@@ -2214,8 +2214,8 @@ const Options = ({
                     <Stack direction = {['column','row','row']} mb = {2}>
 
                     <FormControl 
-                        isDisabled = {disabledFlags.moveFrom}
-                        isInvalid = {invalidFlags.moveFrom} >
+                        isDisabled = {APIdisabledFlags.moveFrom}
+                        isInvalid = {invalidFieldFlags.moveFrom} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
@@ -2235,8 +2235,8 @@ const Options = ({
                     </FormControl>
 
                     <FormControl 
-                        isDisabled = {disabledFlags.moveRange}
-                        isInvalid = {invalidFlags.moveRange} >
+                        isDisabled = {APIdisabledFlags.moveRange}
+                        isInvalid = {invalidFieldFlags.moveRange} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
@@ -2258,8 +2258,8 @@ const Options = ({
                     </Stack>
 
                     <FormControl 
-                        isDisabled = {disabledFlags.moveTo}
-                        isInvalid = {invalidFlags.moveTo} >
+                        isDisabled = {APIdisabledFlags.moveTo}
+                        isInvalid = {invalidFieldFlags.moveTo} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
@@ -2300,7 +2300,7 @@ const Options = ({
 
                     <Stack direction = {['column','row','row']} alignItems = 'baseline'>
 
-                    <FormControl isDisabled = {disabledFlags.remapDemo} width = 'xs'>
+                    <FormControl isDisabled = {APIdisabledFlags.remapDemo} width = 'xs'>
                         <Select
                             value = {editAPIFunctionArguments.remapDemo} 
                             size = 'sm'
