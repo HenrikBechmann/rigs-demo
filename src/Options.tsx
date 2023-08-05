@@ -138,18 +138,6 @@ const errorMessages = {
     moveTo:'integer: required, greater than or equal to listlowindex',
 }
 
-const textColors = {
-    rangepropertyvalues:'gray',
-    emptyrangeproperty:'gray',
-    rangepAPIvalues:'gray',
-    emptyrangeAPI:'gray',
-}
-
-const propertyDisabledFlags = {
-    startingLowIndex:false,
-    startingHighIndex:false,
-}
-
 const dependentAPIFields = [
     'scrolltoIndex',
     'listsize',
@@ -213,6 +201,22 @@ const Options = ({
     editAPIFunctionArgumentsRef.current = editAPIFunctionArguments
 
     // --------------------------------[ internal mutable field data ]-----------------------------
+
+    const textColorsRef = useRef({
+        rangepropertyvalues:'gray',
+        emptyrangeproperty:'gray',
+        rangeAPIvalues:'gray',
+        emptyrangeAPI:'gray',
+    })
+
+    const textColors = textColorsRef.current
+
+    const propertyDisabledFlagsRef = useRef({
+        startingLowIndex:false,
+        startingHighIndex:false,
+    })
+
+    const propertyDisabledFlags = propertyDisabledFlagsRef.current
 
     // disabled controls
     const disabledFlagsRef = useRef<GenericObject>(
@@ -758,6 +762,7 @@ const Options = ({
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             editAPIFunctionArguments.rangeAPIType = input
             sessionAPIFunctionArgumentsRef.current.rangeAPIType = input
+            updateFieldAccessFunctions.rangeAPI()
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         prependCount:(input:string) => {
@@ -905,6 +910,24 @@ const Options = ({
                 textColors.emptyrangeproperty = 'black'
             }
         },
+        rangeAPI:() => {
+            if (!functionEnabledSettings.listrange) {
+                textColors.rangeAPIvalues = 'gray'
+                textColors.emptyrangeAPI = 'gray'
+                textColors.rangeAPIvalues = 'gray'
+                textColors.emptyrangeAPI = 'gray'
+            } else {
+                if (sessionAPIFunctionArgumentsRef.current.rangeAPIType == 
+                    'rangeAPIvalues') {
+                    textColors.rangeAPIvalues = 'black'
+                    textColors.emptyrangeAPI = 'gray'
+                } else {
+                    textColors.rangeAPIvalues = 'gray'
+                    textColors.emptyrangeAPI = 'black'
+                }
+            }
+
+        },
         APIFunctions: (service:string = '') => {
 
             // disable all, and reset error conditions
@@ -1030,6 +1053,7 @@ const Options = ({
                 updateFieldAccessFunctions.contentType(contentSelection)
                 updateFieldAccessFunctions.APIFunctions()
                 updateFieldAccessFunctions.propertyFields(contentSelection)
+                updateFieldAccessFunctions.rangeAPI()
                 setOptionsState('ready')
                 break
 
@@ -1060,6 +1084,7 @@ const Options = ({
             case 'newopfunctionselector': {
 
                 updateFieldAccessFunctions.APIFunctions(sessionOperationFunctionSelectorRef.current)
+                updateFieldAccessFunctions.rangeAPI()
                 setOptionsState('ready')
                 break
 
@@ -1902,7 +1927,7 @@ const Options = ({
 
                     </Stack>
 
-                    <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangepAPIvalues}>
+                    <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangeAPIvalues}>
                         Integers. Set low and high indexes. high index must be greater than or equal to  
                         low index.
                     </Text>
