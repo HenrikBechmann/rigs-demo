@@ -94,6 +94,7 @@ const fieldSections:GenericObject = {
     listsize:'operations',
     prependCount:'operations',
     appendCount:'operations',
+    rangeAPIType:'properties',
     listLowIndex:'operations',
     listHighIndex:'operations',
     insertFrom:'operations',
@@ -140,6 +141,8 @@ const errorMessages = {
 const textColors = {
     rangepropertyvalues:'gray',
     emptyrangeproperty:'gray',
+    rangepAPIvalues:'gray',
+    emptyrangeAPI:'gray',
 }
 
 const propertyDisabledFlags = {
@@ -147,11 +150,11 @@ const propertyDisabledFlags = {
     startingHighIndex:false,
 }
 
-const dependentServiceFields = [
+const dependentAPIFields = [
     'scrolltoIndex',
     'listsize',
     'prependCount','appendCount',
-    'listLowIndex','listHighIndex',
+    'listLowIndex','listHighIndex','rangeAPIType',
     'insertFrom', 'insertRange',
     'removeFrom', 'removeRange',
     'moveFrom', 'moveRange', 'moveTo',
@@ -218,6 +221,7 @@ const Options = ({
             cellMinWidth:false,
             scrolltoIndex:false,
             listsize:false,
+            rangeAPIType:false,
             listLowIndex:false,
             listHighIndex:false,
             prependCount:false,
@@ -750,6 +754,12 @@ const Options = ({
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
+        rangeAPIType:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.rangeAPIType = input
+            sessionAPIFunctionArgumentsRef.current.rangeAPIType = input
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
         prependCount:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             editAPIFunctionArguments.prependCount = input
@@ -832,7 +842,7 @@ const Options = ({
         },
     }
 
-    const serviceFunctions = {
+    const APISnapshots = {
         getCacheIndexMap: () => {
             console.log('cacheIndexMap =',functionsAPI.getCacheIndexMap())
         },
@@ -895,10 +905,10 @@ const Options = ({
                 textColors.emptyrangeproperty = 'black'
             }
         },
-        serviceFunctions: (service:string) => {
+        APIFunctions: (service:string = '') => {
 
             // disable all, and reset error conditions
-            for (const field of dependentServiceFields) {
+            for (const field of dependentAPIFields) {
                 disabledFlags[field] = true
                 if (invalidFlags[field]) {
                     invalidFlags[field] = false
@@ -930,6 +940,7 @@ const Options = ({
                     case 'listrange':{
                         disabledFlags.listLowIndex = false
                         disabledFlags.listHighIndex = false
+                        disabledFlags.rangeAPIType = false
                         isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
                         isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
                         break
@@ -1017,7 +1028,7 @@ const Options = ({
                 const contentSelection = sessionContentTypeSelectorRef.current
 
                 updateFieldAccessFunctions.contentType(contentSelection)
-                updateFieldAccessFunctions.serviceFunctions(contentSelection)
+                updateFieldAccessFunctions.APIFunctions()
                 updateFieldAccessFunctions.propertyFields(contentSelection)
                 setOptionsState('ready')
                 break
@@ -1048,7 +1059,7 @@ const Options = ({
             }
             case 'newopfunctionselector': {
 
-                updateFieldAccessFunctions.serviceFunctions(sessionOperationFunctionSelectorRef.current)
+                updateFieldAccessFunctions.APIFunctions(sessionOperationFunctionSelectorRef.current)
                 setOptionsState('ready')
                 break
 
@@ -1677,7 +1688,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFunctions.getCacheIndexMap}
+                            onClick = {APISnapshots.getCacheIndexMap}
                         >
                                 Get Cache Index Map
                         </Button>
@@ -1692,7 +1703,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFunctions.getCacheItemMap}
+                            onClick = {APISnapshots.getCacheItemMap}
                         >
                             Get Cache Item Map
                         </Button>
@@ -1707,7 +1718,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFunctions.getCradleIndexMap}
+                            onClick = {APISnapshots.getCradleIndexMap}
                         >
                             Get Cradle Index Map
                         </Button>
@@ -1837,6 +1848,14 @@ const Options = ({
 
                     <Heading size = 'xs'>Change virtual list range</Heading>
 
+            <RadioGroup 
+                value = {editAPIFunctionArguments.rangeAPIType} 
+                onChange = {onChangeFunctions.rangeAPIType}
+                isDisabled = {disabledFlags.rangeAPIType}
+            >
+                <VStack align = 'start'>
+                    <Radio value = 'rangeAPIvalues'>Range Values</Radio>
+
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
@@ -1883,7 +1902,20 @@ const Options = ({
 
                     </Stack>
 
-                    <FormControl>
+                    <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.rangepAPIvalues}>
+                        Integers. Set low and high indexes. high index must be greater than or equal to  
+                        low index.
+                    </Text>
+
+                    <Radio value = 'emptyrangeAPI'>Empty Virtual List</Radio>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} color = {textColors.emptyrangeAPI}>
+                        This selection will send an empty range array to the scroller, creating an empty virtual list.
+                    </Text>
+                </VStack>
+            </RadioGroup>
+
+                    <FormControl borderBottom = '1px' >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
 
                             <FormLabel htmlFor='listrange' fontSize = 'sm'>Enable</FormLabel>
@@ -1895,11 +1927,6 @@ const Options = ({
                             />
                         </InputGroup>
                     </FormControl>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integers. Set low and high indexes. high index must be greater than or equal to  
-                        low index.
-                    </Text>
 
                     <Heading size = 'xs'>prepend index count to list range</Heading>
 

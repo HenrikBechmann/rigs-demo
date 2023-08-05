@@ -40,6 +40,7 @@ import {
 const defaultAPIFunctionArguments:GenericObject = {
   gotoIndex:'',
   listsize:'',
+  rangeAPIType:'rangeAPIvalues',
   listLowIndex:'',
   listHighIndex:'',
   prependCount:'',
