@@ -138,7 +138,7 @@ const errorMessages = {
     moveTo:'integer: required, greater than or equal to listlowindex',
 }
 
-const dependentAPIFields = [
+const accessControlledAPIFields = [
     'scrolltoIndex',
     'listsize',
     'prependCount','appendCount',
@@ -221,8 +221,8 @@ const Options = ({
     // disabled controls
     const APIdisabledFlagsRef = useRef<GenericObject>(
         {
-            cellMinHeight:false,
-            cellMinWidth:false,
+            cellMinHeight:false, // property
+            cellMinWidth:false, // property
             scrolltoIndex:false,
             listsize:false,
             rangeAPIType:false,
@@ -949,7 +949,7 @@ const Options = ({
         APIFunctions: (service:string = '') => {
 
             // disable all, and reset error conditions
-            for (const field of dependentAPIFields) {
+            for (const field of accessControlledAPIFields) {
                 APIdisabledFlags[field] = true
                 if (invalidFieldFlags[field]) {
                     invalidFieldFlags[field] = false
