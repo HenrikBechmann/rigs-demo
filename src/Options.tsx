@@ -169,58 +169,69 @@ const Options = ({
     // -------------------------[ component state updates ]------------------------
 
     // inherited scroller service functions
-    const functionsAPI = functionsAPIRef.current
+    const 
+        functionsAPI = functionsAPIRef.current
 
-    const indexRangeRef = useRef<number[]>([])
-    const [listlowindex, listhighindex] = indexRangeRef.current
+    const 
+        indexRangeRef = useRef<number[]>([]),
+        [listlowindex, listhighindex] = indexRangeRef.current
 
-    const originalContentTypeSelectorRef = useRef(sessionContentTypeSelectorRef.current)
+    const 
+        originalContentTypeSelectorRef = useRef(sessionContentTypeSelectorRef.current)
 
     // component state
-    const [optionsState, setOptionsState] = useState('setup')
+    const 
+        [optionsState, setOptionsState] = useState('setup')
 
     // simple values
-    const [editContentTypeSelector, setEditContentTypeSelector] = useState(sessionContentTypeSelectorRef.current)
+    const 
+        [editContentTypeSelector, setEditContentTypeSelector] = 
+            useState(sessionContentTypeSelectorRef.current)
 
-    const [editOperationFunctionSelector, setEditOperationFunctionSelector] = 
-        useState(sessionOperationFunctionSelectorRef.current)
-
-    const editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current)
+    const 
+        [editOperationFunctionSelector, setEditOperationFunctionSelector] = 
+            useState(sessionOperationFunctionSelectorRef.current),
+        editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current)
     editOperationFunctionSelectorRef.current = editOperationFunctionSelector
 
     // objects. The local values are used to assign valid edits to the inherited values
-    const [editContentTypeProperties, setEditContentTypeProperties] = 
-        useState({...sessionAllContentTypePropertiesRef.current[editContentTypeSelector]})
-    const editContentTypePropertiesRef = useRef(editContentTypeProperties)
+    const
+        [editContentTypeProperties, setEditContentTypeProperties] = 
+            useState({...sessionAllContentTypePropertiesRef.current[editContentTypeSelector]}),
+        editContentTypePropertiesRef = useRef(editContentTypeProperties)
     editContentTypePropertiesRef.current = editContentTypeProperties
 
-    const [editCallbackFlags, setEditCallbackFlags] = useState({...sessionCallbackFlagsRef.current})
+    const 
+        [editCallbackFlags, setEditCallbackFlags] = 
+            useState({...sessionCallbackFlagsRef.current})
     
-    const [editAPIFunctionArguments, setEditAPIFunctionArguments] = useState({...sessionAPIFunctionArgumentsRef.current})
-    const editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments)
+    const 
+        [editAPIFunctionArguments, setEditAPIFunctionArguments] = 
+            useState({...sessionAPIFunctionArgumentsRef.current}),
+        editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments)
     editAPIFunctionArgumentsRef.current = editAPIFunctionArguments
 
     // --------------------------------[ internal mutable field data ]-----------------------------
 
-    const rangeTextColorsRef = useRef({
-        rangepropertyvalues:'gray',
-        emptyrangeproperty:'gray',
-        rangeAPIvalues:'gray',
-        emptyrangeAPI:'gray',
-    })
+    const 
+        rangeTextColorsRef = useRef({
+            rangepropertyvalues:'gray',
+            emptyrangeproperty:'gray',
+            rangeAPIvalues:'gray',
+            emptyrangeAPI:'gray',
+        }),
+        rangeTextColors = rangeTextColorsRef.current
 
-    const rangeTextColors = rangeTextColorsRef.current
-
-    const propertyDisabledFlagsRef = useRef({
-        startingLowIndex:false,
-        startingHighIndex:false,
-    })
-
-    const propertyDisabledFlags = propertyDisabledFlagsRef.current
+    const 
+        propertyDisabledFlagsRef = useRef({
+            startingLowIndex:false,
+            startingHighIndex:false,
+        }),
+        propertyDisabledFlags = propertyDisabledFlagsRef.current
 
     // disabled controls
-    const APIdisabledFlagsRef = useRef<GenericObject>(
-        {
+    const 
+        APIdisabledFlagsRef = useRef<GenericObject>({
             cellMinHeight:false, // property
             cellMinWidth:false, // property
             scrolltoIndex:false,
@@ -238,14 +249,12 @@ const Options = ({
             moveRange:false,
             moveTo:false,
             remapDemo:false,
-        }
-    )
-
-    const APIdisabledFlags = APIdisabledFlagsRef.current
+        }),
+        APIdisabledFlags = APIdisabledFlagsRef.current
 
     // invalid flags
-    const invalidFieldFlagsRef = useRef<GenericObject>(
-        {
+    const 
+        invalidFieldFlagsRef = useRef<GenericObject>({
             contentType:false,
             orientation:false,
             cellHeight:false,
@@ -275,10 +284,8 @@ const Options = ({
             moveRange:false,
             moveTo:false,
             remapDemo:false,
-        }
-    )
-
-    const invalidFieldFlags = invalidFieldFlagsRef.current
+        }),
+        invalidFieldFlags = invalidFieldFlagsRef.current
 
     // test forwarded to host; returns text list of invalid section titles for display to user
     const getInvalidSections = () => {
@@ -299,21 +306,21 @@ const Options = ({
     }
 
     // scroller function switch settings
-    const functionEnabledSettingsRef = useRef<GenericObject>({
-        goto:false,
-        listsize:false,
-        prependCount:false,
-        appendCount:false,
-        listrange:false,
-        reload:false,
-        insert:false,
-        remove:false,
-        move:false,
-        remap:false,
-        clear:false,
-    })
-
-    const functionEnabledSettings = functionEnabledSettingsRef.current
+    const 
+            functionEnabledSettingsRef = useRef<GenericObject>({
+            goto:false,
+            listsize:false,
+            prependCount:false,
+            appendCount:false,
+            listrange:false,
+            reload:false,
+            insert:false,
+            remove:false,
+            move:false,
+            remap:false,
+            clear:false,
+        }),
+        functionEnabledSettings = functionEnabledSettingsRef.current
 
     // -----------------------------------[ field management functions ]------------------------------
 
@@ -525,7 +532,6 @@ const Options = ({
 
     // display on change functions
     const onChangeFunctions = {
-
         showAxis:(event:React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
             const value = target.checked
@@ -535,7 +541,6 @@ const Options = ({
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current].technicalshowAxis = value
             setEditContentTypeProperties({...editContentTypeProperties})
         },
-
         // update scroller service function switch settings
         onChangeEnabler:(event:React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
@@ -553,7 +558,6 @@ const Options = ({
             setEditOperationFunctionSelector(opfunc)
             setOptionsState('preparenewopfunctionselector')
         },
-
         // contentType global switch
         contentType:(event:React.ChangeEvent) => {
             const target = event.target as HTMLSelectElement
@@ -565,7 +569,6 @@ const Options = ({
             setEditContentTypeSelector(value)
             setOptionsState('preparenewcontenttype')
         },
-
         // callback handling
         callbackSettings:(event:React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
@@ -575,7 +578,6 @@ const Options = ({
             callbackSettings[callbackID] = callbackValue
             setEditCallbackFlags({...callbackSettings})            
         },
-
         // individual values
         orientation:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
@@ -1154,8 +1156,7 @@ const Options = ({
 
             <RadioGroup 
                 value = {editContentTypeProperties.orientation} 
-                onChange = {onChangeFunctions.orientation}
-            >
+                onChange = {onChangeFunctions.orientation}>
                 <HStack align = 'center'>
                     <Radio value = 'vertical'>Vertical</Radio>
                     <Radio value = 'horizontal'>Horizontal</Radio>
