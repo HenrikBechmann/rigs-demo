@@ -495,12 +495,12 @@ const getFunctionToastContent = (
     }
     case 'prependCount': {
       functionsAPI.prependIndexCount(APIFunctionArguments.prependCount)
-      codeblock = `functionsAPI.prependIndexCount([${APIFunctionArguments.prependCount})`
+      codeblock = `functionsAPI.prependIndexCount(${APIFunctionArguments.prependCount})`
       break
     }
     case 'appendCount': {
       functionsAPI.appendIndexCount(APIFunctionArguments.appendCount)
-      codeblock = `functionsAPI.appendIndexCount([${APIFunctionArguments.appendCount})`
+      codeblock = `functionsAPI.appendIndexCount(${APIFunctionArguments.appendCount})`
       break
     }
     case 'reload': {
