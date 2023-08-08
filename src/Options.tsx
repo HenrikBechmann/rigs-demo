@@ -174,7 +174,11 @@ const Options = ({
 
     const 
         indexRangeRef = useRef<number[]>([]),
-        [listlowindex, listhighindex] = indexRangeRef.current
+        [listlowindex, listhighindex] = indexRangeRef.current,
+        rangesize = 
+            indexRangeRef.current.length == 0?
+            0:
+            listhighindex - listlowindex + 1
 
     const 
         originalContentTypeSelectorRef = useRef(sessionContentTypeSelectorRef.current)
@@ -482,7 +486,9 @@ const Options = ({
             return isInvalid
         },
         insertFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, listlowindex))
+            const isInvalid = (!isInteger(value) || 
+                    (rangesize && (!isValueGreaterThanOrEqualToMinValue(value, listlowindex)))
+                )
             invalidFieldFlags.insertFrom = isInvalid
             isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
             return isInvalid
