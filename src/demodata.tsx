@@ -80,7 +80,7 @@ const repositioningFlagCallback = (flag:boolean) => {
 
 const changeListSizeCallback = (newlistsize:number) => {
     
-    demoCallbackFlagsRef.current.changeListsizeCallback && 
+    demoCallbackFlagsRef.current.changeListSizeCallback && 
         console.log('changeListSizeCallback: newlistsize', 
             newlistsize)
 
@@ -181,17 +181,16 @@ const simpleComponentStyles = {
         backgroundColor:'white',
         border: '1px solid black',
         borderRadius:'8px',
+        overflow:'hidden',
     } as React.CSSProperties
 }
 
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
-    // const originalindexRef = useRef(props.index)
-
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
+            {`list index ${props.index},`}<br/>
             {`cache itemID ${props.itemID}`}
         </div>
     </div>
