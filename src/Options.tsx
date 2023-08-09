@@ -452,7 +452,7 @@ const Options = ({
             return isInvalid
         },
         scrolltoIndex:(value:string) => {
-            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, listlowindex))
+            const isInvalid = (!isInteger(value)) // || !isValueGreaterThanOrEqualToMinValue(value, listlowindex))
             invalidFieldFlags.scrolltoIndex = isInvalid
             return isInvalid
         },
