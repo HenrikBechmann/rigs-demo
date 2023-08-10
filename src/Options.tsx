@@ -2337,7 +2337,7 @@ const Options = ({
                         The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
                         items to the newly assigned indexes. We've included a random test that applies to 
                         the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
-                        items scroll out of scope.
+                        items scroll out of scope. See Explanations for details.
                     </Text>
 
                     <Heading size = 'xs'>Reload the cache</Heading>
