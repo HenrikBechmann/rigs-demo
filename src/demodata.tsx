@@ -190,7 +190,7 @@ const SimpleItem = (props:any) => {
 
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {`list index ${props.index},`}<br/>
+            {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
             {`cache itemID ${props.itemID}`}
         </div>
     </div>
@@ -350,7 +350,7 @@ const getVariableTestString = (index:number, itemID:number) => {
 
 const VariableItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableTestString(props.index, props.itemID))
+    const testStringRef = useRef(getVariableTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
 
@@ -589,7 +589,7 @@ const VariableItemDynamic = (props:any) => {
     useEffect(()=>{
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
-            const teststringinstance = getDynamicTestString(props.index, props.itemID)
+            const teststringinstance = getDynamicTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID)
             setTeststring(teststringinstance)
 
         },200 + (Math.random() * 2000))
@@ -655,7 +655,7 @@ const getVariableOversizedTestString = (index:number, itemID:number) => {
 
 const VariableOversizedItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableOversizedTestString(props.index, props.itemID))
+    const testStringRef = useRef(getVariableOversizedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
 
@@ -887,7 +887,7 @@ const SubscrollerComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
         <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            [{index}]={itemID} List #{index + 1 - lowindex} of {listsize}
+            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
 
@@ -931,7 +931,7 @@ const getVariableNestedTestString = (index:number, itemID:number) => {
 
 const VariableSubscrollerItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableNestedTestString(props.index, props.itemID))
+    const testStringRef = useRef(getVariableNestedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
 
@@ -1204,7 +1204,7 @@ const SharedCacheComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
         <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            [{index}]={itemID} List #{index + 1 - lowindex} of {listsize}
+            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
 
