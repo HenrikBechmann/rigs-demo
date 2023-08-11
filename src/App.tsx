@@ -335,11 +335,11 @@ function App() {
     }
 
   },[demoState])
-
+  // overscrollBehavior is set here to attempt to stop reload in mobile. not working
   return (
     <ChakraProvider>
 
-    <Box height = '100vh'><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr'>
+    <Box height = '100vh' style={{overscrollBehavior:'none'}}><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr' style={{overscrollBehavior:'none'}}>
 
       <Box padding = {[1,1,2]}>
 
