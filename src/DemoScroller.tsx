@@ -4,9 +4,9 @@ import React from 'react'
 
 import GridScroller from 'react-infinite-grid-scroller'
 
-const Scroller = ({demoAllContentTypeProperties, demoContentType}:any) => {
+const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) => {
 
-    return <GridScroller key = {demoContentType} {...demoAllContentTypeProperties[demoContentType]}/>
+    return <GridScroller key = {demoContentTypeSelector} {...demoAllContentTypeProperties[demoContentTypeSelector]}/>
 }
 
 export default Scroller
