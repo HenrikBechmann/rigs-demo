@@ -21,19 +21,20 @@ import Scroller from 'react-infinite-grid-scroller'
 // They control the firing of the callbacks. The demo callbacks, when activated, send feedback
 // to the browser console.
 // The callback names are recognized by RIGS, and fired if found.
-export const defaultCallbackSettings = {
+export const defaultCallbackFlags = {
     referenceIndexCallback:false,
     repositioningIndexCallback:false,
     preloadIndexCallback:false,
     itemExceptionCallback:false,
-    changeListsizeCallback:false,
+    changeListSizeCallback:false,
+    changeListRangeCallback:false,
     deleteListCallback:false,
     repositioningFlagCallback:false,
 }
 
 // initialize the demo settings with the default settings, and export to the App module. 
 // These settings can be changed in the Callbacks section of the Options drawer
-export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as GenericObject}
+export const demoCallbackFlagsRef = {current:{...defaultCallbackFlags} as GenericObject}
 
 
 // -----------------
@@ -42,28 +43,28 @@ export const demoCallbackSettingsRef = {current:{...defaultCallbackSettings} as 
 
 const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
 
-    demoCallbackSettingsRef.current.referenceIndexCallback && 
+    demoCallbackFlagsRef.current.referenceIndexCallback && 
         console.log('referenceIndexCallback: index, location, cradleState',
             index, location, cradleState)
    
 }
 const preloadIndexCallback = (index:number) => {
     
-    demoCallbackSettingsRef.current.preloadIndexCallback && 
+    demoCallbackFlagsRef.current.preloadIndexCallback && 
         console.log('preloadIndexCallback: index', 
             index)
 
 }
 const deleteListCallback = (reason:string, deleteList:number[]) => {
     
-    demoCallbackSettingsRef.current.deleteListCallback && 
+    demoCallbackFlagsRef.current.deleteListCallback && 
         console.log('deleteListCallback: reason, deleteList',
             reason, deleteList)
 
 }
 const repositioningIndexCallback = (index:number) => {
     
-    demoCallbackSettingsRef.current.repositioningIndexCallback && 
+    demoCallbackFlagsRef.current.repositioningIndexCallback && 
         console.log('repositioningIndexCallback: index',
             index)
 
@@ -71,23 +72,31 @@ const repositioningIndexCallback = (index:number) => {
 
 const repositioningFlagCallback = (flag:boolean) => {
     
-    demoCallbackSettingsRef.current.repositioningFlagCallback && 
+    demoCallbackFlagsRef.current.repositioningFlagCallback && 
         console.log('repositioningFlagCallback: index',
             flag)
 
 }
 
-const changeListsizeCallback = (newlistsize:number) => {
+const changeListSizeCallback = (newlistsize:number) => {
     
-    demoCallbackSettingsRef.current.changeListsizeCallback && 
-        console.log('changeListsizeCallback: newlistsize', 
+    demoCallbackFlagsRef.current.changeListSizeCallback && 
+        console.log('changeListSizeCallback: newlistsize', 
             newlistsize)
+
+}
+
+const changeListRangeCallback = (newlistrange:number) => {
+    
+    demoCallbackFlagsRef.current.changeListRangeCallback && 
+        console.log('changeListRangeCallback: newlistrange', 
+            newlistrange)
 
 }
 
 const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
     
-    demoCallbackSettingsRef.current.itemExceptionCallback && 
+    demoCallbackFlagsRef.current.itemExceptionCallback && 
         console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
             index, itemID, returnvalue, location, error)
 
@@ -96,12 +105,12 @@ const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, loc
 // The functions object is used by the Options drawer for the snapshot functions,
 // and by the main app for the operations functions selected in the Options drawer.
 // The functions are instantiated in the scroller on mounting, by the functionsCallback below
-export const functionsObjectRef = {current:{} as GenericObject}
+export const functionsAPIRef = {current:{} as GenericObject}
 
 // the functions callback returns the funtions API to the caller on mounting
 const functionsCallback = (functions:GenericObject) => {
 
-    functionsObjectRef.current = functions
+    functionsAPIRef.current = functions
 
 }
 
@@ -115,7 +124,8 @@ const callbacks = {
     repositioningIndexCallback,
     preloadIndexCallback,
     itemExceptionCallback,
-    changeListsizeCallback,
+    changeListSizeCallback,
+    changeListRangeCallback,
     deleteListCallback,
     repositioningFlagCallback,
 }
@@ -171,17 +181,16 @@ const simpleComponentStyles = {
         backgroundColor:'white',
         border: '1px solid black',
         borderRadius:'8px',
+        overflow:'hidden',
     } as React.CSSProperties
 }
 
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
-    const originalindexRef = useRef(props.index)
-
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {originalindexRef.current + 1}: {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
+            {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
             {`cache itemID ${props.itemID}`}
         </div>
     </div>
@@ -224,6 +233,7 @@ const simplePlaceholderMessages = {
 const simplecontentProperties = {
     startingIndex:0,
     startingListSize:300,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:150,
     cellWidth:150,
@@ -281,6 +291,7 @@ const simplePromisesScrollerStyles = {
 const simplepromisesProperties = {
     startingIndex:0,
     startingListSize:300,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:150,
     cellWidth:150,
@@ -327,11 +338,11 @@ const getVariableTestString = (index:number, itemID:number) => {
     let teststr
 
     if ([0,1,51,52,196,197,198,199].includes(index)) {
-        teststr = 'SHORT STRING ' + (index + 1) + ` [${index}]=${itemID}`// short string for demo
+        teststr = 'SHORT STRING ' + ` [${index}]=${itemID}`// short string for demo
     } else if (index == 3) {
-        teststr =`${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,.5 * teststring.length)}`
+        teststr =`[${index}]=${itemID} test string => ${teststring.substr(0,.5 * teststring.length)}`
     } else {
-        teststr =`${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+        teststr =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
     }
 
     return teststr
@@ -339,7 +350,7 @@ const getVariableTestString = (index:number, itemID:number) => {
 
 const VariableItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableTestString(props.index, props.itemID))
+    const testStringRef = useRef(getVariableTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
 
@@ -461,6 +472,7 @@ const variablePlaceholderMessages = {
 const variablecontentProperties = {
     startingIndex:0,
     startingListSize:200,
+    // startingListRange:[-60,60],
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -505,6 +517,7 @@ const getVariableItemPromise = (index:number, itemID:number) => {
 const variablepromiseProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -533,7 +546,7 @@ const variablepromiseProperties = {
 
 const getDynamicTestString = (index:number, itemID:number) => {
 
-    return `${index + 1}: [${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+    return `[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
 }
 
@@ -576,7 +589,7 @@ const VariableItemDynamic = (props:any) => {
     useEffect(()=>{
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
-            const teststringinstance = getDynamicTestString(props.index, props.itemID)
+            const teststringinstance = getDynamicTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID)
             setTeststring(teststringinstance)
 
         },200 + (Math.random() * 2000))
@@ -606,6 +619,7 @@ const getVariableItemDynamic = (index:number, itemID:number) => {
 const variabledynamicProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -634,14 +648,14 @@ const getVariableOversizedTestString = (index:number, itemID:number) => {
 
     let teststr
 
-    teststr =`${index + 1}: [${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
+    teststr =`[${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
 
     return teststr
 }
 
 const VariableOversizedItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableOversizedTestString(props.index, props.itemID))
+    const testStringRef = useRef(getVariableOversizedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
 
@@ -752,6 +766,7 @@ const getVariableOversizedItem = (index:number, itemID:number) => {
 const variableoversizedProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:800,
     cellWidth:400,
@@ -835,7 +850,8 @@ const SubscrollerComponent = (props:any) => {
         cellWidth, 
         runwaySize, 
         startingIndex, 
-        startingListSize, 
+        startingListSize,
+        startingListRange, 
         getItem, 
         cache,
         layout,
@@ -855,7 +871,7 @@ const SubscrollerComponent = (props:any) => {
 
     },[scrollerPropertiesRef.current.orientation])
 
-    const { listsize } = scrollerPropertiesRef.current
+    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
 
     useEffect(()=>{
 
@@ -871,7 +887,7 @@ const SubscrollerComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
         <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            [{index}]={itemID} List #{index + 1} of {listsize}
+            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
 
@@ -884,6 +900,7 @@ const SubscrollerComponent = (props:any) => {
                 cellWidth = {cellWidth}
                 runwaySize = {runwaySize}
                 startingListSize = {startingListSize}
+                startingListRange = {startingListRange}
                 startingIndex = {startingIndex}
                 getItem = {getItem}
                 callbacks = {null}
@@ -907,14 +924,14 @@ const SubscrollerComponent = (props:any) => {
 
 const getVariableNestedTestString = (index:number, itemID:number) => {
 
-    const str =`${index + 1}:[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+    const str =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
     return str
 }
 
 const VariableSubscrollerItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableNestedTestString(props.index, props.itemID))
+    const testStringRef = useRef(getVariableNestedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
 
@@ -960,6 +977,7 @@ const nestedVariableSubscrollerProperties = {
 
     startingIndex:0,
     startingListSize:100,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:300,
     cellWidth:250,
@@ -1001,7 +1019,7 @@ const uniformSubscrollerItemStyle = {
 
 const getUniformSubscrollerItem = (index:any, itemID:number) => {
 
-    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID} Item {index + 1} of this list </div>
+    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID}</div>
 
 }
 
@@ -1009,6 +1027,7 @@ const nestedUniformSubscrollerProperties = {
 
     startingIndex:0,
     startingListSize:100,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:40,
     cellWidth:250,
@@ -1054,6 +1073,7 @@ const nestedScrollerStyles = {
 const nestedcontentProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:400,
     cellWidth:300,
@@ -1101,6 +1121,7 @@ const getNestedSubscrollerPromise = (index:number, itemID:number) => {
 const nestedpromisesProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:400,
     cellWidth:300,
@@ -1147,6 +1168,7 @@ const SharedCacheComponent = (props:any) => {
         runwaySize, 
         startingIndex, 
         startingListSize, 
+        startingListRange,
         getItem, 
         cache,
         layout,
@@ -1166,7 +1188,7 @@ const SharedCacheComponent = (props:any) => {
 
     },[scrollerPropertiesRef.current.orientation])
 
-    const { listsize } = scrollerPropertiesRef.current
+    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
 
     useEffect(()=>{
 
@@ -1182,7 +1204,7 @@ const SharedCacheComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
         <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            [{index}]={itemID} List #{index + 1} of {listsize}
+            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
         <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
 
@@ -1195,6 +1217,7 @@ const SharedCacheComponent = (props:any) => {
                 cellWidth = {cellWidth}
                 runwaySize = {runwaySize}
                 startingListSize = {startingListSize}
+                startingListRange = {startingListRange}
                 startingIndex = {startingIndex}
                 getItem = {getItem}
                 callbacks = {null}
@@ -1235,6 +1258,7 @@ const sharedcacheScrollerStyles = {
 const sharedcacheProperties = {
     startingIndex:0,
     startingListSize:200,
+    startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:400,
     cellWidth:300,
@@ -1246,7 +1270,7 @@ const sharedcacheProperties = {
     layout: 'uniform',
 
     getItem:getSharedCacheSubscroller,
-    styles:nestedScrollerStyles,
+    styles:sharedcacheScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical:{

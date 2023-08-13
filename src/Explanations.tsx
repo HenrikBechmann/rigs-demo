@@ -12,7 +12,7 @@ import {
     Heading,
 } from '@chakra-ui/react'
 
-const emitMarkdown = (markdown:string) => {
+const renderMarkdown = (markdown:string) => {
 
     return <Box className = 'markdown-body' fontSize = 'sm'>
         <ReactMarkdown children = {markdown} remarkPlugins = {[remarkGfm]}/>
@@ -31,7 +31,7 @@ There are several main ways to experiment with content sizing and configuration 
 
 - try out the various content types offered in the _Options_ drawer
 - change the size of the browser window
-- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for reset to 100%). Zooming down to 50% or 33% are interesting
+- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for reset to 100%). Zooming down to 50% or 33% is interesting
 
 There are many options that can be set in the _Options_ drawer.
 
@@ -67,12 +67,12 @@ The three basic content types of this demo site are:
 - variable
 - nested scrollers
 
-The variations include \`promises\` of all three which are randomly delayed for loading. There is also
+The variations include \`promises\` of all three types which are randomly delayed for loading. There is also
 a _dynamic_ version of the variable content type, in which every cell randomly, and continuously, loads new and 
 different data. Finally there is an _oversized_ variable version which explores the effect of having cells that can
 extend beyond the boundaries of the viewport. The scroller still scrolls in all of these circumstances.
 
-Each of the content type items shows the virtual list position number (index + 1), the (zero based) \`index\` 
+Each of the content type items shows the virtual list \`index\` 
 number, and the transient scroller cache \`itemID\` number. You'll notice that with caching limited to the 
 scope of the \`Cradle\` (the default 'cradle' caching including the visible cells plus the 'runway' cells), 
 the \`itemID\` changes when the cells leave and return to the \`Cradle\` scope. If the caching is set to 
@@ -90,7 +90,7 @@ The term _variable_ is for the layout in which for vertical orientation, the cel
 vary between the \`cellMinWidth\` and \`cellWidth\` parameter values.
 
 There is also a *shared cache (experimental)* content type which shares cache for all visible scrollers. This
-has no operational effect.
+currently has no operational effect.
 
 Of course these content types are just samples. The main point of RIGS is to allow almost any kind of React Component 
 content.
@@ -119,7 +119,13 @@ changed. But see also the _Scroll To_ option in the _Service Function Operations
 type is changed. Subsequently the list size can be changed directly through the API (see the _Change virtual list 
 size_ option in the _Service Function Operations options_ section), or when a \`getItem\` call returns a \`null\` 
 (this becomes the new end-of-list), or when the list size is modified through the cache management API (again, see 
-the _Service Function Operations options_ section).
+the _Service Function Operations options_ section). Starting list size is ignored when Starting list range is set.
+
+**Starting list range** is applied only on initial mounting of a scroller, or in this demo whenever the content 
+type is changed. Subsequently the list range can be changed directly through the API (see the _Change virtual list 
+range option in the _Service Function Operations options_ section). The Starting list range property can be set to 
+a two part array of integers \`[lowindex, highindex]\`, or to an empty array  (\`[]\`) for an empty virtual list. 
+\`lowindex\` and \`highindex\` can be any integer, but \`lowindex\` must be less than or equal to \`highindex\`.
 
 The **Runway size** option sets the number of rows of cells that are instantiated _out of view_ at the start and 
 the end of the cradle. This gives the cradle some leeway to load cells before they come into view.
@@ -129,7 +135,7 @@ In addition, the _keepload_ option keeps components in the cache as they are loa
 load the entire virtual list into the cache. Both _keepload_ and _preload_ are constrained by \`cacheMax\`. Using
 \`cacheMax\`, the caching algorithm tries to maintain an equal weight of caching before and after the \`Cradle\`.
 Also note that _preload_ of nested scrollers partially loads the scroller components, but cannot load the contents 
-until displayed by the \`Cradle\`. The reason is that components in cache but not displayed lose their \`width\`, 
+until displayed by the \`Cradle\`. The reason is that components in cache, but not displayed, lose their \`width\`, 
 \`height\`, \`scrollTop\`, and \`scrollLeft\` values. These values are needed by the Scroller for calculating 
 configurations.
 
@@ -157,7 +163,8 @@ const callbacks = {
     functionsCallback, // obtain API functions
     referenceIndexCallback, // current index at the Cradle axis
     itemExceptionCallback, // information on failed getItem call
-    changeListsizeCallback, // list size has changed
+    changeListSizeCallback, // list size has changed
+    changeListRangeCallback, // list range has changed
     deleteListCallback, // items have been deleted from the cache
     repositioningFlagCallback, // repositioning has started/ended
     repositioningIndexCallback, // current virtual repositioning index
@@ -168,10 +175,10 @@ See the formal documentation (linked in the _Documentation &amp; Source Code_ se
 
 Callbacks should be written as closures something like this (example from this site's demodata module):
 ~~~
-const changeListsizeCallback = (newlistsize:number) => {
+const changeListSizeCallback = (newlistsize:number) => {
     
-    demoCallbackSettingsRef.current.changeListsizeCallback && 
-        console.log('changeListsizeCallback: newlistsize', 
+    demoCallbackFlagsRef.current.changeListSizeCallback && 
+        console.log('changeListSizeCallback: newlistsize', 
             newlistsize)
 
 }
@@ -181,11 +188,11 @@ This example outputs feedback to the browser console if a flag has been set for 
 The special callback \`functionsCallback\`, which acquires API functions from RIGS, should be written something 
 like this:
 ~~~
-const functionsObjectRef = useRef(null)
+const functionsAPIRef = useRef(null)
 
 const functionsCallback = (functions) => {
 
-    functionsObjectRef.current = functions
+    functionsAPIRef.current = functions
 
 }
 ~~~
@@ -196,13 +203,14 @@ directly by the demo).
 const snapshots_md = `
 Snapshots provide support for advanced interactions with the RIGS cache. As the name suggests,
 they provide snapshots of the contents of the cache (containing both the visible and invisible content) and the 
-\`Cradle\` (containing the visible user content). 
+\`Cradle\` (containing the visible user content). \`getPropertiesSnapshot\` gets the current properties of the scroller.'
 
 Keep in mind that RIGS maintains a sparse memory cache in which there
 is no guarantee of entries being contiguous. The \`Cradle\` on the other hand is guaranteed to hold contiguous
 entries by index position in the virtual list.
 
-The \`index\` is the position in the virtual list of the scroller (a virtual zero-based array).
+The \`index\` is the position in the virtual list of the scroller, as constrained by \`lowindex\` and \`highindex\`
+values of the list range.
 
 The \`itemID\` is a unique session ID of the user component, assigned by RIGS for the time the component is in the cache,
 regardless of its position in the virtual list (the position in the virtual list could change with use of the API functions).
@@ -221,6 +229,9 @@ The javascript \`Maps\` returned by \`getCacheIndexMap()\` and \`getCacheItemMap
 \`getCradleIndexMap()\` returns a javascript \`Map\` of the current contents of the \`Cradle\`, in which \`key\` = the item's 
 \`index\` in the virtual list and \`value\` = the \`itemID\` of the user component. The \`Map\` returned by
 \`getCradleIndexMap()\` is thus a subset of the Map retured by \`getCacheIndexMap()\`.
+
+\`getPropertiesSnapshot()\` gives the object that holding scroller properties that is returned to scroller hosts and 
+scroller children when invoked.
 
 For the purposes of this demo, these snapshots are returned to the browser console.
 
@@ -244,6 +255,15 @@ appropriate. The size of the virtual list is initially set with the \`startingLi
 can also be truncated by returning \`null\` from a \`getItem\` call. This will cause the list to be truncated to the 
 index value of the \`getItem\` call. Finally, the list size may be changed as a side effect of cache management calls 
 listed below.
+
+\`setListRange(...)\` optionally takes an array of two numbers \`[lowindex, highindex]\`, being the \`lowindex\` and 
+\`highindex\` of the virtual list. \`lowindex\` must be <= \`highindex\`, but both can be positive or negative 
+integers. \`setListRange\` if present supercedes \`startingListSize\`. If \`setListRange\` is given an empty array 
+(\`[]\`) it creates an empty virtual list.
+
+\`prependIndexCount(...)\` takes a positive integer for the number of indexes to add to the start of the virtual list.
+
+\`appendIndexCount(...)\` takes a positive integer for the number of indexes to add to the end of the virtual list.
 
 The following cache operation functions are provided for advanced interaction with the RIGS cache.
 
@@ -322,16 +342,17 @@ const Explainer = ({explanation, children:title}:{explanation:JSX.Element, child
 
 const Explanations = () => {
 
-    const overview = emitMarkdown(overview_md),
-        key_design_ideas = emitMarkdown(key_design_ideas_md),
-        content = emitMarkdown(content_md),
-        properties = emitMarkdown(properties_md),
-        callbacks = emitMarkdown(callbacks_md),
-        snapshots = emitMarkdown(snapshots_md),
-        operations = emitMarkdown(operations_md),
-        performance = emitMarkdown(performance_md),
-        motivation = emitMarkdown(motivation_md),
-        documentation = emitMarkdown(documentation_md)
+    const 
+        overview = renderMarkdown(overview_md),
+        key_design_ideas = renderMarkdown(key_design_ideas_md),
+        content = renderMarkdown(content_md),
+        properties = renderMarkdown(properties_md),
+        callbacks = renderMarkdown(callbacks_md),
+        snapshots = renderMarkdown(snapshots_md),
+        operations = renderMarkdown(operations_md),
+        performance = renderMarkdown(performance_md),
+        motivation = renderMarkdown(motivation_md),
+        documentation = renderMarkdown(documentation_md)
 
     return (
 

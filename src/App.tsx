@@ -11,7 +11,8 @@ import {
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 
   UnorderedList, ListItem,
   Heading, Image, Text, Code,
-  useDisclosure, Button, Link, useToast,
+  Button, Link,
+  useDisclosure, useToast,
 
 } from '@chakra-ui/react'
 
@@ -19,31 +20,38 @@ import Explanations from './Explanations'
 import Options from './Options'
 import DemoScroller from './DemoScroller'
 
+// default -> demo <-> session <-> edit
+
 import { 
 
   defaultAllContentTypeProperties, 
-  defaultCallbackSettings,
-
   demoAllContentTypePropertiesRef,
-  demoCallbackSettingsRef, 
 
-  functionsObjectRef,
+  defaultCallbackFlags,
+  demoCallbackFlagsRef, 
+
+  functionsAPIRef,
 
   GenericObject, // type
 
 } from './demodata'
 
 
-const defaultFunctionProperties:GenericObject = {
+const defaultAPIFunctionArguments:GenericObject = {
   gotoIndex:'',
   listsize:'',
+  rangeAPIType:'rangeAPIvalues',
+  listLowIndex:'',
+  listHighIndex:'',
+  prependCount:'',
+  appendCount:'',
   insertFrom:'',
   insertRange:'',
   removeFrom:'',
   removeRange:'',
+  moveTo:'',
   moveFrom:'',
   moveRange:'',
-  moveTo:'',
   remapDemo:'backwardsort',
 }
 
@@ -62,8 +70,10 @@ const contentTitles:GenericObject = {
 }
 
 const ErrorBox = (props:any) => {
+
   const { invalidSections, isOpen, onClose } = props
   if (!isOpen) return null
+
   const listitems:any[] = []
   let count = 0
   invalidSections.forEach((title:string)=>{
@@ -71,139 +81,265 @@ const ErrorBox = (props:any) => {
   })
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent fontSize = {[9,9,14]}>
-          <ModalHeader >There are errors</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>Please correct the errors in the following sections before proceeding.</Text>
-            <UnorderedList ml = {4}>
-              {listitems}
-            </UnorderedList>
-          </ModalBody >
-          <ModalFooter>
-            <Button onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent fontSize = {[9,9,14]}>
+        <ModalHeader >There are errors</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Text>Please correct the errors in the following sections before proceeding.</Text>
+          <UnorderedList ml = {4}>
+            {listitems}
+          </UnorderedList>
+        </ModalBody >
+        <ModalFooter>
+          <Button onClick={onClose}>
+            Close
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   )
+
+}
+
+const mapAllPropertiesDemoToSession = (
+  demoAllProperties:GenericObject, 
+  sessionAllProperties:GenericObject
+) => {
+
+    const workingAllProperties = {...sessionAllProperties}
+
+    for (const typeSelector in demoAllProperties) {
+
+        const workingTypeProperties = {...demoAllProperties[typeSelector]}
+        const startingListRange = workingTypeProperties.startingListRange
+        if (startingListRange) {
+            if (startingListRange.length == 0) {
+                workingTypeProperties.rangePropertyType = 'emptyrangeproperty'
+                workingTypeProperties.startingLowIndex = ''
+                workingTypeProperties.startingHighIndex = ''
+            } else {
+                const [lowindex, highindex] = startingListRange
+                workingTypeProperties.rangePropertyType = 'rangepropertyvalues'
+                workingTypeProperties.startingLowIndex = lowindex + ''
+                workingTypeProperties.startingHighIndex = highindex + ''
+            }
+        } else {
+            workingTypeProperties.rangePropertyType = 'rangepropertyvalues'
+            workingTypeProperties.startingLowIndex = ''
+            workingTypeProperties.startingHighIndex = ''
+        }
+
+        delete workingTypeProperties.startingListRange
+        workingAllProperties[typeSelector] = workingTypeProperties
+ 
+    }
+
+    Object.assign(sessionAllProperties, workingAllProperties)
+
+    return sessionAllProperties
+
+}
+
+const mapAllPropertiesSessionToDemo = (
+  sessionAllProperties:GenericObject, 
+  demoAllProperties:GenericObject
+) => {
+
+    const workingAllProperties = {...demoAllProperties}
+
+    for (const typeSelector in demoAllProperties) {
+
+        const workingTypeProperties = {...sessionAllProperties[typeSelector]}
+        const rangePropertyType = workingTypeProperties.rangePropertyType
+        const {startingLowIndex, startingHighIndex} = workingTypeProperties
+        if (rangePropertyType == 'rangepropertyvalues') {
+            if (startingLowIndex && startingHighIndex) { // strings
+                workingTypeProperties.startingListRange = [+startingLowIndex, +startingHighIndex]
+            } else {
+                workingTypeProperties.startingListRange = null
+            }
+        } else {
+                workingTypeProperties.startingListRange = []
+        }
+
+        delete workingTypeProperties.rangePropertyType
+        delete workingTypeProperties.startingLowIndex
+        delete workingTypeProperties.startingHighIndex
+        workingAllProperties[typeSelector] = workingTypeProperties
+ 
+    }
+
+    Object.assign(demoAllProperties,workingAllProperties)
+
+    return demoAllProperties
+
 }
 
 function App() {
 
-  const [demoState, setDemoState] = useState('ready')
+  const [demoState, setDemoState] = useState('setup')
 
   // baseline - static
-  const defaultContentType = 'simplecontent'
-  const defaultOperationFunction = ''
+  const defaultContentTypeSelector = 'simplecontent'
+  const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
-  // defaultCallbackSettings imported above
-  // defaultFunctionProperties defined above
+  // defaultCallbackFlags imported above
+  // defaultAPIFunctionArguments defined above
+
+  const indexRangeRef = useRef([])
   
   // assigned from demo versions for edit
-  const sessionContentTypeRef = useRef<string>('')
-  const sessionOperationFunctionRef = useRef<string>('')
-  const sessionAllContentTypePropertiesRef = useRef<GenericObject>({})
-  const sessionCallbackSettingsRef = useRef<GenericObject>({})
-  const sessionFunctionPropertiesRef = useRef<GenericObject>({})
+  const 
+      sessionContentTypeSelectorRef = useRef<string>(''),
+      sessionOperationFunctionSelectorRef = useRef<string>(''),
+      sessionAllContentTypePropertiesRef = useRef<GenericObject>({}),
+      sessionCallbackFlagsRef = useRef<GenericObject>({}),
+      sessionAPIFunctionArgumentsRef = useRef<GenericObject>({})
 
   // live demo control, initialized by baseline, updated by session data
-  const demoContentTypeRef = useRef<string>(defaultContentType)
-  const demoOperationFunctionRef = useRef(defaultOperationFunction)
-  // demoAllContentTypePropertiesRef imported above
-  // demoCallbackSettingsRef imported above
-  const demoFunctionPropertiesRef = useRef<GenericObject>({...defaultFunctionProperties})
+  const 
+      demoContentTypeSelectorRef = useRef<string>(defaultContentTypeSelector),
+      demoOperationFunctionSelectorRef = useRef(defaultOperationFunctionSelector),
+      // demoAllContentTypePropertiesRef imported above
+      // demoCallbackFlagsRef imported above
+      demoAPIFunctionArgumentsRef = useRef<GenericObject>({...defaultAPIFunctionArguments})
 
   // drawer management
-  const { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure()
-  const { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
+  const 
+      { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure(),
+      { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
 
   const optionsButtonRef = useRef(null)
   const explanationsButtonRef = useRef(null)
 
   // error handling
-  const functionsRef = useRef<GenericObject>({})
+  const optionsAPIRef = useRef<GenericObject>({})
   const {isOpen:isOpenErrors, onOpen:onOpenErrors, onClose:onCloseErrors } = useDisclosure()
 
   const functionToast = useToast()
 
-  // buttons
-  const showOptions = () => {
-    sessionContentTypeRef.current = demoContentTypeRef.current
-    sessionOperationFunctionRef.current = demoOperationFunctionRef.current
-    sessionAllContentTypePropertiesRef.current = {...demoAllContentTypePropertiesRef.current}
-    sessionCallbackSettingsRef.current = {...demoCallbackSettingsRef.current}
-    sessionFunctionPropertiesRef.current = {...demoFunctionPropertiesRef.current}
-    onOpenOptions()
-  }
-
   const invalidSectionsRef = useRef<any>(null)
 
-  const applyOptions = () => {
-    demoContentTypeRef.current = sessionContentTypeRef.current
-    demoOperationFunctionRef.current = sessionOperationFunctionRef.current
-    demoAllContentTypePropertiesRef.current = {...sessionAllContentTypePropertiesRef.current}
-    demoCallbackSettingsRef.current = {...sessionCallbackSettingsRef.current}
-    demoFunctionPropertiesRef.current = {...sessionFunctionPropertiesRef.current}
+  // ---- buttons response
+  const showOptions = () => {
 
-    invalidSectionsRef.current = functionsRef.current.invalidSections()
+    sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
+    sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
+    sessionAllContentTypePropertiesRef.current = 
+      mapAllPropertiesDemoToSession(
+        demoAllContentTypePropertiesRef.current,
+        sessionAllContentTypePropertiesRef.current
+     )
+    sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
+    sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
+
+    onOpenOptions()
+
+  }
+
+  const applyOptions = () => {
+
+    demoContentTypeSelectorRef.current = sessionContentTypeSelectorRef.current
+    demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
+    demoAllContentTypePropertiesRef.current = 
+      mapAllPropertiesSessionToDemo(
+        sessionAllContentTypePropertiesRef.current,
+        demoAllContentTypePropertiesRef.current
+     )
+    demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
+    demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
+
+    invalidSectionsRef.current = optionsAPIRef.current.getInvalidSections()
+
     if (invalidSectionsRef.current.size) {
+
       onOpenErrors()
+
     } else {
+
       onCloseOptions()
-      if (demoOperationFunctionRef.current) {
+
+      if (demoOperationFunctionSelectorRef.current) {
         applyFunction()
       }
+
     }
+
+    setDemoState('apply')
+
   }
 
   const applyFunction = () => {
+
     functionToast({
       title: 'API called:',
       description: <div>{
+
         getFunctionToastContent( // runs the function as a side effect
-          demoOperationFunctionRef.current, 
-          demoFunctionPropertiesRef.current,
-          functionsObjectRef.current)}
-      </div>,
+
+          demoOperationFunctionSelectorRef.current, 
+          demoAPIFunctionArgumentsRef.current,
+          functionsAPIRef.current)
+
+        }</div>,
+
       status: 'success',
       isClosable: true,
     })
-    demoOperationFunctionRef.current = ''
+
+    demoOperationFunctionSelectorRef.current = ''
+
   }
 
   const resetOptions = () => {
-    demoContentTypeRef.current = defaultContentType
-    demoOperationFunctionRef.current = defaultOperationFunction
+
+    demoContentTypeSelectorRef.current = defaultContentTypeSelector
+    demoOperationFunctionSelectorRef.current = defaultOperationFunctionSelector
     demoAllContentTypePropertiesRef.current = {...defaultAllContentTypeProperties}
-    demoCallbackSettingsRef.current = {...defaultCallbackSettings}
-    demoFunctionPropertiesRef.current = {...defaultFunctionProperties}
+    demoCallbackFlagsRef.current = {...defaultCallbackFlags}
+    demoAPIFunctionArgumentsRef.current = {...defaultAPIFunctionArguments}
+
     onCloseOptions()
+
+    setDemoState('resetall')
+    
   }
 
   useEffect(()=>{
 
     switch (demoState) {
-      case 'openoptions': 
-      case 'openexplanations':
+      case 'setup':
       case 'apply': 
       case 'resetall': {
+
+        setTimeout(()=>{ // allow cycle for load scroller, get functions and indexRange
+
+          const props = functionsAPIRef.current.getPropertiesSnapshot()
+          indexRangeRef.current = props.virtualListProps.range
+          setDemoState('ready') 
+
+        },100)
+        break
+
+      }
+
+      case 'openoptions': 
+      case 'openexplanations':{
+
         setDemoState('ready')
         break
+
       }
     }
 
   },[demoState])
-
+  // overscrollBehavior is set here to attempt to stop reload in mobile. not working
   return (
     <ChakraProvider>
 
-    <Box height = '100vh'><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr'>
+    <Box height = '100vh' style={{overscrollBehavior:'none'}}><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr' style={{overscrollBehavior:'none'}}>
 
       <Box padding = {[1,1,2]}>
 
@@ -222,18 +358,19 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.0.5-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-1.1.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
-          <i>Content:</i> {contentTitles[demoContentTypeRef.current]},&nbsp; 
-          {demoAllContentTypePropertiesRef.current[demoContentTypeRef.current].orientation}</Text>          
+          <i>Content:</i> {contentTitles[demoContentTypeSelectorRef.current]},&nbsp; 
+          {demoAllContentTypePropertiesRef.current[demoContentTypeSelectorRef.current].orientation}, 
+          range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}]</Text>          
       </Box>
 
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
         <DemoScroller 
-          demoContentType = {demoContentTypeRef.current} 
+          demoContentTypeSelector = {demoContentTypeSelectorRef.current} 
           demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} />
 
       </Box>
@@ -260,17 +397,17 @@ function App() {
           <Options 
 
             // simple values
-            sessionContentTypeRef = { sessionContentTypeRef }
-            sessionOperationFunctionRef = { sessionOperationFunctionRef }
+            sessionContentTypeSelectorRef = { sessionContentTypeSelectorRef }
+            sessionOperationFunctionSelectorRef = { sessionOperationFunctionSelectorRef }
 
             // dynamic ref objects
             sessionAllContentTypePropertiesRef = { sessionAllContentTypePropertiesRef } 
-            sessionCallbackSettingsRef = { sessionCallbackSettingsRef }
-            sessionFunctionPropertiesRef = { sessionFunctionPropertiesRef }
+            sessionCallbackFlagsRef = { sessionCallbackFlagsRef }
+            sessionAPIFunctionArgumentsRef = { sessionAPIFunctionArgumentsRef }
 
-            // static
-            functionsObjectRef = { functionsObjectRef }
-            functionsRef = { functionsRef }
+            // functions
+            functionsAPIRef = { functionsAPIRef }
+            optionsAPIRef = { optionsAPIRef }
 
           />
 
@@ -329,82 +466,102 @@ export default App
 
 // as side effect runs the requested function
 const getFunctionToastContent = (
-  functionindex:string, 
-  functionProperties:GenericObject,
-  functionsObject:GenericObject) => {
+  functionSelector:string, 
+  APIFunctionArguments:GenericObject,
+  functionsAPI:GenericObject) => {
 
   let codeblock
   let seeconsole = false
-  switch (functionindex) {
+  switch (functionSelector) {
     case 'goto': {
-      functionsObject.scrollToIndex(functionProperties.scrolltoIndex)
-      codeblock = `functionsObject.scrollToIndex(${functionProperties.scrolltoIndex})`
+      functionsAPI.scrollToIndex(APIFunctionArguments.scrolltoIndex)
+      codeblock = `functionsAPI.scrollToIndex(${APIFunctionArguments.scrolltoIndex})`
       break
     }
     case 'listsize': {
-      functionsObject.setListsize(functionProperties.listsize)
-      codeblock = `functionsObject.setListsize(${functionProperties.listsize})`
+      functionsAPI.setListSize(APIFunctionArguments.listsize)
+      codeblock = `functionsAPI.setListSize(${APIFunctionArguments.listsize})`
+      break
+    }
+    case 'listrange': {
+      if (APIFunctionArguments.rangeAPIType == 'rangeAPIvalues') {
+          functionsAPI.setListRange([APIFunctionArguments.listLowIndex, APIFunctionArguments.listHighIndex])
+          codeblock = `functionsAPI.setListRange([${APIFunctionArguments.listLowIndex},${APIFunctionArguments.listHighIndex}])`
+      } else {
+          functionsAPI.setListRange([])
+          codeblock = `functionsAPI.setListRange([])`
+      }
+      break
+    }
+    case 'prependCount': {
+      functionsAPI.prependIndexCount(APIFunctionArguments.prependCount)
+      codeblock = `functionsAPI.prependIndexCount(${APIFunctionArguments.prependCount})`
+      break
+    }
+    case 'appendCount': {
+      functionsAPI.appendIndexCount(APIFunctionArguments.appendCount)
+      codeblock = `functionsAPI.appendIndexCount(${APIFunctionArguments.appendCount})`
       break
     }
     case 'reload': {
-      functionsObject.reload()
-      codeblock = `functionsObject.reload()`
+      functionsAPI.reload()
+      codeblock = `functionsAPI.reload()`
       break
     }
     case 'insert': {
-      const result = functionsObject.insertIndex(
-        functionProperties.insertFrom, functionProperties.insertRange)
+      const result = functionsAPI.insertIndex(
+        APIFunctionArguments.insertFrom, APIFunctionArguments.insertRange)
       console.log('[changeList, replaceList, removeList]',result)
-      if (functionProperties.insertRange) {
-        codeblock = `functionsObject.insertIndex(${functionProperties.insertFrom},${functionProperties.insertRange})`
+      if (APIFunctionArguments.insertRange) {
+        codeblock = `functionsAPI.insertIndex(${APIFunctionArguments.insertFrom},${APIFunctionArguments.insertRange})`
       } else {
-        codeblock = `functionsObject.insertIndex(${functionProperties.insertFrom})`
+        codeblock = `functionsAPI.insertIndex(${APIFunctionArguments.insertFrom})`
       }
       seeconsole = true
       break
     }
     case 'remove': {
-      const result = functionsObject.removeIndex(
-        functionProperties.removeFrom, functionProperties.removeRange)
+      const result = functionsAPI.removeIndex(
+        APIFunctionArguments.removeFrom, APIFunctionArguments.removeRange)
       console.log('[changeList, replaceList, removeList]',result)
-      if (functionProperties.removeRange) {
-        codeblock = `functionsObject.removeIndex(${functionProperties.removeFrom},${functionProperties.removeRange})`
+      if (APIFunctionArguments.removeRange) {
+        codeblock = `functionsAPI.removeIndex(${APIFunctionArguments.removeFrom},${APIFunctionArguments.removeRange})`
       } else {
-        codeblock = `functionsObject.removeIndex(${functionProperties.removeFrom})`
+        codeblock = `functionsAPI.removeIndex(${APIFunctionArguments.removeFrom})`
       }
       seeconsole = true
       break
     }
     case 'move': {
-      const result = functionsObject.moveIndex(
-        functionProperties.moveTo, functionProperties.moveFrom, functionProperties.moveRange)
-      if (functionProperties.moveRange) {
-        codeblock = `functionsObject.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom},${functionProperties.moveRange})`
+      const result = functionsAPI.moveIndex(
+        APIFunctionArguments.moveTo, APIFunctionArguments.moveFrom, APIFunctionArguments.moveRange)
+      if (APIFunctionArguments.moveRange) {
+        codeblock = `functionsAPI.moveIndex(${APIFunctionArguments.moveTo},${APIFunctionArguments.moveFrom},${APIFunctionArguments.moveRange})`
       } else {
-        codeblock = `functionsObject.moveIndex(${functionProperties.moveTo},${functionProperties.moveFrom})`
+        codeblock = `functionsAPI.moveIndex(${APIFunctionArguments.moveTo},${APIFunctionArguments.moveFrom})`
       }
       console.log('processedIndexList', result)
       seeconsole = true
       break
     }
     case 'remap': {
-      switch (functionProperties.remapDemo) {
+      switch (APIFunctionArguments.remapDemo) {
         case 'backwardsort':{
-          remapindex_backwardsort(functionsObject)
+          remapindex_backwardsort(functionsAPI)
           break
         }
         case 'replaceitems':{
-          remapindex_replaceItems(functionsObject)
+          remapindex_replaceItems(functionsAPI)
           break
         }
       }
-      codeblock = `functionsObject.remapIndexes(changeMap)`
+      codeblock = `functionsAPI.remapIndexes(changeMap)`
       seeconsole = true
       break
     }
     case 'clear':{
-      functionsObject.clearCache()
-      codeblock = `functionsObject.clearCache()`
+      functionsAPI.clearCache()
+      codeblock = `functionsAPI.clearCache()`
       break
     }
 
@@ -418,9 +575,9 @@ const getFunctionToastContent = (
   </>
 }
 
-const remapindex_backwardsort = (functionsObject:GenericObject) => {
+const remapindex_backwardsort = (functionsAPI:GenericObject) => {
 
-  const cradleindexmap = functionsObject.getCradleIndexMap()
+  const cradleindexmap = functionsAPI.getCradleIndexMap()
   if (!cradleindexmap) return
 
   const cradleindexarray:Array<number[]> = Array.from(cradleindexmap)
@@ -438,7 +595,7 @@ const remapindex_backwardsort = (functionsObject:GenericObject) => {
   for (const i in indexarray) {
     changeMap.set(indexarray[i],cacheItemIDarray[i])
   }
-  const returnarray = functionsObject.remapIndexes(changeMap)
+  const returnarray = functionsAPI.remapIndexes(changeMap)
 
   console.log(`remapIndexes:
 [modifiedIndexesList,
@@ -453,9 +610,9 @@ changeMap]`,
 
 }
 
-const remapindex_replaceItems = (functionsObject:GenericObject) => {
+const remapindex_replaceItems = (functionsAPI:GenericObject) => {
 
-  const cradleindexmap = functionsObject.getCradleIndexMap()
+  const cradleindexmap = functionsAPI.getCradleIndexMap()
   if (!cradleindexmap) return
 
   const indexList = [...cradleindexmap.keys()]
@@ -483,7 +640,7 @@ const remapindex_replaceItems = (functionsObject:GenericObject) => {
   changeMap.set(index,lastitemid)
   changeMap.set(lastindex, firstitemid)
 
-  const returnarray = functionsObject.remapIndexes(changeMap)
+  const returnarray = functionsAPI.remapIndexes(changeMap)
 
   console.log(`remapIndexes:
 [modifiedIndexesList,
