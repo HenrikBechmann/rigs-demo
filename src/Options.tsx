@@ -1,5 +1,8 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
 
+// TODO: update functionsAPI with change of contentType selection?
+// TODO: map properties from session to edit here
+
 import React, {useState, useRef, useEffect} from 'react'
 
 import {
@@ -37,29 +40,29 @@ const isInteger = (value:any) => {
 
     const test = +value
 
-    return (isNumber(value) && (Math.floor(test) == test))
+    return (isNumber(value) && (Math.floor(test) === test))
 
 }
 
-const minValue = (value:any, minValue:any) => {
+const isValueGreaterThanOrEqualToMinValue = (compareValue:any, minValue:any) => {
 
-    if (!isInteger(value) || !isInteger(minValue)) return false
+    if (!isInteger(compareValue) || !isInteger(minValue)) return false
 
-    const testvalue = +value
+    const testCompareValue = +compareValue
     const testMinValue = +minValue
 
-    return testvalue >= testMinValue
+    return testCompareValue >= testMinValue
 
 }
 
-const maxValue = (value:any, maxValue:any) => {
+const isValueLessThanOrEqualToMaxValue = (compareValue:any, maxValue:any) => {
 
-    if (!isInteger(value) || !isInteger(maxValue)) return false
+    if (!isInteger(compareValue) || !isInteger(maxValue)) return false
 
-    const testvalue = +value
+    const testCompareValue = +compareValue
     const testMaxValue = +maxValue
 
-    return testvalue <= testMaxValue
+    return testCompareValue <= testMaxValue
 
 }
 
@@ -80,12 +83,20 @@ const fieldSections:GenericObject = {
     cellMinWidth:'properties',
     startingIndex:'properties',
     startingListSize:'properties',
+    rangePropertyType:'properties',
+    startingLowIndex:'properties',
+    startingHighIndex:'properties',
     padding:'properties',
     gap:'properties',
     runwaySize:'properties',
     cacheMax:'properties',
     scrolltoIndex:'operations',
     listsize:'operations',
+    prependCount:'operations',
+    appendCount:'operations',
+    rangeAPIType:'properties',
+    listLowIndex:'operations',
+    listHighIndex:'operations',
     insertFrom:'operations',
     insertRange:'operations',
     removeFrom:'operations',
@@ -104,81 +115,136 @@ const errorMessages = {
     cellWidth:'integer: cellWidth is required with minimum 25',
     cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
     cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
-    startingIndex:'blank, or integer greater than or equal to 0',
+    startingIndex:'blank, or integer greater than or equal to listlowindex',
     startingListSize:'integer: required, with minimum 0',
+    startingLowIndex:'integer: must be less than or equal to high index',
+    startingHighIndex:'integer: must be greater than or equal to low index',
     padding:'blank, or integer greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
     cacheMax:'blank, or integer greater than or equal to 0',
-    scrolltoIndex:'integer: required, greater than or equal to 0',
+    scrolltoIndex:'integer: required, greater than or equal to listlowindex',
     listsize:'integer: required, greater than or equal to 0',
-    insertFrom:'integer: required, greater than or equal to 0',
+    listLowIndex:'integer: required',
+    listHighIndex:'integer:required, greater than or equal to low index',
+    prependCount:'integer:required, greater than or equal to 0',
+    appendCount:'integer:required, greater than or equal to 0',
+    insertFrom:'integer: required, greater than or equal to listlowindex',
     insertRange:'blank, or integer greater than or equal to the "from" index',
-    removeFrom:'integer: required, greater than or equal to 0',
+    removeFrom:'integer: required, greater than or equal to listlowindex',
     removeRange:'blank, or integer greater than or equal to the "from" index',
-    moveFrom:'integer: required, greater than or equal to 0',
+    moveFrom:'integer: required, greater than or equal to listlowindex',
     moveRange:'blank, or integer greater than or equal to the "from" index',
-    moveTo:'integer: required, greater than or equal to 0',
+    moveTo:'integer: required, greater than or equal to listlowindex',
 }
 
-const dependentFields = [
+const accessControlledAPIFields = [
     'scrolltoIndex',
     'listsize',
+    'prependCount','appendCount',
+    'listLowIndex','listHighIndex','rangeAPIType',
     'insertFrom', 'insertRange',
     'removeFrom', 'removeRange',
     'moveFrom', 'moveRange', 'moveTo',
     'remapDemo',
 ]
 
-// Options component; almost 40 fields
+// ----------------------------------------------------
+// Options component; about 40 fields
 const Options = ({
 
+    sessionContentTypeSelectorRef, 
     sessionAllContentTypePropertiesRef, 
-    sessionContentTypeRef, 
-    sessionCallbackSettingsRef, 
-    sessionOperationFunctionRef, 
-    sessionFunctionPropertiesRef,
-    functionsObjectRef,
-    functionsRef,
+
+    sessionCallbackFlagsRef, 
+
+    sessionOperationFunctionSelectorRef, 
+    sessionAPIFunctionArgumentsRef,
+
+    functionsAPIRef,
+    optionsAPIRef,
 
 }:GenericObject) => {
  
-    // -------------------------[ state updates ]------------------------
+    // -------------------------[ component state updates ]------------------------
 
     // inherited scroller service functions
-    const functionsObject = functionsObjectRef.current
+    const 
+        functionsAPI = functionsAPIRef.current
+
+    const 
+        indexRangeRef = useRef<number[]>([]),
+        [listlowindex, listhighindex] = indexRangeRef.current,
+        rangesize = 
+            indexRangeRef.current.length == 0?
+            0:
+            listhighindex - listlowindex + 1
+
+    const 
+        originalContentTypeSelectorRef = useRef(sessionContentTypeSelectorRef.current)
 
     // component state
-    const [optionsState, setOptionsState] = useState('initialize-dependencies')
+    const 
+        [optionsState, setOptionsState] = useState('setup')
 
     // simple values
-    const [editContentType, setEditContentType] = useState(sessionContentTypeRef.current)
-    // const editContentTypeRef = useRef(sessionContentTypeRef.current)
+    const 
+        [editContentTypeSelector, setEditContentTypeSelector] = 
+            useState(sessionContentTypeSelectorRef.current)
 
-    const [editOperationFunction, setEditOperationFunction] = useState(sessionOperationFunctionRef.current)
-    const editOperationFunctionRef = useRef(sessionOperationFunctionRef.current)
-    editOperationFunctionRef.current = editOperationFunction
+    const 
+        [editOperationFunctionSelector, setEditOperationFunctionSelector] = 
+            useState(sessionOperationFunctionSelectorRef.current),
+        editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current)
+    editOperationFunctionSelectorRef.current = editOperationFunctionSelector
 
     // objects. The local values are used to assign valid edits to the inherited values
-    const [editContentTypeProperties, setEditContentTypeProperties] = useState({...sessionAllContentTypePropertiesRef.current[editContentType]})
-    const editContentTypePropertiesRef = useRef(editContentTypeProperties)
+    const
+        [editContentTypeProperties, setEditContentTypeProperties] = 
+            useState({...sessionAllContentTypePropertiesRef.current[editContentTypeSelector]}),
+        editContentTypePropertiesRef = useRef(editContentTypeProperties)
     editContentTypePropertiesRef.current = editContentTypeProperties
 
-    const [editCallbackSettings, setEditCallbackSettings] = useState({...sessionCallbackSettingsRef.current})
+    const 
+        [editCallbackFlags, setEditCallbackFlags] = 
+            useState({...sessionCallbackFlagsRef.current})
     
-    const [editFunctionProperties, setEditFunctionProperties] = useState({...sessionFunctionPropertiesRef.current})
-    const editFunctionPropertiesRef = useRef(editFunctionProperties)
-    editFunctionPropertiesRef.current = editFunctionProperties
+    const 
+        [editAPIFunctionArguments, setEditAPIFunctionArguments] = 
+            useState({...sessionAPIFunctionArgumentsRef.current}),
+        editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments)
+    editAPIFunctionArgumentsRef.current = editAPIFunctionArguments
 
     // --------------------------------[ internal mutable field data ]-----------------------------
 
+    const 
+        rangeTextColorsRef = useRef({
+            rangepropertyvalues:'gray',
+            emptyrangeproperty:'gray',
+            rangeAPIvalues:'gray',
+            emptyrangeAPI:'gray',
+        }),
+        rangeTextColors = rangeTextColorsRef.current
+
+    const 
+        propertyDisabledFlagsRef = useRef({
+            startingLowIndex:false,
+            startingHighIndex:false,
+        }),
+        propertyDisabledFlags = propertyDisabledFlagsRef.current
+
     // disabled controls
-    const disabledFlagsRef = useRef<GenericObject>(
-        {
-            cellMinHeight:false,
-            cellMinWidth:false,
+    const 
+        APIdisabledFlagsRef = useRef<GenericObject>({
+            cellMinHeight:false, // property
+            cellMinWidth:false, // property
             scrolltoIndex:false,
             listsize:false,
+            rangeAPIType:false,
+            listLowIndex:false,
+            listHighIndex:false,
+            prependCount:false,
+            appendCount:false,
             insertFrom:false,
             insertRange:false,
             removeFrom:false,
@@ -187,14 +253,12 @@ const Options = ({
             moveRange:false,
             moveTo:false,
             remapDemo:false,
-        }
-    )
-
-    const disabledFlags = disabledFlagsRef.current
+        }),
+        APIdisabledFlags = APIdisabledFlagsRef.current
 
     // invalid flags
-    const invalidFlagsRef = useRef<GenericObject>(
-        {
+    const 
+        invalidFieldFlagsRef = useRef<GenericObject>({
             contentType:false,
             orientation:false,
             cellHeight:false,
@@ -203,6 +267,8 @@ const Options = ({
             cellMinWidth:false,
             startingIndex:false,
             startingListSize:false,
+            startingLowIndex:false,
+            startingHighIndex:false,
             padding:false,
             gap:false,
             runwaySize:false,
@@ -210,6 +276,10 @@ const Options = ({
             cacheMax:false,
             scrolltoIndex:false,
             listsize:false,
+            listLowIndex:false,
+            listHighIndex:false,
+            prependCount:false,
+            appendCount:false,
             insertFrom:false,
             insertRange:false,
             removeFrom:false,
@@ -218,16 +288,15 @@ const Options = ({
             moveRange:false,
             moveTo:false,
             remapDemo:false,
-        }
-    )
-
-    const invalidFlags = invalidFlagsRef.current
+        }),
+        invalidFieldFlags = invalidFieldFlagsRef.current
 
     // test forwarded to host; returns text list of invalid section titles for display to user
-    const invalidSections = () => {
+    const getInvalidSections = () => {
+
         const sections = new Set<string>()
-        const errorfields = invalidFlagsRef.current
-        for (const field in invalidFlagsRef.current) {
+        const errorfields = invalidFieldFlagsRef.current
+        for (const field in invalidFieldFlagsRef.current) {
             if (errorfields[field]) {
                 sections.add(fieldSections[field])
             }
@@ -237,44 +306,42 @@ const Options = ({
             sectionSet.add(sectionTitles[value])
         }) 
         return sectionSet
+
     }
 
-    useEffect(()=>{
-        functionsRef.current = {
-            invalidSections
-        }
-    },[])
-
     // scroller function switch settings
-    const functionEnabledSettingsRef = useRef<GenericObject>({
-        goto:false,
-        listsize:false,
-        reload:false,
-        insert:false,
-        remove:false,
-        move:false,
-        remap:false,
-        clear:false,
-    })
+    const 
+            functionEnabledSettingsRef = useRef<GenericObject>({
+            goto:false,
+            listsize:false,
+            prependCount:false,
+            appendCount:false,
+            listrange:false,
+            reload:false,
+            insert:false,
+            remove:false,
+            move:false,
+            remap:false,
+            clear:false,
+        }),
+        functionEnabledSettings = functionEnabledSettingsRef.current
 
-    const functionEnabledSettings = functionEnabledSettingsRef.current
-
-    // -----------------------------------[ field functions ]------------------------------
+    // -----------------------------------[ field management functions ]------------------------------
 
     // display value error check functions
     const isInvalidTests = {
         cellHeight:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 25))
-            invalidFlags.cellHeight = isInvalid
-            if (!disabledFlags.cellMinHeight) {
+            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, 25))
+            invalidFieldFlags.cellHeight = isInvalid
+            if (!APIdisabledFlags.cellMinHeight) {
                 isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
             }
             return isInvalid
         },
         cellWidth:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 25))
-            invalidFlags.cellWidth = isInvalid
-            if (!disabledFlags.cellMinWidth) {
+            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, 25))
+            invalidFieldFlags.cellWidth = isInvalid
+            if (!APIdisabledFlags.cellMinWidth) {
                 isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
             }
             return isInvalid
@@ -282,222 +349,204 @@ const Options = ({
         cellMinHeight:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellHeight)))
+                isInvalid = (!isValueGreaterThanOrEqualToMinValue(value,25) || !(isValueLessThanOrEqualToMaxValue(value, editContentTypePropertiesRef.current.cellHeight)))
             }
-            invalidFlags.cellMinHeight = isInvalid
+            invalidFieldFlags.cellMinHeight = isInvalid
             return isInvalid
         },
         cellMinWidth:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = (!minValue(value,25) || !(maxValue(value, editContentTypePropertiesRef.current.cellWidth)))
+                isInvalid = (!isValueGreaterThanOrEqualToMinValue(value,25) || !(isValueLessThanOrEqualToMaxValue(value, editContentTypePropertiesRef.current.cellWidth)))
             }
-            invalidFlags.cellMinWidth = isInvalid
+            invalidFieldFlags.cellMinWidth = isInvalid
             return isInvalid
         },
         startingIndex:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,0)
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,listlowindex)
             }
-            invalidFlags.startingIndex = isInvalid
+            invalidFieldFlags.startingIndex = isInvalid
             return isInvalid
         },
         startingListSize:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.startingListSize = isInvalid
+            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, 0))
+            invalidFieldFlags.startingListSize = isInvalid
             return isInvalid
+        },
+        startingLowIndex:(value:string) => {
+
+            let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingHighIndex))
+            if (!isInvalid) {
+                invalidFieldFlags.startingLowIndex = isInvalid
+                return isInvalid
+            }
+
+            isInvalid = isBlank(value) && !isBlank(editContentTypePropertiesRef.current.startingHighIndex)
+
+            !isInvalid && (isInvalid = isBlank(editContentTypePropertiesRef.current.startingHighIndex))
+
+            !isInvalid && (isInvalid = !isInteger(value))
+
+            !isInvalid && (isInvalid = !isInteger(editContentTypePropertiesRef.current.startingHighIndex))
+
+            !isInvalid && (isInvalid = !isValueGreaterThanOrEqualToMinValue(editContentTypePropertiesRef.current.startingHighIndex,value))
+
+            invalidFieldFlags.startingLowIndex = isInvalid
+            return isInvalid
+
+        },
+        startingHighIndex:(value:string) => {
+
+            let isInvalid = !(isBlank(value) && isBlank(editContentTypePropertiesRef.current.startingLowIndex))
+            if (!isInvalid) {
+                invalidFieldFlags.startingHighIndex = isInvalid
+                return isInvalid
+            }
+
+            isInvalid = isBlank(value) && !isBlank(editContentTypePropertiesRef.current.startingLowIndex)
+
+            !isInvalid && (isInvalid = isBlank(editContentTypePropertiesRef.current.startingLowIndex))
+
+            !isInvalid && (isInvalid = !isInteger(value))
+
+            !isInvalid && (isInvalid = !isInteger(editContentTypePropertiesRef.current.startingLowIndex))
+
+            !isInvalid && (isInvalid = !isValueLessThanOrEqualToMaxValue(editContentTypePropertiesRef.current.startingLowIndex, value))
+
+            invalidFieldFlags.startingHighIndex = isInvalid
+            return isInvalid
+
         },
         padding:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,0)
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,0)
             }
-            invalidFlags.padding = isInvalid
+            invalidFieldFlags.padding = isInvalid
             return isInvalid
         },
         gap:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,0)
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,0)
             }
-            invalidFlags.gap = isInvalid
+            invalidFieldFlags.gap = isInvalid
             return isInvalid
         },
         runwaySize:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,1)
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,1)
             }
-            invalidFlags.runwaySize = isInvalid
+            invalidFieldFlags.runwaySize = isInvalid
             return isInvalid
         },
         cacheMax:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,0)
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,0)
             }
-            invalidFlags.cacheMax = isInvalid
+            invalidFieldFlags.cacheMax = isInvalid
             return isInvalid
         },
         scrolltoIndex:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.scrolltoIndex = isInvalid
+            const isInvalid = (!isInteger(value)) // || !isValueGreaterThanOrEqualToMinValue(value, listlowindex))
+            invalidFieldFlags.scrolltoIndex = isInvalid
             return isInvalid
         },
         listsize:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.listsize = isInvalid
+            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, 0))
+            invalidFieldFlags.listsize = isInvalid
+            return isInvalid
+        },
+        listLowIndex:(value:string) => {
+            const isInvalid = !isInteger(value)
+            invalidFieldFlags.listLowIndex = isInvalid
+            isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+            return isInvalid
+        },
+        listHighIndex:(value:string) => {
+            let isInvalid = !isInteger(value)
+            if (!isInvalid) {
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,editAPIFunctionArgumentsRef.current.listLowIndex)
+            }
+            invalidFieldFlags.listHighIndex = isInvalid
+            return isInvalid
+        },
+        prependCount:(value:string) => {
+            const isInvalid = ((!isInteger(value)) || (!isValueGreaterThanOrEqualToMinValue(value, 0)) )
+            invalidFieldFlags.prependCount = isInvalid
+            return isInvalid
+        },
+        appendCount:(value:string) => {
+            const isInvalid = ((!isInteger(value)) || (!isValueGreaterThanOrEqualToMinValue(value, 0)) )
+            invalidFieldFlags.appendCount = isInvalid
             return isInvalid
         },
         insertFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.insertFrom = isInvalid
-            isInvalidTests.insertRange(editFunctionPropertiesRef.current.insertRange)
+            const isInvalid = (!isInteger(value) || 
+                    (rangesize && (!isValueGreaterThanOrEqualToMinValue(value, listlowindex)))
+                )
+            invalidFieldFlags.insertFrom = isInvalid
+            isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
             return isInvalid
         },
         insertRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editFunctionPropertiesRef.current.insertFrom)
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,editAPIFunctionArgumentsRef.current.insertFrom)
             }
-            invalidFlags.insertRange = isInvalid
+            invalidFieldFlags.insertRange = isInvalid
             return isInvalid
         },
         removeFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.removeFrom = isInvalid
-            isInvalidTests.removeRange(editFunctionPropertiesRef.current.removeRange)
+            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, listlowindex))
+            invalidFieldFlags.removeFrom = isInvalid
+            isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
             return isInvalid
         },
         removeRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editFunctionPropertiesRef.current.removeFrom)
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,editAPIFunctionArgumentsRef.current.removeFrom)
             }
-            invalidFlags.removeRange = isInvalid
+            invalidFieldFlags.removeRange = isInvalid
             return isInvalid
         },
         moveFrom:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.moveFrom = isInvalid
-            isInvalidTests.moveRange(editFunctionPropertiesRef.current.moveRange)
+            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, listlowindex))
+            invalidFieldFlags.moveFrom = isInvalid
+            isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
             return isInvalid
         },
         moveRange:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !minValue(value,editFunctionPropertiesRef.current.moveFrom)
+                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,editAPIFunctionArgumentsRef.current.moveFrom)
             }
-            invalidFlags.moveRange = isInvalid
+            invalidFieldFlags.moveRange = isInvalid
             return isInvalid
         },
         moveTo:(value:string) => {
-            const isInvalid = (!isInteger(value) || !minValue(value, 0))
-            invalidFlags.moveTo = isInvalid
+            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, listlowindex))
+            invalidFieldFlags.moveTo = isInvalid
             return isInvalid
         },
     }
 
-    const dependencyFuncs = {
-        contentType:(value:string) => {
-
-            let disabled
-            if (['variablecontent','variablepromises','variabledynamic','variableoversized'].includes(value)) {
-
-                disabled = false
-                isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
-                isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
-
-            } else {
-
-                disabled = true
-                invalidFlags.cellMinHeight = 
-                    invalidFlags.cellMinWidth = false
-
-            }
-
-            disabledFlags.cellMinHeight =
-                disabledFlags.cellMinWidth = disabled
-
-        },
-        serviceFunctions: (service:string) => {
-
-            // disable all, and reset error conditions
-            for (const field of dependentFields) {
-                disabledFlags[field] = true
-                if (invalidFlags[field]) {
-                    invalidFlags[field] = false
-                    editFunctionPropertiesRef.current[field] = sessionFunctionPropertiesRef.current[field]
-                }
-            }
-            if (service) {
-                switch (service) {
-                    case 'goto':{
-                        disabledFlags.scrolltoIndex = false
-                        isInvalidTests.scrolltoIndex(editFunctionPropertiesRef.current.scrolltoIndex)
-                        break
-                    }
-                    case 'listsize':{
-                        disabledFlags.listsize = false
-                        isInvalidTests.listsize(editFunctionPropertiesRef.current.listsize)
-                        break
-                    }
-                    case 'reload':{
-
-                        break
-                    }
-                    case 'insert':{
-                        disabledFlags.insertFrom = false
-                        disabledFlags.insertRange = false
-                        isInvalidTests.insertFrom(editFunctionPropertiesRef.current.insertFrom)
-                        isInvalidTests.insertRange(editFunctionPropertiesRef.current.insertRange)
-                        break
-                    }
-                    case 'remove':{
-                        disabledFlags.removeFrom = false
-                        disabledFlags.removeRange = false
-                        isInvalidTests.removeFrom(editFunctionPropertiesRef.current.removeFrom)
-                        isInvalidTests.removeRange(editFunctionPropertiesRef.current.removeRange)
-                        break
-                    }
-                    case 'move':{
-                        disabledFlags.moveFrom = false
-                        disabledFlags.moveRange = false
-                        disabledFlags.moveTo = false
-                        isInvalidTests.moveFrom(editFunctionPropertiesRef.current.moveFrom)
-                        isInvalidTests.moveRange(editFunctionPropertiesRef.current.moveRange)
-                        isInvalidTests.moveTo(editFunctionPropertiesRef.current.moveTo)
-                        break
-                    }
-                    case 'remap':{
-                        disabledFlags.remapDemo = false
-                        break
-                    }
-                    case 'clear':{
-
-                        break
-                    }
-                }
-            }
-            setEditFunctionProperties({...editFunctionPropertiesRef.current})
-        }
-
-    }
-
     // display on change functions
-    const onChangeFuncs = {
-
+    const onChangeFunctions = {
         showAxis:(event:React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
             const value = target.checked
 
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.technical.showAxis = value
-            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current].technicalshowAxis = value
-            setEditContentTypeProperties({...editProperties})
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.technical.showAxis = value
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current].technicalshowAxis = value
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
-
         // update scroller service function switch settings
         onChangeEnabler:(event:React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
@@ -511,279 +560,570 @@ const Options = ({
                 enablerValue?
                     enablerID:
                     ''
-            sessionOperationFunctionRef.current = opfunc
-            setEditOperationFunction(opfunc)
-            setOptionsState('prepare-to-update-function-dependencies')
+            sessionOperationFunctionSelectorRef.current = opfunc
+            setEditOperationFunctionSelector(opfunc)
+            setOptionsState('preparenewopfunctionselector')
         },
-
         // contentType global switch
         contentType:(event:React.ChangeEvent) => {
             const target = event.target as HTMLSelectElement
             const value = target.value
-            sessionContentTypeRef.current = value
+            sessionContentTypeSelectorRef.current = value
             // change property set to correspond with content type
             setEditContentTypeProperties({...sessionAllContentTypePropertiesRef.current[value]})
-            sessionContentTypeRef.current = value
-            setEditContentType(value)
-            setOptionsState('prepare-to-update-content-dependencies')
+            sessionContentTypeSelectorRef.current = value
+            setEditContentTypeSelector(value)
+            setOptionsState('preparenewcontenttype')
         },
-
         // callback handling
         callbackSettings:(event:React.ChangeEvent) => {
             const target = event.target as HTMLInputElement
             const callbackID = target.id
             const callbackValue = target.checked
-            const callbackSettings = sessionCallbackSettingsRef.current
+            const callbackSettings = sessionCallbackFlagsRef.current
             callbackSettings[callbackID] = callbackValue
-            setEditCallbackSettings({...callbackSettings})            
+            setEditCallbackFlags({...callbackSettings})            
         },
-
         // individual values
         orientation:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.orientation = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.orientation = input
             const newSessionProperties = 
-                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],orientation:input}
-            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
-            setEditContentTypeProperties({...editProperties})
+                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],orientation:input}
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cellHeight:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cellHeight = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cellHeight = input
             if (!isInvalidTests.cellHeight(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellHeight:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellHeight:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cellWidth:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cellWidth = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cellWidth = input
             if (!isInvalidTests.cellWidth(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellWidth:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellWidth:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cellMinHeight:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cellMinHeight = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cellMinHeight = input
             if (!isInvalidTests.cellMinHeight(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellMinHeight:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellMinHeight:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cellMinWidth:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cellMinWidth = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cellMinWidth = input
             if (!isInvalidTests.cellMinWidth(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cellMinWidth:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cellMinWidth:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         startingIndex:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.startingIndex = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.startingIndex = input
             if (!isInvalidTests.startingIndex(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],startingIndex:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingIndex:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         startingListSize:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.startingListSize = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.startingListSize = input
             if (!isInvalidTests.startingListSize(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],startingListSize:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
+        },
+        rangePropertyType:(input:string) => {
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.rangePropertyType = input
+            const newSessionProperties = 
+                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],rangePropertyType:input}
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            updateFieldAccessFunctions.propertyFields(sessionContentTypeSelectorRef.current)
+            setEditContentTypeProperties({...editContentTypeProperties})
+        },
+        startingLowIndex:(input:string) => {
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.startingLowIndex = input
+            if (!isInvalidTests.startingLowIndex(input)) {
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingLowIndex:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            }
+            setEditContentTypeProperties({...editContentTypeProperties})
+            isInvalidTests.startingHighIndex(editContentTypeProperties.startingHighIndex)
+        },
+        startingHighIndex:(input:string) => {
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.startingHighIndex = input
+            if (!isInvalidTests.startingHighIndex(input)) {
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingHighIndex:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            }
+            setEditContentTypeProperties({...editContentTypeProperties})
+            isInvalidTests.startingLowIndex(editContentTypeProperties.startingLowIndex)
         },
         padding:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.padding = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.padding = input
             if (!isInvalidTests.padding(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],padding:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],padding:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         gap:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.gap = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.gap = input
             if (!isInvalidTests.gap(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],gap:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],gap:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         runwaySize:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.runwaySize = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.runwaySize = input
             if (!isInvalidTests.runwaySize(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],runwaySize:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],runwaySize:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cache:(event:React.ChangeEvent) => {
-            const editProperties = editContentTypePropertiesRef.current
+            const editContentTypeProperties = editContentTypePropertiesRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
-            editProperties.cache = value
+            editContentTypeProperties.cache = value
             const newDisplayValues = 
-                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cache:value}
-            sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newDisplayValues
-            setEditContentTypeProperties({...editProperties})
+                {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cache:value}
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newDisplayValues
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         cacheMax:(input:string) => {
-            const editProperties = editContentTypePropertiesRef.current
-            editProperties.cacheMax = input
+            const editContentTypeProperties = editContentTypePropertiesRef.current
+            editContentTypeProperties.cacheMax = input
             if (!isInvalidTests.cacheMax(input)) {
                 const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current],cacheMax:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeRef.current] = newSessionProperties
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],cacheMax:input}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
-            setEditContentTypeProperties({...editProperties})
+            setEditContentTypeProperties({...editContentTypeProperties})
         },
         scrolltoIndex:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.scrolltoIndex = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.scrolltoIndex = input
             if (!isInvalidTests.scrolltoIndex(input)) {
-                sessionFunctionPropertiesRef.current.scrolltoIndex = input
+                sessionAPIFunctionArgumentsRef.current.scrolltoIndex = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         listsize:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.listsize = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.listsize = input
             if (!isInvalidTests.listsize(input)) {
-                sessionFunctionPropertiesRef.current.listsize = input
+                sessionAPIFunctionArgumentsRef.current.listsize = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
+        listLowIndex:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.listLowIndex = input
+            if (!isInvalidTests.listLowIndex(input)) {
+                sessionAPIFunctionArgumentsRef.current.listLowIndex = input
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
+        listHighIndex:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.listHighIndex = input
+            if (!isInvalidTests.listHighIndex(input)) {
+                sessionAPIFunctionArgumentsRef.current.listHighIndex = input
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
+        rangeAPIType:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.rangeAPIType = input
+            sessionAPIFunctionArgumentsRef.current.rangeAPIType = input
+            updateFieldAccessFunctions.rangeAPI()
+
+            if (input == 'emptyrangeAPI') {
+                APIdisabledFlags.listLowIndex = true
+                APIdisabledFlags.listHighIndex = true
+                if (invalidFieldFlags.listLowIndex) {
+                    invalidFieldFlags.listLowIndex = false
+                    editAPIFunctionArgumentsRef.current.listLowIndex = sessionAPIFunctionArgumentsRef.current.listLowIndex
+                }
+                if (invalidFieldFlags.listHighIndex) {
+                    invalidFieldFlags.listHighIndex = false
+                    editAPIFunctionArgumentsRef.current.listHighIndex = sessionAPIFunctionArgumentsRef.current.listHighIndex
+                }
+            } else {
+                APIdisabledFlags.listLowIndex = false
+                APIdisabledFlags.listHighIndex = false
+                isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
+                isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
+        prependCount:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.prependCount = input
+            if (!isInvalidTests.prependCount(input)) {
+                sessionAPIFunctionArgumentsRef.current.prependCount = input
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
+        appendCount:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.appendCount = input
+            if (!isInvalidTests.appendCount(input)) {
+                sessionAPIFunctionArgumentsRef.current.appendCount = input
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         insertFrom:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.insertFrom = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.insertFrom = input
             if (!isInvalidTests.insertFrom(input)) {
-                sessionFunctionPropertiesRef.current.insertFrom = input
+                sessionAPIFunctionArgumentsRef.current.insertFrom = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         insertRange:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.insertRange = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.insertRange = input
             if (!isInvalidTests.insertRange(input)) {
-                sessionFunctionPropertiesRef.current.insertRange = input
+                sessionAPIFunctionArgumentsRef.current.insertRange = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         removeFrom:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.removeFrom = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.removeFrom = input
             if (!isInvalidTests.removeFrom(input)) {
-                sessionFunctionPropertiesRef.current.removeFrom = input
+                sessionAPIFunctionArgumentsRef.current.removeFrom = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         removeRange:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.removeRange = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.removeRange = input
             if (!isInvalidTests.removeRange(input)) {
-                sessionFunctionPropertiesRef.current.removeRange = input
+                sessionAPIFunctionArgumentsRef.current.removeRange = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         moveFrom:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.moveFrom = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.moveFrom = input
             if (!isInvalidTests.moveFrom(input)) {
-                sessionFunctionPropertiesRef.current.moveFrom = input
+                sessionAPIFunctionArgumentsRef.current.moveFrom = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         moveRange:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.moveRange = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.moveRange = input
             if (!isInvalidTests.moveRange(input)) {
-                sessionFunctionPropertiesRef.current.moveRange = input
+                sessionAPIFunctionArgumentsRef.current.moveRange = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         moveTo:(input:string) => {
-            const editProperties = editFunctionPropertiesRef.current
-            editProperties.moveTo = input
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.moveTo = input
             if (!isInvalidTests.moveTo(input)) {
-                sessionFunctionPropertiesRef.current.moveTo = input
+                sessionAPIFunctionArgumentsRef.current.moveTo = input
             }
-            setEditFunctionProperties({...editProperties})
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         remapDemo:(event:React.ChangeEvent) => {
-            const editProperties = editFunctionPropertiesRef.current
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
-            editProperties.remapDemo = value
-            sessionFunctionPropertiesRef.current.remapDemo = value
-            setEditFunctionProperties({...editProperties})
+            editAPIFunctionArguments.remapDemo = value
+            sessionAPIFunctionArgumentsRef.current.remapDemo = value
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
     }
 
-    const serviceFuncs = {
+    const APISnapshotFunctions = {
         getCacheIndexMap: () => {
-            console.log('cacheIndexMap =',functionsObject.getCacheIndexMap())
+            console.log('cacheIndexMap =',functionsAPI.getCacheIndexMap())
         },
         getCacheItemMap: () => {
-            console.log('cacheItemMap =',functionsObject.getCacheItemMap())
+            console.log('cacheItemMap =',functionsAPI.getCacheItemMap())
         },
         getCradleIndexMap: () => {
-            console.log('cradleIndexMap =',functionsObject.getCradleIndexMap())
+            console.log('cradleIndexMap =',functionsAPI.getCradleIndexMap())
         },
+        getPropertiesSnapshot: () => {
+            console.log('properties =',functionsAPI.getPropertiesSnapshot())
+        }
+    }
+
+    const updateFieldAccessFunctions = {
+        contentType:(contentSelection:string) => {
+
+            let disabled
+            if (['variablecontent','variablepromises','variabledynamic','variableoversized'].includes(contentSelection)) {
+
+                disabled = false
+                isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
+                isInvalidTests.cellMinWidth(editContentTypePropertiesRef.current.cellMinWidth)
+
+            } else {
+
+                disabled = true
+                invalidFieldFlags.cellMinHeight = 
+                    invalidFieldFlags.cellMinWidth = false
+
+            }
+
+            APIdisabledFlags.cellMinHeight =
+                APIdisabledFlags.cellMinWidth = disabled
+
+        },
+        propertyFields: (contentSelection:string) => {
+            if (sessionAllContentTypePropertiesRef.current[contentSelection].rangePropertyType == 
+                'rangepropertyvalues') {
+                propertyDisabledFlags.startingLowIndex = false
+                propertyDisabledFlags.startingHighIndex = false
+                rangeTextColors.rangepropertyvalues = 'black'
+                rangeTextColors.emptyrangeproperty = 'gray'
+            } else {
+                if (isInvalidTests.startingLowIndex(
+                    editContentTypePropertiesRef.current.startingLowIndex) ||
+                    isInvalidTests.startingHighIndex(
+                    editContentTypePropertiesRef.current.startingHighIndex)) {
+
+                    editContentTypePropertiesRef.current.startingLowIndex = 
+                        sessionAllContentTypePropertiesRef.current[contentSelection].startingLowIndex
+                    editContentTypePropertiesRef.current.startingHighIndex = 
+                        sessionAllContentTypePropertiesRef.current[contentSelection].startingHighIndex
+                    invalidFieldFlagsRef.current.startingLowIndex = false
+                    invalidFieldFlagsRef.current.startingHighIndex = false
+                }
+                propertyDisabledFlags.startingLowIndex = true
+                propertyDisabledFlags.startingHighIndex = true
+                rangeTextColors.rangepropertyvalues = 'gray'
+                rangeTextColors.emptyrangeproperty = 'black'
+            }
+        },
+        rangeAPI:() => {
+            if (!functionEnabledSettings.listrange) {
+                rangeTextColors.rangeAPIvalues = 'gray'
+                rangeTextColors.emptyrangeAPI = 'gray'
+                rangeTextColors.rangeAPIvalues = 'gray'
+                rangeTextColors.emptyrangeAPI = 'gray'
+            } else {
+                if (sessionAPIFunctionArgumentsRef.current.rangeAPIType == 
+                    'rangeAPIvalues') {
+                    rangeTextColors.rangeAPIvalues = 'black'
+                    rangeTextColors.emptyrangeAPI = 'gray'
+                } else {
+                    rangeTextColors.rangeAPIvalues = 'gray'
+                    rangeTextColors.emptyrangeAPI = 'black'
+                }
+            }
+
+        },
+        APIFunctions: (service:string = '') => {
+
+            // disable all, and reset error conditions
+            for (const field of accessControlledAPIFields) {
+                APIdisabledFlags[field] = true
+                if (invalidFieldFlags[field]) {
+                    invalidFieldFlags[field] = false
+                    editAPIFunctionArgumentsRef.current[field] = sessionAPIFunctionArgumentsRef.current[field]
+                }
+            }
+            if (service) {
+                switch (service) {
+                    case 'goto':{
+                        APIdisabledFlags.scrolltoIndex = false
+                        isInvalidTests.scrolltoIndex(editAPIFunctionArgumentsRef.current.scrolltoIndex)
+                        break
+                    }
+                    case 'listsize':{
+                        APIdisabledFlags.listsize = false
+                        isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
+                        break
+                    }
+                    case 'prependCount':{
+                        APIdisabledFlags.prependCount = false
+                        isInvalidTests.prependCount(editAPIFunctionArgumentsRef.current.prependCount)
+                        break
+                    }
+                    case 'appendCount':{
+                        APIdisabledFlags.appendCount = false
+                        isInvalidTests.appendCount(editAPIFunctionArgumentsRef.current.appendCount)
+                        break
+                    }
+                    case 'listrange':{
+                        APIdisabledFlags.rangeAPIType = false
+                        if (editAPIFunctionArgumentsRef.current.rangeAPIType == 'rangeAPIvalues') {
+                            APIdisabledFlags.listLowIndex = false
+                            APIdisabledFlags.listHighIndex = false
+                            isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
+                            isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+                        }
+                        break
+                    }
+                    case 'reload':{
+
+                        break
+                    }
+                    case 'insert':{
+                        APIdisabledFlags.insertFrom = false
+                        APIdisabledFlags.insertRange = false
+                        isInvalidTests.insertFrom(editAPIFunctionArgumentsRef.current.insertFrom)
+                        isInvalidTests.insertRange(editAPIFunctionArgumentsRef.current.insertRange)
+                        break
+                    }
+                    case 'remove':{
+                        APIdisabledFlags.removeFrom = false
+                        APIdisabledFlags.removeRange = false
+                        isInvalidTests.removeFrom(editAPIFunctionArgumentsRef.current.removeFrom)
+                        isInvalidTests.removeRange(editAPIFunctionArgumentsRef.current.removeRange)
+                        break
+                    }
+                    case 'move':{
+                        APIdisabledFlags.moveFrom = false
+                        APIdisabledFlags.moveRange = false
+                        APIdisabledFlags.moveTo = false
+                        isInvalidTests.moveFrom(editAPIFunctionArgumentsRef.current.moveFrom)
+                        isInvalidTests.moveRange(editAPIFunctionArgumentsRef.current.moveRange)
+                        isInvalidTests.moveTo(editAPIFunctionArgumentsRef.current.moveTo)
+                        break
+                    }
+                    case 'remap':{
+                        APIdisabledFlags.remapDemo = false
+                        break
+                    }
+                    case 'clear':{
+
+                        break
+                    }
+                }
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArgumentsRef.current})
+        }
+
+    }
+
+    const updateIndexRange = () => { // for change of content type
+
+        if (originalContentTypeSelectorRef.current === sessionContentTypeSelectorRef.current) {
+
+            const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+            indexRangeRef.current = scrollerProps.virtualListProps.range
+
+            return
+
+        }
+
+        const contentTypeProperties = 
+            sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current]
+        if (contentTypeProperties.startingListRange) {
+            indexRangeRef.current = contentTypeProperties.startingListRange
+        } else {
+            indexRangeRef.current = [0, contentTypeProperties.startingListSize]
+        }
+
     }
 
     // --------------------------[ state change control ]------------------
 
     useEffect(()=>{
+
+        optionsAPIRef.current = {
+            getInvalidSections
+        }
+        
+    },[])
+
+    // state management
+    useEffect(()=>{
         switch (optionsState) {
-            case 'initialize-dependencies': {
-                dependencyFuncs.contentType(sessionContentTypeRef.current)
-                dependencyFuncs.serviceFunctions(sessionOperationFunctionRef.current)
+            case 'setup': {
+
+                const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+                indexRangeRef.current = scrollerProps.virtualListProps.range
+
+                const contentSelection = sessionContentTypeSelectorRef.current
+
+                updateFieldAccessFunctions.contentType(contentSelection)
+                updateFieldAccessFunctions.APIFunctions()
+                updateFieldAccessFunctions.propertyFields(contentSelection)
+                updateFieldAccessFunctions.rangeAPI()
                 setOptionsState('ready')
                 break
+
             }
-            case 'prepare-to-update-content-dependencies': {
-                setOptionsState('update-content-dependencies')
+
+            case 'preparenewcontenttype': {
+                updateIndexRange()
+                setOptionsState('newcontenttype')
                 break
+
             }
-            case 'update-content-dependencies': {
-                dependencyFuncs.contentType(sessionContentTypeRef.current)
+            case 'newcontenttype': {
+
+                const contentSelection = sessionContentTypeSelectorRef.current
+
+                updateFieldAccessFunctions.contentType(contentSelection)
+                updateFieldAccessFunctions.propertyFields(contentSelection)
                 setOptionsState('ready')
                 break
+
             }
-            case 'prepare-to-update-function-dependencies': {
-                setOptionsState('update-function-dependencies')
+            case 'preparenewopfunctionselector': {
+
+                setOptionsState('newopfunctionselector')
                 break
+
             }
-            case 'update-function-dependencies': {
-                dependencyFuncs.serviceFunctions(sessionOperationFunctionRef.current)
+            case 'newopfunctionselector': {
+
+                updateFieldAccessFunctions.APIFunctions(sessionOperationFunctionSelectorRef.current)
+                updateFieldAccessFunctions.rangeAPI()
                 setOptionsState('ready')
                 break
+
             }
         }
-    },[optionsState, dependencyFuncs])
+    },[optionsState, updateFieldAccessFunctions])
 
     // ------------------------------[ render ]------------------------------
     
+
     return (
 
     <Box><VStack align = 'start' alignItems = 'stretch'>
@@ -794,8 +1134,8 @@ const Options = ({
 
             <Select 
                 size = 'md'
-                value = {editContentType} 
-                onChange = {onChangeFuncs.contentType}
+                value = {editContentTypeSelector} 
+                onChange = {onChangeFunctions.contentType}
             >
                 <option value="simplecontent">Simple uniform content</option>
                 <option value="simplepromises">Simple uniform promises</option>
@@ -809,7 +1149,8 @@ const Options = ({
             </Select>
 
             <FormHelperText>
-                Current content will be replaced on Apply.
+                Current content will be replaced on Apply.<br/>
+                Current list index range [lowindex,highindex] is [{listlowindex},{listhighindex}]
             </FormHelperText>
 
         </FormControl>
@@ -821,8 +1162,7 @@ const Options = ({
 
             <RadioGroup 
                 value = {editContentTypeProperties.orientation} 
-                onChange = {onChangeFuncs.orientation}
-            >
+                onChange = {onChangeFunctions.orientation}>
                 <HStack align = 'center'>
                     <Radio value = 'vertical'>Vertical</Radio>
                     <Radio value = 'horizontal'>Horizontal</Radio>
@@ -852,7 +1192,7 @@ const Options = ({
 
                     <Stack direction = {['column','row','row']}>
 
-                        <FormControl isInvalid = {invalidFlags.cellHeight}>
+                        <FormControl isInvalid = {invalidFieldFlags.cellHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>cellHeight:</FormLabel>
@@ -860,7 +1200,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellHeight} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.cellHeight}
+                                    onChange = {onChangeFunctions.cellHeight}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -871,7 +1211,7 @@ const Options = ({
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl isInvalid = {invalidFlags.cellWidth}>
+                        <FormControl isInvalid = {invalidFieldFlags.cellWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>cellWidth:</FormLabel>
@@ -879,7 +1219,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellWidth} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.cellWidth}
+                                    onChange = {onChangeFunctions.cellWidth}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -903,8 +1243,8 @@ const Options = ({
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.cellMinHeight}
-                            isInvalid = {invalidFlags.cellMinHeight}>
+                            isDisabled = {APIdisabledFlags.cellMinHeight}
+                            isInvalid = {invalidFieldFlags.cellMinHeight}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>cellMinHeight:</FormLabel>
@@ -912,7 +1252,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellMinHeight} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.cellMinHeight}
+                                    onChange = {onChangeFunctions.cellMinHeight}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -924,8 +1264,8 @@ const Options = ({
                         </FormControl>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.cellMinHeight}
-                            isInvalid = {invalidFlags.cellMinWidth}>
+                            isDisabled = {APIdisabledFlags.cellMinHeight}
+                            isInvalid = {invalidFieldFlags.cellMinWidth}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>cellMinWidth:</FormLabel>
@@ -933,7 +1273,7 @@ const Options = ({
                                 <NumberInput 
                                     value = {editContentTypeProperties.cellMinWidth} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.cellMinWidth}
+                                    onChange = {onChangeFunctions.cellMinWidth}
                                     clampValueOnBlur = {false}
                                 >
                                         <NumberInputField border = '2px' />
@@ -954,7 +1294,7 @@ const Options = ({
 
                     <Stack direction = {['column','row','row']}>
 
-                    <FormControl isInvalid = {invalidFlags.padding} >
+                    <FormControl isInvalid = {invalidFieldFlags.padding} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
@@ -962,7 +1302,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.padding} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.padding}
+                                onChange = {onChangeFunctions.padding}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -973,7 +1313,7 @@ const Options = ({
                         </FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isInvalid = {invalidFlags.gap} >
+                    <FormControl isInvalid = {invalidFieldFlags.gap} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>gap:</FormLabel>
@@ -981,7 +1321,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.gap} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.gap}
+                                onChange = {onChangeFunctions.gap}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1001,7 +1341,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Starting index</Heading>
                     
-                    <FormControl isInvalid = {invalidFlags.startingIndex} >
+                    <FormControl isInvalid = {invalidFieldFlags.startingIndex} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
@@ -1010,7 +1350,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.startingIndex} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.startingIndex}
+                                onChange = {onChangeFunctions.startingIndex}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1030,7 +1370,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Starting list size</Heading>
                     
-                    <FormControl isInvalid = {invalidFlags.startingListSize} >
+                    <FormControl isInvalid = {invalidFieldFlags.startingListSize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
@@ -1039,7 +1379,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.startingListSize} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.startingListSize}
+                                onChange = {onChangeFunctions.startingListSize}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1054,12 +1394,89 @@ const Options = ({
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. This will only apply right after a content type change. It will 
                         set the starting list size of the session for the content type. See also
-                        'Change virtual list size' in the 'Service functions: operations' section.
+                        'Change virtual list size' in the 'Service functions: operations' section. 
+                        Ignored if 'Starting list range' is set.
                     </Text>
+
+                    <Heading size = 'xs'>Starting list range</Heading>
+
+                    <RadioGroup 
+                        value = {editContentTypeProperties.rangePropertyType} 
+                        onChange = {onChangeFunctions.rangePropertyType}
+                    >
+                        <VStack align = 'start'>
+                            <Radio value = 'rangepropertyvalues'>Range Values</Radio>
+
+                            <Stack direction = {['column','row','row']}>
+                            
+                                <FormControl 
+                                    isInvalid = {invalidFieldFlags.startingLowIndex} 
+                                    isDisabled = {propertyDisabledFlags.startingLowIndex}
+                                >
+                                    <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                        <FormLabel fontSize = 'sm'>lowIndex:</FormLabel>
+
+                                        <NumberInput 
+                                            value = {editContentTypeProperties.startingLowIndex} 
+                                            size = 'sm'
+                                            onChange = {onChangeFunctions.startingLowIndex}
+                                            clampValueOnBlur = {false}
+                                        >
+                                            <NumberInputField border = '2px' />
+                                        </NumberInput>
+                                    </InputGroup>
+
+                                    <FormErrorMessage>
+                                        {errorMessages.startingLowIndex}
+                                    </FormErrorMessage>
+                                </FormControl>
+
+                                <FormControl 
+                                    isInvalid = {invalidFieldFlags.startingHighIndex} 
+                                    isDisabled = {propertyDisabledFlags.startingHighIndex}
+                                >
+                                    <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                        <FormLabel fontSize = 'sm'>highIndex:</FormLabel>
+
+                                        <NumberInput 
+                                            value = {editContentTypeProperties.startingHighIndex} 
+                                            size = 'sm'
+                                            onChange = {onChangeFunctions.startingHighIndex}
+                                            clampValueOnBlur = {false}
+                                        >
+                                            <NumberInputField border = '2px' />
+                                        </NumberInput>
+                                    </InputGroup>
+
+                                    <FormErrorMessage>
+                                        {errorMessages.startingHighIndex}
+                                    </FormErrorMessage>
+                                </FormControl>
+
+                            </Stack>
+
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {rangeTextColors.rangepropertyvalues}>
+                                Integers. Either both or neither of <i>lowIndex</i> and <i>highIndex</i> must be set.&nbsp;
+                                <i>Starting list range</i> if set will only apply right after a content type change. 
+                                It will set the starting list range of the session for the content type. See also
+                                'Change virtual list range' in the 'Service functions: operations' section.
+                            </Text>
+
+                            <Radio value = 'emptyrangeproperty'>Empty Virtual List</Radio>
+
+                            <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px' color = {rangeTextColors.emptyrangeproperty}>
+                                This selection will send an empty range array to the scroller, creating an empty virtual list.&nbsp;
+                                It will only apply right after a content type change. 
+                                See also 'Change virtual list range' in the 'Service functions: operations' section.
+                            </Text>
+                        </VStack>
+                    </RadioGroup>
 
                     <Heading size = 'xs'>Runway size</Heading>
                     
-                    <FormControl isInvalid = {invalidFlags.runwaySize} >
+                    <FormControl isInvalid = {invalidFieldFlags.runwaySize} >
                         <HStack>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
@@ -1068,7 +1485,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.runwaySize} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.runwaySize}
+                                onChange = {onChangeFunctions.runwaySize}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1094,7 +1511,7 @@ const Options = ({
                             value = {editContentTypeProperties.cache} 
                             flexGrow = {.8} 
                             size = 'sm'
-                            onChange = {onChangeFuncs.cache}
+                            onChange = {onChangeFunctions.cache}
                         >
                             <option value="cradle">cradle</option>
                             <option value="keepload">keep load</option>
@@ -1102,7 +1519,7 @@ const Options = ({
                         </Select>
                     </FormControl>
 
-                    <FormControl isInvalid = {invalidFlags.cacheMax}>
+                    <FormControl isInvalid = {invalidFieldFlags.cacheMax}>
                         <InputGroup size = 'sm' flexGrow = {1.2} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>cacheMax:</FormLabel>
@@ -1110,7 +1527,7 @@ const Options = ({
                             <NumberInput 
                                 value = {editContentTypeProperties.cacheMax} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.cacheMax}
+                                onChange = {onChangeFunctions.cacheMax}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1136,7 +1553,7 @@ const Options = ({
                             isChecked = {editContentTypeProperties.technical.showAxis} 
                             size = 'sm'
                             mt = {2}
-                            onChange = {onChangeFuncs.showAxis}
+                            onChange = {onChangeFunctions.showAxis}
                         >
                             Show axis
                         </Checkbox>
@@ -1145,7 +1562,8 @@ const Options = ({
                         </FormHelperText>
                     </FormControl>
 
-                </VStack></AccordionPanel>
+                    </VStack>
+                </AccordionPanel>
 
             </AccordionItem>
 
@@ -1171,11 +1589,11 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.referenceIndexCallback} 
+                            isChecked = {editCallbackFlags.referenceIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'referenceIndexCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Reference index
                         </Checkbox>
@@ -1186,11 +1604,11 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.preloadIndexCallback} 
+                            isChecked = {editCallbackFlags.preloadIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'preloadIndexCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Preload Index
                         </Checkbox>
@@ -1201,11 +1619,11 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.itemExceptionCallback} 
+                            isChecked = {editCallbackFlags.itemExceptionCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'itemExceptionCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Item Exceptions
                         </Checkbox>
@@ -1216,11 +1634,11 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.repositioningFlagCallback} 
+                            isChecked = {editCallbackFlags.repositioningFlagCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningFlagCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             isRepositioning Notification
                         </Checkbox>
@@ -1232,11 +1650,11 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.repositioningIndexCallback} 
+                            isChecked = {editCallbackFlags.repositioningIndexCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'repositioningIndexCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Repositioning Index
                         </Checkbox>
@@ -1247,13 +1665,13 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.changeListsizeCallback} 
+                            isChecked = {editCallbackFlags.changeListSizeCallback} 
                             size = 'sm'
                             mt = {2}
-                            id = 'changeListsizeCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            id = 'changeListSizeCallback'
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
-                            Listsize change
+                            List size change
                         </Checkbox>
                         <FormHelperText>
                             Reports change to list size for any standard reason.
@@ -1262,11 +1680,26 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
-                            isChecked = {editCallbackSettings.deleteListCallback} 
+                            isChecked = {editCallbackFlags.changeListRangeCallback} 
+                            size = 'sm'
+                            mt = {2}
+                            id = 'changeListRangeCallback'
+                            onChange = {onChangeFunctions.callbackSettings}
+                        >
+                            List range change
+                        </Checkbox>
+                        <FormHelperText>
+                            Reports change to list range (lowindex -&gt; highindex) for any standard reason.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Checkbox 
+                            isChecked = {editCallbackFlags.deleteListCallback} 
                             size = 'sm'
                             mt = {2}
                             id = 'deleteListCallback'
-                            onChange = {onChangeFuncs.callbackSettings}
+                            onChange = {onChangeFunctions.callbackSettings}
                         >
                             Deleted List
                         </Checkbox>
@@ -1309,7 +1742,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFuncs.getCacheIndexMap}
+                            onClick = {APISnapshotFunctions.getCacheIndexMap}
                         >
                                 Get Cache Index Map
                         </Button>
@@ -1324,7 +1757,7 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFuncs.getCacheItemMap}
+                            onClick = {APISnapshotFunctions.getCacheItemMap}
                         >
                             Get Cache Item Map
                         </Button>
@@ -1339,13 +1772,27 @@ const Options = ({
                             size = 'sm' 
                             mt = {2} 
                             type = 'button'
-                            onClick = {serviceFuncs.getCradleIndexMap}
+                            onClick = {APISnapshotFunctions.getCradleIndexMap}
                         >
                             Get Cradle Index Map
                         </Button>
                         <FormHelperText>
                             snapshot (javascript <Code>Map</Code>) of cradle <Code>index</Code> (=key) to 
                             scroller-assigned session <Code>itemID</Code> (=value) map.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Button 
+                            size = 'sm' 
+                            mt = {2} 
+                            type = 'button'
+                            onClick = {APISnapshotFunctions.getPropertiesSnapshot}
+                        >
+                            Get Properties Snapshot
+                        </Button>
+                        <FormHelperText>
+                            snapshot of scroller properties.
                         </FormHelperText>
                     </FormControl>
 
@@ -1381,16 +1828,16 @@ const Options = ({
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.scrolltoIndex}
-                            isInvalid = {invalidFlags.scrolltoIndex}>
+                            isDisabled = {APIdisabledFlags.scrolltoIndex}
+                            isInvalid = {invalidFieldFlags.scrolltoIndex}>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>index:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.scrolltoIndex} 
+                                    value = {editAPIFunctionArguments.scrolltoIndex} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.scrolltoIndex}
+                                    onChange = {onChangeFunctions.scrolltoIndex}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1408,7 +1855,7 @@ const Options = ({
 
                                 <Switch 
                                     isChecked = {functionEnabledSettings.goto} 
-                                    onChange = {onChangeFuncs.onChangeEnabler} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
                                     id='goto' 
                                 />
                             </InputGroup>
@@ -1428,16 +1875,16 @@ const Options = ({
                     <HStack alignItems = 'baseline'>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.listsize}
-                            isInvalid = {invalidFlags.listsize} >
+                            isDisabled = {APIdisabledFlags.listsize}
+                            isInvalid = {invalidFieldFlags.listsize} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>size:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.listsize} 
+                                    value = {editAPIFunctionArguments.listsize} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.listsize}
+                                    onChange = {onChangeFunctions.listsize}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1455,7 +1902,7 @@ const Options = ({
 
                                 <Switch 
                                     isChecked = {functionEnabledSettings.listsize} 
-                                    onChange = {onChangeFuncs.onChangeEnabler} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
                                     id='listsize' 
                                 />
                             </InputGroup>
@@ -1467,21 +1914,191 @@ const Options = ({
                         Integer. Change the size of the scroller's virtual list.
                     </Text>
 
+                    <Heading size = 'xs'>Change virtual list range</Heading>
+
+                    <RadioGroup 
+                        value = {editAPIFunctionArguments.rangeAPIType} 
+                        onChange = {onChangeFunctions.rangeAPIType}
+                        isDisabled = {APIdisabledFlags.rangeAPIType}
+                    >
+                        <VStack align = 'start'>
+                            <Radio value = 'rangeAPIvalues'>Range Values</Radio>
+
+                            <Stack direction = {['column','row','row']}>
+
+                                <FormControl 
+                                    isDisabled = {APIdisabledFlags.listLowIndex}
+                                    isInvalid = {invalidFieldFlags.listLowIndex} >
+                                    <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                        <FormLabel fontSize = 'sm'>low index:</FormLabel>
+
+                                        <NumberInput 
+                                            value = {editAPIFunctionArguments.listLowIndex} 
+                                            size = 'sm'
+                                            onChange = {onChangeFunctions.listLowIndex}
+                                            clampValueOnBlur = {false}
+                                        >
+                                            <NumberInputField border = '2px' />
+                                        </NumberInput>
+                                    </InputGroup>
+                                    <FormErrorMessage>
+                                        {errorMessages.listLowIndex}
+                                    </FormErrorMessage>
+                                </FormControl>
+
+                                <FormControl 
+                                    isDisabled = {APIdisabledFlags.listHighIndex}
+                                    isInvalid = {invalidFieldFlags.listHighIndex} >
+                                    <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                        <FormLabel fontSize = 'sm'>high index:</FormLabel>
+
+                                        <NumberInput 
+                                            value = {editAPIFunctionArguments.listHighIndex} 
+                                            size = 'sm'
+                                            onChange = {onChangeFunctions.listHighIndex}
+                                            clampValueOnBlur = {false}
+                                        >
+                                            <NumberInputField border = '2px' />
+                                        </NumberInput>
+                                    </InputGroup>
+                                    <FormErrorMessage>
+                                        {errorMessages.listHighIndex}
+                                    </FormErrorMessage>
+                                </FormControl>
+
+                            </Stack>
+
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {rangeTextColors.rangeAPIvalues}>
+                                Integers. Set low and high indexes. high index must be greater than or equal to  
+                                low index.
+                            </Text>
+
+                            <Radio value = 'emptyrangeAPI'>Empty Virtual List</Radio>
+
+                            <Text fontSize = 'sm' paddingBottom = {2} color = {rangeTextColors.emptyrangeAPI}>
+                                This selection will send an empty range array to the scroller, creating an empty virtual list.
+                            </Text>
+                        </VStack>
+                    </RadioGroup>
+
+                    <FormControl borderBottom = '1px' >
+                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+
+                            <FormLabel htmlFor='listrange' fontSize = 'sm'>Enable</FormLabel>
+
+                            <Switch 
+                                isChecked = {functionEnabledSettings.listrange} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
+                                id='listrange' 
+                            />
+                        </InputGroup>
+                    </FormControl>
+
+                    <Heading size = 'xs'>prepend index count to list range</Heading>
+
+                    <HStack alignItems = 'baseline'>
+
+                        <FormControl 
+                            isDisabled = {APIdisabledFlags.prependCount}
+                            isInvalid = {invalidFieldFlags.prependCount} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>count:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editAPIFunctionArguments.prependCount} 
+                                    size = 'sm'
+                                    onChange = {onChangeFunctions.prependCount}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.prependCount}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+
+                                <FormLabel htmlFor='prependCount' fontSize = 'sm'>Enable</FormLabel>
+
+                                <Switch 
+                                    isChecked = {functionEnabledSettings.prependCount} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
+                                    id='prependCount' 
+                                />
+                            </InputGroup>
+                        </FormControl>
+
+                    </HStack>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. Prepend indexes to the virtual list.
+                    </Text>
+
+                    <Heading size = 'xs'>append index count to list range</Heading>
+
+                    <HStack alignItems = 'baseline'>
+
+                        <FormControl 
+                            isDisabled = {APIdisabledFlags.appendCount}
+                            isInvalid = {invalidFieldFlags.appendCount} >
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>count:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editAPIFunctionArguments.appendCount} 
+                                    size = 'sm'
+                                    onChange = {onChangeFunctions.appendCount}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.appendCount}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+
+                                <FormLabel htmlFor='appendCount' fontSize = 'sm'>Enable</FormLabel>
+
+                                <Switch 
+                                    isChecked = {functionEnabledSettings.appendCount} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
+                                    id='appendCount' 
+                                />
+                            </InputGroup>
+                        </FormControl>
+
+                    </HStack>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. Append indexes to the virtual list.
+                    </Text>
+
                     <Heading size = 'xs'>Insert indexes</Heading>
 
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.insertFrom}
-                            isInvalid = {invalidFlags.insertFrom} >
+                            isDisabled = {APIdisabledFlags.insertFrom}
+                            isInvalid = {invalidFieldFlags.insertFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.insertFrom} 
+                                    value = {editAPIFunctionArguments.insertFrom} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.insertFrom}
+                                    onChange = {onChangeFunctions.insertFrom}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1493,16 +2110,16 @@ const Options = ({
                         </FormControl>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.insertRange}
-                            isInvalid = {invalidFlags.insertRange} >
+                            isDisabled = {APIdisabledFlags.insertRange}
+                            isInvalid = {invalidFieldFlags.insertRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.insertRange} 
+                                    value = {editAPIFunctionArguments.insertRange} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.insertRange}
+                                    onChange = {onChangeFunctions.insertRange}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1522,7 +2139,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.insert} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='insert' 
                             />
                         </InputGroup>
@@ -1538,16 +2155,16 @@ const Options = ({
                     <Stack direction = {['column','row','row']}>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.removeFrom}
-                            isInvalid = {invalidFlags.removeFrom} >
+                            isDisabled = {APIdisabledFlags.removeFrom}
+                            isInvalid = {invalidFieldFlags.removeFrom} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>from:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.removeFrom} 
+                                    value = {editAPIFunctionArguments.removeFrom} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.removeFrom}
+                                    onChange = {onChangeFunctions.removeFrom}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1559,16 +2176,16 @@ const Options = ({
                         </FormControl>
 
                         <FormControl 
-                            isDisabled = {disabledFlags.removeRange}
-                            isInvalid = {invalidFlags.removeRange} >
+                            isDisabled = {APIdisabledFlags.removeRange}
+                            isInvalid = {invalidFieldFlags.removeRange} >
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                                 <FormLabel fontSize = 'sm'>range:</FormLabel>
 
                                 <NumberInput 
-                                    value = {editFunctionProperties.removeRange} 
+                                    value = {editAPIFunctionArguments.removeRange} 
                                     size = 'sm'
-                                    onChange = {onChangeFuncs.removeRange}
+                                    onChange = {onChangeFunctions.removeRange}
                                     clampValueOnBlur = {false}
                                 >
                                     <NumberInputField border = '2px' />
@@ -1588,7 +2205,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.remove} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='remove' 
                             />
                         </InputGroup>
@@ -1604,16 +2221,16 @@ const Options = ({
                     <Stack direction = {['column','row','row']} mb = {2}>
 
                     <FormControl 
-                        isDisabled = {disabledFlags.moveFrom}
-                        isInvalid = {invalidFlags.moveFrom} >
+                        isDisabled = {APIdisabledFlags.moveFrom}
+                        isInvalid = {invalidFieldFlags.moveFrom} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>from:</FormLabel>
 
                             <NumberInput 
-                                value = {editFunctionProperties.moveFrom} 
+                                value = {editAPIFunctionArguments.moveFrom} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.moveFrom}
+                                onChange = {onChangeFunctions.moveFrom}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1625,16 +2242,16 @@ const Options = ({
                     </FormControl>
 
                     <FormControl 
-                        isDisabled = {disabledFlags.moveRange}
-                        isInvalid = {invalidFlags.moveRange} >
+                        isDisabled = {APIdisabledFlags.moveRange}
+                        isInvalid = {invalidFieldFlags.moveRange} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>range:</FormLabel>
 
                             <NumberInput 
-                                value = {editFunctionProperties.moveRange} 
+                                value = {editAPIFunctionArguments.moveRange} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.moveRange}
+                                onChange = {onChangeFunctions.moveRange}
                                 clampValueOnBlur = {false}
                            >
                                 <NumberInputField border = '2px' />
@@ -1648,16 +2265,16 @@ const Options = ({
                     </Stack>
 
                     <FormControl 
-                        isDisabled = {disabledFlags.moveTo}
-                        isInvalid = {invalidFlags.moveTo} >
+                        isDisabled = {APIdisabledFlags.moveTo}
+                        isInvalid = {invalidFieldFlags.moveTo} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>to:</FormLabel>
 
                             <NumberInput 
-                                value = {editFunctionProperties.moveTo} 
+                                value = {editAPIFunctionArguments.moveTo} 
                                 size = 'sm'
-                                onChange = {onChangeFuncs.moveTo}
+                                onChange = {onChangeFunctions.moveTo}
                                 clampValueOnBlur = {false}
                             >
                                 <NumberInputField border = '2px' />
@@ -1675,7 +2292,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.move} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='move' 
                             />
                         </InputGroup>
@@ -1690,11 +2307,11 @@ const Options = ({
 
                     <Stack direction = {['column','row','row']} alignItems = 'baseline'>
 
-                    <FormControl isDisabled = {disabledFlags.remapDemo} width = 'xs'>
+                    <FormControl isDisabled = {APIdisabledFlags.remapDemo} width = 'xs'>
                         <Select
-                            value = {editFunctionProperties.remapDemo} 
+                            value = {editAPIFunctionArguments.remapDemo} 
                             size = 'sm'
-                            onChange = {onChangeFuncs.remapDemo}
+                            onChange = {onChangeFunctions.remapDemo}
                         >
                             <option value="backwardsort">Backward sort</option>
                             <option value="replaceitems">Replace items</option>
@@ -1708,7 +2325,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.remap} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='remap' 
                             />
                         </InputGroup>
@@ -1720,7 +2337,7 @@ const Options = ({
                         The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
                         items to the newly assigned indexes. We've included a random test that applies to 
                         the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
-                        items scroll out of scope.
+                        items scroll out of scope. See Explanations for details.
                     </Text>
 
                     <Heading size = 'xs'>Reload the cache</Heading>
@@ -1731,7 +2348,7 @@ const Options = ({
 
                             <Switch 
                                 isChecked = {functionEnabledSettings.reload} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='reload' 
                             />
                         </InputGroup>
@@ -1748,7 +2365,7 @@ const Options = ({
                             
                             <Switch 
                                 isChecked = {functionEnabledSettings.clear} 
-                                onChange = {onChangeFuncs.onChangeEnabler} 
+                                onChange = {onChangeFunctions.onChangeEnabler} 
                                 id='clear' 
                             />
                         </InputGroup>
