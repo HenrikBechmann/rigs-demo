@@ -478,6 +478,11 @@ const getFunctionToastContent = (
       codeblock = `functionsAPI.scrollToIndex(${APIFunctionArguments.scrolltoIndex})`
       break
     }
+    case 'gotopixel': {
+      functionsAPI.scrollToPixel(APIFunctionArguments.scrollToPixel)
+      codeblock = `functionsAPI.scrollToPixel(${APIFunctionArguments.scrollToPixel})`
+      break
+    }
     case 'listsize': {
       functionsAPI.setListSize(APIFunctionArguments.listsize)
       codeblock = `functionsAPI.setListSize(${APIFunctionArguments.listsize})`

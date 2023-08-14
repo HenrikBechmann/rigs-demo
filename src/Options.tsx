@@ -91,6 +91,7 @@ const fieldSections:GenericObject = {
     runwaySize:'properties',
     cacheMax:'properties',
     scrolltoIndex:'operations',
+    scrollToPixel:'operations',
     listsize:'operations',
     prependCount:'operations',
     appendCount:'operations',
@@ -124,6 +125,7 @@ const errorMessages = {
     runwaySize:'blank, or integer minimum 1',
     cacheMax:'blank, or integer greater than or equal to 0',
     scrolltoIndex:'integer: required, greater than or equal to listlowindex',
+    scrollToPixel:'integer:required, greater than or equal to 0',
     listsize:'integer: required, greater than or equal to 0',
     listLowIndex:'integer: required',
     listHighIndex:'integer:required, greater than or equal to low index',
@@ -139,7 +141,7 @@ const errorMessages = {
 }
 
 const accessControlledAPIFields = [
-    'scrolltoIndex',
+    'scrolltoIndex','scrollToPixel',
     'listsize',
     'prependCount','appendCount',
     'listLowIndex','listHighIndex','rangeAPIType',
@@ -239,6 +241,7 @@ const Options = ({
             cellMinHeight:false, // property
             cellMinWidth:false, // property
             scrolltoIndex:false,
+            scrollToPixel:false,
             listsize:false,
             rangeAPIType:false,
             listLowIndex:false,
@@ -275,6 +278,7 @@ const Options = ({
             cache:false,
             cacheMax:false,
             scrolltoIndex:false,
+            scrollToPixel:false,
             listsize:false,
             listLowIndex:false,
             listHighIndex:false,
@@ -313,6 +317,7 @@ const Options = ({
     const 
             functionEnabledSettingsRef = useRef<GenericObject>({
             goto:false,
+            gotopixel:false,
             listsize:false,
             prependCount:false,
             appendCount:false,
@@ -454,6 +459,11 @@ const Options = ({
         scrolltoIndex:(value:string) => {
             const isInvalid = (!isInteger(value)) // || !isValueGreaterThanOrEqualToMinValue(value, listlowindex))
             invalidFieldFlags.scrolltoIndex = isInvalid
+            return isInvalid
+        },
+        scrollToPixel:(value:string) => {
+            const isInvalid = (!isInteger(value) && !isValueGreaterThanOrEqualToMinValue(value, 0))
+            invalidFieldFlags.scrollToPixel = isInvalid
             return isInvalid
         },
         listsize:(value:string) => {
@@ -742,6 +752,14 @@ const Options = ({
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
+        scrollToPixel:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.scrollToPixel = input
+            if (!isInvalidTests.scrollToPixel(input)) {
+                sessionAPIFunctionArgumentsRef.current.scrollToPixel = input
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
         listsize:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             editAPIFunctionArguments.listsize = input
@@ -969,6 +987,11 @@ const Options = ({
                     case 'goto':{
                         APIdisabledFlags.scrolltoIndex = false
                         isInvalidTests.scrolltoIndex(editAPIFunctionArgumentsRef.current.scrolltoIndex)
+                        break
+                    }
+                    case 'gotopixel': {
+                        APIdisabledFlags.scrollToPixel = false
+                        isInvalidTests.scrollToPixel(editAPIFunctionArgumentsRef.current.scrollToPixel)
                         break
                     }
                     case 'listsize':{
@@ -1823,7 +1846,7 @@ const Options = ({
 
                     <VStack alignItems = 'start'>
 
-                    <Heading size = 'xs'>Scroll to</Heading>
+                    <Heading size = 'xs'>Scroll to index</Heading>
 
                     <HStack alignItems = 'baseline'>
 
@@ -1868,6 +1891,53 @@ const Options = ({
 
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
                         Integer. Go to the specified index number in the virtual list.
+                    </Text>
+
+                    <Heading size = 'xs'>Scroll to pixel</Heading>
+
+                    <HStack alignItems = 'baseline'>
+
+                        <FormControl 
+                            isDisabled = {APIdisabledFlags.scrollToPixel}
+                            isInvalid = {invalidFieldFlags.scrollToPixel}>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>pixel:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editAPIFunctionArguments.scrollToPixel} 
+                                    size = 'sm'
+                                    onChange = {onChangeFunctions.scrollToPixel}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.scrollToPixel}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <FormControl>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+
+                                <FormLabel htmlFor='gotopixel' fontSize = 'sm'>Enable</FormLabel>
+
+                                <Switch 
+                                    isChecked = {functionEnabledSettings.gotopixel} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
+                                    id='gotopixel' 
+                                />
+                            </InputGroup>
+                            <FormErrorMessage>
+                            something
+                            </FormErrorMessage>
+                        </FormControl>
+
+                    </HStack>
+
+                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                        Integer. Go to the specified pixel number in the virtual list scrollblock.
                     </Text>
 
                     <Heading size = 'xs'>Change virtual list size</Heading>
