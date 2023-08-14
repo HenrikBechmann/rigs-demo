@@ -39,6 +39,8 @@ import {
 
 const defaultAPIFunctionArguments:GenericObject = {
   gotoIndex:'',
+  scrollToPixel:'',
+  scrolltobehavior:'',
   listsize:'',
   rangeAPIType:'rangeAPIvalues',
   listLowIndex:'',
@@ -479,8 +481,13 @@ const getFunctionToastContent = (
       break
     }
     case 'gotopixel': {
-      functionsAPI.scrollToPixel(APIFunctionArguments.scrollToPixel)
-      codeblock = `functionsAPI.scrollToPixel(${APIFunctionArguments.scrollToPixel})`
+      if (APIFunctionArguments.scrolltobehavior) {
+          functionsAPI.scrollToPixel(APIFunctionArguments.scrollToPixel,APIFunctionArguments.scrolltobehavior)
+          codeblock = `functionsAPI.scrollToPixel(${APIFunctionArguments.scrollToPixel},"${APIFunctionArguments.scrolltobehavior}")`
+      } else {
+          functionsAPI.scrollToPixel(APIFunctionArguments.scrollToPixel)
+          codeblock = `functionsAPI.scrollToPixel(${APIFunctionArguments.scrollToPixel})`
+      }
       break
     }
     case 'listsize': {

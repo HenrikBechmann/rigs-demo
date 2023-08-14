@@ -92,6 +92,7 @@ const fieldSections:GenericObject = {
     cacheMax:'properties',
     scrolltoIndex:'operations',
     scrollToPixel:'operations',
+    scrolltobehavior:'operations',
     listsize:'operations',
     prependCount:'operations',
     appendCount:'operations',
@@ -141,7 +142,7 @@ const errorMessages = {
 }
 
 const accessControlledAPIFields = [
-    'scrolltoIndex','scrollToPixel',
+    'scrolltoIndex','scrollToPixel','scrolltobehavior',
     'listsize',
     'prependCount','appendCount',
     'listLowIndex','listHighIndex','rangeAPIType',
@@ -242,6 +243,7 @@ const Options = ({
             cellMinWidth:false, // property
             scrolltoIndex:false,
             scrollToPixel:false,
+            scrolltobehavior:false,
             listsize:false,
             rangeAPIType:false,
             listLowIndex:false,
@@ -760,6 +762,14 @@ const Options = ({
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
+        scrolltobehavior:(event:React.ChangeEvent) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            const target = event.target as HTMLSelectElement
+            const value = target.value
+            editAPIFunctionArguments.scrolltobehavior = value
+            sessionAPIFunctionArgumentsRef.current.scrolltobehavior = value
+            setEditContentTypeProperties({...editContentTypeProperties})
+        },
         listsize:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             editAPIFunctionArguments.listsize = input
@@ -991,6 +1001,7 @@ const Options = ({
                     }
                     case 'gotopixel': {
                         APIdisabledFlags.scrollToPixel = false
+                        APIdisabledFlags.scrolltobehavior = false
                         isInvalidTests.scrollToPixel(editAPIFunctionArgumentsRef.current.scrollToPixel)
                         break
                     }
@@ -1882,9 +1893,6 @@ const Options = ({
                                     id='goto' 
                                 />
                             </InputGroup>
-                            <FormErrorMessage>
-                            something
-                            </FormErrorMessage>
                         </FormControl>
 
                     </HStack>
@@ -1895,7 +1903,7 @@ const Options = ({
 
                     <Heading size = 'xs'>Scroll to pixel</Heading>
 
-                    <HStack alignItems = 'baseline'>
+                    <VStack alignItems = 'baseline'>
 
                         <FormControl 
                             isDisabled = {APIdisabledFlags.scrollToPixel}
@@ -1918,7 +1926,34 @@ const Options = ({
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl>
+                        <Text fontSize = 'sm' paddingBottom = {2} >
+                            Integer. Scroll to the specified pixel number in the virtual list scrollblock.
+                        </Text>
+
+                        <FormControl
+                            isDisabled = {APIdisabledFlags.scrolltobehavior}
+                        >
+                        <HStack alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>behavior:</FormLabel>
+                            <Select 
+                                value = {editAPIFunctionArguments.scrolltobehavior} 
+                                flexGrow = {.8} 
+                                size = 'sm'
+                                onChange = {onChangeFunctions.scrolltobehavior}
+                            >
+                                <option value="">default behavior</option>
+                                <option value="smooth">smooth</option>
+                                <option value="instant">instant</option>
+                                <option value="auto">auto</option>
+                            </Select>
+                        </HStack>
+                        </FormControl>
+
+                        <Text fontSize = 'sm' paddingBottom = {2} >
+                            Default uses smooth behavior. Otherwise select behavior.
+                        </Text>
+
+                        <FormControl borderBottom = '1px'>
                             <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
 
                                 <FormLabel htmlFor='gotopixel' fontSize = 'sm'>Enable</FormLabel>
@@ -1928,17 +1963,11 @@ const Options = ({
                                     onChange = {onChangeFunctions.onChangeEnabler} 
                                     id='gotopixel' 
                                 />
+
                             </InputGroup>
-                            <FormErrorMessage>
-                            something
-                            </FormErrorMessage>
                         </FormControl>
 
-                    </HStack>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integer. Go to the specified pixel number in the virtual list scrollblock.
-                    </Text>
+                    </VStack>
 
                     <Heading size = 'xs'>Change virtual list size</Heading>
 
