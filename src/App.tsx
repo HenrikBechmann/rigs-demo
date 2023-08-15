@@ -154,6 +154,7 @@ const mapAllPropertiesSessionToDemo = (
     for (const typeSelector in demoAllProperties) {
 
         const workingTypeProperties = {...sessionAllProperties[typeSelector]}
+
         const rangePropertyType = workingTypeProperties.rangePropertyType
         const {startingLowIndex, startingHighIndex} = workingTypeProperties
         if (rangePropertyType == 'rangepropertyvalues') {
@@ -169,6 +170,7 @@ const mapAllPropertiesSessionToDemo = (
         delete workingTypeProperties.rangePropertyType
         delete workingTypeProperties.startingLowIndex
         delete workingTypeProperties.startingHighIndex
+
         workingAllProperties[typeSelector] = workingTypeProperties
  
     }
@@ -249,7 +251,7 @@ function App() {
       mapAllPropertiesSessionToDemo(
         sessionAllContentTypePropertiesRef.current,
         demoAllContentTypePropertiesRef.current
-     )
+      )
     demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
     demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
 

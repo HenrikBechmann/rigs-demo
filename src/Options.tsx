@@ -683,7 +683,12 @@ const Options = ({
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editContentTypeProperties})
-            isInvalidTests.startingHighIndex(editContentTypeProperties.startingHighIndex)
+            if (!isInvalidTests.startingHighIndex(editContentTypeProperties.startingHighIndex)) {
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],
+                        startingHighIndex:editContentTypeProperties.startingHighIndex}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            }
         },
         startingHighIndex:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
@@ -694,7 +699,12 @@ const Options = ({
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
             setEditContentTypeProperties({...editContentTypeProperties})
-            isInvalidTests.startingLowIndex(editContentTypeProperties.startingLowIndex)
+            if (!isInvalidTests.startingLowIndex(editContentTypeProperties.startingLowIndex)) {
+                const newSessionProperties = 
+                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],
+                        startingLowIndex:editContentTypeProperties.startingLowIndex}
+                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
+            }
         },
         padding:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
