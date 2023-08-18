@@ -249,6 +249,10 @@ the _About the Callbacks options_ section for more details.
 \`scrollToIndex(...)\` allows the host to change the contents of the visible \`Cradle\`, by changing the ReferenceIndex 
 of the \`Cradle\` to the specified index.
 
+\`scrollToPixel(...)\` scrolls the scroller to the provided pixel, along the current orientation.
+
+\`scrollByPixel(...)\` scrolls the scroller up or down by the number of provided pixels, along the current orientation.
+
 The \`setListsize(...)\` function allows the host to modify the size of the virtual list. If any cache or \`Cradle\` 
 items become out of scope as a result of this change they are removed from the cache, and the \`Cradle\` is moved as
 appropriate. The size of the virtual list is initially set with the \`startingListSize\` property. The size of the list
