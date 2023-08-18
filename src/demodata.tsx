@@ -579,7 +579,7 @@ const VariableItemDynamic = (props:any) => {
 
     // const originalindexRef = useRef(props.index)
 
-    const intervalRef = useRef<NodeJS.Timer | null>(null)
+    const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
     const [teststring, setTeststring] = useState('placeholder')
     const teststringRef = useRef<string>()
@@ -595,7 +595,8 @@ const VariableItemDynamic = (props:any) => {
         },200 + (Math.random() * 2000))
 
         return () => {
-            clearInterval(intervalRef.current as NodeJS.Timer)
+            const intervalID = intervalRef.current
+            clearInterval(intervalID as NodeJS.Timeout)
         }
 
     },[])
