@@ -176,31 +176,27 @@ const Options = ({
 
     // inherited scroller service functions
     const 
-        functionsAPI = functionsAPIRef.current
+        functionsAPI = functionsAPIRef.current,
 
-    const 
         indexRangeRef = useRef<number[]>([]),
         [listlowindex, listhighindex] = indexRangeRef.current,
         rangesize = 
             indexRangeRef.current.length == 0?
             0:
-            listhighindex - listlowindex + 1
+            listhighindex - listlowindex + 1,
 
-    const 
-        originalContentTypeSelectorRef = useRef(sessionContentTypeSelectorRef.current)
+        originalContentTypeSelectorRef = useRef(sessionContentTypeSelectorRef.current),
 
-    // component state
-    const 
-        [optionsState, setOptionsState] = useState('setup')
+        // component state
+        [optionsState, setOptionsState] = useState('setup'),
 
-    // simple values
-    const 
+        // simple values
         [editContentTypeSelector, setEditContentTypeSelector] = 
-            useState(sessionContentTypeSelectorRef.current)
-
-    const 
+            useState(sessionContentTypeSelectorRef.current),
         [editOperationFunctionSelector, setEditOperationFunctionSelector] = 
-            useState(sessionOperationFunctionSelectorRef.current),
+            useState(sessionOperationFunctionSelectorRef.current)
+
+    const
         editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current)
     editOperationFunctionSelectorRef.current = editOperationFunctionSelector
 
