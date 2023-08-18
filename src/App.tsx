@@ -39,6 +39,10 @@ import {
 
 const defaultAPIFunctionArguments:GenericObject = {
   gotoIndex:'',
+  scrollToPixel:'',
+  scrollByPixel:'',
+  scrolltobehavior:'',
+  scrollbybehavior:'',
   listsize:'',
   rangeAPIType:'rangeAPIvalues',
   listLowIndex:'',
@@ -152,6 +156,7 @@ const mapAllPropertiesSessionToDemo = (
     for (const typeSelector in demoAllProperties) {
 
         const workingTypeProperties = {...sessionAllProperties[typeSelector]}
+
         const rangePropertyType = workingTypeProperties.rangePropertyType
         const {startingLowIndex, startingHighIndex} = workingTypeProperties
         if (rangePropertyType == 'rangepropertyvalues') {
@@ -167,6 +172,7 @@ const mapAllPropertiesSessionToDemo = (
         delete workingTypeProperties.rangePropertyType
         delete workingTypeProperties.startingLowIndex
         delete workingTypeProperties.startingHighIndex
+
         workingAllProperties[typeSelector] = workingTypeProperties
  
     }
@@ -247,7 +253,7 @@ function App() {
       mapAllPropertiesSessionToDemo(
         sessionAllContentTypePropertiesRef.current,
         demoAllContentTypePropertiesRef.current
-     )
+      )
     demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
     demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
 
@@ -358,7 +364,7 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.1.0-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-1.2.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
@@ -476,6 +482,26 @@ const getFunctionToastContent = (
     case 'goto': {
       functionsAPI.scrollToIndex(APIFunctionArguments.scrolltoIndex)
       codeblock = `functionsAPI.scrollToIndex(${APIFunctionArguments.scrolltoIndex})`
+      break
+    }
+    case 'gotopixel': {
+      if (APIFunctionArguments.scrolltobehavior) {
+          functionsAPI.scrollToPixel(APIFunctionArguments.scrollToPixel,APIFunctionArguments.scrolltobehavior)
+          codeblock = `functionsAPI.scrollToPixel(${APIFunctionArguments.scrollToPixel},"${APIFunctionArguments.scrolltobehavior}")`
+      } else {
+          functionsAPI.scrollToPixel(APIFunctionArguments.scrollToPixel)
+          codeblock = `functionsAPI.scrollToPixel(${APIFunctionArguments.scrollToPixel})`
+      }
+      break
+    }
+    case 'gobypixel': {
+      if (APIFunctionArguments.scrollbybehavior) {
+          functionsAPI.scrollByPixel(APIFunctionArguments.scrollByPixel,APIFunctionArguments.scrollbybehavior)
+          codeblock = `functionsAPI.scrollByPixel(${APIFunctionArguments.scrollByPixel},"${APIFunctionArguments.scrollbybehavior}")`
+      } else {
+          functionsAPI.scrollByPixel(APIFunctionArguments.scrollByPixel)
+          codeblock = `functionsAPI.scrollByPixel(${APIFunctionArguments.scrollByPixel})`
+      }
       break
     }
     case 'listsize': {
