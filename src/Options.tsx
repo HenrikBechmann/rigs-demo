@@ -92,7 +92,9 @@ const fieldSections:GenericObject = {
     cacheMax:'properties',
     scrolltoIndex:'operations',
     scrollToPixel:'operations',
+    scrollByPixel:'operations',
     scrolltobehavior:'operations',
+    scrollbybehavior:'operations',
     listsize:'operations',
     prependCount:'operations',
     appendCount:'operations',
@@ -127,6 +129,7 @@ const errorMessages = {
     cacheMax:'blank, or integer greater than or equal to 0',
     scrolltoIndex:'integer: required, greater than or equal to listlowindex',
     scrollToPixel:'integer:required, greater than or equal to 0',
+    scrollByPixel:'integer:required',
     listsize:'integer: required, greater than or equal to 0',
     listLowIndex:'integer: required',
     listHighIndex:'integer:required, greater than or equal to low index',
@@ -142,7 +145,7 @@ const errorMessages = {
 }
 
 const accessControlledAPIFields = [
-    'scrolltoIndex','scrollToPixel','scrolltobehavior',
+    'scrolltoIndex','scrollToPixel','scrollByPixel','scrolltobehavior','scrollbybehavior',
     'listsize',
     'prependCount','appendCount',
     'listLowIndex','listHighIndex','rangeAPIType',
@@ -243,7 +246,9 @@ const Options = ({
             cellMinWidth:false, // property
             scrolltoIndex:false,
             scrollToPixel:false,
+            scrollByPixel:false,
             scrolltobehavior:false,
+            scrollbybehavior:false,
             listsize:false,
             rangeAPIType:false,
             listLowIndex:false,
@@ -281,6 +286,7 @@ const Options = ({
             cacheMax:false,
             scrolltoIndex:false,
             scrollToPixel:false,
+            scrollByPixel:false,
             listsize:false,
             listLowIndex:false,
             listHighIndex:false,
@@ -320,6 +326,7 @@ const Options = ({
             functionEnabledSettingsRef = useRef<GenericObject>({
             goto:false,
             gotopixel:false,
+            gobypixel:false,
             listsize:false,
             prependCount:false,
             appendCount:false,
@@ -466,6 +473,11 @@ const Options = ({
         scrollToPixel:(value:string) => {
             const isInvalid = (!isInteger(value) && !isValueGreaterThanOrEqualToMinValue(value, 0))
             invalidFieldFlags.scrollToPixel = isInvalid
+            return isInvalid
+        },
+        scrollByPixel:(value:string) => {
+            const isInvalid = !isInteger(value)
+            invalidFieldFlags.scrollByPixel = isInvalid
             return isInvalid
         },
         listsize:(value:string) => {
@@ -772,12 +784,28 @@ const Options = ({
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
+        scrollByPixel:(input:string) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            editAPIFunctionArguments.scrollByPixel = input
+            if (!isInvalidTests.scrollByPixel(input)) {
+                sessionAPIFunctionArgumentsRef.current.scrollByPixel = input
+            }
+            setEditAPIFunctionArguments({...editAPIFunctionArguments})
+        },
         scrolltobehavior:(event:React.ChangeEvent) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             const target = event.target as HTMLSelectElement
             const value = target.value
             editAPIFunctionArguments.scrolltobehavior = value
             sessionAPIFunctionArgumentsRef.current.scrolltobehavior = value
+            setEditContentTypeProperties({...editContentTypeProperties})
+        },
+        scrollbybehavior:(event:React.ChangeEvent) => {
+            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
+            const target = event.target as HTMLSelectElement
+            const value = target.value
+            editAPIFunctionArguments.scrollbybehavior = value
+            sessionAPIFunctionArgumentsRef.current.scrollbybehavior = value
             setEditContentTypeProperties({...editContentTypeProperties})
         },
         listsize:(input:string) => {
@@ -1013,6 +1041,12 @@ const Options = ({
                         APIdisabledFlags.scrollToPixel = false
                         APIdisabledFlags.scrolltobehavior = false
                         isInvalidTests.scrollToPixel(editAPIFunctionArgumentsRef.current.scrollToPixel)
+                        break
+                    }
+                    case 'gobypixel': {
+                        APIdisabledFlags.scrollByPixel = false
+                        APIdisabledFlags.scrollbybehavior = false
+                        isInvalidTests.scrollByPixel(editAPIFunctionArgumentsRef.current.scrollByPixel)
                         break
                     }
                     case 'listsize':{
@@ -1972,6 +2006,74 @@ const Options = ({
                                     isChecked = {functionEnabledSettings.gotopixel} 
                                     onChange = {onChangeFunctions.onChangeEnabler} 
                                     id='gotopixel' 
+                                />
+
+                            </InputGroup>
+                        </FormControl>
+
+                    </VStack>
+
+                    <Heading size = 'xs'>Scroll by pixel</Heading>
+
+                    <VStack alignItems = 'baseline'>
+
+                        <FormControl 
+                            isDisabled = {APIdisabledFlags.scrollByPixel}
+                            isInvalid = {invalidFieldFlags.scrollByPixel}>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
+
+                                <FormLabel fontSize = 'sm'>pixel shift:</FormLabel>
+
+                                <NumberInput 
+                                    value = {editAPIFunctionArguments.scrollByPixel} 
+                                    size = 'sm'
+                                    onChange = {onChangeFunctions.scrollByPixel}
+                                    clampValueOnBlur = {false}
+                                >
+                                    <NumberInputField border = '2px' />
+                                </NumberInput>
+                            </InputGroup>
+                            <FormErrorMessage>
+                                {errorMessages.scrollByPixel}
+                            </FormErrorMessage>
+                        </FormControl>
+
+                        <Text fontSize = 'sm' paddingBottom = {2} >
+                            Integer. Scroll the distance specified by the pixel ampunt, in the virtual list scrollblock.
+                        </Text>
+
+                        <FormControl
+                            isDisabled = {APIdisabledFlags.scrollbybehavior}
+                        >
+                        <HStack alignItems = 'baseline'>
+                            <FormLabel fontSize = 'sm'>behavior:</FormLabel>
+                            <Select 
+                                value = {editAPIFunctionArguments.scrollbybehavior} 
+                                flexGrow = {.8} 
+                                size = 'sm'
+                                onChange = {onChangeFunctions.scrollbybehavior}
+                            >
+                                <option value="">default behavior</option>
+                                <option value="smooth">smooth</option>
+                                <option value="instant">instant</option>
+                                <option value="auto">auto</option>
+                            </Select>
+                        </HStack>
+                        </FormControl>
+
+                        <Text fontSize = 'sm' paddingBottom = {2} >
+                            Default uses smooth behavior. Otherwise select behavior.
+                        </Text>
+
+                        <FormControl borderBottom = '1px'>
+                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
+
+                                <FormLabel htmlFor='gobypixel' fontSize = 'sm'>Enable</FormLabel>
+
+                                <Switch 
+                                    isChecked = {functionEnabledSettings.gobypixel} 
+                                    onChange = {onChangeFunctions.onChangeEnabler} 
+                                    id='gobypixel' 
                                 />
 
                             </InputGroup>
