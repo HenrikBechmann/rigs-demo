@@ -11,7 +11,7 @@ import {
     FormControl, FormLabel, FormHelperText, FormErrorMessage, // forms
     Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, // accordion
     Button, Switch, Radio, RadioGroup, Checkbox, Select, // active content components
-    NumberInput, NumberInputField, InputGroup, // number component
+    Input, NumberInput, NumberInputField, InputGroup, // number component
     Heading, Text, Code, // passive content components
 
 } from '@chakra-ui/react'
@@ -123,7 +123,7 @@ const errorMessages = {
     startingListSize:'integer: required, with minimum 0',
     startingLowIndex:'integer: must be less than or equal to high index',
     startingHighIndex:'integer: must be greater than or equal to low index',
-    padding:'blank, or integer greater than or equal to 0',
+    padding:'blank, or integer, or comma separated list of 2-4 integers, all greater than or equal to 0',
     gap:'blank, or integeer greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
     cacheMax:'blank, or integer greater than or equal to 0',
@@ -432,7 +432,17 @@ const Options = ({
         padding:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,0)
+                const list = value.split(',')
+                if (list.length > 4) {
+                    isInvalid = true
+                } else {
+                    list.forEach((value)=>{
+                        if (!isValueGreaterThanOrEqualToMinValue(value,0)) {
+                            isInvalid = true
+                        }
+
+                    })
+                }                
             }
             invalidFieldFlags.padding = isInvalid
             return isInvalid
@@ -714,7 +724,10 @@ const Options = ({
                 sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
             }
         },
-        padding:(input:string) => {
+        // padding:(input:string) => {
+        padding:(event:React.ChangeEvent) => {
+            const target = event.target as HTMLSelectElement
+            const input = target.value
             const editContentTypeProperties = editContentTypePropertiesRef.current
             editContentTypeProperties.padding = input
             if (!isInvalidTests.padding(input)) {
@@ -1366,25 +1379,27 @@ const Options = ({
 
                     <Heading size = 'xs'>Padding and gaps</Heading>
 
-                    <Stack direction = {['column','row','row']}>
+                    <VStack>
 
                     <FormControl isInvalid = {invalidFieldFlags.padding} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
                             <FormLabel fontSize = 'sm'>padding:</FormLabel>
 
-                            <NumberInput 
+                            <Input 
                                 value = {editContentTypeProperties.padding} 
                                 size = 'sm'
                                 onChange = {onChangeFunctions.padding}
-                                clampValueOnBlur = {false}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
+                                // clampValueOnBlur = {false}
+                            />
                         </InputGroup>
                         <FormErrorMessage>
                             {errorMessages.padding}
                         </FormErrorMessage>
+                        <Text fontSize = 'sm' paddingBottom = {2}>
+                            Blank, or integer, or comma separated list of 2-4 integers. 
+                            Padding applies to the scroller borders.
+                        </Text>
                     </FormControl>
 
                     <FormControl isInvalid = {invalidFieldFlags.gap} >
@@ -1404,14 +1419,12 @@ const Options = ({
                         <FormErrorMessage>
                             {errorMessages.gap}
                         </FormErrorMessage>
+                        <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
+                            Integer (pixels), optional. Gaps apply to the space between cells.
+                        </Text>
                     </FormControl>
 
-                    </Stack>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integers (pixels), optional. Padding applies to the scroller borders; gaps apply to 
-                        the space between cells.
-                    </Text>
+                    </VStack>
 
                     <Heading size = 'xs'>Starting index</Heading>
                     

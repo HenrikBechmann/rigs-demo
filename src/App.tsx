@@ -136,6 +136,10 @@ const mapAllPropertiesDemoToSession = (
         }
 
         delete workingTypeProperties.startingListRange
+        const padding = workingTypeProperties.padding
+        if (Array.isArray(padding)) {
+            workingTypeProperties.padding = padding.join(',')
+        }
         workingAllProperties[typeSelector] = workingTypeProperties
  
     }
@@ -172,6 +176,15 @@ const mapAllPropertiesSessionToDemo = (
         delete workingTypeProperties.rangePropertyType
         delete workingTypeProperties.startingLowIndex
         delete workingTypeProperties.startingHighIndex
+
+        const padding = workingTypeProperties.padding
+        if (padding) {
+            const paddinglist = padding.toString().split(',')
+            paddinglist.forEach((value:string, index:number, list:number[]) => {
+                list[index] = +value
+            })
+            workingTypeProperties.padding = paddinglist
+        }
 
         workingAllProperties[typeSelector] = workingTypeProperties
  
