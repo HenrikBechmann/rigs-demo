@@ -1397,8 +1397,8 @@ const Options = ({
                             {errorMessages.padding}
                         </FormErrorMessage>
                         <Text fontSize = 'sm' paddingBottom = {2}>
-                            Blank, or integer, or comma separated list of 2-4 integers. 
-                            Padding applies to the scroller borders.
+                            Blank, or integer, or comma separated list of 2-4 integers. These will be
+                            formed into an array for the padding property. Padding applies to the scroller borders.
                         </Text>
                     </FormControl>
 
