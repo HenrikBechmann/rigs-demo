@@ -1,5 +1,5 @@
 
-// copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT 
 
 import React, {useState, useEffect, useRef} from 'react';
 
