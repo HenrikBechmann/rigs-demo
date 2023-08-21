@@ -107,8 +107,11 @@ orientation is pivoted from vertical to horizontal or back.
 cells. See the descriptions of _uniform_ and _variable_ layouts in the _About the Content Type options_ section
 for details on how these are applied.
 
-**padding** defines the border width around the (visible) cradle. The **gap** property defines the gap between cells, 
-both vertically and horizontally. Gaps do not apply at the beginning or end of rows or columns (controlled by 
+**padding** defines the border width around the (visible) cradle. It can be an integer or a 2-4 part comma separated 
+list (following CSS assignment conventions).
+The **gap** property defines the gap (gutters) between cells, 
+both vertically and horizontally. It can be an integer or a 2 part comma separated list (column-gap/row-gap). 
+Gaps do not apply at the beginning or end of rows or columns (controlled by 
 padding instead). Adjusting the background colour using the \`styles\` object (see the bottom of this panel) colors 
 the padding and gap spaces.
 
