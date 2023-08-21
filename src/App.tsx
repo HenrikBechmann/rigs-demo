@@ -136,6 +136,17 @@ const mapAllPropertiesDemoToSession = (
         }
 
         delete workingTypeProperties.startingListRange
+
+        const padding = workingTypeProperties.padding
+        if (Array.isArray(padding)) {
+            workingTypeProperties.padding = padding.join(',')
+        }
+
+        const gap = workingTypeProperties.pad
+        if (Array.isArray(gap)) {
+            workingTypeProperties.gap = gap.join(',')
+        }
+
         workingAllProperties[typeSelector] = workingTypeProperties
  
     }
@@ -172,6 +183,24 @@ const mapAllPropertiesSessionToDemo = (
         delete workingTypeProperties.rangePropertyType
         delete workingTypeProperties.startingLowIndex
         delete workingTypeProperties.startingHighIndex
+
+        const padding = workingTypeProperties.padding
+        if (padding) {
+            const paddinglist = padding.toString().split(',')
+            paddinglist.forEach((value:string, index:number, list:number[]) => {
+                list[index] = +value
+            })
+            workingTypeProperties.padding = paddinglist
+        }
+
+        const gap = workingTypeProperties.gap
+        if (gap) {
+            const gaplist = gap.toString().split(',')
+            gaplist.forEach((value:string, index:number, list:number[]) => {
+                list[index] = +value
+            })
+            workingTypeProperties.gap = gaplist
+        }
 
         workingAllProperties[typeSelector] = workingTypeProperties
  
@@ -364,7 +393,7 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.2.0-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-1.3.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
