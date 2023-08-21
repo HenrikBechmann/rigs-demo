@@ -124,7 +124,7 @@ const errorMessages = {
     startingLowIndex:'integer: must be less than or equal to high index',
     startingHighIndex:'integer: must be greater than or equal to low index',
     padding:'blank, or integer, or comma separated list of 2-4 integers, all greater than or equal to 0',
-    gap:'blank, or integeer greater than or equal to 0',
+    gap:'blank, or integer, or comma separated list of 2 integers, all greater than or equal to 0',
     runwaySize:'blank, or integer minimum 1',
     cacheMax:'blank, or integer greater than or equal to 0',
     scrolltoIndex:'integer: required, greater than or equal to listlowindex',
@@ -450,7 +450,17 @@ const Options = ({
         gap:(value:string) => {
             let isInvalid = false
             if (!isBlank(value)) {
-                isInvalid = !isValueGreaterThanOrEqualToMinValue(value,0)
+                const list = value.split(',')
+                if (list.length > 2) {
+                    isInvalid = true
+                } else {
+                    list.forEach((value)=>{
+                        if (!isValueGreaterThanOrEqualToMinValue(value,0)) {
+                            isInvalid = true
+                        }
+
+                    })
+                }                
             }
             invalidFieldFlags.gap = isInvalid
             return isInvalid
@@ -737,7 +747,9 @@ const Options = ({
             }
             setEditContentTypeProperties({...editContentTypeProperties})
         },
-        gap:(input:string) => {
+        gap:(event:React.ChangeEvent) => {
+            const target = event.target as HTMLSelectElement
+            const input = target.value
             const editContentTypeProperties = editContentTypePropertiesRef.current
             editContentTypeProperties.gap = input
             if (!isInvalidTests.gap(input)) {
@@ -1384,12 +1396,13 @@ const Options = ({
                     <FormControl isInvalid = {invalidFieldFlags.padding} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
-                            <FormLabel fontSize = 'sm'>padding:</FormLabel>
+                            <FormLabel htmlFor = 'padding' fontSize = 'sm'>padding:</FormLabel>
 
                             <Input 
                                 value = {editContentTypeProperties.padding} 
                                 size = 'sm'
                                 onChange = {onChangeFunctions.padding}
+                                id = 'padding'
                                 // clampValueOnBlur = {false}
                             />
                         </InputGroup>
@@ -1405,22 +1418,22 @@ const Options = ({
                     <FormControl isInvalid = {invalidFieldFlags.gap} >
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
 
-                            <FormLabel fontSize = 'sm'>gap:</FormLabel>
+                            <FormLabel htmlFor = 'gap' fontSize = 'sm'>gap:</FormLabel>
 
-                            <NumberInput 
+                            <Input 
                                 value = {editContentTypeProperties.gap} 
                                 size = 'sm'
+                                id = 'gap'
                                 onChange = {onChangeFunctions.gap}
-                                clampValueOnBlur = {false}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
+                                // clampValueOnBlur = {false}
+                            />
                         </InputGroup>
                         <FormErrorMessage>
                             {errorMessages.gap}
                         </FormErrorMessage>
                         <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                            Integer (pixels), optional. Gaps apply to the space between cells.
+                            Blank, or integer, or comma separated list of 2 integers. These will be
+                            formed into an array for the gap property. Gap applies to the grid gutters.
                         </Text>
                     </FormControl>
 
