@@ -30,6 +30,7 @@ export const defaultCallbackFlags = {
     changeListRangeCallback:false,
     deleteListCallback:false,
     repositioningFlagCallback:false,
+    boundaryCallback:false,
 }
 
 // initialize the demo settings with the default settings, and export to the App module. 
@@ -48,6 +49,12 @@ const referenceIndexCallback = (index:number, location:string, cradleState:strin
             index, location, cradleState)
    
 }
+
+const boundaryCallback = (position:string, index:number) => {
+    demoCallbackFlagsRef.current.boundaryCallback && 
+        console.log('boundaryCallback: position, index', position, index)
+}
+
 const preloadIndexCallback = (index:number) => {
     
     demoCallbackFlagsRef.current.preloadIndexCallback && 
@@ -128,6 +135,7 @@ const callbacks = {
     changeListRangeCallback,
     deleteListCallback,
     repositioningFlagCallback,
+    boundaryCallback,
 }
 
 // =============================================================================

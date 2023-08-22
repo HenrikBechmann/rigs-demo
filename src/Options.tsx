@@ -1704,6 +1704,21 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
+                            isChecked = {editCallbackFlags.boundaryCallback} 
+                            size = 'sm'
+                            mt = {2}
+                            id = 'boundaryCallback'
+                            onChange = {onChangeFunctions.callbackSettings}
+                        >
+                            Boundary callback
+                        </Checkbox>
+                        <FormHelperText>
+                            This reports when the first or last index item of the virtual list is loaded into the Cradle.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Checkbox 
                             isChecked = {editCallbackFlags.preloadIndexCallback} 
                             size = 'sm'
                             mt = {2}

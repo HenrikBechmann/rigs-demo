@@ -165,6 +165,7 @@ Callbacks are sent to RIGS through the \`callbacks\` parameter like this:
 const callbacks = {
     functionsCallback, // obtain API functions
     referenceIndexCallback, // current index at the Cradle axis
+    boundaryCallback, // current start-of-list or end-of-list index loaded to Cradle
     itemExceptionCallback, // information on failed getItem call
     changeListSizeCallback, // list size has changed
     changeListRangeCallback, // list range has changed
