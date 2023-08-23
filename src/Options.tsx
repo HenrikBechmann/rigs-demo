@@ -132,7 +132,7 @@ const errorMessages = {
     scrollToPixel:'integer:required, greater than or equal to 0',
     scrollByPixel:'integer:required',
     listsize:'integer: required, greater than or equal to 0',
-    listLowIndex:'integer: required',
+    listLowIndex:'integer: required, less than or equal to high index',
     listHighIndex:'integer:required, greater than or equal to low index',
     prependCount:'integer:required, greater than or equal to 0',
     appendCount:'integer:required, greater than or equal to 0',
@@ -503,13 +503,22 @@ const Options = ({
             return isInvalid
         },
         listLowIndex:(value:string) => {
-            const isInvalid = !isInteger(value)
+            let isInvalid = isBlank(value)
+            if (!isInvalid) {
+                isInvalid = !isInteger(value)
+            }
+            if (!isInvalid) {
+                isInvalid = !isValueLessThanOrEqualToMaxValue(value,editAPIFunctionArgumentsRef.current.listHighIndex)
+            }
             invalidFieldFlags.listLowIndex = isInvalid
-            isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+            // isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
             return isInvalid
         },
         listHighIndex:(value:string) => {
-            let isInvalid = !isInteger(value)
+            let isInvalid = isBlank(value)
+            if (!isInvalid) {
+                isInvalid = !isInteger(value)
+            }
             if (!isInvalid) {
                 isInvalid = !isValueGreaterThanOrEqualToMinValue(value,editAPIFunctionArgumentsRef.current.listLowIndex)
             }
@@ -845,6 +854,7 @@ const Options = ({
                 sessionAPIFunctionArgumentsRef.current.listLowIndex = input
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
+            isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
         },
         listHighIndex:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
@@ -853,6 +863,7 @@ const Options = ({
                 sessionAPIFunctionArgumentsRef.current.listHighIndex = input
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
+            isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
         },
         rangeAPIType:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
