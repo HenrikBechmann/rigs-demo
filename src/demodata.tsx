@@ -329,7 +329,8 @@ const simplepromisesProperties = {
 // -----------------
 
 const getAutoExpansionCount = (position:string, index:number) => {
-    console.log('firing getAutoExpansionCount')
+    if (position == 'SOL' && index >= -1000) return 10
+    if (position == 'EOL' && index <= 1000) return 10
     return 0
 }
 
