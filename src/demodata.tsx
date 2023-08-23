@@ -4,6 +4,8 @@ import React, {useRef, useState, useEffect} from 'react'
 
 import Scroller from 'react-infinite-grid-scroller'
 
+import { setDemoStatePack } from './App'
+
 /*
     CONTENT TYPES are defined just below the SCROLLER CALLBACKS section.
 */
@@ -329,9 +331,21 @@ const simplepromisesProperties = {
 // -----------------
 
 const getAutoExpansionCount = (position:string, index:number) => {
-    if (position == 'SOL' && index >= -1000) return 10
-    if (position == 'EOL' && index <= 1000) return 10
-    return 0
+
+    let count = 0
+
+    if (position == 'SOL' && index >= -1000) count = 10
+
+    if (position == 'EOL' && index <= 1000) count = 10
+
+    const statePack:GenericObject = setDemoStatePack
+
+    if (count) {
+        statePack.setDemoState('autoexpand')
+    }
+
+    return count
+
 }
 
 const simpleAutoExpandScrollerStyles = {

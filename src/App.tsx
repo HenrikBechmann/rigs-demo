@@ -213,9 +213,19 @@ const mapAllPropertiesSessionToDemo = (
 
 }
 
+export const setDemoStatePack:GenericObject = {
+    setDemoState:null
+}
+
 function App() {
 
   const [demoState, setDemoState] = useState('setup')
+
+  useEffect(()=>{
+
+      setDemoStatePack.setDemoState = setDemoState
+
+  },[])
 
   // baseline - static
   const defaultContentTypeSelector = 'simplecontent'
@@ -348,6 +358,7 @@ function App() {
     switch (demoState) {
       case 'setup':
       case 'apply': 
+      case 'autoexpand':
       case 'resetall': {
 
         setTimeout(()=>{ // allow cycle for load scroller, get functions and indexRange
