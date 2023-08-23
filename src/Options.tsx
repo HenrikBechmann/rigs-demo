@@ -40,7 +40,8 @@ const isInteger = (value:any) => {
 
     const test = +value
 
-    return (isNumber(value) && (Math.floor(test) === test))
+    // return (isNumber(value) && (Math.floor(test) === test))
+    return (Number.isInteger(test))
 
 }
 
@@ -1238,6 +1239,7 @@ const Options = ({
             >
                 <option value="simplecontent">Simple uniform content</option>
                 <option value="simplepromises">Simple uniform promises</option>
+                <option value="simpleautoexpand">Simple auto expand</option>
                 <option value="variablecontent">Variable content</option>
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>

@@ -156,6 +156,7 @@ const callbacks = {
 
     1. simplecontent:    simplecontentProperties,
     2. simplepromises:   simplepromisesProperties,
+    2.1 simpleautoexpand:simpleautoexpandProperties,
     3. variablecontent:  variablecontentProperties,
     4. variablepromises: variablepromiseProperties,
     5. variabledynamic:  variabledynamicProperties,
@@ -312,6 +313,55 @@ const simplepromisesProperties = {
 
     getItem: getSimpleItemPromise,
     styles: simplePromisesScrollerStyles,
+    placeholderMessages: simplePlaceholderMessages,
+    callbacks,
+    technical: {
+        showAxis:false
+    },
+}
+
+// ============================[ 2.1 Simple auto expand ]==============================
+
+// the simple content component definitions above are used for these items, except for the following...
+
+// -----------------
+// scroller property values assembled for this content variant
+// -----------------
+
+const getAutoExpansionCount = (position:string, index:number) => {
+    console.log('firing getAutoExpansionCount')
+    return 0
+}
+
+const simpleAutoExpandScrollerStyles = {
+    viewport:{
+        overscrollBehavior:'none'
+    },
+    placeholderframe: {
+        borderRadius:'8px',
+        backgroundColor:'palegreen',
+    },
+}
+
+
+// properties for the simple promises scroller
+const simpleAutoExpandProperties = {
+    startingIndex:0,
+    startingListSize:300,
+    startingListRange:[-50,50],
+    orientation:'vertical',
+    cellHeight:150,
+    cellWidth:150,
+    padding:10,
+    gap:5,
+    runwaySize:4,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    getItem: getSimpleItem,
+    getExpansionCount:getAutoExpansionCount,
+    styles: simpleAutoExpandScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
     technical: {
@@ -1293,6 +1343,7 @@ const sharedcacheProperties = {
 export const defaultAllContentTypeProperties = {
     simplecontent:simplecontentProperties,
     simplepromises:simplepromisesProperties,
+    simpleautoexpand:simpleAutoExpandProperties,
     variablecontent:variablecontentProperties,
     variablepromises:variablepromiseProperties,
     variabledynamic:variabledynamicProperties,

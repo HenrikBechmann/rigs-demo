@@ -63,6 +63,7 @@ const contentTitles:GenericObject = {
 
   simplecontent:"Simple uniform content",
   simplepromises:"Simple uniform promises",
+  simpleautoexpand:"Simple auto expand",
   variablecontent:"Variable content",
   variablepromises:"Variable promises",
   variabledynamic:"Variable dynamic",
