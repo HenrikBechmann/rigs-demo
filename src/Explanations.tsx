@@ -21,7 +21,7 @@ const renderMarkdown = (markdown:string) => {
 }
 
 const overview_md = `
-There are two reasons for this website:
+There are two reasons for this website :
 
 - to provide a way to become familiar with the  features of *react-infinite-grid-scroller* (*RIGS*)
 - to provide a test environment for various platforms. If you see any issues, please report them 
