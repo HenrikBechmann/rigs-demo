@@ -173,6 +173,7 @@ const callbacks = {
     repositioningFlagCallback, // repositioning has started/ended
     repositioningIndexCallback, // current virtual repositioning index
     preloadIndexCallback, // current index being preloaded
+    boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
 }
 ~~~
 See the formal documentation (linked in the _Documentation &amp; Source Code_ section) for details.
