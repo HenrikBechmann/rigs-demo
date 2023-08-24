@@ -165,6 +165,7 @@ Callbacks are sent to RIGS through the \`callbacks\` parameter like this:
 const callbacks = {
     functionsCallback, // obtain API functions
     referenceIndexCallback, // current index at the Cradle axis
+    boundaryCallback, // current start-of-list or end-of-list index loaded to Cradle
     itemExceptionCallback, // information on failed getItem call
     changeListSizeCallback, // list size has changed
     changeListRangeCallback, // list range has changed
@@ -172,6 +173,7 @@ const callbacks = {
     repositioningFlagCallback, // repositioning has started/ended
     repositioningIndexCallback, // current virtual repositioning index
     preloadIndexCallback, // current index being preloaded
+    boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
 }
 ~~~
 See the formal documentation (linked in the _Documentation &amp; Source Code_ section) for details.
