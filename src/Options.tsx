@@ -40,7 +40,8 @@ const isInteger = (value:any) => {
 
     const test = +value
 
-    return (isNumber(value) && (Math.floor(test) === test))
+    // return (isNumber(value) && (Math.floor(test) === test))
+    return (Number.isInteger(test))
 
 }
 
@@ -131,7 +132,7 @@ const errorMessages = {
     scrollToPixel:'integer:required, greater than or equal to 0',
     scrollByPixel:'integer:required',
     listsize:'integer: required, greater than or equal to 0',
-    listLowIndex:'integer: required',
+    listLowIndex:'integer: required, less than or equal to high index',
     listHighIndex:'integer:required, greater than or equal to low index',
     prependCount:'integer:required, greater than or equal to 0',
     appendCount:'integer:required, greater than or equal to 0',
@@ -502,13 +503,22 @@ const Options = ({
             return isInvalid
         },
         listLowIndex:(value:string) => {
-            const isInvalid = !isInteger(value)
+            let isInvalid = isBlank(value)
+            if (!isInvalid) {
+                isInvalid = !isInteger(value)
+            }
+            if (!isInvalid) {
+                isInvalid = !isValueLessThanOrEqualToMaxValue(value,editAPIFunctionArgumentsRef.current.listHighIndex)
+            }
             invalidFieldFlags.listLowIndex = isInvalid
-            isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
+            // isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
             return isInvalid
         },
         listHighIndex:(value:string) => {
-            let isInvalid = !isInteger(value)
+            let isInvalid = isBlank(value)
+            if (!isInvalid) {
+                isInvalid = !isInteger(value)
+            }
             if (!isInvalid) {
                 isInvalid = !isValueGreaterThanOrEqualToMinValue(value,editAPIFunctionArgumentsRef.current.listLowIndex)
             }
@@ -844,6 +854,7 @@ const Options = ({
                 sessionAPIFunctionArgumentsRef.current.listLowIndex = input
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
+            isInvalidTests.listHighIndex(editAPIFunctionArgumentsRef.current.listHighIndex)
         },
         listHighIndex:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
@@ -852,6 +863,7 @@ const Options = ({
                 sessionAPIFunctionArgumentsRef.current.listHighIndex = input
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
+            isInvalidTests.listLowIndex(editAPIFunctionArgumentsRef.current.listLowIndex)
         },
         rangeAPIType:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
@@ -1238,6 +1250,7 @@ const Options = ({
             >
                 <option value="simplecontent">Simple uniform content</option>
                 <option value="simplepromises">Simple uniform promises</option>
+                <option value="simpleautoexpand">Simple auto expand</option>
                 <option value="variablecontent">Variable content</option>
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>
@@ -1699,6 +1712,21 @@ const Options = ({
                         </Checkbox>
                         <FormHelperText>
                             This reports the first index of the tail grid, near the top or left of the viewport.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Checkbox 
+                            isChecked = {editCallbackFlags.boundaryCallback} 
+                            size = 'sm'
+                            mt = {2}
+                            id = 'boundaryCallback'
+                            onChange = {onChangeFunctions.callbackSettings}
+                        >
+                            Boundary callback
+                        </Checkbox>
+                        <FormHelperText>
+                            This reports when the first or last index item of the virtual list is loaded into the Cradle.
                         </FormHelperText>
                     </FormControl>
 

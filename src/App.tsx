@@ -63,6 +63,7 @@ const contentTitles:GenericObject = {
 
   simplecontent:"Simple uniform content",
   simplepromises:"Simple uniform promises",
+  simpleautoexpand:"Simple auto expand",
   variablecontent:"Variable content",
   variablepromises:"Variable promises",
   variabledynamic:"Variable dynamic",
@@ -212,9 +213,19 @@ const mapAllPropertiesSessionToDemo = (
 
 }
 
+export const setDemoStatePack:GenericObject = {
+    setDemoState:null
+}
+
 function App() {
 
   const [demoState, setDemoState] = useState('setup')
+
+  useEffect(()=>{
+
+      setDemoStatePack.setDemoState = setDemoState
+
+  },[])
 
   // baseline - static
   const defaultContentTypeSelector = 'simplecontent'
@@ -347,6 +358,7 @@ function App() {
     switch (demoState) {
       case 'setup':
       case 'apply': 
+      case 'autoexpand':
       case 'resetall': {
 
         setTimeout(()=>{ // allow cycle for load scroller, get functions and indexRange
@@ -393,7 +405,7 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.3.0-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-1.4.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
