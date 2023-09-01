@@ -71,6 +71,7 @@ const contentTitles:GenericObject = {
   nestedcontent:"Nested uniform scrollers",
   nestedpromises:"Nested uniform scroller promises",
   sharedcache:"Shared cache (experimental)",
+  draggablenested:"Draggable nested components",
 
 }
 

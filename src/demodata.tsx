@@ -166,6 +166,7 @@ const callbacks = {
     7. nestedcontent:    nestedcontentProperties,
     8. nestedpromises:   nestedpromisesProperties,
     9. sharedcache:      sharedcacheProperties
+    10. draggablenested: draggablenestesProperties
 
 */
 
@@ -1352,6 +1353,144 @@ const sharedcacheProperties = {
     },
 }
 
+// --------------------[ 10. - scroller of draggable nested properties ]----------------------
+
+
+const DraggableNestedComponent = (props:any) => {
+
+    const [testState, setTestState] = useState('setup')
+    const testStateRef = useRef<string|null>(null)
+    testStateRef.current = testState
+
+    const { 
+        index, 
+        itemID,
+        scrollerProperties,
+        cacheAPI,
+    } = props
+
+    const properties = nestedUniformSubscrollerProperties
+
+    const {
+        // orientation, 
+        gap, 
+        padding, 
+        cellHeight, 
+        cellWidth, 
+        runwaySize, 
+        startingIndex, 
+        startingListSize, 
+        startingListRange,
+        getItem, 
+        cache,
+        layout,
+    } = properties
+
+    const { scrollerPropertiesRef } = scrollerProperties
+
+    const dynamicorientationRef = useRef<null | string>(null)
+
+    useEffect(() =>{
+
+        const { orientation } = scrollerPropertiesRef.current
+        dynamicorientationRef.current = 
+            (orientation == 'vertical')?
+                'horizontal':
+                'vertical'
+
+    },[scrollerPropertiesRef.current.orientation])
+
+    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
+
+    useEffect(()=>{
+
+        switch (testState) {
+            case 'setup':
+            case 'revised': {
+                setTestState('ready')
+                break
+            }
+        }
+
+    },[testState])
+
+    return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
+        <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
+            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
+        </div>
+        <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
+
+            <Scroller 
+                orientation = { dynamicorientationRef.current } 
+                cache = { cache }
+                gap = {gap}
+                padding = {padding}
+                cellHeight = {cellHeight}
+                cellWidth = {cellWidth}
+                runwaySize = {runwaySize}
+                startingListSize = {startingListSize}
+                startingListRange = {startingListRange}
+                startingIndex = {startingIndex}
+                getItem = {getItem}
+                callbacks = {null}
+                placeholder = {null}
+                styles = { null }
+                layout = { layout }
+                scrollerProperties = { scrollerProperties }
+                cacheAPI = {cacheAPI}
+            />
+
+        </div>
+
+    </div>
+
+}
+
+// -----------------
+// scroller property values assembled for the nested scroller
+// -----------------
+
+const getDraggbleNestedSubscroller = (index:number, itemID:number) => {
+
+    return <SharedCacheComponent 
+        index = {index} 
+        itemID = {itemID}
+        scrollerProperties = {null}
+        cacheAPI = {null}
+    />
+
+}
+
+const draggablenestedScrollerStyles = {
+    viewport:{
+        overscrollBehavior:'none'
+    },
+}
+
+const draggablenestedProperties = {
+    startingIndex:0,
+    startingListSize:200,
+    startingListRange:[-50,50],
+    orientation:'vertical',
+    cellHeight:400,
+    cellWidth:300,
+    padding:5,
+    gap:5,
+    runwaySize:3,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    getItem:getSharedCacheSubscroller,
+    styles:sharedcacheScrollerStyles,
+    placeholderMessages: null,
+    callbacks,
+    technical:{
+        showAxis:false
+    },
+}
+
+
 // ==============================[ consolidated scroller properties namespace ]=========================
 
 // this is exported for the App module to use
@@ -1366,6 +1505,7 @@ export const defaultAllContentTypeProperties = {
     nestedcontent:nestedcontentProperties,
     nestedpromises:nestedpromisesProperties,
     sharedcache:sharedcacheProperties,
+    draggablenested: draggablenestedProperties,
 }
 
 // this is exported for the App module to use
