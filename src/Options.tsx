@@ -1256,9 +1256,9 @@ const Options = ({
                 <option value="variabledynamic">Variable dynamic</option>
                 <option value="variableoversized">Variable oversized</option>
                 <option value="nestedcontent">Nested scrollers</option>
+                <option value="draggablenested">Draggable nested scrollers</option>
                 <option value="nestedpromises">Nested scroller promises</option>
                 <option value="sharedcache">Shared cache (experimental)</option>
-                <option value="draggablenested">Draggable nested components</option>
             </Select>
 
             <FormHelperText>
