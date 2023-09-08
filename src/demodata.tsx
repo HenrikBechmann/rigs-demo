@@ -10,6 +10,82 @@ import { setDemoStatePack } from './App'
     CONTENT TYPES are defined just below the SCROLLER CALLBACKS section.
 */
 
+// -----------------------------[ Test data ]--------------------------------
+
+export const testData:GenericObject = {
+    Housing:['Studio','1-bedroom','2-bedroom','family home'],
+    Tool:['hammer','saw','screwdriver','wrench'],
+    Food:['bread','onions','mushrooms','potatoes'],
+    Furniture:['chair','bed','couch','table'],
+}
+
+const testDataColors = {
+    Housing:'Azure',
+    Tool:'Beige',
+    Food:'HoneyDew',
+    Furniture:'LightCyan',
+}
+
+const chooseRandomGroup = (testData:object) => {
+
+    const groups = Object.keys(testData)
+    return groups[getRandomInt(groups.length)]
+
+}
+
+const chooseRandomItem = (list:Array<string>) => {
+    return list[getRandomInt(list.length)]
+}
+
+function getRandomInt(max:number) {
+  return Math.floor(Math.random() * max);
+}
+
+export const acceptAll = (testData:object) => {
+    return Object.keys(testData)
+}
+
+const acceptOne = (testData:object) => {
+    const groups = Object.keys(testData)
+    return [groups[getRandomInt(groups.length)]]
+}
+
+const acceptTwo = (testData:object) => {
+    const first = acceptOne(testData)
+    let second = acceptOne(testData)
+    while (first == second) {
+        second = acceptOne(testData)
+    }
+    return [first,second]
+}
+
+const rotateAccepts = (index:number) => {
+    const selector = index % 3
+    let accepts
+    switch (selector) {
+        case 0: {
+            return acceptAll(testData)
+            break
+        }
+        case 1: {
+            return acceptTwo(testData)
+            break
+        }
+        case 2: {
+            return acceptOne(testData)
+            break
+        }
+    }
+}
+
+const selectItem = (accepts:Array<string>,index:number) => {
+    const accept:string = accepts[index % (accepts.length)]
+    const textOptions:Array<any> = testData[accept]
+    const textOption = textOptions[getRandomInt(textOptions.length)]
+    return [accept, textOption]
+}
+
+
 // =============================================================================
 // ==============================[ SCROLLER CALLBACKS ]=========================
 // =============================================================================

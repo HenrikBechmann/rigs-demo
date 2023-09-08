@@ -1,6 +1,8 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto
 
-import React from 'react'
+import React, {useRef} from 'react'
+
+import {testData, acceptAll} from './demodata'
 
 // import GridScroller from 'react-infinite-grid-scroller'
 
@@ -8,7 +10,13 @@ import { RigsDnd as GridScroller } from 'react-infinite-grid-scroller'
 
 const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) => {
 
-    return <GridScroller key = {demoContentTypeSelector} {...demoAllContentTypeProperties[demoContentTypeSelector]}/>
+    const dndOptionsRef = useRef({accepts:acceptAll(testData)})
+
+    console.log('dndOptions',dndOptionsRef.current)
+
+    const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+
+    return <GridScroller key = {demoContentTypeSelector} {...props}/>
 
 }
 
