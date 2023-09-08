@@ -1,6 +1,6 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useState, useEffect} from 'react'
+import React, {useRef, useState, useEffect, useMemo} from 'react'
 
 import Scroller from 'react-infinite-grid-scroller'
 
@@ -19,11 +19,11 @@ export const testData:GenericObject = {
     Furniture:['chair','bed','couch','table'],
 }
 
-const testDataColors = {
-    Housing:'Azure',
-    Tool:'Beige',
-    Food:'HoneyDew',
-    Furniture:'LightCyan',
+const testDataColors:GenericObject = {
+    Housing:'AntiqueWhite', // 'Azure',
+    Tool: 'AquaMarine',//'Beige',
+    Food: 'Cyan', // HoneyDew',
+    Furniture:'Gold', //LightCyan',
 }
 
 const chooseRandomGroup = (testData:object) => {
@@ -259,7 +259,7 @@ const simpleComponentStyles = {
         top:0,
         left:0,
         padding:'3px',
-        backgroundColor:'white', 
+        // backgroundColor:'white', 
         margin:'3px'
     } as React.CSSProperties,
     outer: {
@@ -276,10 +276,31 @@ const simpleComponentStyles = {
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
+    const {color, type, typeSelection, scrollerProperties} = props
+
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+
+    console.log('isDnd, scrollerProperties',isDnd, {...scrollerProperties})
+
+    if (color) simpleComponentStyles.outer.backgroundColor = color
+    let typeText
+    if (type && typeSelection) typeText = `${type}: ${typeSelection}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '28px', width:'31px'}} />
+        else return null
+
+    },[isDnd])
+
+    console.log('float', float)
+
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
+            {isDnd && float}
+            {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br style = {{clear:'left'}}/>
             {`cache itemID ${props.itemID}`}
+            {typeText && <br />}
+            {typeText}
         </div>
     </div>
 
@@ -298,6 +319,44 @@ const getSimpleItem = (index:number, itemID:number) => {
      const component = <SimpleItem index = {index} itemID = {itemID} scrollerProperties = {null} />
 
      return component
+
+}
+
+const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
+
+    console.log('running getSimpleItemPack', context)
+
+    const accepts = context.accepts
+
+    const [accept, typeSelection] = selectItem(accepts,index)
+
+    console.log('accept, typeSelection',accept, typeSelection)
+
+    const color = testDataColors[accept]
+
+    let component
+
+     if (index == 30) {
+         component = Promise.reject(new Error('not found for demo purposes'))
+     } else if (index == 40) {
+         component = 5 // deliberate return of an invalid (non-React-component) content type for demo
+     } else {
+         component = <SimpleItem 
+             index = {index} 
+             itemID = {itemID} 
+             type = {accept}
+             typeSelection = {typeSelection}
+             color = { color }
+             scrollerProperties = {null} />
+     }
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:accept},
+        profile:{color, type:accept, typeSelection },
+    }
+
+     return itemPack
 
 }
 
@@ -333,6 +392,7 @@ const simplecontentProperties = {
     layout: 'uniform',
 
     getItem: getSimpleItem,
+    getItemPack: getSimpleItemPack,
     styles: simpleScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
