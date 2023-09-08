@@ -12,7 +12,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
     const dndOptionsRef = useRef({accepts:acceptAll(testData)})
 
-    console.log('dndOptions',dndOptionsRef.current)
+    // console.log('dndOptions',dndOptionsRef.current)
 
     const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
 

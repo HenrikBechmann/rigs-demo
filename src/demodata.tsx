@@ -13,7 +13,7 @@ import { setDemoStatePack } from './App'
 // -----------------------------[ Test data ]--------------------------------
 
 export const testData:GenericObject = {
-    Housing:['Studio','1-bedroom','2-bedroom','family home'],
+    Housing:['Studio','1-bed','2-bed','family home'],
     Tool:['hammer','saw','screwdriver','wrench'],
     Food:['bread','onions','mushrooms','potatoes'],
     Furniture:['chair','bed','couch','table'],
@@ -60,7 +60,7 @@ const acceptTwo = (testData:object) => {
 }
 
 const rotateAccepts = (index:number) => {
-    const selector = index % 3
+    const selector = Math.abs(index) % 3
     let accepts
     switch (selector) {
         case 0: {
@@ -79,10 +79,15 @@ const rotateAccepts = (index:number) => {
 }
 
 const selectItem = (accepts:Array<string>,index:number) => {
-    const accept:string = accepts[index % (accepts.length)]
+
+    const selector = (Math.abs(index) % accepts.length)
+    const accept:string = accepts[selector]
     const textOptions:Array<any> = testData[accept]
+
     const textOption = textOptions[getRandomInt(textOptions.length)]
+
     return [accept, textOption]
+
 }
 
 
@@ -280,7 +285,7 @@ const SimpleItem = (props:any) => {
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
-    console.log('isDnd, scrollerProperties',isDnd, {...scrollerProperties})
+    // console.log('isDnd, scrollerProperties',isDnd, {...scrollerProperties})
 
     if (color) simpleComponentStyles.outer.backgroundColor = color
     let typeText
@@ -291,8 +296,6 @@ const SimpleItem = (props:any) => {
         else return null
 
     },[isDnd])
-
-    console.log('float', float)
 
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
@@ -324,13 +327,9 @@ const getSimpleItem = (index:number, itemID:number) => {
 
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    console.log('running getSimpleItemPack', context)
-
     const accepts = context.accepts
 
     const [accept, typeSelection] = selectItem(accepts,index)
-
-    console.log('accept, typeSelection',accept, typeSelection)
 
     const color = testDataColors[accept]
 
