@@ -22,10 +22,24 @@ export const testUniformData:GenericObject = {
 }
 
 const testUniformDataColors:GenericObject = {
-    Housing:'AntiqueWhite', // 'Azure',
-    Tool: 'AquaMarine',//'Beige',
-    Food: 'Cyan', // HoneyDew',
-    Furniture:'Gold', //LightCyan',
+    Housing:'AntiqueWhite',
+    Tool: 'AquaMarine',
+    Food: 'Cyan',
+    Furniture:'Gold',
+}
+
+export const testVariableData:GenericObject = {
+    Post:['Frank','Julia','Rachid','Selma'],
+    Message:['Karl','Roxi','Jane','Ben'],
+    Opinion:['Greg','Summer','John','Gloria'],
+    Report:['Mike','Cynthia','Bianca','Jim'],
+}
+
+const testVariableDataColors:GenericObject = {
+    Post:'AntiqueWhite',
+    Message: 'AquaMarine',
+    Opinion: 'Cyan',
+    Report:'Gold',
 }
 
 const chooseRandomGroup = (testData:object) => {
