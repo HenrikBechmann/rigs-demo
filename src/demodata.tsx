@@ -14,14 +14,14 @@ import { setDemoStatePack } from './App'
 
 let globalCreationID = 0
 
-export const testData:GenericObject = {
+export const testUniformData:GenericObject = {
     Housing:['Studio','1-bed','2-bed','family home'],
     Tool:['hammer','saw','screwdriver','wrench'],
     Food:['bread','onions','mushrooms','potatoes'],
     Furniture:['chair','bed','couch','table'],
 }
 
-const testDataColors:GenericObject = {
+const testUniformDataColors:GenericObject = {
     Housing:'AntiqueWhite', // 'Azure',
     Tool: 'AquaMarine',//'Beige',
     Food: 'Cyan', // HoneyDew',
@@ -61,7 +61,7 @@ const acceptTwo = (testData:object) => {
     return [first,second]
 }
 
-const rotateAccepts = (index:number) => {
+const rotateAccepts = (testData:object,index:number) => {
     const selector = Math.abs(index) % 3
     let accepts
     switch (selector) {
@@ -80,7 +80,7 @@ const rotateAccepts = (index:number) => {
     }
 }
 
-const selectItem = (accepts:Array<string>,index:number) => {
+const selectItem = (testData:GenericObject, accepts:Array<string>,index:number) => {
 
     const selector = (Math.abs(index) % accepts.length)
     const accept:string = accepts[selector]
@@ -332,9 +332,9 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     const accepts = context.accepts
 
-    const [accept, typeSelection] = selectItem(accepts,index)
+    const [accept, typeSelection] = selectItem(testUniformData,accepts,index)
 
-    const color = testDataColors[accept]
+    const color = testUniformDataColors[accept]
 
     const creationID = globalCreationID++
 
@@ -433,9 +433,9 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
 
     const accepts = context.accepts
 
-    const [accept, typeSelection] = selectItem(accepts,index)
+    const [accept, typeSelection] = selectItem(testUniformData,accepts,index)
 
-    const color = testDataColors[accept]
+    const color = testUniformDataColors[accept]
 
     const creationID = globalCreationID++
 
