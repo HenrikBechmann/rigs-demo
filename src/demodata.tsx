@@ -12,6 +12,8 @@ import { setDemoStatePack } from './App'
 
 // -----------------------------[ Test data ]--------------------------------
 
+let globalCreationID = 0
+
 export const testData:GenericObject = {
     Housing:['Studio','1-bed','2-bed','family home'],
     Tool:['hammer','saw','screwdriver','wrench'],
@@ -281,7 +283,7 @@ const simpleComponentStyles = {
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
-    const {color, type, typeSelection, scrollerProperties} = props
+    const {color, type, typeSelection, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
@@ -302,6 +304,7 @@ const SimpleItem = (props:any) => {
             {isDnd && float}
             {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br style = {{clear:'left'}}/>
             {`cache itemID ${props.itemID}`}
+            {creationID && <br />} {creationID && `creationID: ${creationID}`}
             {typeText && <br />}
             {typeText}
         </div>
@@ -333,6 +336,8 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     const color = testDataColors[accept]
 
+    const creationID = globalCreationID++
+
     let component
 
      if (index == 30) {
@@ -346,13 +351,14 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
              type = {accept}
              typeSelection = {typeSelection}
              color = { color }
+             creationID = {creationID}
              scrollerProperties = {null} />
      }
 
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeSelection },
+        profile:{color, type:accept, typeSelection, creationID},
     }
 
      return itemPack
@@ -431,6 +437,8 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
 
     const color = testDataColors[accept]
 
+    const creationID = globalCreationID++
+
     const component = new Promise((resolve, reject) => {
 
         setTimeout(()=> {
@@ -441,6 +449,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
                 type = {accept}
                 typeSelection = {typeSelection}
                 color = { color }
+                creationID = {creationID}
                 scrollerProperties = {null}
             />)
 
@@ -451,7 +460,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeSelection },
+        profile:{color, type:accept, typeSelection, creationID },
     }
 
      return itemPack
