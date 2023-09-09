@@ -36,10 +36,10 @@ export const testVariableData:GenericObject = {
 }
 
 const testVariableDataColors:GenericObject = {
-    Post:'AntiqueWhite',
-    Message: 'AquaMarine',
-    Opinion: 'Cyan',
-    Report:'Gold',
+    Post:'BurlyWood',
+    Message: 'DarkKhaki',
+    Opinion: 'DarkSalmon',
+    Report:'LightPink',
 }
 
 const chooseRandomGroup = (testData:object) => {
