@@ -318,9 +318,8 @@ const SimpleItem = (props:any) => {
             {isDnd && float}
             {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br style = {{clear:'left'}}/>
             {`cache itemID ${props.itemID}`}
-            {creationID && <br />} {creationID && `creationID: ${creationID}`}
-            {typeText && <br />}
-            {typeText}
+            {creationID && <><br />{`creationID: ${creationID}`}</>}
+            {typeText && <><br />{typeText}</>}
         </div>
     </div>
 
@@ -618,7 +617,24 @@ const getVariableTestString = (index:number, itemID:number) => {
 
 const VariableItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
+    const {color, type, typeSelection, scrollerProperties, creationID} = props
+
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+
+    let typeText = '', creationIDText = ''
+    if (type && typeSelection) typeText = `${type} from ${typeSelection}:`
+
+    if (creationID) creationIDText = `creationID: ${creationID}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '30px', width:'34px'}} />
+        else return null
+
+    },[isDnd])
+
+    const testString = getVariableTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID)
+
+    const testStringRef = useRef(testString)
 
     const {
 
@@ -644,6 +660,9 @@ const VariableItem = (props:any) => {
             }
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+    const innerstyles = {...variableComponentStyles.inner}
+
+    color && (innerstyles.backgroundColor = color)
 
     // ------------------------[ handle scroll position recovery ]---------------------
 
@@ -713,7 +732,12 @@ const VariableItem = (props:any) => {
 
     // register the scroller element
     return <div ref = {scrollerElementRef} data-type = 'variable-content' style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
+        <div style = {innerstyles}>
+            {isDnd && float}
+            {creationIDText && <>{creationIDText} <br /></>} 
+            {typeText && <>{typeText} <br /></>}
+            {testStringRef.current}
+        </div>
     </div>
 }
 
@@ -724,6 +748,43 @@ const VariableItem = (props:any) => {
 const getVariableItem = (index:number, itemID:number) => {
 
      return <VariableItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+
+}
+
+const getVariableItemPack = (index:number, itemID:number, context:GenericObject) => {
+
+    const accepts = context.accepts
+
+    const [accept, typeSelection] = selectItem(testVariableData,accepts,index)
+
+    const color = testVariableDataColors[accept]
+
+    const creationID = globalCreationID++
+
+    let component
+
+     if (index == 30) {
+         component = Promise.reject(new Error('not found for demo purposes'))
+     } else if (index == 40) {
+         component = 5 // deliberate return of an invalid (non-React-component) content type for demo
+     } else {
+         component = <VariableItem 
+             index = {index} 
+             itemID = {itemID} 
+             type = {accept}
+             typeSelection = {typeSelection}
+             color = { color }
+             creationID = {creationID}
+             scrollerProperties = {null} />
+     }
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:accept},
+        profile:{color, type:accept, typeSelection, creationID},
+    }
+
+    return itemPack
 
 }
 
@@ -754,6 +815,7 @@ const variablecontentProperties = {
     layout: 'variable',
 
     getItem: getVariableItem,
+    getItemPack: getVariableItemPack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,

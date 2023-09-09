@@ -2,17 +2,43 @@
 
 import React, {useRef} from 'react'
 
-import {testUniformData, acceptAll} from './demodata'
+import {testUniformData, testVariableData, acceptAll, GenericObject} from './demodata'
 
 // import GridScroller from 'react-infinite-grid-scroller'
 
 import { RigsDnd as GridScroller } from 'react-infinite-grid-scroller'
 
+const testDataSource:GenericObject = {
+
+  simplecontent:testUniformData,
+  simplepromises:testUniformData,
+  simpleautoexpand:testUniformData,
+  variablecontent:testVariableData,
+  variablepromises:testVariableData,
+  variabledynamic:testVariableData,
+  variableoversized:testVariableData,
+  nestedcontent:"",
+  nestedpromises:"",
+  sharedcache:"",
+  draggablenested:"",
+
+}
+
 const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) => {
 
-    const dndOptionsRef = useRef({accepts:acceptAll(testUniformData)})
+    const testData = testDataSource[demoContentTypeSelector]
 
-    // console.log('dndOptions',dndOptionsRef.current)
+    const demoContentTypeSelectorRef = useRef(demoContentTypeSelector)
+
+    const dndOptionsRef = useRef({accepts:acceptAll(testData)})
+
+    if (demoContentTypeSelector != demoContentTypeSelectorRef.current) {
+
+        demoContentTypeSelectorRef.current = demoContentTypeSelector
+
+        dndOptionsRef.current.accepts = acceptAll(testData)
+
+    }
 
     const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
 
