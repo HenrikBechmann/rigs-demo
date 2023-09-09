@@ -423,6 +423,40 @@ const getSimpleItemPromise = (index:number, itemID:number) => {
 
 }
 
+const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
+
+    const accepts = context.accepts
+
+    const [accept, typeSelection] = selectItem(accepts,index)
+
+    const color = testDataColors[accept]
+
+    const component = new Promise((resolve, reject) => {
+
+        setTimeout(()=> {
+
+            resolve(<SimpleItem 
+                index = {index} 
+                itemID = {itemID} 
+                type = {accept}
+                typeSelection = {typeSelection}
+                color = { color }
+                scrollerProperties = {null}
+            />)
+
+        },400 + (Math.random() * 2000))
+
+    })
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:accept},
+        profile:{color, type:accept, typeSelection },
+    }
+
+     return itemPack
+}
+
 const simplePromisesScrollerStyles = {
     viewport:{
         overscrollBehavior:'none'
@@ -450,6 +484,7 @@ const simplepromisesProperties = {
     layout: 'uniform',
 
     getItem: getSimpleItemPromise,
+    getItemPack: getSimpleItemPromisePack,
     styles: simplePromisesScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
@@ -511,6 +546,7 @@ const simpleAutoExpandProperties = {
     layout: 'uniform',
 
     getItem: getSimpleItem,
+    getItemPack: getSimpleItemPack,
     getExpansionCount:getAutoExpansionCount,
     styles: simpleAutoExpandScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
