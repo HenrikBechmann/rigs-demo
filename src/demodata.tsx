@@ -844,6 +844,46 @@ const getVariableItemPromise = (index:number, itemID:number) => {
 
 }
 
+const getVariableItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
+
+    
+    const accepts = context.accepts
+
+    const [accept, typeSelection] = selectItem(testVariableData,accepts,index)
+
+    const color = testVariableDataColors[accept]
+
+    const creationID = globalCreationID++
+
+    let component = new Promise((resolve, reject) => {
+        setTimeout(()=> {
+
+            resolve(
+                <VariableItem 
+                     index = {index} 
+                     itemID = {itemID} 
+                     type = {accept}
+                     typeSelection = {typeSelection}
+                     color = { color }
+                     creationID = {creationID}
+                     scrollerProperties = {null} 
+                 />
+            )
+
+        },1000 + (Math.random() * 2000))
+    
+    })         
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:accept},
+        profile:{color, type:accept, typeSelection, creationID},
+    }
+
+    return itemPack
+
+}
+
 const variablepromiseProperties = {
     startingIndex:0,
     startingListSize:200,
@@ -861,6 +901,7 @@ const variablepromiseProperties = {
     layout: 'variable',
 
     getItem: getVariableItemPromise,
+    getItemPack: getVariableItemPromisePack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
