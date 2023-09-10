@@ -1257,9 +1257,10 @@ const Options = ({
                 <option value="variableoversized">Variable oversized</option>
                 <option value="variableautoexpand">Variable auto expand</option>
                 <option value="nestedmixed">Nested mixed scrollers</option>
-                <option value="draggablenested">Draggable nested scrollers</option>
-                <option value="nestedpromises">Nested scroller promises</option>
-                <option value="sharedcache">Shared cache (experimental)</option>
+                <option value="nestedmixedpromises">Nested mixed promises</option>
+                <option value="nestedmixedautoexpand">Nested mixed auto expand</option>
+                <option value="nesteduniform">Nested uniform scrollers</option>
+                <option value="nestedvariable">Nested variable scrollers</option>
             </Select>
 
             <FormHelperText>

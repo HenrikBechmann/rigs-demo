@@ -19,9 +19,9 @@ const testDataSource:GenericObject = {
   variableoversized:testVariableData,
   variableautoexpand:testVariableData,
   nestedmixed:testNestedAccepts,
-  nestedpromises:{},
-  sharedcache:{},
-  draggablenested:{},
+  nestedmixedpromises:{},
+  nesteduniform:{},
+  nestedmixedautoexpand:{},
 
 }
 

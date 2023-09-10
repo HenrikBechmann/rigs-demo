@@ -70,9 +70,9 @@ const contentTitles:GenericObject = {
   variableoversized:"Variable oversized",
   variableautoexpand:"Variable autoexpand",
   nestedmixed:"Nested mixed scrollers",
-  nestedpromises:"Nested uniform scroller promises",
-  sharedcache:"Shared cache (experimental)",
-  draggablenested:"Draggable nested components",
+  nestedmixedpromises:"Nested mixed scroller promises",
+  nestedmixedautoexpand:"Nested mixed auto expand",
+  nesteduniform:"Nested uniform scrollers",
 
 }
 

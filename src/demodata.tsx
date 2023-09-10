@@ -252,7 +252,7 @@ const callbacks = {
     - a first part to define the components to be sent to the scroller
     - a second part to assemble the property values to send to the scroller
 
-    The left column is the list of seven content type choices on the Options page
+    The left column is the list of thirteen content type choices on the Options page
     The right column is the names of the objects holding the scroller properties for those content types
         - you can search for those property objects below to see how they are created
         - all property objects are assembled in a namespace object at the bottom of this module 
@@ -260,16 +260,17 @@ const callbacks = {
 
     1. simplecontent:    simplecontentProperties,
     2. simplepromises:   simplepromisesProperties,
-    2.1 simpleautoexpand:simpleautoexpandProperties,
-    3. variablecontent:  variablecontentProperties,
-    4. variablepromises: variablepromiseProperties,
-    5. variabledynamic:  variabledynamicProperties,
-    6. variableoversized: variableoversizedProperties,
-    6.1. variableautoexpand:  variableautoexpandProperties,
-    7. nestedmixed:    nestedcontentProperties,
-    8. nestedpromises:   nestedpromisesProperties,
-    9. sharedcache:      sharedcacheProperties
-    10. draggablenested: draggablenestesProperties
+    3 simpleautoexpand:simpleautoexpandProperties,
+    4. variablecontent:  variablecontentProperties,
+    5. variablepromises: variablepromiseProperties,
+    6. variabledynamic:  variabledynamicProperties,
+    7. variableoversized: variableoversizedProperties,
+    8. variableautoexpand:  variableautoexpandProperties,
+    9. nestedmixed:    nestedmixedProperties,
+    10. nestedmixedpromises:   nestedpromisesProperties,
+    11. nestedmixedautoexpand: draggablenestesProperties
+    12. nesteduniform:      sharedcacheProperties
+    13. nestedvariable:      sharedcacheProperties
 
 */
 
@@ -1636,7 +1637,7 @@ const nestedScrollerStyles = {
     },
 }
 
-const nestedcontentProperties = {
+const nestedmixedProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
@@ -1994,10 +1995,10 @@ export const defaultAllContentTypeProperties = {
     variabledynamic:variabledynamicProperties,
     variableoversized:variableoversizedProperties,
     variableautoexpand:variableautoexpandProperties,
-    nestedmixed:nestedcontentProperties,
-    nestedpromises:nestedpromisesProperties,
-    sharedcache:sharedcacheProperties,
-    draggablenested: draggablenestedProperties,
+    nestedmixed:nestedmixedProperties,
+    nestedmixedpromises:nestedpromisesProperties,
+    nesteduniform:sharedcacheProperties,
+    nestedmixedautoexpand: draggablenestedProperties,
 }
 
 // this is exported for the App module to use
