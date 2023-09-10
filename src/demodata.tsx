@@ -258,19 +258,20 @@ const callbacks = {
         - all property objects are assembled in a namespace object at the bottom of this module 
             for use by the demo app
 
-    1. simplecontent:    simplecontentProperties,
-    2. simplepromises:   simplepromisesProperties,
-    3 simpleautoexpand:simpleautoexpandProperties,
-    4. variablecontent:  variablecontentProperties,
-    5. variablepromises: variablepromiseProperties,
-    6. variabledynamic:  variabledynamicProperties,
-    7. variableoversized: variableoversizedProperties,
-    8. variableautoexpand:  variableautoexpandProperties,
-    9. nestedmixed:    nestedmixedProperties,
-    10. nestedmixedpromises:   nestedpromisesProperties,
-    11. nestedmixedautoexpand: draggablenestesProperties
-    12. nesteduniform:      sharedcacheProperties
-    13. nestedvariable:      sharedcacheProperties
+    1. simplecontent:           simplecontentProperties,
+    2. simplepromises:          simplepromisesProperties,
+    3. simpleautoexpand:        simpleautoexpandProperties,
+    4. variablecontent:         variablecontentProperties,
+    5. variablepromises:        variablepromiseProperties,
+    6. variabledynamic:         variabledynamicProperties,
+    7. variableoversized:       variableoversizedProperties,
+    8. variableautoexpand:      variableautoexpandProperties,
+    9. nestingmixed:            nestingmixedProperties,
+    10. nestingmixedpromises:   nestingmixedpromisesProperties,
+    
+    11. nestingmixedautoexpand: nestingmixedautoexpandProperties,
+    12. nestinguniform:         nestinguniformProperties,
+    13. nestingvariable:        nestingvariableProperties,
 
 */
 
@@ -522,7 +523,7 @@ const simplepromisesProperties = {
     },
 }
 
-// ============================[ 2.1 Simple auto expand ]==============================
+// ============================[ 3. Simple auto expand ]==============================
 
 // the simple content component definitions above are used for these items, except for the following...
 
@@ -585,7 +586,7 @@ const simpleAutoExpandProperties = {
     },
 }
 
-// ==========================[ 3. variable content ]============================
+// ==========================[ 4. variable content ]============================
 
 // -----------------
 // variable content component definition
@@ -830,7 +831,7 @@ const variablecontentProperties = {
         showAxis:false
     },
 }
-// =========================[ 4. variable promises ]================================
+// =========================[ 5. variable promises ]================================
 
 // the variable component definitions are reused for the variable promises variant
 
@@ -916,7 +917,7 @@ const variablepromiseProperties = {
         showAxis:false
     },
 }
-// ===========================[ 5. variable dynamic ]===============================
+// ===========================[ 6. variable dynamic ]===============================
 
 // -----------------
 // variable dynamic content component definition
@@ -1085,7 +1086,7 @@ const variabledynamicProperties = {
     },
 }
 
-// ======================[ 6. variable oversized content ]=========================
+// ======================[ 7. variable oversized content ]=========================
 
 const oversizedteststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
 
@@ -1296,7 +1297,7 @@ const variableoversizedProperties = {
     },
 }
 
-// ======================[ 6.1 variable auto expand ]=========================
+// ======================[ 8. variable auto expand ]=========================
 
 const getVariableAutoExpansionCount = (position:string, index:number) => {
 
@@ -1353,7 +1354,7 @@ const variableautoexpandProperties = {
     },
 }
 
-// ======================[ 7. nested scrollers content (scroller of sub-scrollers) ]=========================
+// ======================[ 9. nesting mixed scrollers content (scroller of sub-scrollers) ]=========================
 
 // For this there is a scroller, that contains cells of scrollers (subscrollers)
 // The subscroller content comes in two variants - variable content, and uniform content
@@ -1362,7 +1363,7 @@ const variableautoexpandProperties = {
 // nested scrollers cell component definition
 // -----------------
 
-const nestedSubscrollerComponentStyles = {
+const subcrollerComponentStyles = {
     container: {
         display:'flex',
         flexDirection:'column',
@@ -1400,8 +1401,8 @@ const SubscrollerComponent = (props:any) => {
 
     const properties = 
         (variant == 'uniform')?
-            nestedUniformSubscrollerProperties:
-            nestedVariableSubscrollerProperties
+            uniformSubscrollerProperties:
+            variableSubscrollerProperties
 
     const {
         // orientation, 
@@ -1446,11 +1447,11 @@ const SubscrollerComponent = (props:any) => {
 
     },[testState])
 
-    return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
-        <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
+    return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
+        <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
-        <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
+        <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
             <Scroller 
                 orientation = { dynamicorientationRef.current } 
@@ -1477,13 +1478,13 @@ const SubscrollerComponent = (props:any) => {
 
 }
 
-// --------------------[ 7a. subscoller variable cell content variant ]-----------------------
+// --------------------[ 9a. variable subscroller cell content ]-----------------------
 
 // -----------------
 // content for variable subscroller variant
 // -----------------
 
-const getVariableNestedTestString = (index:number, itemID:number) => {
+const getVariableSubscrollerTestString = (index:number, itemID:number) => {
 
     const str =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
@@ -1492,7 +1493,7 @@ const getVariableNestedTestString = (index:number, itemID:number) => {
 
 const VariableSubscrollerItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableNestedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
+    const testStringRef = useRef(getVariableSubscrollerTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
 
@@ -1534,7 +1535,7 @@ const getVariableSubscrollerItem = (index:number, itemID:number) => {
 
 }
 
-const nestedVariableSubscrollerProperties = {
+const variableSubscrollerProperties = {
 
     startingIndex:0,
     startingListSize:100,
@@ -1559,7 +1560,7 @@ const nestedVariableSubscrollerProperties = {
 
 }
 
-// -------------------[ 7b. subscroller uniform  cell content variant ]-----------------
+// -------------------[ 9b. uniform subscroller cell content ]-----------------
 
 // -----------------
 // component definition for uniform subscroller variant
@@ -1584,7 +1585,7 @@ const getUniformSubscrollerItem = (index:any, itemID:number) => {
 
 }
 
-const nestedUniformSubscrollerProperties = {
+const uniformSubscrollerProperties = {
 
     startingIndex:0,
     startingListSize:100,
@@ -1609,13 +1610,13 @@ const nestedUniformSubscrollerProperties = {
 
 }
 
-// --------------------[ back to 7. - scroller of subscrollers properties ]----------------------
+// --------------------[ back to 9. - nesting scroller properties ]----------------------
 
 // -----------------
 // scroller property values assembled for the nested scroller
 // -----------------
 
-const getSubscroller = (index:number, itemID:number) => {
+const getMixedSubscroller = (index:number, itemID:number) => {
 
     const variant =
         ((index % 2) == 0)?
@@ -1631,13 +1632,13 @@ const getSubscroller = (index:number, itemID:number) => {
 
 }
 
-const nestedScrollerStyles = {
+const nestingScrollerStyles = {
     viewport:{
         overscrollBehavior:'none'
     },
 }
 
-const nestedmixedProperties = {
+const nestingmixedProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
@@ -1651,8 +1652,8 @@ const nestedmixedProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getSubscroller,
-    styles:nestedScrollerStyles,
+    getItem:getMixedSubscroller,
+    styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical:{
@@ -1660,14 +1661,19 @@ const nestedmixedProperties = {
     },
 }
 
-// =======================[ 8. scroller of subscrollers content item promises ]========================
+// =======================[ 10. nesting subscroller item promises ]========================
 
 // -----------------
 // scroller property values assembled for the nested scroller promises variant
 // -----------------
 
 // note the setTimeout
-const getNestedSubscrollerPromise = (index:number, itemID:number) => {
+const getMixedSubscrollerPromise = (index:number, itemID:number) => {
+
+    const variant =
+        ((index % 2) == 0)?
+        'uniform':
+        'variable'
 
     return new Promise((resolve, reject) => {
         setTimeout(()=> {
@@ -1676,6 +1682,7 @@ const getNestedSubscrollerPromise = (index:number, itemID:number) => {
                 <SubscrollerComponent 
                     index = {index} 
                     itemID = {itemID}
+                    variant = {variant}
                     scrollerProperties = {null}
                 />
             )
@@ -1685,7 +1692,7 @@ const getNestedSubscrollerPromise = (index:number, itemID:number) => {
 
 }
 
-const nestedpromisesProperties = {
+const nestingmixedpromisesProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
@@ -1699,8 +1706,8 @@ const nestedpromisesProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getNestedSubscrollerPromise,
-    styles:nestedScrollerStyles,
+    getItem:getMixedSubscrollerPromise,
+    styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical: {
@@ -1708,7 +1715,11 @@ const nestedpromisesProperties = {
     },
 }
 
-// --------------------[ 9. - scroller of shared cache properties ]----------------------
+// --------------------[ 11. - nesting mixed auto expand ]----------------------
+
+
+
+// --------------------[ 12. - nesting uniform scrollers ]----------------------
 
 
 const SharedCacheComponent = (props:any) => {
@@ -1724,7 +1735,7 @@ const SharedCacheComponent = (props:any) => {
         cacheAPI,
     } = props
 
-    const properties = nestedUniformSubscrollerProperties
+    const properties = uniformSubscrollerProperties
 
     const {
         // orientation, 
@@ -1769,11 +1780,11 @@ const SharedCacheComponent = (props:any) => {
 
     },[testState])
 
-    return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
-        <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
+    return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
+        <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
-        <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
+        <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
             <Scroller 
                 orientation = { dynamicorientationRef.current } 
@@ -1822,7 +1833,7 @@ const sharedcacheScrollerStyles = {
     },
 }
 
-const sharedcacheProperties = {
+const nestedmixedautoexpandProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
@@ -1845,7 +1856,7 @@ const sharedcacheProperties = {
     },
 }
 
-// --------------------[ 10. - scroller of draggable nested properties ]----------------------
+// --------------------[ 13. - nesting variable scrollers ]----------------------
 
 
 const DraggableNestedComponent = (props:any) => {
@@ -1861,7 +1872,7 @@ const DraggableNestedComponent = (props:any) => {
         cacheAPI,
     } = props
 
-    const properties = nestedUniformSubscrollerProperties
+    const properties = uniformSubscrollerProperties
 
     const {
         // orientation, 
@@ -1906,11 +1917,11 @@ const DraggableNestedComponent = (props:any) => {
 
     },[testState])
 
-    return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
-        <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
+    return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
+        <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
         </div>
-        <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
+        <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
             <Scroller 
                 orientation = { dynamicorientationRef.current } 
@@ -1959,7 +1970,7 @@ const draggablenestedScrollerStyles = {
     },
 }
 
-const draggablenestedProperties = {
+const nesteduniformProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
@@ -1995,10 +2006,11 @@ export const defaultAllContentTypeProperties = {
     variabledynamic:variabledynamicProperties,
     variableoversized:variableoversizedProperties,
     variableautoexpand:variableautoexpandProperties,
-    nestedmixed:nestedmixedProperties,
-    nestedmixedpromises:nestedpromisesProperties,
-    nesteduniform:sharedcacheProperties,
-    nestedmixedautoexpand: draggablenestedProperties,
+    nestingmixed:nestingmixedProperties,
+    nestingmixedpromises:nestingmixedpromisesProperties,
+    
+    nestingmixedautoexpand: nestedmixedautoexpandProperties,
+    nestinguniform:nesteduniformProperties,
 }
 
 // this is exported for the App module to use

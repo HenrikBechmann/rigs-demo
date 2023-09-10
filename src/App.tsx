@@ -69,10 +69,10 @@ const contentTitles:GenericObject = {
   variabledynamic:"Variable dynamic",
   variableoversized:"Variable oversized",
   variableautoexpand:"Variable autoexpand",
-  nestedmixed:"Nested mixed scrollers",
-  nestedmixedpromises:"Nested mixed scroller promises",
-  nestedmixedautoexpand:"Nested mixed auto expand",
-  nesteduniform:"Nested uniform scrollers",
+  nestingmixed:"Nested mixed scrollers",
+  nestingmixedpromises:"Nested mixed scroller promises",
+  nestingmixedautoexpand:"Nested mixed auto expand",
+  nestinguniform:"Nested uniform scrollers",
 
 }
 

@@ -1256,10 +1256,10 @@ const Options = ({
                 <option value="variabledynamic">Variable dynamic</option>
                 <option value="variableoversized">Variable oversized</option>
                 <option value="variableautoexpand">Variable auto expand</option>
-                <option value="nestedmixed">Nested mixed scrollers</option>
-                <option value="nestedmixedpromises">Nested mixed promises</option>
-                <option value="nestedmixedautoexpand">Nested mixed auto expand</option>
-                <option value="nesteduniform">Nested uniform scrollers</option>
+                <option value="nestingmixed">Nested mixed scrollers</option>
+                <option value="nestingmixedpromises">Nested mixed promises</option>
+                <option value="nestingmixedautoexpand">Nested mixed auto expand</option>
+                <option value="nestinguniform">Nested uniform scrollers</option>
                 <option value="nestedvariable">Nested variable scrollers</option>
             </Select>
 

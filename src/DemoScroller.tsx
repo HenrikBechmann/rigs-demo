@@ -18,10 +18,10 @@ const testDataSource:GenericObject = {
   variabledynamic:testVariableData,
   variableoversized:testVariableData,
   variableautoexpand:testVariableData,
-  nestedmixed:testNestedAccepts,
-  nestedmixedpromises:{},
-  nesteduniform:{},
-  nestedmixedautoexpand:{},
+  nestingmixed:testNestedAccepts,
+  nestingmixedpromises:{},
+  nestinguniform:{},
+  nestingmixedautoexpand:{},
 
 }
 
