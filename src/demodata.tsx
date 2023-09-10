@@ -1718,9 +1718,49 @@ const nestingmixedpromisesProperties = {
 // --------------------[ 11. - nesting mixed auto expand ]----------------------
 
 
+const getNestingMixedAutoExpansionCount = (position:string, index:number) => {
+
+    let count = 0
+
+    if (position == 'SOL' && index >= -1000) count = 10
+
+    if (position == 'EOL' && index <= 1000) count = 10
+
+    const statePack:GenericObject = setDemoStatePack
+
+    if (count) {
+        statePack.setDemoState('autoexpand')
+    }
+
+    return count
+
+}
+
+const nestingmixedautoexpandProperties = {
+    startingIndex:0,
+    startingListSize:200,
+    startingListRange:[-50,50],
+    orientation:'vertical',
+    cellHeight:400,
+    cellWidth:300,
+    padding:5,
+    gap:5,
+    runwaySize:3,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    getItem:getMixedSubscroller,
+    getExpansionCount:getNestingMixedAutoExpansionCount,
+    styles:nestingScrollerStyles,
+    placeholderMessages: null,
+    callbacks,
+    technical: {
+        showAxis:false
+    },
+}
 
 // --------------------[ 12. - nesting uniform scrollers ]----------------------
-
 
 const SharedCacheComponent = (props:any) => {
 
@@ -1833,7 +1873,7 @@ const sharedcacheScrollerStyles = {
     },
 }
 
-const nestedmixedautoexpandProperties = {
+const nestinguniformProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
@@ -1970,7 +2010,7 @@ const draggablenestedScrollerStyles = {
     },
 }
 
-const nesteduniformProperties = {
+const nestingvariableProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
@@ -2008,9 +2048,9 @@ export const defaultAllContentTypeProperties = {
     variableautoexpand:variableautoexpandProperties,
     nestingmixed:nestingmixedProperties,
     nestingmixedpromises:nestingmixedpromisesProperties,
-    
-    nestingmixedautoexpand: nestedmixedautoexpandProperties,
-    nestinguniform:nesteduniformProperties,
+    nestingmixedautoexpand: nestingmixedautoexpandProperties,
+    nestinguniform:nestinguniformProperties,
+    nestingvariable:nestingvariableProperties,
 }
 
 // this is exported for the App module to use
