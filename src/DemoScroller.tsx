@@ -17,6 +17,7 @@ const testDataSource:GenericObject = {
   variablepromises:testVariableData,
   variabledynamic:testVariableData,
   variableoversized:testVariableData,
+  variableautoexpand:testVariableData,
   nestedcontent:"",
   nestedpromises:"",
   sharedcache:"",

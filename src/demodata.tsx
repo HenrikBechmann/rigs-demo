@@ -260,6 +260,7 @@ const callbacks = {
     4. variablepromises: variablepromiseProperties,
     5. variabledynamic:  variabledynamicProperties,
     6. variableoversized: variableoversizedProperties,
+    6.1. variableautoexpand:  variableautoexpandProperties,
     7. nestedcontent:    nestedcontentProperties,
     8. nestedpromises:   nestedpromisesProperties,
     9. sharedcache:      sharedcacheProperties
@@ -523,7 +524,7 @@ const simplepromisesProperties = {
 // scroller property values assembled for this content variant
 // -----------------
 
-const getAutoExpansionCount = (position:string, index:number) => {
+const getSimpleAutoExpansionCount = (position:string, index:number) => {
 
     let count = 0
 
@@ -569,7 +570,7 @@ const simpleAutoExpandProperties = {
 
     getItem: getSimpleItem,
     getItemPack: getSimpleItemPack,
-    getExpansionCount:getAutoExpansionCount,
+    getExpansionCount:getSimpleAutoExpansionCount,
     styles: simpleAutoExpandScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
@@ -1077,6 +1078,7 @@ const variabledynamicProperties = {
         showAxis:false
     },
 }
+
 // ======================[ 6. variable oversized content ]=========================
 
 const oversizedteststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
@@ -1282,6 +1284,63 @@ const variableoversizedProperties = {
     getItemPack: getVariableOversizedItemPack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
+    callbacks,
+    technical: {
+        showAxis:false
+    },
+}
+
+// ======================[ 6.1 variable auto expand ]=========================
+
+const getVariableAutoExpansionCount = (position:string, index:number) => {
+
+    let count = 0
+
+    if (position == 'SOL' && index >= -1000) count = 10
+
+    if (position == 'EOL' && index <= 1000) count = 10
+
+    const statePack:GenericObject = setDemoStatePack
+
+    if (count) {
+        statePack.setDemoState('autoexpand')
+    }
+
+    return count
+
+}
+
+const variableAutoexpandScrollerStyles = {
+    viewport:{
+        overscrollBehavior:'none'
+    },
+}
+
+const variableAutoexpandPlaceholderMessages = {
+    
+}
+
+const variableautoexpandProperties = {
+    startingIndex:0,
+    startingListSize:200,
+    // startingListRange:[-60,60],
+    orientation:'vertical',
+    cellHeight:320,
+    cellWidth:250,
+    cellMinHeight:25,
+    cellMinWidth:25,
+    padding:10,
+    gap:5,
+    runwaySize:5,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'variable',
+
+    getItem: getVariableItem,
+    getItemPack: getVariableItemPack,
+    getExpansionCount:getVariableAutoExpansionCount,
+    styles: variableAutoexpandScrollerStyles,
+    placeholderMessages: variableAutoexpandPlaceholderMessages,
     callbacks,
     technical: {
         showAxis:false
@@ -1927,6 +1986,7 @@ export const defaultAllContentTypeProperties = {
     variablepromises:variablepromiseProperties,
     variabledynamic:variabledynamicProperties,
     variableoversized:variableoversizedProperties,
+    variableautoexpand:variableautoexpandProperties,
     nestedcontent:nestedcontentProperties,
     nestedpromises:nestedpromisesProperties,
     sharedcache:sharedcacheProperties,

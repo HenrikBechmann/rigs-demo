@@ -991,7 +991,7 @@ const Options = ({
         contentType:(contentSelection:string) => {
 
             let disabled
-            if (['variablecontent','variablepromises','variabledynamic','variableoversized'].includes(contentSelection)) {
+            if (['variablecontent','variablepromises','variabledynamic','variableoversized','variableautoexpand'].includes(contentSelection)) {
 
                 disabled = false
                 isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
@@ -1255,6 +1255,7 @@ const Options = ({
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>
                 <option value="variableoversized">Variable oversized</option>
+                <option value="variableautoexpand">Variable auto expand</option>
                 <option value="nestedcontent">Nested scrollers</option>
                 <option value="draggablenested">Draggable nested scrollers</option>
                 <option value="nestedpromises">Nested scroller promises</option>

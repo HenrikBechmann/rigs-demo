@@ -68,6 +68,7 @@ const contentTitles:GenericObject = {
   variablepromises:"Variable promises",
   variabledynamic:"Variable dynamic",
   variableoversized:"Variable oversized",
+  variableautoexpand:"Variable autoexpand",
   nestedcontent:"Nested uniform scrollers",
   nestedpromises:"Nested uniform scroller promises",
   sharedcache:"Shared cache (experimental)",
