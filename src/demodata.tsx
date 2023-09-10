@@ -1354,14 +1354,17 @@ const variableautoexpandProperties = {
     },
 }
 
-// ======================[ 9. nesting mixed scrollers content (scroller of sub-scrollers) ]=========================
+// ======================[ 9. nesting mixed (uniform and variable) subscrollers ]=========================
 
 // For this there is a scroller, that contains cells of scrollers (subscrollers)
 // The subscroller content comes in two variants - variable content, and uniform content
 
 // -----------------
-// nested scrollers cell component definition
+// nested sub scrollers cell component definition
 // -----------------
+// --------------------[ subscroller component definition ]-----------------------
+
+// subscrollers are passed a variant property which defines content
 
 const subcrollerComponentStyles = {
     container: {
@@ -1478,11 +1481,7 @@ const SubscrollerComponent = (props:any) => {
 
 }
 
-// --------------------[ 9a. variable subscroller cell content ]-----------------------
-
-// -----------------
-// content for variable subscroller variant
-// -----------------
+// --------------------[ variable subscroller cell content ]-----------------------
 
 const getVariableSubscrollerTestString = (index:number, itemID:number) => {
 
@@ -1525,10 +1524,6 @@ const VariableSubscrollerItem = (props:any) => {
     </div>
 }
 
-// -----------------
-// properties assembled for variable subscroller variant
-// -----------------
-
 const getVariableSubscrollerItem = (index:number, itemID:number) => {
 
      return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
@@ -1560,11 +1555,10 @@ const variableSubscrollerProperties = {
 
 }
 
-// -------------------[ 9b. uniform subscroller cell content ]-----------------
+// -------------------[ uniform subscroller cell content ]-----------------
 
 // -----------------
-// component definition for uniform subscroller variant
-// (the component itself is a simple div, so is defined in the getUniformSubscrollerItem function below)
+// (the subscroller content component itself is a simple div, so is defined in the getUniformSubscrollerItem function below)
 // -----------------
 
 const uniformSubscrollerItemStyle = {
@@ -1610,11 +1604,7 @@ const uniformSubscrollerProperties = {
 
 }
 
-// --------------------[ back to 9. - nesting scroller properties ]----------------------
-
-// -----------------
-// scroller property values assembled for the nested scroller
-// -----------------
+// --------------------[ nesting mixed scroller properties ]----------------------
 
 const getMixedSubscroller = (index:number, itemID:number) => {
 
@@ -1661,7 +1651,7 @@ const nestingmixedProperties = {
     },
 }
 
-// =======================[ 10. nesting subscroller item promises ]========================
+// =======================[ 10. nesting mixed subscroller item promises ]========================
 
 // -----------------
 // scroller property values assembled for the nested scroller promises variant
@@ -1715,7 +1705,7 @@ const nestingmixedpromisesProperties = {
     },
 }
 
-// --------------------[ 11. - nesting mixed auto expand ]----------------------
+// --------------------[ 11. - nesting mixed subscroller auto expand ]----------------------
 
 
 const getNestingMixedAutoExpansionCount = (position:string, index:number) => {
