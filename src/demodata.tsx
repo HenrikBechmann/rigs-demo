@@ -1092,6 +1092,21 @@ const getVariableOversizedTestString = (index:number, itemID:number) => {
 
 const VariableOversizedItem = (props:any) => {
 
+    const {color, type, typeSelection, scrollerProperties, creationID} = props
+
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+
+    let typeText = '', creationIDText = ''
+    if (type && typeSelection) typeText = `${type} from ${typeSelection}:`
+
+    if (creationID) creationIDText = `creationID: ${creationID}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '30px', width:'34px'}} />
+        else return null
+
+    },[isDnd])
+
     const testStringRef = useRef(getVariableOversizedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
@@ -1118,6 +1133,9 @@ const VariableOversizedItem = (props:any) => {
             }
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+    const innerstyles = {...variableComponentStyles.inner}
+
+    color && (innerstyles.backgroundColor = color)
 
     // ------------------------[ handle scroll position recovery ]---------------------
 
@@ -1186,7 +1204,12 @@ const VariableOversizedItem = (props:any) => {
     cacheSentinel()
 
     return <div ref = {scrollerElementRef} data-type = 'variable-oversized' style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
+        <div style = {innerstyles}>
+            {isDnd && float}
+            {creationIDText && <>{creationIDText} <br /></>} 
+            {typeText && <>{typeText} <br /></>}
+            {testStringRef.current}
+        </div>
     </div>
 }
 
@@ -1197,6 +1220,45 @@ const VariableOversizedItem = (props:any) => {
 const getVariableOversizedItem = (index:number, itemID:number) => {
 
      return <VariableOversizedItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+
+}
+
+const getVariableOversizedItemPack = (index:number, itemID:number, context:GenericObject) => {
+
+     // return <VariableOversizedItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+
+    const accepts = context.accepts
+
+    const [accept, typeSelection] = selectItem(testVariableData,accepts,index)
+
+    const color = testVariableDataColors[accept]
+
+    const creationID = globalCreationID++
+
+    let component
+
+     if (index == 30) {
+         component = Promise.reject(new Error('not found for demo purposes'))
+     } else if (index == 40) {
+         component = 5 // deliberate return of an invalid (non-React-component) content type for demo
+     } else {
+         component = <VariableOversizedItem 
+             index = {index} 
+             itemID = {itemID} 
+             type = {accept}
+             typeSelection = {typeSelection}
+             color = { color }
+             creationID = {creationID}
+             scrollerProperties = {null} />
+     }
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:accept},
+        profile:{color, type:accept, typeSelection, creationID},
+    }
+
+    return itemPack
 
 }
 
@@ -1217,6 +1279,7 @@ const variableoversizedProperties = {
     layout: 'variable',
 
     getItem: getVariableOversizedItem,
+    getItemPack: getVariableOversizedItemPack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
