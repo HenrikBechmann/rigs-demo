@@ -2,11 +2,11 @@
 
 import React, {useRef} from 'react'
 
-import {testUniformData, testVariableData, acceptAll, GenericObject} from './demodata'
+import {testUniformData, testVariableData, testNestedAccepts, acceptAll, GenericObject} from './demodata'
 
-// import GridScroller from 'react-infinite-grid-scroller'
+import GridScroller from 'react-infinite-grid-scroller'
 
-import { RigsDnd as GridScroller } from 'react-infinite-grid-scroller'
+import { RigsDnd as DndScroller } from 'react-infinite-grid-scroller'
 
 const testDataSource:GenericObject = {
 
@@ -18,10 +18,10 @@ const testDataSource:GenericObject = {
   variabledynamic:testVariableData,
   variableoversized:testVariableData,
   variableautoexpand:testVariableData,
-  nestedcontent:"",
-  nestedpromises:"",
-  sharedcache:"",
-  draggablenested:"",
+  nestedmixed:testNestedAccepts,
+  nestedpromises:{},
+  sharedcache:{},
+  draggablenested:{},
 
 }
 
@@ -31,19 +31,32 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
     const demoContentTypeSelectorRef = useRef(demoContentTypeSelector)
 
-    const dndOptionsRef = useRef({accepts:acceptAll(testData)})
+    const dndOptionsRef = useRef<GenericObject | null>(null)
 
-    if (demoContentTypeSelector != demoContentTypeSelectorRef.current) {
+    if (['simplecontent','simplepromises','simpleautoexpand','variablecontent','variablepromises',
+        'variabledynamic','variableoversized','variableautoexpand'].includes(demoContentTypeSelector)) {
 
-        demoContentTypeSelectorRef.current = demoContentTypeSelector
+        if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
 
-        dndOptionsRef.current.accepts = acceptAll(testData)
+            demoContentTypeSelectorRef.current = demoContentTypeSelector
 
+            const dndOptions = {
+                accepts:acceptAll(testData),
+            }
+
+            dndOptionsRef.current = dndOptions
+
+        }
+
+        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+
+        return <DndScroller key = {demoContentTypeSelector} {...props}/>
+
+    } else {
+
+        return <GridScroller key = {demoContentTypeSelector} {...demoAllContentTypeProperties[demoContentTypeSelector]}/>        
+    
     }
-
-    const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
-
-    return <GridScroller key = {demoContentTypeSelector} {...props}/>
 
 }
 

@@ -10,7 +10,7 @@ import { setDemoStatePack } from './App'
     CONTENT TYPES are defined just below the SCROLLER CALLBACKS section.
 */
 
-// -----------------------------[ Test data ]--------------------------------
+// -----------------------------[ Test data for dnd ]--------------------------------
 
 let globalCreationID = 0
 
@@ -40,6 +40,12 @@ const testVariableDataColors:GenericObject = {
     Message: 'DarkKhaki',
     Opinion: 'DarkSalmon',
     Report:'LightPink',
+}
+
+export const testNestedAccepts:GenericObject = {
+    variable:['variable'],
+    uniform:['uniform'],
+    mixed:['uniform','variable'],
 }
 
 const chooseRandomGroup = (testData:object) => {
@@ -105,7 +111,6 @@ const selectItem = (testData:GenericObject, accepts:Array<string>,index:number) 
     return [accept, textOption]
 
 }
-
 
 // =============================================================================
 // ==============================[ SCROLLER CALLBACKS ]=========================
@@ -261,7 +266,7 @@ const callbacks = {
     5. variabledynamic:  variabledynamicProperties,
     6. variableoversized: variableoversizedProperties,
     6.1. variableautoexpand:  variableautoexpandProperties,
-    7. nestedcontent:    nestedcontentProperties,
+    7. nestedmixed:    nestedcontentProperties,
     8. nestedpromises:   nestedpromisesProperties,
     9. sharedcache:      sharedcacheProperties
     10. draggablenested: draggablenestesProperties
@@ -1389,12 +1394,8 @@ const SubscrollerComponent = (props:any) => {
         index, 
         itemID,
         scrollerProperties,
+        variant,
     } = props
-
-    const variant =
-        ((index % 2) == 0)?
-        'uniform':
-        'variable'
 
     const properties = 
         (variant == 'uniform')?
@@ -1615,9 +1616,15 @@ const nestedUniformSubscrollerProperties = {
 
 const getSubscroller = (index:number, itemID:number) => {
 
+    const variant =
+        ((index % 2) == 0)?
+        'uniform':
+        'variable'
+
     return <SubscrollerComponent 
         index = {index} 
         itemID = {itemID}
+        variant = {variant}
         scrollerProperties = {null}
     />
 
@@ -1987,7 +1994,7 @@ export const defaultAllContentTypeProperties = {
     variabledynamic:variabledynamicProperties,
     variableoversized:variableoversizedProperties,
     variableautoexpand:variableautoexpandProperties,
-    nestedcontent:nestedcontentProperties,
+    nestedmixed:nestedcontentProperties,
     nestedpromises:nestedpromisesProperties,
     sharedcache:sharedcacheProperties,
     draggablenested: draggablenestedProperties,
