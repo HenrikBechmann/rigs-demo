@@ -923,6 +923,25 @@ const getDynamicTestString = (index:number, itemID:number) => {
 
 const VariableItemDynamic = (props:any) => {
 
+    const {color, type, typeSelection, scrollerProperties, creationID} = props
+
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+
+    let typeText = '', creationIDText = ''
+    if (type && typeSelection) typeText = `${type} from ${typeSelection}:`
+
+    if (creationID) creationIDText = `creationID: ${creationID}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '30px', width:'34px'}} />
+        else return null
+
+    },[isDnd])
+
+    // const testString = getVariableTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID)
+
+    // const testStringRef = useRef(testString)
+
     const {
 
         orientation,
@@ -947,8 +966,9 @@ const VariableItemDynamic = (props:any) => {
             }
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+    const innerstyles = {...variableComponentStyles.inner}
 
-    // const originalindexRef = useRef(props.index)
+    color && (innerstyles.backgroundColor = color)
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -973,7 +993,12 @@ const VariableItemDynamic = (props:any) => {
     },[])
 
     return <div data-type = 'variable-dynamic' style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{teststringRef.current}</div>
+        <div style = {innerstyles}>
+            {isDnd && float}
+            {creationIDText && <>{creationIDText} <br /></>} 
+            {typeText && <>{typeText} <br /></>}
+            {teststringRef.current}
+        </div>
     </div>
 
 }
@@ -985,6 +1010,45 @@ const VariableItemDynamic = (props:any) => {
 const getVariableItemDynamic = (index:number, itemID:number) => {
 
      return <VariableItemDynamic index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+
+}
+
+const getVariableItemDynamicPack = (index:number, itemID:number, context:GenericObject) => {
+
+     // return <VariableItemDynamic index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+
+    const accepts = context.accepts
+
+    const [accept, typeSelection] = selectItem(testVariableData,accepts,index)
+
+    const color = testVariableDataColors[accept]
+
+    const creationID = globalCreationID++
+
+    let component
+
+     if (index == 30) {
+         component = Promise.reject(new Error('not found for demo purposes'))
+     } else if (index == 40) {
+         component = 5 // deliberate return of an invalid (non-React-component) content type for demo
+     } else {
+         component = <VariableItemDynamic
+             index = {index} 
+             itemID = {itemID} 
+             type = {accept}
+             typeSelection = {typeSelection}
+             color = { color }
+             creationID = {creationID}
+             scrollerProperties = {null} />
+     }
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:accept},
+        profile:{color, type:accept, typeSelection, creationID},
+    }
+
+    return itemPack
 
 }
 
@@ -1005,6 +1069,7 @@ const variabledynamicProperties = {
     layout: 'variable',
 
     getItem: getVariableItemDynamic,
+    getItemPack: getVariableItemDynamicPack,
     styles: variableScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
