@@ -407,7 +407,7 @@ const simplecontentProperties = {
     startingIndex:0,
     startingListSize:300,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation: 'vertical',
     cellHeight:150,
     cellWidth:150,
     padding:10,
