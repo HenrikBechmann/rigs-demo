@@ -69,92 +69,92 @@ const isValueLessThanOrEqualToMaxValue = (compareValue:any, maxValue:any) => {
 
 // ------------------------[ static field data ]----------------------
 
-const sectionTitles:GenericObject = {
-  properties:'Properties for the selected content type',
-  callbacks:'Callbacks',
-  snapshots:'Service functions: snapshots',
-  operations:'Service functions: operations',
-}
+const 
+    sectionTitles:GenericObject = {
+        properties:'Properties for the selected content type',
+        callbacks:'Callbacks',
+        snapshots:'Service functions: snapshots',
+        operations:'Service functions: operations',
+    },
 
-const fieldSections:GenericObject = {
+    fieldSections:GenericObject = {
 
-    cellHeight:'properties',
-    cellWidth:'properties',
-    cellMinHeight:'properties',
-    cellMinWidth:'properties',
-    startingIndex:'properties',
-    startingListSize:'properties',
-    rangePropertyType:'properties',
-    startingLowIndex:'properties',
-    startingHighIndex:'properties',
-    padding:'properties',
-    gap:'properties',
-    runwaySize:'properties',
-    cacheMax:'properties',
-    scrolltoIndex:'operations',
-    scrollToPixel:'operations',
-    scrollByPixel:'operations',
-    scrolltobehavior:'operations',
-    scrollbybehavior:'operations',
-    listsize:'operations',
-    prependCount:'operations',
-    appendCount:'operations',
-    rangeAPIType:'properties',
-    listLowIndex:'operations',
-    listHighIndex:'operations',
-    insertFrom:'operations',
-    insertRange:'operations',
-    removeFrom:'operations',
-    removeRange:'operations',
-    moveFrom:'operations',
-    moveRange:'operations',
-    moveTo:'operations',
+        cellHeight:'properties',
+        cellWidth:'properties',
+        cellMinHeight:'properties',
+        cellMinWidth:'properties',
+        startingIndex:'properties',
+        startingListSize:'properties',
+        rangePropertyType:'properties',
+        startingLowIndex:'properties',
+        startingHighIndex:'properties',
+        padding:'properties',
+        gap:'properties',
+        runwaySize:'properties',
+        cacheMax:'properties',
+        scrolltoIndex:'operations',
+        scrollToPixel:'operations',
+        scrollByPixel:'operations',
+        scrolltobehavior:'operations',
+        scrollbybehavior:'operations',
+        listsize:'operations',
+        prependCount:'operations',
+        appendCount:'operations',
+        rangeAPIType:'properties',
+        listLowIndex:'operations',
+        listHighIndex:'operations',
+        insertFrom:'operations',
+        insertRange:'operations',
+        removeFrom:'operations',
+        removeRange:'operations',
+        moveFrom:'operations',
+        moveRange:'operations',
+        moveTo:'operations',
 
-}
+    },
 
+    // display error messages
+    errorMessages = { 
+        // string selection, no errors
+        cellHeight:'integer: cellHeight is required with minimum of 25',
+        cellWidth:'integer: cellWidth is required with minimum 25',
+        cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
+        cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
+        startingIndex:'blank, or integer greater than or equal to listlowindex',
+        startingListSize:'integer: required, with minimum 0',
+        startingLowIndex:'integer: must be less than or equal to high index',
+        startingHighIndex:'integer: must be greater than or equal to low index',
+        padding:'blank, or integer, or comma separated list of 2-4 integers, all greater than or equal to 0',
+        gap:'blank, or integer, or comma separated list of 2 integers, all greater than or equal to 0',
+        runwaySize:'blank, or integer minimum 1',
+        cacheMax:'blank, or integer greater than or equal to 0',
+        scrolltoIndex:'integer: required, greater than or equal to listlowindex',
+        scrollToPixel:'integer:required, greater than or equal to 0',
+        scrollByPixel:'integer:required',
+        listsize:'integer: required, greater than or equal to 0',
+        listLowIndex:'integer: required, less than or equal to high index',
+        listHighIndex:'integer:required, greater than or equal to low index',
+        prependCount:'integer:required, greater than or equal to 0',
+        appendCount:'integer:required, greater than or equal to 0',
+        insertFrom:'integer: required, greater than or equal to listlowindex',
+        insertRange:'blank, or integer greater than or equal to the "from" index',
+        removeFrom:'integer: required, greater than or equal to listlowindex',
+        removeRange:'blank, or integer greater than or equal to the "from" index',
+        moveFrom:'integer: required, greater than or equal to listlowindex',
+        moveRange:'blank, or integer greater than or equal to the "from" index',
+        moveTo:'integer: required, greater than or equal to listlowindex',
+    },
 
-// display error messages
-const errorMessages = { 
-    // string selection, no errors
-    cellHeight:'integer: cellHeight is required with minimum of 25',
-    cellWidth:'integer: cellWidth is required with minimum 25',
-    cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
-    cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
-    startingIndex:'blank, or integer greater than or equal to listlowindex',
-    startingListSize:'integer: required, with minimum 0',
-    startingLowIndex:'integer: must be less than or equal to high index',
-    startingHighIndex:'integer: must be greater than or equal to low index',
-    padding:'blank, or integer, or comma separated list of 2-4 integers, all greater than or equal to 0',
-    gap:'blank, or integer, or comma separated list of 2 integers, all greater than or equal to 0',
-    runwaySize:'blank, or integer minimum 1',
-    cacheMax:'blank, or integer greater than or equal to 0',
-    scrolltoIndex:'integer: required, greater than or equal to listlowindex',
-    scrollToPixel:'integer:required, greater than or equal to 0',
-    scrollByPixel:'integer:required',
-    listsize:'integer: required, greater than or equal to 0',
-    listLowIndex:'integer: required, less than or equal to high index',
-    listHighIndex:'integer:required, greater than or equal to low index',
-    prependCount:'integer:required, greater than or equal to 0',
-    appendCount:'integer:required, greater than or equal to 0',
-    insertFrom:'integer: required, greater than or equal to listlowindex',
-    insertRange:'blank, or integer greater than or equal to the "from" index',
-    removeFrom:'integer: required, greater than or equal to listlowindex',
-    removeRange:'blank, or integer greater than or equal to the "from" index',
-    moveFrom:'integer: required, greater than or equal to listlowindex',
-    moveRange:'blank, or integer greater than or equal to the "from" index',
-    moveTo:'integer: required, greater than or equal to listlowindex',
-}
-
-const accessControlledAPIFields = [
-    'scrolltoIndex','scrollToPixel','scrollByPixel','scrolltobehavior','scrollbybehavior',
-    'listsize',
-    'prependCount','appendCount',
-    'listLowIndex','listHighIndex','rangeAPIType',
-    'insertFrom', 'insertRange',
-    'removeFrom', 'removeRange',
-    'moveFrom', 'moveRange', 'moveTo',
-    'remapDemo',
-]
+    accessControlledAPIFields = [
+        'scrolltoIndex','scrollToPixel','scrollByPixel','scrolltobehavior','scrollbybehavior',
+        'listsize',
+        'prependCount','appendCount',
+        'listLowIndex','listHighIndex','rangeAPIType',
+        'insertFrom', 'insertRange',
+        'removeFrom', 'removeRange',
+        'moveFrom', 'moveRange', 'moveTo',
+        'remapDemo',
+    ]
 
 // ----------------------------------------------------
 // Options component; about 40 fields
@@ -195,52 +195,42 @@ const Options = ({
         [editContentTypeSelector, setEditContentTypeSelector] = 
             useState(sessionContentTypeSelectorRef.current),
         [editOperationFunctionSelector, setEditOperationFunctionSelector] = 
-            useState(sessionOperationFunctionSelectorRef.current)
+            useState(sessionOperationFunctionSelectorRef.current),
 
-    const
-        editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current)
-    editOperationFunctionSelectorRef.current = editOperationFunctionSelector
+        editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current),
 
-    // objects. The local values are used to assign valid edits to the inherited values
-    const
+        // objects. The local values are used to assign valid edits to the inherited values
         [editContentTypeProperties, setEditContentTypeProperties] = 
             useState({...sessionAllContentTypePropertiesRef.current[editContentTypeSelector]}),
-        editContentTypePropertiesRef = useRef(editContentTypeProperties)
-    editContentTypePropertiesRef.current = editContentTypeProperties
+        editContentTypePropertiesRef = useRef(editContentTypeProperties),
 
-    const 
         [editCallbackFlags, setEditCallbackFlags] = 
-            useState({...sessionCallbackFlagsRef.current})
+            useState({...sessionCallbackFlagsRef.current}),
     
-    const 
         [editAPIFunctionArguments, setEditAPIFunctionArguments] = 
             useState({...sessionAPIFunctionArgumentsRef.current}),
-        editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments)
-    editAPIFunctionArgumentsRef.current = editAPIFunctionArguments
+        editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments),
 
-    // --------------------------------[ internal mutable field data ]-----------------------------
+        // --------------------------------[ internal mutable field data ]-----------------------------
 
-    const 
         rangeTextColorsRef = useRef({
             rangepropertyvalues:'gray',
             emptyrangeproperty:'gray',
             rangeAPIvalues:'gray',
             emptyrangeAPI:'gray',
         }),
-        rangeTextColors = rangeTextColorsRef.current
+        rangeTextColors = rangeTextColorsRef.current,
 
-    const 
         propertyDisabledFlagsRef = useRef({
             startingLowIndex:false,
             startingHighIndex:false,
         }),
-        propertyDisabledFlags = propertyDisabledFlagsRef.current
+        propertyDisabledFlags = propertyDisabledFlagsRef.current,
 
-    // disabled controls
-    const 
+        // disabled controls
         APIdisabledFlagsRef = useRef<GenericObject>({
-            cellMinHeight:false, // property
-            cellMinWidth:false, // property
+            cellMinHeight:false,
+            cellMinWidth:false,
             scrolltoIndex:false,
             scrollToPixel:false,
             scrollByPixel:false,
@@ -261,10 +251,9 @@ const Options = ({
             moveTo:false,
             remapDemo:false,
         }),
-        APIdisabledFlags = APIdisabledFlagsRef.current
+        APIdisabledFlags = APIdisabledFlagsRef.current,
 
-    // invalid flags
-    const 
+        // invalid flags
         invalidFieldFlagsRef = useRef<GenericObject>({
             contentType:false,
             orientation:false,
@@ -298,7 +287,29 @@ const Options = ({
             moveTo:false,
             remapDemo:false,
         }),
-        invalidFieldFlags = invalidFieldFlagsRef.current
+        invalidFieldFlags = invalidFieldFlagsRef.current,
+
+        // scroller function switch settings
+        functionEnabledSettingsRef = useRef<GenericObject>({
+            goto:false,
+            gotopixel:false,
+            gobypixel:false,
+            listsize:false,
+            prependCount:false,
+            appendCount:false,
+            listrange:false,
+            reload:false,
+            insert:false,
+            remove:false,
+            move:false,
+            remap:false,
+            clear:false,
+        }),
+        functionEnabledSettings = functionEnabledSettingsRef.current
+
+    editOperationFunctionSelectorRef.current = editOperationFunctionSelector
+    editContentTypePropertiesRef.current = editContentTypeProperties
+    editAPIFunctionArgumentsRef.current = editAPIFunctionArguments
 
     // test forwarded to host; returns text list of invalid section titles for display to user
     const getInvalidSections = () => {
@@ -317,25 +328,6 @@ const Options = ({
         return sectionSet
 
     }
-
-    // scroller function switch settings
-    const 
-            functionEnabledSettingsRef = useRef<GenericObject>({
-            goto:false,
-            gotopixel:false,
-            gobypixel:false,
-            listsize:false,
-            prependCount:false,
-            appendCount:false,
-            listrange:false,
-            reload:false,
-            insert:false,
-            remove:false,
-            move:false,
-            remap:false,
-            clear:false,
-        }),
-        functionEnabledSettings = functionEnabledSettingsRef.current
 
     // -----------------------------------[ field management functions ]------------------------------
 
