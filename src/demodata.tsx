@@ -1468,8 +1468,8 @@ const SubscrollerComponent = (props:any) => {
                 startingListRange = {startingListRange}
                 startingIndex = {startingIndex}
                 getItem = {getItem}
-                callbacks = {null}
-                placeholder = {null}
+                callbacks = { null }
+                placeholder = { null }
                 styles = { null }
                 layout = { layout }
                 scrollerProperties = { scrollerProperties }
