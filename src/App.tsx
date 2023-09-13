@@ -73,6 +73,7 @@ const contentTitles:GenericObject = {
   nestingmixedpromises:"Nested mixed scroller promises",
   nestingmixedautoexpand:"Nested mixed auto expand",
   nestinguniform:"Nested uniform scrollers",
+  nestingvariable:"Nested variable scrollers",
 
 }
 

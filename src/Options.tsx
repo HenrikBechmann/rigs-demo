@@ -1252,7 +1252,7 @@ const Options = ({
                 <option value="nestingmixedpromises">Nested mixed scroller promises</option>
                 <option value="nestingmixedautoexpand">Nested mixed scroller auto expand</option>
                 <option value="nestinguniform">Nested uniform scrollers</option>
-                <option value="nestedvariable">Nested variable scrollers</option>
+                <option value="nestingvariable">Nested variable scrollers</option>
             </Select>
 
             <FormHelperText>

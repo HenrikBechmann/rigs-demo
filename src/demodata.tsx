@@ -1399,9 +1399,14 @@ const SubscrollerComponent = (props:any) => {
         index, 
         itemID,
         scrollerProperties,
-        variant,
+        cacheAPI,
     } = props
 
+    let {
+        variant
+    } = props
+
+    variant = variant ?? 'uniform'
     const properties = 
         (variant == 'uniform')?
             uniformSubscrollerProperties:
@@ -1473,6 +1478,7 @@ const SubscrollerComponent = (props:any) => {
                 styles = { null }
                 layout = { layout }
                 scrollerProperties = { scrollerProperties }
+                cacheAPI = {cacheAPI}
             />
 
         </div>
@@ -1617,6 +1623,7 @@ const getMixedSubscroller = (index:number, itemID:number) => {
         index = {index} 
         itemID = {itemID}
         variant = {variant}
+        cacheAPI = {null}
         scrollerProperties = {null}
     />
 
@@ -1673,6 +1680,7 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
                     index = {index} 
                     itemID = {itemID}
                     variant = {variant}
+                    cacheAPI = {null}
                     scrollerProperties = {null}
                 />
             )
@@ -1752,115 +1760,21 @@ const nestingmixedautoexpandProperties = {
 
 // --------------------[ 12. - nesting uniform scrollers ]----------------------
 
-const SharedCacheComponent = (props:any) => {
-
-    const [testState, setTestState] = useState('setup')
-    const testStateRef = useRef<string|null>(null)
-    testStateRef.current = testState
-
-    const { 
-        index, 
-        itemID,
-        scrollerProperties,
-        cacheAPI,
-    } = props
-
-    const properties = uniformSubscrollerProperties
-
-    const {
-        // orientation, 
-        gap, 
-        padding, 
-        cellHeight, 
-        cellWidth, 
-        runwaySize, 
-        startingIndex, 
-        startingListSize, 
-        startingListRange,
-        getItem, 
-        cache,
-        layout,
-    } = properties
-
-    const { scrollerPropertiesRef } = scrollerProperties
-
-    const dynamicorientationRef = useRef<null | string>(null)
-
-    useEffect(() =>{
-
-        const { orientation } = scrollerPropertiesRef.current
-        dynamicorientationRef.current = 
-            (orientation == 'vertical')?
-                'horizontal':
-                'vertical'
-
-    },[scrollerPropertiesRef.current.orientation])
-
-    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
-
-    useEffect(()=>{
-
-        switch (testState) {
-            case 'setup':
-            case 'revised': {
-                setTestState('ready')
-                break
-            }
-        }
-
-    },[testState])
-
-    return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
-        <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
-            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
-        </div>
-        <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
-
-            <Scroller 
-                orientation = { dynamicorientationRef.current } 
-                cache = { cache }
-                gap = {gap}
-                padding = {padding}
-                cellHeight = {cellHeight}
-                cellWidth = {cellWidth}
-                runwaySize = {runwaySize}
-                startingListSize = {startingListSize}
-                startingListRange = {startingListRange}
-                startingIndex = {startingIndex}
-                getItem = {getItem}
-                callbacks = {null}
-                placeholder = {null}
-                styles = { null }
-                layout = { layout }
-                scrollerProperties = { scrollerProperties }
-                cacheAPI = {cacheAPI}
-            />
-
-        </div>
-
-    </div>
-
-}
-
 // -----------------
 // scroller property values assembled for the nested scroller
 // -----------------
 
-const getSharedCacheSubscroller = (index:number, itemID:number) => {
+const getUniformSubscroller = (index:number, itemID:number) => {
 
-    return <SharedCacheComponent 
+    const variant = 'uniform'
+
+    return <SubscrollerComponent 
         index = {index} 
         itemID = {itemID}
-        scrollerProperties = {null}
+        variant = {variant}
         cacheAPI = {null}
+        scrollerProperties = {null}
     />
-
-}
-
-const sharedcacheScrollerStyles = {
-    viewport:{
-        overscrollBehavior:'none'
-    },
 }
 
 const nestinguniformProperties = {
@@ -1877,8 +1791,8 @@ const nestinguniformProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getSharedCacheSubscroller,
-    styles:sharedcacheScrollerStyles,
+    getItem:getUniformSubscroller,
+    styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical:{
@@ -1888,116 +1802,21 @@ const nestinguniformProperties = {
 
 // --------------------[ 13. - nesting variable scrollers ]----------------------
 
-
-const DraggableNestedComponent = (props:any) => {
-
-    const [testState, setTestState] = useState('setup')
-    const testStateRef = useRef<string|null>(null)
-    testStateRef.current = testState
-
-    const { 
-        index, 
-        itemID,
-        scrollerProperties,
-        cacheAPI,
-    } = props
-
-    const properties = uniformSubscrollerProperties
-
-    const {
-        // orientation, 
-        gap, 
-        padding, 
-        cellHeight, 
-        cellWidth, 
-        runwaySize, 
-        startingIndex, 
-        startingListSize, 
-        startingListRange,
-        getItem, 
-        cache,
-        layout,
-    } = properties
-
-    const { scrollerPropertiesRef } = scrollerProperties
-
-    const dynamicorientationRef = useRef<null | string>(null)
-
-    useEffect(() =>{
-
-        const { orientation } = scrollerPropertiesRef.current
-        dynamicorientationRef.current = 
-            (orientation == 'vertical')?
-                'horizontal':
-                'vertical'
-
-    },[scrollerPropertiesRef.current.orientation])
-
-    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
-
-    useEffect(()=>{
-
-        switch (testState) {
-            case 'setup':
-            case 'revised': {
-                setTestState('ready')
-                break
-            }
-        }
-
-    },[testState])
-
-    return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
-        <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
-            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
-        </div>
-        <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
-
-            <Scroller 
-                orientation = { dynamicorientationRef.current } 
-                cache = { cache }
-                gap = {gap}
-                padding = {padding}
-                cellHeight = {cellHeight}
-                cellWidth = {cellWidth}
-                runwaySize = {runwaySize}
-                startingListSize = {startingListSize}
-                startingListRange = {startingListRange}
-                startingIndex = {startingIndex}
-                getItem = {getItem}
-                callbacks = {null}
-                placeholder = {null}
-                styles = { null }
-                layout = { layout }
-                scrollerProperties = { scrollerProperties }
-                cacheAPI = {cacheAPI}
-            />
-
-        </div>
-
-    </div>
-
-}
-
 // -----------------
 // scroller property values assembled for the nested scroller
 // -----------------
 
-const getDraggbleNestedSubscroller = (index:number, itemID:number) => {
+const getVariableSubscroller = (index:number, itemID:number) => {
 
-    return <SharedCacheComponent 
+    const variant = 'variable'
+
+    return <SubscrollerComponent 
         index = {index} 
         itemID = {itemID}
-        scrollerProperties = {null}
+        variant = {variant}
         cacheAPI = {null}
+        scrollerProperties = {null}
     />
-
-}
-
-const draggablenestedScrollerStyles = {
-    viewport:{
-        overscrollBehavior:'none'
-    },
 }
 
 const nestingvariableProperties = {
@@ -2014,8 +1833,8 @@ const nestingvariableProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getSharedCacheSubscroller,
-    styles:sharedcacheScrollerStyles,
+    getItem:getVariableSubscroller,
+    styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical:{
