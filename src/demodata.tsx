@@ -1457,7 +1457,7 @@ const SubscrollerComponent = (props:any) => {
 
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
-            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
+            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
         </div>
         <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
