@@ -106,6 +106,22 @@ const rotateAccepts = (testData:object,index:number) => {
     }
 }
 
+const getSubscrollerAccepts = (variant:string) => {
+
+    const testData = 
+        variant == 'uniform'?
+            testUniformData:
+            testVariableData
+
+    const instanceID = 
+        variant == 'uniform'?
+            uniformInstanceID++:
+            variableInstanceID++
+
+    return rotateAccepts(testData,instanceID)
+
+}
+
 const selectType = (testData:GenericObject, accepts:Array<string>,index:number) => {
 
     const selector = (Math.abs(index) % accepts.length)
@@ -952,10 +968,6 @@ const VariableItemDynamic = (props:any) => {
 
     },[isDnd])
 
-    // const testString = getVariableTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID)
-
-    // const testStringRef = useRef(testString)
-
     const {
 
         orientation,
@@ -1542,6 +1554,12 @@ const getVariableSubscrollerItem = (index:number, itemID:number) => {
 
 }
 
+const getVariableSubscrollerItemPack = (index:number, itemID:number, context:GenericObject) => {
+
+     return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+
+}
+
 const variableSubscrollerProperties = {
 
     startingIndex:0,
@@ -1591,6 +1609,12 @@ const getUniformSubscrollerItem = (index:any, itemID:number) => {
 
 }
 
+const getUniformSubscrollerItemPack = (index:any, itemID:number, context:GenericObject) => {
+
+    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID}</div>
+
+}
+
 const uniformSubscrollerProperties = {
 
     startingIndex:0,
@@ -1617,22 +1641,6 @@ const uniformSubscrollerProperties = {
 }
 
 // --------------------[ nesting mixed scroller properties ]----------------------
-
-const getSubscrollerAccepts = (variant:string) => {
-
-    const testData = 
-        variant == 'uniform'?
-            testUniformData:
-            testVariableData
-
-    const instanceID = 
-        variant == 'uniform'?
-            uniformInstanceID++:
-            variableInstanceID++
-
-    return rotateAccepts(testData,instanceID)
-
-}
 
 const getMixedSubscroller = (index:number, itemID:number) => {
 
