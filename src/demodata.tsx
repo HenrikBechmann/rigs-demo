@@ -1404,13 +1404,10 @@ const SubscrollerComponent = (props:any) => {
         itemID,
         scrollerProperties,
         cacheAPI,
+        variant,
+        dndOptions,
     } = props
 
-    let {
-        variant
-    } = props
-
-    variant = variant ?? 'uniform'
     const properties = 
         (variant == 'uniform')?
             uniformSubscrollerProperties:
@@ -1481,6 +1478,7 @@ const SubscrollerComponent = (props:any) => {
                 placeholder = { null }
                 styles = { null }
                 layout = { layout }
+                dndOptions = { dndOptions }
                 scrollerProperties = { scrollerProperties }
                 cacheAPI = {cacheAPI}
             />
@@ -1623,12 +1621,17 @@ const getMixedSubscroller = (index:number, itemID:number) => {
         'uniform':
         'variable'
 
+    const dndOptions = {
+        type:variant,
+    }
+
     return <SubscrollerComponent 
-        index = {index} 
-        itemID = {itemID}
-        variant = {variant}
-        cacheAPI = {null}
-        scrollerProperties = {null}
+        index = { index } 
+        itemID = { itemID }
+        variant = { variant }
+        dndOptions = { dndOptions }
+        cacheAPI = { null }
+        scrollerProperties = { null }
     />
 
 }
@@ -1676,6 +1679,10 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
         'uniform':
         'variable'
 
+    const dndOptions = {
+        type:variant,
+    }
+
     return new Promise((resolve, reject) => {
         setTimeout(()=> {
 
@@ -1684,6 +1691,7 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
                     index = {index} 
                     itemID = {itemID}
                     variant = {variant}
+                    dndOptions = { dndOptions }
                     cacheAPI = {null}
                     scrollerProperties = {null}
                 />
@@ -1772,10 +1780,15 @@ const getUniformSubscroller = (index:number, itemID:number) => {
 
     const variant = 'uniform'
 
+    const dndOptions = {
+        type:variant,
+    }
+
     return <SubscrollerComponent 
         index = {index} 
         itemID = {itemID}
         variant = {variant}
+        dndOptions = { dndOptions }
         cacheAPI = {null}
         scrollerProperties = {null}
     />
@@ -1814,10 +1827,15 @@ const getVariableSubscroller = (index:number, itemID:number) => {
 
     const variant = 'variable'
 
+    const dndOptions = {
+        type:variant,
+    }
+
     return <SubscrollerComponent 
         index = {index} 
         itemID = {itemID}
         variant = {variant}
+        dndOptions = { dndOptions }
         cacheAPI = {null}
         scrollerProperties = {null}
     />
