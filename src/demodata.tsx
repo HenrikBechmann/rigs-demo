@@ -327,15 +327,15 @@ const simpleComponentStyles = {
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
-    const {color, type, typeTextSelection, scrollerProperties, creationID} = props
+    const {color, type, typeText, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
     // console.log('isDnd, scrollerProperties',isDnd, {...scrollerProperties})
 
     if (color) simpleComponentStyles.outer.backgroundColor = color
-    let typeText
-    if (type && typeTextSelection) typeText = `${type}: ${typeTextSelection}`
+    let localTypeText
+    if (type && typeText) localTypeText = `${type}: ${typeText}`
 
     const float = useMemo(() => {
         if (isDnd) return <div style = {{float:'left', height: '28px', width:'31px'}} />
@@ -349,7 +349,7 @@ const SimpleItem = (props:any) => {
             {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br style = {{clear:'left'}}/>
             {`cache itemID ${props.itemID}`}
             {creationID && <><br />{`creationID: ${creationID}`}</>}
-            {typeText && <><br />{typeText}</>}
+            {localTypeText && <><br />{localTypeText}</>}
         </div>
     </div>
 
@@ -375,7 +375,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     const accepts = context.accepts
 
-    const [accept, typeTextSelection] = selectType(testUniformData,accepts,index)
+    const [accept, typeText] = selectType(testUniformData,accepts,index)
 
     const color = testUniformDataColors[accept]
 
@@ -392,7 +392,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
              index = {index} 
              itemID = {itemID} 
              type = {accept}
-             typeTextSelection = {typeTextSelection}
+             typeText = {typeText}
              color = { color }
              creationID = {creationID}
              scrollerProperties = {null} />
@@ -401,7 +401,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeTextSelection, creationID},
+        profile:{color, type:accept, typeText, creationID},
     }
 
      return itemPack
@@ -476,7 +476,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
 
     const accepts = context.accepts
 
-    const [accept, typeTextSelection] = selectType(testUniformData,accepts,index)
+    const [accept, typeText] = selectType(testUniformData,accepts,index)
 
     const color = testUniformDataColors[accept]
 
@@ -490,7 +490,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
                 index = {index} 
                 itemID = {itemID} 
                 type = {accept}
-                typeTextSelection = {typeTextSelection}
+                typeText = {typeText}
                 color = { color }
                 creationID = {creationID}
                 scrollerProperties = {null}
@@ -503,7 +503,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeTextSelection, creationID },
+        profile:{color, type:accept, typeText, creationID },
     }
 
      return itemPack
@@ -647,12 +647,12 @@ const getVariableTestString = (index:number, itemID:number) => {
 
 const VariableItem = (props:any) => {
 
-    const {color, type, typeTextSelection, scrollerProperties, creationID} = props
+    const {color, type, typeText, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
-    let typeText = '', creationIDText = ''
-    if (type && typeTextSelection) typeText = `${type} from ${typeTextSelection}:`
+    let localTypeText = '', creationIDText = ''
+    if (type && typeText) localTypeText = `${type} from ${typeText}:`
 
     if (creationID) creationIDText = `creationID: ${creationID}`
 
@@ -765,7 +765,7 @@ const VariableItem = (props:any) => {
         <div style = {innerstyles}>
             {isDnd && float}
             {creationIDText && <>{creationIDText} <br /></>} 
-            {typeText && <>{typeText} <br /></>}
+            {localTypeText && <>{localTypeText} <br /></>}
             {testStringRef.current}
         </div>
     </div>
@@ -785,7 +785,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
 
     const accepts = context.accepts
 
-    const [accept, typeTextSelection] = selectType(testVariableData,accepts,index)
+    const [accept, typeText] = selectType(testVariableData,accepts,index)
 
     const color = testVariableDataColors[accept]
 
@@ -802,7 +802,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
              index = {index} 
              itemID = {itemID} 
              type = {accept}
-             typeTextSelection = {typeTextSelection}
+             typeText = {typeText}
              color = { color }
              creationID = {creationID}
              scrollerProperties = {null} />
@@ -811,7 +811,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeTextSelection, creationID},
+        profile:{color, type:accept, typeText, creationID},
     }
 
     return itemPack
@@ -879,7 +879,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
     
     const accepts = context.accepts
 
-    const [accept, typeTextSelection] = selectType(testVariableData,accepts,index)
+    const [accept, typeText] = selectType(testVariableData,accepts,index)
 
     const color = testVariableDataColors[accept]
 
@@ -893,7 +893,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
                      index = {index} 
                      itemID = {itemID} 
                      type = {accept}
-                     typeTextSelection = {typeTextSelection}
+                     typeText = {typeText}
                      color = { color }
                      creationID = {creationID}
                      scrollerProperties = {null} 
@@ -907,7 +907,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeTextSelection, creationID},
+        profile:{color, type:accept, typeText, creationID},
     }
 
     return itemPack
@@ -953,12 +953,12 @@ const getDynamicTestString = (index:number, itemID:number) => {
 
 const VariableItemDynamic = (props:any) => {
 
-    const {color, type, typeTextSelection, scrollerProperties, creationID} = props
+    const {color, type, typeText, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
-    let typeText = '', creationIDText = ''
-    if (type && typeTextSelection) typeText = `${type} from ${typeTextSelection}:`
+    let localTypeText = '', creationIDText = ''
+    if (type && typeText) localTypeText = `${type} from ${typeText}:`
 
     if (creationID) creationIDText = `creationID: ${creationID}`
 
@@ -1022,7 +1022,7 @@ const VariableItemDynamic = (props:any) => {
         <div style = {innerstyles}>
             {isDnd && float}
             {creationIDText && <>{creationIDText} <br /></>} 
-            {typeText && <>{typeText} <br /></>}
+            {localTypeText && <>{localTypeText} <br /></>}
             {teststringRef.current}
         </div>
     </div>
@@ -1045,7 +1045,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
 
     const accepts = context.accepts
 
-    const [accept, typeTextSelection] = selectType(testVariableData,accepts,index)
+    const [accept, typeText] = selectType(testVariableData,accepts,index)
 
     const color = testVariableDataColors[accept]
 
@@ -1062,7 +1062,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
              index = {index} 
              itemID = {itemID} 
              type = {accept}
-             typeTextSelection = {typeTextSelection}
+             typeText = {typeText}
              color = { color }
              creationID = {creationID}
              scrollerProperties = {null} />
@@ -1071,7 +1071,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeTextSelection, creationID},
+        profile:{color, type:accept, typeText, creationID},
     }
 
     return itemPack
@@ -1119,12 +1119,12 @@ const getVariableOversizedTestString = (index:number, itemID:number) => {
 
 const VariableOversizedItem = (props:any) => {
 
-    const {color, type, typeTextSelection, scrollerProperties, creationID} = props
+    const {color, type, typeText, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
-    let typeText = '', creationIDText = ''
-    if (type && typeTextSelection) typeText = `${type} from ${typeTextSelection}:`
+    let localTypeText = '', creationIDText = ''
+    if (type && typeText) localTypeText = `${type} from ${typeText}:`
 
     if (creationID) creationIDText = `creationID: ${creationID}`
 
@@ -1234,7 +1234,7 @@ const VariableOversizedItem = (props:any) => {
         <div style = {innerstyles}>
             {isDnd && float}
             {creationIDText && <>{creationIDText} <br /></>} 
-            {typeText && <>{typeText} <br /></>}
+            {localTypeText && <>{localTypeText} <br /></>}
             {testStringRef.current}
         </div>
     </div>
@@ -1256,7 +1256,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
     const accepts = context.accepts
 
-    const [accept, typeTextSelection] = selectType(testVariableData,accepts,index)
+    const [accept, typeText] = selectType(testVariableData,accepts,index)
 
     const color = testVariableDataColors[accept]
 
@@ -1273,7 +1273,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
              index = {index} 
              itemID = {itemID} 
              type = {accept}
-             typeTextSelection = {typeTextSelection}
+             typeText = {typeText}
              color = { color }
              creationID = {creationID}
              scrollerProperties = {null} />
@@ -1282,7 +1282,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeTextSelection, creationID},
+        profile:{color, type:accept, typeText, creationID},
     }
 
     return itemPack
@@ -1438,7 +1438,8 @@ const SubscrollerComponent = (props:any) => {
         startingIndex, 
         startingListSize,
         startingListRange, 
-        getItem, 
+        getItem,
+        getItemPack,
         cache,
         layout,
     } = properties
@@ -1490,6 +1491,7 @@ const SubscrollerComponent = (props:any) => {
                 startingListRange = {startingListRange}
                 startingIndex = {startingIndex}
                 getItem = {getItem}
+                getItemPack = {getItemPack}
                 callbacks = { null }
                 placeholder = { null }
                 styles = { null }
@@ -1556,7 +1558,32 @@ const getVariableSubscrollerItem = (index:number, itemID:number) => {
 
 const getVariableSubscrollerItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-     return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+    const accepts = context.accepts
+
+    const [type, typeText] = selectType(testVariableData,accepts,index)
+
+    const color = testUniformDataColors[type]
+
+    const creationID = globalCreationID++
+
+    const component = 
+        <VariableSubscrollerItem 
+            index = {index} 
+            itemID = {itemID} 
+            type = {type}
+            typeText = {typeText}
+            color = { color }
+            creationID = {creationID}
+            scrollerProperties = {null}
+        />
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type},
+        profile:{color, type, typeText, creationID},
+    }
+
+     return itemPack
 
 }
 
@@ -1576,6 +1603,7 @@ const variableSubscrollerProperties = {
     layout: 'variable',
 
     getItem: getVariableSubscrollerItem,
+    getItemPack: getVariableSubscrollerItemPack,
     styles:null,
     placeholderMessages: null,
     callbacks:null,
@@ -1597,6 +1625,7 @@ const uniformSubscrollerItemStyle = {
         backgroundColor:'white',
         height:'100%',
         boxSizing:'border-box',
+        fontSize:'small',
     } as React.CSSProperties
 
 // -----------------
@@ -1609,9 +1638,53 @@ const getUniformSubscrollerItem = (index:any, itemID:number) => {
 
 }
 
+const UniformSubscrollerItem = (props:any) => {
+
+    const {
+        index,
+        itemID,
+        type,
+        typeText,
+        color,
+        creationID,
+    } = props
+
+    const styles = {...uniformSubscrollerItemStyle, backgroundColor:color}
+
+    return <div style = { styles }>[{index}]={itemID} {type}:{typeText}</div>
+
+}
+
 const getUniformSubscrollerItemPack = (index:any, itemID:number, context:GenericObject) => {
 
-    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID}</div>
+    const accepts = context.accepts
+
+    const [type, typeText] = selectType(testUniformData,accepts,index)
+
+    const color = testUniformDataColors[type]
+
+    const creationID = globalCreationID++
+
+    console.log('type, typeText, color', type, typeText, color)
+
+    const component = 
+        <UniformSubscrollerItem 
+            index = {index} 
+            itemID = {itemID} 
+            type = {type}
+            typeText = {typeText}
+            color = { color }
+            creationID = {creationID}
+            crollerProperties = {null}
+        />
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type},
+        profile:{color, type, typeText, creationID},
+    }
+
+     return itemPack
 
 }
 
@@ -1631,6 +1704,7 @@ const uniformSubscrollerProperties = {
     layout: 'uniform',
 
     getItem: getUniformSubscrollerItem,
+    getItemPack: getUniformSubscrollerItemPack,
     styles:null,
     placeholderMessages: null,
     callbacks:null,
