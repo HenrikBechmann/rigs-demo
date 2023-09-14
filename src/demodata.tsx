@@ -42,7 +42,7 @@ const testVariableDataColors:GenericObject = {
     Report:'LightPink',
 }
 
-export const testNestedAccepts:GenericObject = {
+export const testNestingAccepts:GenericObject = {
     variable:['variable'],
     uniform:['uniform'],
     mixed:['uniform','variable'],

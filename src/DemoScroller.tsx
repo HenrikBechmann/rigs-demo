@@ -2,7 +2,7 @@
 
 import React, {useRef} from 'react'
 
-import {testUniformData, testVariableData, testNestedAccepts, acceptAll, GenericObject} from './demodata'
+import {testUniformData, testVariableData, testNestingAccepts, acceptAll, GenericObject} from './demodata'
 
 import GridScroller from 'react-infinite-grid-scroller'
 
@@ -18,10 +18,11 @@ const testDataSource:GenericObject = {
   variabledynamic:testVariableData,
   variableoversized:testVariableData,
   variableautoexpand:testVariableData,
-  nestingmixed:testNestedAccepts,
-  nestingmixedpromises:{},
-  nestinguniform:{},
-  nestingmixedautoexpand:{},
+  nestingmixed:testNestingAccepts,
+  nestingmixedpromises:testNestingAccepts,
+  nestingmixedautoexpand:testNestingAccepts,
+  nestinguniform:testNestingAccepts,
+  nestingvariable:testNestingAccepts,
 
 }
 
@@ -42,6 +43,34 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
             const dndOptions = {
                 accepts:acceptAll(testData),
+            }
+
+            dndOptionsRef.current = dndOptions
+
+        }
+
+        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+
+        return <DndScroller key = {demoContentTypeSelector} {...props}/>
+
+    } else if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',
+        'nestinguniform','nestingvariable'].includes(demoContentTypeSelector)){
+
+        if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
+
+            demoContentTypeSelectorRef.current = demoContentTypeSelector
+
+            let accepts
+            if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',].includes(demoContentTypeSelector)) {
+                accepts = testNestingAccepts.mixed
+            } else if (demoContentTypeSelector == 'nestinguniform') {
+                accepts = testNestingAccepts.uniform
+            } else if (demoContentTypeSelector == 'nestingvariable') {
+                accepts = testNestingAccepts.variable
+            }
+
+            const dndOptions = {
+                accepts,
             }
 
             dndOptionsRef.current = dndOptions
