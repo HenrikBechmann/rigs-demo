@@ -14,6 +14,10 @@ import { setDemoStatePack } from './App'
 
 let globalCreationID = 0
 
+// proxies for index for type selection purposes
+let uniformInstanceID = 0
+let variableInstanceID = 0
+
 export const testUniformData:GenericObject = {
     Housing:['Studio','1-bed','2-bed','family home'],
     Tool:['hammer','saw','screwdriver','wrench'],
@@ -100,7 +104,7 @@ const rotateAccepts = (testData:object,index:number) => {
     }
 }
 
-const selectItem = (testData:GenericObject, accepts:Array<string>,index:number) => {
+const selectType = (testData:GenericObject, accepts:Array<string>,index:number) => {
 
     const selector = (Math.abs(index) % accepts.length)
     const accept:string = accepts[selector]
@@ -305,7 +309,7 @@ const simpleComponentStyles = {
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
-    const {color, type, typeSelection, scrollerProperties, creationID} = props
+    const {color, type, typeTextSelection, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
@@ -313,7 +317,7 @@ const SimpleItem = (props:any) => {
 
     if (color) simpleComponentStyles.outer.backgroundColor = color
     let typeText
-    if (type && typeSelection) typeText = `${type}: ${typeSelection}`
+    if (type && typeTextSelection) typeText = `${type}: ${typeTextSelection}`
 
     const float = useMemo(() => {
         if (isDnd) return <div style = {{float:'left', height: '28px', width:'31px'}} />
@@ -353,7 +357,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     const accepts = context.accepts
 
-    const [accept, typeSelection] = selectItem(testUniformData,accepts,index)
+    const [accept, typeTextSelection] = selectType(testUniformData,accepts,index)
 
     const color = testUniformDataColors[accept]
 
@@ -370,7 +374,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
              index = {index} 
              itemID = {itemID} 
              type = {accept}
-             typeSelection = {typeSelection}
+             typeTextSelection = {typeTextSelection}
              color = { color }
              creationID = {creationID}
              scrollerProperties = {null} />
@@ -379,7 +383,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeSelection, creationID},
+        profile:{color, type:accept, typeTextSelection, creationID},
     }
 
      return itemPack
@@ -454,7 +458,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
 
     const accepts = context.accepts
 
-    const [accept, typeSelection] = selectItem(testUniformData,accepts,index)
+    const [accept, typeTextSelection] = selectType(testUniformData,accepts,index)
 
     const color = testUniformDataColors[accept]
 
@@ -468,7 +472,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
                 index = {index} 
                 itemID = {itemID} 
                 type = {accept}
-                typeSelection = {typeSelection}
+                typeTextSelection = {typeTextSelection}
                 color = { color }
                 creationID = {creationID}
                 scrollerProperties = {null}
@@ -481,7 +485,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeSelection, creationID },
+        profile:{color, type:accept, typeTextSelection, creationID },
     }
 
      return itemPack
@@ -625,12 +629,12 @@ const getVariableTestString = (index:number, itemID:number) => {
 
 const VariableItem = (props:any) => {
 
-    const {color, type, typeSelection, scrollerProperties, creationID} = props
+    const {color, type, typeTextSelection, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
     let typeText = '', creationIDText = ''
-    if (type && typeSelection) typeText = `${type} from ${typeSelection}:`
+    if (type && typeTextSelection) typeText = `${type} from ${typeTextSelection}:`
 
     if (creationID) creationIDText = `creationID: ${creationID}`
 
@@ -763,7 +767,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
 
     const accepts = context.accepts
 
-    const [accept, typeSelection] = selectItem(testVariableData,accepts,index)
+    const [accept, typeTextSelection] = selectType(testVariableData,accepts,index)
 
     const color = testVariableDataColors[accept]
 
@@ -780,7 +784,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
              index = {index} 
              itemID = {itemID} 
              type = {accept}
-             typeSelection = {typeSelection}
+             typeTextSelection = {typeTextSelection}
              color = { color }
              creationID = {creationID}
              scrollerProperties = {null} />
@@ -789,7 +793,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeSelection, creationID},
+        profile:{color, type:accept, typeTextSelection, creationID},
     }
 
     return itemPack
@@ -857,7 +861,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
     
     const accepts = context.accepts
 
-    const [accept, typeSelection] = selectItem(testVariableData,accepts,index)
+    const [accept, typeTextSelection] = selectType(testVariableData,accepts,index)
 
     const color = testVariableDataColors[accept]
 
@@ -871,7 +875,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
                      index = {index} 
                      itemID = {itemID} 
                      type = {accept}
-                     typeSelection = {typeSelection}
+                     typeTextSelection = {typeTextSelection}
                      color = { color }
                      creationID = {creationID}
                      scrollerProperties = {null} 
@@ -885,7 +889,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeSelection, creationID},
+        profile:{color, type:accept, typeTextSelection, creationID},
     }
 
     return itemPack
@@ -931,12 +935,12 @@ const getDynamicTestString = (index:number, itemID:number) => {
 
 const VariableItemDynamic = (props:any) => {
 
-    const {color, type, typeSelection, scrollerProperties, creationID} = props
+    const {color, type, typeTextSelection, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
     let typeText = '', creationIDText = ''
-    if (type && typeSelection) typeText = `${type} from ${typeSelection}:`
+    if (type && typeTextSelection) typeText = `${type} from ${typeTextSelection}:`
 
     if (creationID) creationIDText = `creationID: ${creationID}`
 
@@ -1027,7 +1031,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
 
     const accepts = context.accepts
 
-    const [accept, typeSelection] = selectItem(testVariableData,accepts,index)
+    const [accept, typeTextSelection] = selectType(testVariableData,accepts,index)
 
     const color = testVariableDataColors[accept]
 
@@ -1044,7 +1048,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
              index = {index} 
              itemID = {itemID} 
              type = {accept}
-             typeSelection = {typeSelection}
+             typeTextSelection = {typeTextSelection}
              color = { color }
              creationID = {creationID}
              scrollerProperties = {null} />
@@ -1053,7 +1057,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeSelection, creationID},
+        profile:{color, type:accept, typeTextSelection, creationID},
     }
 
     return itemPack
@@ -1101,12 +1105,12 @@ const getVariableOversizedTestString = (index:number, itemID:number) => {
 
 const VariableOversizedItem = (props:any) => {
 
-    const {color, type, typeSelection, scrollerProperties, creationID} = props
+    const {color, type, typeTextSelection, scrollerProperties, creationID} = props
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
     let typeText = '', creationIDText = ''
-    if (type && typeSelection) typeText = `${type} from ${typeSelection}:`
+    if (type && typeTextSelection) typeText = `${type} from ${typeTextSelection}:`
 
     if (creationID) creationIDText = `creationID: ${creationID}`
 
@@ -1238,7 +1242,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
     const accepts = context.accepts
 
-    const [accept, typeSelection] = selectItem(testVariableData,accepts,index)
+    const [accept, typeTextSelection] = selectType(testVariableData,accepts,index)
 
     const color = testVariableDataColors[accept]
 
@@ -1255,7 +1259,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
              index = {index} 
              itemID = {itemID} 
              type = {accept}
-             typeSelection = {typeSelection}
+             typeTextSelection = {typeTextSelection}
              color = { color }
              creationID = {creationID}
              scrollerProperties = {null} />
@@ -1264,7 +1268,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
     const itemPack = {
         content:component,
         dndOptions:{type:accept},
-        profile:{color, type:accept, typeSelection, creationID},
+        profile:{color, type:accept, typeTextSelection, creationID},
     }
 
     return itemPack
