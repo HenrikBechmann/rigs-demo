@@ -52,16 +52,7 @@ export const testNestingAccepts:GenericObject = {
     mixed:['uniform','variable'],
 }
 
-const chooseRandomGroup = (testData:object) => {
-
-    const groups = Object.keys(testData)
-    return groups[getRandomInt(groups.length)]
-
-}
-
-const chooseRandomItem = (list:Array<string>) => {
-    return list[getRandomInt(list.length)]
-}
+// selction drivers for dnd
 
 function getRandomInt(max:number) {
   return Math.floor(Math.random() * max);
@@ -77,16 +68,23 @@ const acceptOne = (testData:object) => {
 }
 
 const acceptTwo = (testData:object) => {
-    const first = acceptOne(testData)
-    let second = acceptOne(testData)
+    const [first] = acceptOne(testData)
+    let [second] = acceptOne(testData)
     while (first == second) {
-        second = acceptOne(testData)
+        [second] = acceptOne(testData)
     }
     return [first,second]
 }
 
+const acceptThree = (testData:object) => {
+    const [remove] = acceptOne(testData)
+    const list = Object.keys(testData)
+    const result = list.filter((item)=> item != remove )
+    return result
+}
+
 const rotateAccepts = (testData:object,index:number) => {
-    const selector = Math.abs(index) % 3
+    const selector = Math.abs(index) % 4
     let accepts
     switch (selector) {
         case 0: {
@@ -99,6 +97,10 @@ const rotateAccepts = (testData:object,index:number) => {
         }
         case 2: {
             return acceptOne(testData)
+            break
+        }
+        case 3: {
+            return acceptThree(testData)
             break
         }
     }
@@ -1384,6 +1386,7 @@ const subcrollerComponentStyles = {
         padding:'3px',
         backgroundColor:'silver',
         border:'2p solid darkgray',
+        fontSize:'small',
     } as React.CSSProperties,
     frame:{
         position:'relative',
@@ -1459,6 +1462,7 @@ const SubscrollerComponent = (props:any) => {
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
+            {' ' + dndOptions.accepts.join(', ')}
         </div>
         <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
@@ -1614,6 +1618,22 @@ const uniformSubscrollerProperties = {
 
 // --------------------[ nesting mixed scroller properties ]----------------------
 
+const getSubscrollerAccepts = (variant:string) => {
+
+    const testData = 
+        variant == 'uniform'?
+            testUniformData:
+            testVariableData
+
+    const instanceID = 
+        variant == 'uniform'?
+            uniformInstanceID++:
+            variableInstanceID++
+
+    return rotateAccepts(testData,instanceID)
+
+}
+
 const getMixedSubscroller = (index:number, itemID:number) => {
 
     const variant =
@@ -1621,8 +1641,11 @@ const getMixedSubscroller = (index:number, itemID:number) => {
         'uniform':
         'variable'
 
+    const accepts = getSubscrollerAccepts(variant)
+
     const dndOptions = {
         type:variant,
+        accepts,
     }
 
     return <SubscrollerComponent 
@@ -1679,8 +1702,11 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
         'uniform':
         'variable'
 
+    const accepts = getSubscrollerAccepts(variant)
+
     const dndOptions = {
         type:variant,
+        accepts,
     }
 
     return new Promise((resolve, reject) => {
@@ -1780,8 +1806,11 @@ const getUniformSubscroller = (index:number, itemID:number) => {
 
     const variant = 'uniform'
 
+    const accepts = getSubscrollerAccepts(variant)
+
     const dndOptions = {
         type:variant,
+        accepts,
     }
 
     return <SubscrollerComponent 
@@ -1827,8 +1856,11 @@ const getVariableSubscroller = (index:number, itemID:number) => {
 
     const variant = 'variable'
 
+    const accepts = getSubscrollerAccepts(variant)
+
     const dndOptions = {
         type:variant,
+        accepts,
     }
 
     return <SubscrollerComponent 
