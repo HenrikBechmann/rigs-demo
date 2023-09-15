@@ -52,7 +52,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
     } else if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',
-        /*'nestinguniform',*/'nestingvariable'].includes(demoContentTypeSelector)){
+        'nestinguniform','nestingvariable'].includes(demoContentTypeSelector)){
 
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
 
