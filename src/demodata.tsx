@@ -1475,8 +1475,20 @@ const SubscrollerComponent = (props:any) => {
 
     },[testState])
 
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+
+    const float = useMemo(() => {
+        if (isDnd) return <div 
+            style = {{float:'left', height: '28px', width:'31px'}} 
+            data-type = 'dnd-float'
+        />
+        else return null
+
+    },[isDnd])
+
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
+            {isDnd && float}
             [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
             {' ' + dndOptions.accepts.join(', ')}
         </div>
@@ -1512,6 +1524,20 @@ const SubscrollerComponent = (props:any) => {
 
 // --------------------[ variable subscroller cell content ]-----------------------
 
+let variableSubscrollerItemStyles = {
+    outer:{
+        backgroundColor:'white',
+        overflow:'scroll',
+    } as React.CSSProperties,
+    inner:{
+        padding:'3px',
+        border:'1px solid black',
+        borderRadius:'8px',
+        backgroundColor:'white',
+        fontSize:'small',
+    } as React.CSSProperties
+}
+
 const getVariableSubscrollerTestString = (index:number, itemID:number) => {
 
     const str =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
@@ -1546,10 +1572,10 @@ const VariableSubscrollerItem = (props:any) => {
                 width:'',
             }
 
-    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+    const outerstyles = {...variableSubscrollerItemStyles.outer, ...orientationstyles}
 
     return <div data-type = 'variable-subscroller' style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
+        <div style = {variableSubscrollerItemStyles.inner}>{testStringRef.current}</div>
     </div>
 }
 
@@ -1622,7 +1648,7 @@ const variableSubscrollerProperties = {
 // (the subscroller content component itself is a simple div, so is defined in the getUniformSubscrollerItem function below)
 // -----------------
 
-const uniformSubscrollerItemStyle = {
+const uniformSubscrollerItemStyles = {
         padding:'3px',
         border:'1px solid green',
         backgroundColor:'white',
@@ -1637,7 +1663,7 @@ const uniformSubscrollerItemStyle = {
 
 const getUniformSubscrollerItem = (index:any, itemID:number) => {
 
-    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID}</div>
+    return <div style = { uniformSubscrollerItemStyles}>[{index}]={itemID}</div>
 
 }
 
@@ -1655,7 +1681,7 @@ const UniformSubscrollerItem = (props:any) => {
 
     const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
-    const styles = {...uniformSubscrollerItemStyle, backgroundColor:color}
+    const styles = {...uniformSubscrollerItemStyles, backgroundColor:color}
 
     const float = useMemo(() => {
         if (isDnd) return <div 
@@ -1713,7 +1739,7 @@ const uniformSubscrollerProperties = {
     startingListSize:100,
     startingListRange:[-50,50],
     orientation:'vertical',
-    cellHeight:40,
+    cellHeight:45,
     cellWidth:250,
     padding:6,
     gap:2,
