@@ -338,7 +338,10 @@ const SimpleItem = (props:any) => {
     if (type && typeText) localTypeText = `${type}: ${typeText}`
 
     const float = useMemo(() => {
-        if (isDnd) return <div style = {{float:'left', height: '28px', width:'31px'}} />
+        if (isDnd) return <div 
+            style = {{float:'left', height: '28px', width:'31px'}} 
+            data-type = 'dnd-float'
+        />
         else return null
 
     },[isDnd])
@@ -1256,9 +1259,9 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
     const accepts = context.accepts
 
-    const [accept, typeText] = selectType(testVariableData,accepts,index)
+    const [type, typeText] = selectType(testVariableData,accepts,index)
 
-    const color = testVariableDataColors[accept]
+    const color = testVariableDataColors[type]
 
     const sourceID = globalSourceID++
 
@@ -1272,7 +1275,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
          component = <VariableOversizedItem 
              index = {index} 
              itemID = {itemID} 
-             type = {accept}
+             type = {type}
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
@@ -1281,8 +1284,8 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
     const itemPack = {
         content:component,
-        dndOptions:{type:accept},
-        profile:{color, type:accept, typeText, sourceID},
+        dndOptions:{type},
+        profile:{color, type, typeText, sourceID},
     }
 
     return itemPack
@@ -1647,11 +1650,29 @@ const UniformSubscrollerItem = (props:any) => {
         typeText,
         color,
         sourceID,
+        scrollerProperties,
     } = props
+
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
 
     const styles = {...uniformSubscrollerItemStyle, backgroundColor:color}
 
-    return <div style = { styles }>[{index}]={itemID} {type}:{typeText}</div>
+    const float = useMemo(() => {
+        if (isDnd) return <div 
+            style = {{float:'left', height: '28px', width:'34px'}} 
+            data-type = 'dnd-float'
+        />
+        else return null
+
+    },[isDnd])
+
+    return <div 
+        data-type = 'uniform-subscroller-item'
+        style = { styles }>
+            {isDnd && float}
+            [{index}]={itemID} {type}:{typeText}
+            {sourceID && <><br />{`sourceID: ${sourceID}`}</>}
+    </div>
 
 }
 
@@ -1673,7 +1694,7 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
             typeText = {typeText}
             color = { color }
             sourceID = {sourceID}
-            crollerProperties = {null}
+            scrollerProperties = {null}
         />
 
     const itemPack = {
