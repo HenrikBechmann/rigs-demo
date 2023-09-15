@@ -1411,6 +1411,12 @@ const subcrollerComponentStyles = {
     } as React.CSSProperties,
 }
 
+const subScrollerStyles = {
+    // dndDragIcon:{
+    //     top:'5px',
+    // },
+}
+
 const SubscrollerComponent = (props:any) => {
 
     const [testState, setTestState] = useState('setup')
@@ -1445,6 +1451,7 @@ const SubscrollerComponent = (props:any) => {
         getItemPack,
         cache,
         layout,
+        styles,
     } = properties
 
     const { scrollerPropertiesRef } = scrollerProperties
@@ -1509,7 +1516,7 @@ const SubscrollerComponent = (props:any) => {
                 getItemPack = {getItemPack}
                 callbacks = { null }
                 placeholder = { null }
-                styles = { null }
+                styles = { styles }
                 layout = { layout }
                 dndOptions = { dndOptions }
                 scrollerProperties = { scrollerProperties }
@@ -1633,7 +1640,7 @@ const variableSubscrollerProperties = {
 
     getItem: getVariableSubscrollerItem,
     getItemPack: getVariableSubscrollerItemPack,
-    styles:null,
+    styles:subScrollerStyles,
     placeholderMessages: null,
     callbacks:null,
     technical: {
@@ -1750,7 +1757,7 @@ const uniformSubscrollerProperties = {
 
     getItem: getUniformSubscrollerItem,
     getItemPack: getUniformSubscrollerItemPack,
-    styles:null,
+    styles:subScrollerStyles,
     placeholderMessages: null,
     callbacks:null,
     technical: {
@@ -1788,8 +1795,11 @@ const getMixedSubscroller = (index:number, itemID:number) => {
 
 const nestingScrollerStyles = {
     viewport:{
-        overscrollBehavior:'none'
+        overscrollBehavior:'none',
     },
+    dndDragIcon: {
+        top:'5px',
+    }
 }
 
 const nestingmixedProperties = {
