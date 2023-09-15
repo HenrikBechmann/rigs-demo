@@ -1479,7 +1479,7 @@ const SubscrollerComponent = (props:any) => {
 
     const float = useMemo(() => {
         if (isDnd) return <div 
-            style = {{float:'left', height: '28px', width:'31px'}} 
+            style = {{float:'left', height: '28px', width:'18px'}} 
             data-type = 'dnd-float'
         />
         else return null
@@ -1796,7 +1796,7 @@ const nestingmixedProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation:'horizontal',
     cellHeight:400,
     cellWidth:300,
     padding:5,
@@ -1859,7 +1859,7 @@ const nestingmixedpromisesProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation:'horizontal',
     cellHeight:400,
     cellWidth:300,
     padding:5,
@@ -1903,7 +1903,7 @@ const nestingmixedautoexpandProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation:'horizontal',
     cellHeight:400,
     cellWidth:300,
     padding:5,
@@ -1954,7 +1954,7 @@ const nestinguniformProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation:'horizontal',
     cellHeight:400,
     cellWidth:300,
     padding:5,
@@ -2004,7 +2004,7 @@ const nestingvariableProperties = {
     startingIndex:0,
     startingListSize:200,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation:'horizontal',
     cellHeight:400,
     cellWidth:300,
     padding:5,
