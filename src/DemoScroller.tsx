@@ -4,9 +4,7 @@ import React, {useRef} from 'react'
 
 import {testUniformData, testVariableData, testNestingAccepts, acceptAll, GenericObject} from './demodata'
 
-import GridScroller from 'react-infinite-grid-scroller'
-
-import { RigsDnd as DndScroller } from 'react-infinite-grid-scroller'
+import GridScroller, { RigsDnd as DndScroller } from 'react-infinite-grid-scroller'
 
 const testDataSource:GenericObject = {
 
@@ -54,7 +52,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
     } else if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',
-        'nestinguniform','nestingvariable'].includes(demoContentTypeSelector)){
+        /*'nestinguniform',*/'nestingvariable'].includes(demoContentTypeSelector)){
 
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
 

@@ -1665,8 +1665,6 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
 
     const creationID = globalCreationID++
 
-    console.log('type, typeText, color', type, typeText, color)
-
     const component = 
         <UniformSubscrollerItem 
             index = {index} 
