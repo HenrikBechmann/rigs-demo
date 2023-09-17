@@ -1442,6 +1442,7 @@ const SubscrollerComponent = (props:any) => {
         cacheAPI,
         variant,
         dndOptions,
+        sourceID,
     } = props
 
     const properties = 
@@ -1509,7 +1510,7 @@ const SubscrollerComponent = (props:any) => {
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             {isDnd && float}
             [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
-            {' ' + dndOptions.accepts.join(', ')}
+            {' sourceID: '+ sourceID + '; ' + dndOptions.accepts.join(', ')}
         </div>
         <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
@@ -1816,21 +1817,69 @@ const getMixedSubscroller = (index:number, itemID:number) => {
         'uniform':
         'variable'
 
-    const accepts = getSubscrollerAccepts(variant)
+    const accepts = getSubscrollerAccepts(variant) || []
+
+    const sourceID = globalSourceID++
+
+    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
 
     const dndOptions = {
         type:variant,
         accepts,
+        dragText,
     }
 
     return <SubscrollerComponent 
         index = { index } 
         itemID = { itemID }
         variant = { variant }
+        sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = { null }
         scrollerProperties = { null }
     />
+
+}
+
+const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
+
+    const variant =
+        ((index % 2) == 0)?
+        'uniform':
+        'variable'
+
+    const cellType = variant
+
+    const accepts = getSubscrollerAccepts(variant) || []
+
+    const sourceID = globalSourceID++
+
+    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+
+    const dndOptions = {
+        type:variant,
+        accepts,
+        dragText,
+    }
+
+    const component = <SubscrollerComponent 
+        index = { index } 
+        itemID = { itemID }
+        variant = { variant }
+        sourceID = {sourceID}
+        dndOptions = { dndOptions }
+        cacheAPI = { null }
+        scrollerProperties = { null }
+    />
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:cellType, dragText},
+        // profile:{color, type:cellType, typeText, sourceID},
+        profile:{ type:cellType, sourceID},
+    }
+
+     return itemPack
 
 }
 
@@ -1858,6 +1907,7 @@ const nestingmixedProperties = {
     layout: 'uniform',
 
     getItem:getMixedSubscroller,
+    getItemPack:getMixedSubscrollerPack,
     styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
@@ -1965,6 +2015,7 @@ const nestingmixedautoexpandProperties = {
     layout: 'uniform',
 
     getItem:getMixedSubscroller,
+    getItemPack:getMixedSubscrollerPack,
     getExpansionCount:getNestingMixedAutoExpansionCount,
     styles:nestingScrollerStyles,
     placeholderMessages: null,
