@@ -1554,6 +1554,21 @@ const getVariableSubscrollerTestString = (index:number, itemID:number) => {
 
 const VariableSubscrollerItem = (props:any) => {
 
+    const {color, type, typeText, scrollerProperties, sourceID} = props
+
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
+
+    let localTypeText = '', sourceIDText = ''
+    if (type && typeText) localTypeText = `${type} from ${typeText}:`
+
+    if (sourceID) sourceIDText = `sourceID: ${sourceID}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '30px', width:'34px'}} />
+        else return null
+
+    },[isDnd])
+
     const testStringRef = useRef(getVariableSubscrollerTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
 
     const {
@@ -1571,18 +1586,28 @@ const VariableSubscrollerItem = (props:any) => {
                 height:'',
                 maxWidth:'',
                 width:'100%',
+                fontSize:'small',
             }:
             {
                 maxHeight:'',
                 height:'100%',
                 maxWidth:cellWidth,
                 width:'',
+                fontSize:'small',
             }
 
     const outerstyles = {...variableSubscrollerItemStyles.outer, ...orientationstyles}
+    const innerstyles = {...variableComponentStyles.inner}
+
+    color && (innerstyles.backgroundColor = color)
 
     return <div data-type = 'variable-subscroller' style = {outerstyles}>
-        <div style = {variableSubscrollerItemStyles.inner}>{testStringRef.current}</div>
+        <div style = {innerstyles}>
+            {isDnd && float}
+            {sourceIDText && <>{sourceIDText} <br /></>} 
+            {localTypeText && <>{localTypeText} <br /></>}
+            {testStringRef.current}
+        </div>
     </div>
 }
 
@@ -1598,7 +1623,7 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
 
     const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
 
-    const color = testUniformDataColors[cellType]
+    const color = testVariableDataColors[cellType]
 
     const sourceID = globalSourceID++
 
