@@ -401,9 +401,11 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
              scrollerProperties = {null} />
      }
 
+    const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+
     const itemPack = {
         content:component,
-        dndOptions:{type:cellType},
+        dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
 
@@ -503,9 +505,11 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
 
     })
 
+    const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+
     const itemPack = {
         content:component,
-        dndOptions:{type:cellType},
+        dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID },
     }
 
@@ -811,9 +815,11 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
              scrollerProperties = {null} />
      }
 
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
     const itemPack = {
         content:component,
-        dndOptions:{type:cellType},
+        dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
 
@@ -905,11 +911,13 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
 
         },1000 + (Math.random() * 2000))
     
-    })         
+    })
+
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
 
     const itemPack = {
         content:component,
-        dndOptions:{type:cellType},
+        dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
 
@@ -1071,9 +1079,11 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
              scrollerProperties = {null} />
      }
 
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
     const itemPack = {
         content:component,
-        dndOptions:{type:cellType},
+        dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
 
@@ -1282,9 +1292,11 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
              scrollerProperties = {null} />
      }
 
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
     const itemPack = {
         content:component,
-        dndOptions:{type:cellType},
+        dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
 
@@ -1638,9 +1650,11 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
             scrollerProperties = {null}
         />
 
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
     const itemPack = {
         content:component,
-        dndOptions:{type:cellType},
+        dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
 
@@ -1755,9 +1769,11 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
             scrollerProperties = {null}
         />
 
+    const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+
     const itemPack = {
         content:component,
-        dndOptions:{type:cellType},
+        dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
 
