@@ -122,15 +122,15 @@ const getSubscrollerAccepts = (variant:string) => {
 
 }
 
-const selectType = (testData:GenericObject, accepts:Array<string>,index:number) => {
+const selectCellType = (testData:GenericObject, accepts:Array<string>,index:number) => {
 
     const selector = (Math.abs(index) % accepts.length)
-    const accept:string = accepts[selector]
-    const textOptions:Array<any> = testData[accept]
+    const cellType:string = accepts[selector]
+    const textOptions:Array<any> = testData[cellType]
 
-    const textOption = textOptions[getRandomInt(textOptions.length)]
+    const typeText = textOptions[getRandomInt(textOptions.length)]
 
-    return [accept, textOption]
+    return [cellType, typeText]
 
 }
 
@@ -378,9 +378,9 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     const accepts = context.accepts
 
-    const [accept, typeText] = selectType(testUniformData,accepts,index)
+    const [cellType, typeText] = selectCellType(testUniformData,accepts,index)
 
-    const color = testUniformDataColors[accept]
+    const color = testUniformDataColors[cellType]
 
     const sourceID = globalSourceID++
 
@@ -394,7 +394,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
          component = <SimpleItem 
              index = {index} 
              itemID = {itemID} 
-             type = {accept}
+             type = {cellType}
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
@@ -403,8 +403,8 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     const itemPack = {
         content:component,
-        dndOptions:{type:accept},
-        profile:{color, type:accept, typeText, sourceID},
+        dndOptions:{type:cellType},
+        profile:{color, type:cellType, typeText, sourceID},
     }
 
      return itemPack
@@ -479,9 +479,9 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
 
     const accepts = context.accepts
 
-    const [accept, typeText] = selectType(testUniformData,accepts,index)
+    const [cellType, typeText] = selectCellType(testUniformData,accepts,index)
 
-    const color = testUniformDataColors[accept]
+    const color = testUniformDataColors[cellType]
 
     const sourceID = globalSourceID++
 
@@ -492,7 +492,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
             resolve(<SimpleItem 
                 index = {index} 
                 itemID = {itemID} 
-                type = {accept}
+                type = {cellType}
                 typeText = {typeText}
                 color = { color }
                 sourceID = {sourceID}
@@ -505,8 +505,8 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
 
     const itemPack = {
         content:component,
-        dndOptions:{type:accept},
-        profile:{color, type:accept, typeText, sourceID },
+        dndOptions:{type:cellType},
+        profile:{color, type:cellType, typeText, sourceID },
     }
 
      return itemPack
@@ -788,9 +788,9 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
 
     const accepts = context.accepts
 
-    const [accept, typeText] = selectType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
 
-    const color = testVariableDataColors[accept]
+    const color = testVariableDataColors[cellType]
 
     const sourceID = globalSourceID++
 
@@ -804,7 +804,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
          component = <VariableItem 
              index = {index} 
              itemID = {itemID} 
-             type = {accept}
+             type = {cellType}
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
@@ -813,8 +813,8 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
 
     const itemPack = {
         content:component,
-        dndOptions:{type:accept},
-        profile:{color, type:accept, typeText, sourceID},
+        dndOptions:{type:cellType},
+        profile:{color, type:cellType, typeText, sourceID},
     }
 
     return itemPack
@@ -882,9 +882,9 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
     
     const accepts = context.accepts
 
-    const [accept, typeText] = selectType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
 
-    const color = testVariableDataColors[accept]
+    const color = testVariableDataColors[cellType]
 
     const sourceID = globalSourceID++
 
@@ -895,7 +895,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
                 <VariableItem 
                      index = {index} 
                      itemID = {itemID} 
-                     type = {accept}
+                     type = {cellType}
                      typeText = {typeText}
                      color = { color }
                      sourceID = {sourceID}
@@ -909,8 +909,8 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
 
     const itemPack = {
         content:component,
-        dndOptions:{type:accept},
-        profile:{color, type:accept, typeText, sourceID},
+        dndOptions:{type:cellType},
+        profile:{color, type:cellType, typeText, sourceID},
     }
 
     return itemPack
@@ -1048,9 +1048,9 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
 
     const accepts = context.accepts
 
-    const [accept, typeText] = selectType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
 
-    const color = testVariableDataColors[accept]
+    const color = testVariableDataColors[cellType]
 
     const sourceID = globalSourceID++
 
@@ -1064,7 +1064,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
          component = <VariableItemDynamic
              index = {index} 
              itemID = {itemID} 
-             type = {accept}
+             type = {cellType}
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
@@ -1073,8 +1073,8 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
 
     const itemPack = {
         content:component,
-        dndOptions:{type:accept},
-        profile:{color, type:accept, typeText, sourceID},
+        dndOptions:{type:cellType},
+        profile:{color, type:cellType, typeText, sourceID},
     }
 
     return itemPack
@@ -1259,9 +1259,9 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
     const accepts = context.accepts
 
-    const [type, typeText] = selectType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
 
-    const color = testVariableDataColors[type]
+    const color = testVariableDataColors[cellType]
 
     const sourceID = globalSourceID++
 
@@ -1275,7 +1275,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
          component = <VariableOversizedItem 
              index = {index} 
              itemID = {itemID} 
-             type = {type}
+             type = {cellType}
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
@@ -1284,8 +1284,8 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
     const itemPack = {
         content:component,
-        dndOptions:{type},
-        profile:{color, type, typeText, sourceID},
+        dndOptions:{type:cellType},
+        profile:{color, type:cellType, typeText, sourceID},
     }
 
     return itemPack
@@ -1596,9 +1596,9 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
 
     const accepts = context.accepts
 
-    const [type, typeText] = selectType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
 
-    const color = testUniformDataColors[type]
+    const color = testUniformDataColors[cellType]
 
     const sourceID = globalSourceID++
 
@@ -1606,7 +1606,7 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
         <VariableSubscrollerItem 
             index = {index} 
             itemID = {itemID} 
-            type = {type}
+            type = {cellType}
             typeText = {typeText}
             color = { color }
             sourceID = {sourceID}
@@ -1615,8 +1615,8 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
 
     const itemPack = {
         content:component,
-        dndOptions:{type},
-        profile:{color, type, typeText, sourceID},
+        dndOptions:{type:cellType},
+        profile:{color, type:cellType, typeText, sourceID},
     }
 
      return itemPack
@@ -1713,9 +1713,9 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
 
     const accepts = context.accepts
 
-    const [type, typeText] = selectType(testUniformData,accepts,index)
+    const [cellType, typeText] = selectCellType(testUniformData,accepts,index)
 
-    const color = testUniformDataColors[type]
+    const color = testUniformDataColors[cellType]
 
     const sourceID = globalSourceID++
 
@@ -1723,7 +1723,7 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
         <UniformSubscrollerItem 
             index = {index} 
             itemID = {itemID} 
-            type = {type}
+            type = {cellType}
             typeText = {typeText}
             color = { color }
             sourceID = {sourceID}
@@ -1732,8 +1732,8 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
 
     const itemPack = {
         content:component,
-        dndOptions:{type},
-        profile:{color, type, typeText, sourceID},
+        dndOptions:{type:cellType},
+        profile:{color, type:cellType, typeText, sourceID},
     }
 
      return itemPack
