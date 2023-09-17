@@ -329,7 +329,7 @@ const SimpleItem = (props:any) => {
 
     const {color, type, typeText, scrollerProperties, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
 
     // console.log('isDnd, scrollerProperties',isDnd, {...scrollerProperties})
 
@@ -652,7 +652,7 @@ const VariableItem = (props:any) => {
 
     const {color, type, typeText, scrollerProperties, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
 
     let localTypeText = '', sourceIDText = ''
     if (type && typeText) localTypeText = `${type} from ${typeText}:`
@@ -958,7 +958,7 @@ const VariableItemDynamic = (props:any) => {
 
     const {color, type, typeText, scrollerProperties, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
 
     let localTypeText = '', sourceIDText = ''
     if (type && typeText) localTypeText = `${type} from ${typeText}:`
@@ -1124,7 +1124,7 @@ const VariableOversizedItem = (props:any) => {
 
     const {color, type, typeText, scrollerProperties, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
 
     let localTypeText = '', sourceIDText = ''
     if (type && typeText) localTypeText = `${type} from ${typeText}:`
@@ -1482,7 +1482,7 @@ const SubscrollerComponent = (props:any) => {
 
     },[testState])
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
 
     const float = useMemo(() => {
         if (isDnd) return <div 
@@ -1686,7 +1686,7 @@ const UniformSubscrollerItem = (props:any) => {
         scrollerProperties,
     } = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dnd
+    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
 
     const styles = {...uniformSubscrollerItemStyles, backgroundColor:color}
 
