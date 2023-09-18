@@ -1743,7 +1743,7 @@ const UniformSubscrollerItem = (props:any) => {
         data-type = 'uniform-subscroller-item'
         style = { styles }>
             {isDnd && float}
-            [{index}]={itemID} {type}:{typeText}
+            [{index}]={itemID} {type}: {typeText}
             {sourceID && <><br />{`sourceID: ${sourceID}`}</>}
     </div>
 
@@ -1930,6 +1930,8 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
 
     const accepts = getSubscrollerAccepts(variant)
 
+    const sourceID = globalSourceID++
+
     const dndOptions = {
         type:variant,
         accepts,
@@ -1943,6 +1945,7 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
                     index = {index} 
                     itemID = {itemID}
                     variant = {variant}
+                    sourceID = {sourceID}
                     dndOptions = { dndOptions }
                     cacheAPI = {null}
                     scrollerProperties = {null}
@@ -1982,6 +1985,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
                     index = {index} 
                     itemID = {itemID}
                     variant = {variant}
+                    sourceID = {sourceID}
                     dndOptions = { dndOptions }
                     cacheAPI = {null}
                     scrollerProperties = {null}
@@ -2082,6 +2086,8 @@ const getUniformSubscroller = (index:number, itemID:number) => {
 
     const accepts = getSubscrollerAccepts(variant)
 
+    const sourceID = globalSourceID++
+
     const dndOptions = {
         type:variant,
         accepts,
@@ -2091,6 +2097,7 @@ const getUniformSubscroller = (index:number, itemID:number) => {
         index = {index} 
         itemID = {itemID}
         variant = {variant}
+        sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = {null}
         scrollerProperties = {null}
@@ -2119,6 +2126,7 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
         index = {index} 
         itemID = {itemID}
         variant = {variant}
+        sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = {null}
         scrollerProperties = {null}
@@ -2169,6 +2177,8 @@ const getVariableSubscroller = (index:number, itemID:number) => {
 
     const accepts = getSubscrollerAccepts(variant)
 
+    const sourceID = globalSourceID++
+
     const dndOptions = {
         type:variant,
         accepts,
@@ -2178,6 +2188,7 @@ const getVariableSubscroller = (index:number, itemID:number) => {
         index = {index} 
         itemID = {itemID}
         variant = {variant}
+        sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = {null}
         scrollerProperties = {null}
@@ -2206,6 +2217,7 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
         index = {index} 
         itemID = {itemID}
         variant = {variant}
+        sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = {null}
         scrollerProperties = {null}
