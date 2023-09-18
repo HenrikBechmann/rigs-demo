@@ -40,7 +40,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
             demoContentTypeSelectorRef.current = demoContentTypeSelector
 
             const dndOptions = {
-                accepts:acceptAll(testData),
+                accept:acceptAll(testData),
             }
 
             dndOptionsRef.current = dndOptions
@@ -58,17 +58,17 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
             demoContentTypeSelectorRef.current = demoContentTypeSelector
 
-            let accepts
+            let accept
             if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',].includes(demoContentTypeSelector)) {
-                accepts = testNestingAccepts.mixed
+                accept = testNestingAccepts.mixed
             } else if (demoContentTypeSelector == 'nestinguniform') {
-                accepts = testNestingAccepts.uniform
+                accept = testNestingAccepts.uniform
             } else if (demoContentTypeSelector == 'nestingvariable') {
-                accepts = testNestingAccepts.variable
+                accept = testNestingAccepts.variable
             }
 
             const dndOptions = {
-                accepts,
+                accept,
             }
 
             dndOptionsRef.current = dndOptions

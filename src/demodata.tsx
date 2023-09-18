@@ -85,7 +85,7 @@ const acceptThree = (testData:object) => {
 
 const rotateAccepts = (testData:object,index:number) => {
     const selector = Math.abs(index) % 4
-    let accepts
+    let accept
     switch (selector) {
         case 0: {
             return acceptAll(testData)
@@ -122,10 +122,10 @@ const getSubscrollerAccepts = (variant:string) => {
 
 }
 
-const selectCellType = (testData:GenericObject, accepts:Array<string>,index:number) => {
+const selectCellType = (testData:GenericObject, accept:Array<string>,index:number) => {
 
-    const selector = (Math.abs(index) % accepts.length)
-    const cellType:string = accepts[selector]
+    const selector = (Math.abs(index) % accept.length)
+    const cellType:string = accept[selector]
     const textOptions:Array<any> = testData[cellType]
 
     const typeText = textOptions[getRandomInt(textOptions.length)]
@@ -376,9 +376,9 @@ const getSimpleItem = (index:number, itemID:number) => {
 
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accepts = context.accepts
+    const accept = context.accept
 
-    const [cellType, typeText] = selectCellType(testUniformData,accepts,index)
+    const [cellType, typeText] = selectCellType(testUniformData,accept,index)
 
     const color = testUniformDataColors[cellType]
 
@@ -479,9 +479,9 @@ const getSimpleItemPromise = (index:number, itemID:number) => {
 
 const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accepts = context.accepts
+    const accept = context.accept
 
-    const [cellType, typeText] = selectCellType(testUniformData,accepts,index)
+    const [cellType, typeText] = selectCellType(testUniformData,accept,index)
 
     const color = testUniformDataColors[cellType]
 
@@ -790,9 +790,9 @@ const getVariableItem = (index:number, itemID:number) => {
 
 const getVariableItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accepts = context.accepts
+    const accept = context.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
     const color = testVariableDataColors[cellType]
 
@@ -886,9 +886,9 @@ const getVariableItemPromise = (index:number, itemID:number) => {
 const getVariableItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
     
-    const accepts = context.accepts
+    const accept = context.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
     const color = testVariableDataColors[cellType]
 
@@ -1054,9 +1054,9 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
 
      // return <VariableItemDynamic index = {index} itemID = {itemID} scrollerProperties = {null}/>    
 
-    const accepts = context.accepts
+    const accept = context.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
     const color = testVariableDataColors[cellType]
 
@@ -1267,9 +1267,9 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
      // return <VariableOversizedItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
 
-    const accepts = context.accepts
+    const accept = context.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
     const color = testVariableDataColors[cellType]
 
@@ -1510,7 +1510,7 @@ const SubscrollerComponent = (props:any) => {
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             {isDnd && float}
             [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
-            {' sourceID: '+ sourceID + '; ' + dndOptions.accepts.join(', ')}
+            {' sourceID: '+ sourceID + '; ' + dndOptions.accept.join(', ')}
         </div>
         <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
@@ -1632,9 +1632,9 @@ const getVariableSubscrollerItem = (index:number, itemID:number) => {
 
 const getVariableSubscrollerItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accepts = context.accepts
+    const accept = context.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accepts,index)
+    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
     const color = testVariableDataColors[cellType]
 
@@ -1751,9 +1751,9 @@ const UniformSubscrollerItem = (props:any) => {
 
 const getUniformSubscrollerItemPack = (index:any, itemID:number, context:GenericObject) => {
 
-    const accepts = context.accepts
+    const accept = context.accept
 
-    const [cellType, typeText] = selectCellType(testUniformData,accepts,index)
+    const [cellType, typeText] = selectCellType(testUniformData,accept,index)
 
     const color = testUniformDataColors[cellType]
 
@@ -1817,15 +1817,15 @@ const getMixedSubscroller = (index:number, itemID:number) => {
         'uniform':
         'variable'
 
-    const accepts = getSubscrollerAccepts(variant) || []
+    const accept = getSubscrollerAccepts(variant) || []
 
     const sourceID = globalSourceID++
 
-    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
         type:variant,
-        accepts,
+        accept,
         dragText,
     }
 
@@ -1845,19 +1845,19 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
 
     const selector = (Math.abs(index) % 2)
 
-    const variant = context.accepts[selector]
+    const variant = context.accept[selector]
 
     const cellType = variant
 
-    const accepts = getSubscrollerAccepts(cellType) || []
+    const accept = getSubscrollerAccepts(cellType) || []
 
     const sourceID = globalSourceID++
 
-    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
         type:cellType,
-        accepts,
+        accept,
         dragText,
     }
 
@@ -1928,13 +1928,13 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
         'uniform':
         'variable'
 
-    const accepts = getSubscrollerAccepts(variant)
+    const accept = getSubscrollerAccepts(variant)
 
     const sourceID = globalSourceID++
 
     const dndOptions = {
         type:variant,
-        accepts,
+        accept,
     }
 
     return new Promise((resolve, reject) => {
@@ -1961,19 +1961,19 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
 
     const selector = (Math.abs(index) % 2)
 
-    const variant = context.accepts[selector]
+    const variant = context.accept[selector]
 
     const cellType = variant
 
-    const accepts = getSubscrollerAccepts(cellType) || [] // "possibly undefined" below
+    const accept = getSubscrollerAccepts(cellType) || [] // "possibly undefined" below
 
     const sourceID = globalSourceID++
 
-    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
         type:cellType,
-        accepts,
+        accept,
         dragText,
     }
 
@@ -2084,13 +2084,13 @@ const getUniformSubscroller = (index:number, itemID:number) => {
 
     const variant = 'uniform'
 
-    const accepts = getSubscrollerAccepts(variant)
+    const accept = getSubscrollerAccepts(variant)
 
     const sourceID = globalSourceID++
 
     const dndOptions = {
         type:variant,
-        accepts,
+        accept,
     }
 
     return <SubscrollerComponent 
@@ -2110,15 +2110,15 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
 
     const cellType = variant
 
-    const accepts = getSubscrollerAccepts(variant) || []
+    const accept = getSubscrollerAccepts(variant) || []
 
     const sourceID = globalSourceID++
 
-    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
         type:cellType,
-        accepts,
+        accept,
         dragText,
     }
 
@@ -2175,13 +2175,13 @@ const getVariableSubscroller = (index:number, itemID:number) => {
 
     const variant = 'variable'
 
-    const accepts = getSubscrollerAccepts(variant)
+    const accept = getSubscrollerAccepts(variant)
 
     const sourceID = globalSourceID++
 
     const dndOptions = {
         type:variant,
-        accepts,
+        accept,
     }
 
     return <SubscrollerComponent 
@@ -2201,15 +2201,15 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
 
     const cellType = variant
 
-    const accepts = getSubscrollerAccepts(variant) || []
+    const accept = getSubscrollerAccepts(variant) || []
 
     const sourceID = globalSourceID++
 
-    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
         type:cellType,
-        accepts,
+        accept,
         dragText,
     }
 
