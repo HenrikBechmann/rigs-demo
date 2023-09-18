@@ -20,14 +20,14 @@ let variableInstanceID = 0
 
 export const testUniformData:GenericObject = {
     Housing:['Studio','1-bed','2-bed','family home'],
-    Tool:['hammer','saw','screwdriver','wrench'],
+    Tools:['hammer','saw','screwdriver','wrench'],
     Food:['bread','onions','mushrooms','potatoes'],
     Furniture:['chair','bed','couch','table'],
 }
 
 const testUniformDataColors:GenericObject = {
     Housing:'AntiqueWhite',
-    Tool: 'AquaMarine',
+    Tools: 'AquaMarine',
     Food: 'Cyan',
     Furniture:'Gold',
 }
