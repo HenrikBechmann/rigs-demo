@@ -1843,21 +1843,20 @@ const getMixedSubscroller = (index:number, itemID:number) => {
 
 const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const variant =
-        ((index % 2) == 0)?
-        'uniform':
-        'variable'
+    const selector = (Math.abs(index) % 2)
+
+    const variant = context.accepts[selector]
 
     const cellType = variant
 
-    const accepts = getSubscrollerAccepts(variant) || []
+    const accepts = getSubscrollerAccepts(cellType) || []
 
     const sourceID = globalSourceID++
 
     const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
 
     const dndOptions = {
-        type:variant,
+        type:cellType,
         accepts,
         dragText,
     }
@@ -1875,7 +1874,6 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
     const itemPack = {
         content:component,
         dndOptions:{type:cellType, dragText},
-        // profile:{color, type:cellType, typeText, sourceID},
         profile:{ type:cellType, sourceID},
     }
 
@@ -1956,6 +1954,52 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
 
 }
 
+const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:GenericObject) => {
+
+    const selector = (Math.abs(index) % 2)
+
+    const variant = context.accepts[selector]
+
+    const cellType = variant
+
+    const accepts = getSubscrollerAccepts(cellType) || [] // "possibly undefined" below
+
+    const sourceID = globalSourceID++
+
+    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+
+    const dndOptions = {
+        type:cellType,
+        accepts,
+        dragText,
+    }
+
+    const component = new Promise((resolve, reject) => {
+        setTimeout(()=> {
+
+            resolve(
+                <SubscrollerComponent 
+                    index = {index} 
+                    itemID = {itemID}
+                    variant = {variant}
+                    dndOptions = { dndOptions }
+                    cacheAPI = {null}
+                    scrollerProperties = {null}
+                />
+            )
+
+        },400 + (Math.random() * 2000))
+    })
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:cellType, dragText},
+        profile:{ type:cellType, sourceID},
+    }
+
+     return itemPack
+}
+
 const nestingmixedpromisesProperties = {
     startingIndex:0,
     startingListSize:200,
@@ -1971,6 +2015,7 @@ const nestingmixedpromisesProperties = {
     layout: 'uniform',
 
     getItem:getMixedSubscrollerPromise,
+    getItemPack:getMixedSubscrollerPromisePack,
     styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
@@ -2052,6 +2097,42 @@ const getUniformSubscroller = (index:number, itemID:number) => {
     />
 }
 
+const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
+
+    const variant = 'uniform'
+
+    const cellType = variant
+
+    const accepts = getSubscrollerAccepts(variant) || []
+
+    const sourceID = globalSourceID++
+
+    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+
+    const dndOptions = {
+        type:cellType,
+        accepts,
+        dragText,
+    }
+
+    const component = <SubscrollerComponent 
+        index = {index} 
+        itemID = {itemID}
+        variant = {variant}
+        dndOptions = { dndOptions }
+        cacheAPI = {null}
+        scrollerProperties = {null}
+    />
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:cellType, dragText},
+        profile:{ type:cellType, sourceID},
+    }
+
+     return itemPack
+}
+
 const nestinguniformProperties = {
     startingIndex:0,
     startingListSize:200,
@@ -2067,6 +2148,7 @@ const nestinguniformProperties = {
     layout: 'uniform',
 
     getItem:getUniformSubscroller,
+    getItemPack:getUniformSubscrollerPack,
     styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
@@ -2102,6 +2184,42 @@ const getVariableSubscroller = (index:number, itemID:number) => {
     />
 }
 
+const getVariableSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
+
+    const variant = 'variable'
+
+    const cellType = variant
+
+    const accepts = getSubscrollerAccepts(variant) || []
+
+    const sourceID = globalSourceID++
+
+    const dragText = `sourceID: ${sourceID}, ${accepts.join(', ')}`
+
+    const dndOptions = {
+        type:cellType,
+        accepts,
+        dragText,
+    }
+
+    const component = <SubscrollerComponent 
+        index = {index} 
+        itemID = {itemID}
+        variant = {variant}
+        dndOptions = { dndOptions }
+        cacheAPI = {null}
+        scrollerProperties = {null}
+    />
+
+    const itemPack = {
+        content:component,
+        dndOptions:{type:cellType, dragText},
+        profile:{ type:cellType, sourceID},
+    }
+
+     return itemPack
+}
+
 const nestingvariableProperties = {
     startingIndex:0,
     startingListSize:200,
@@ -2117,6 +2235,7 @@ const nestingvariableProperties = {
     layout: 'uniform',
 
     getItem:getVariableSubscroller,
+    getItemPack:getVariableSubscrollerPack,
     styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
