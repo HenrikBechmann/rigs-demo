@@ -317,7 +317,7 @@ const simpleComponentStyles = {
         position:'relative',
         height:'100%', 
         width:'100%',
-        backgroundColor:'white',
+        // backgroundColor:'white',
         border: '1px solid black',
         borderRadius:'8px',
         overflow:'hidden',
@@ -623,14 +623,14 @@ const simpleAutoExpandProperties = {
 
 let variableComponentStyles = {
     outer:{
-        backgroundColor:'white',
+        // backgroundColor:'white',
         overflow:'scroll',
     } as React.CSSProperties,
     inner:{
         padding:'3px',
         border:'1px solid black',
         borderRadius:'8px',
-        backgroundColor:'white', 
+        // backgroundColor:'white', 
     } as React.CSSProperties
 }
 
@@ -1546,14 +1546,14 @@ const SubscrollerComponent = (props:any) => {
 
 let variableSubscrollerItemStyles = {
     outer:{
-        backgroundColor:'white',
+        // backgroundColor:'white',
         overflow:'scroll',
     } as React.CSSProperties,
     inner:{
         padding:'3px',
         border:'1px solid black',
         borderRadius:'8px',
-        backgroundColor:'white',
+        // backgroundColor:'white',
         fontSize:'small',
     } as React.CSSProperties
 }
@@ -1698,7 +1698,7 @@ const variableSubscrollerProperties = {
 const uniformSubscrollerItemStyles = {
         padding:'3px',
         border:'1px solid green',
-        backgroundColor:'white',
+        // backgroundColor:'white',
         height:'100%',
         boxSizing:'border-box',
         fontSize:'small',
