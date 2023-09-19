@@ -32,7 +32,20 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
     const dndOptionsRef = useRef<GenericObject | null>(null)
 
-    if (['simplecontent','simplepromises','simpleautoexpand','variablecontent','variablepromises',
+    // if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
+
+    //         demoContentTypeSelectorRef.current = demoContentTypeSelector
+    //     const dndOptions = {
+    //         accept:acceptAll(testData),
+    //     }
+
+    //     dndOptionsRef.current = dndOptions
+
+    // }
+
+    // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+
+    if ([/*'simplecontent',*/'simplepromises','simpleautoexpand','variablecontent','variablepromises',
         'variabledynamic','variableoversized','variableautoexpand'].includes(demoContentTypeSelector)) {
 
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
@@ -81,8 +94,23 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
     } else {
 
-        return <GridScroller key = {demoContentTypeSelector} {...demoAllContentTypeProperties[demoContentTypeSelector]}/>        
+        if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
+
+                demoContentTypeSelectorRef.current = demoContentTypeSelector
+            const dndOptions = {
+                accept:acceptAll(testData),
+            }
+
+            dndOptionsRef.current = dndOptions
+
+        }
+
+        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+
+        // return <GridScroller key = {demoContentTypeSelector} {...demoAllContentTypeProperties[demoContentTypeSelector]}/>        
     
+        return <GridScroller key = {demoContentTypeSelector} {...props}/>        
+
     }
 
 }
