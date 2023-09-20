@@ -45,7 +45,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
     // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
 
-    if ([/*'simplecontent',*/'simplepromises','simpleautoexpand','variablecontent','variablepromises',
+    if (['simplecontent','simplepromises','simpleautoexpand','variablecontent','variablepromises',
         'variabledynamic','variableoversized','variableautoexpand'].includes(demoContentTypeSelector)) {
 
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
