@@ -1743,7 +1743,7 @@ const UniformSubscrollerItem = (props:any) => {
         data-type = 'uniform-subscroller-item'
         style = { styles }>
             {isDnd && float}
-            [{index}]={itemID} {type}: {typeText}
+            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} {type}: {typeText}
             {sourceID && <><br />{`sourceID: ${sourceID}`}</>}
     </div>
 
