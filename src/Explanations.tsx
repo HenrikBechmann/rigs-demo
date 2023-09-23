@@ -276,12 +276,9 @@ integers. \`setListRange\` if present supercedes \`startingListSize\`. If \`setL
 
 The following cache operation functions are provided for advanced interaction with the RIGS cache.
 
-\`insertIndex(...)\`, \`removeIndex(...)\`, \`moveIndex(...)\`, and \`remapIndexes(...)\` allow for direct manipulation
+\`insertIndex(...)\`, \`removeIndex(...)\`, and \`moveIndex(...)\` allow for direct manipulation
 of the cache to support sorting, filtering, and drag-n-drop. They each return data for feedback and control. They can 
 each operate on one or more indexes. \`Cradle\` content is synchronzed with these cache changes as appropriate. 
-
-Two test procedures are provided for the \`remapIndexes(...)\` option. The "Backward" test literally reverses the order of 
-the items in the cradle. The "Replace items" test replaces the 2nd and 6th items, and swaps the 1st and 5th items.
 
 These cache operation functions can each be tested in this demo, with the feedback returned to the browser console. 
 See the formal documentation linked in the _Documentation &amp; Source Code_ section for details.

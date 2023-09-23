@@ -153,7 +153,6 @@ const
         'insertFrom', 'insertRange',
         'removeFrom', 'removeRange',
         'moveFrom', 'moveRange', 'moveTo',
-        'remapDemo',
     ]
 
 // ----------------------------------------------------
@@ -249,7 +248,6 @@ const Options = ({
             moveFrom:false,
             moveRange:false,
             moveTo:false,
-            remapDemo:false,
         }),
         APIdisabledFlags = APIdisabledFlagsRef.current,
 
@@ -285,7 +283,6 @@ const Options = ({
             moveFrom:false,
             moveRange:false,
             moveTo:false,
-            remapDemo:false,
         }),
         invalidFieldFlags = invalidFieldFlagsRef.current,
 
@@ -302,7 +299,7 @@ const Options = ({
             insert:false,
             remove:false,
             move:false,
-            remap:false,
+            // remap:false,
             clear:false,
         }),
         functionEnabledSettings = functionEnabledSettingsRef.current
@@ -954,14 +951,6 @@ const Options = ({
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
-        remapDemo:(event:React.ChangeEvent) => {
-            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
-            const target = event.target as HTMLSelectElement
-            const value = target.value
-            editAPIFunctionArguments.remapDemo = value
-            sessionAPIFunctionArgumentsRef.current.remapDemo = value
-            setEditAPIFunctionArguments({...editAPIFunctionArguments})
-        },
     }
 
     const APISnapshotFunctions = {
@@ -1126,10 +1115,10 @@ const Options = ({
                         isInvalidTests.moveTo(editAPIFunctionArgumentsRef.current.moveTo)
                         break
                     }
-                    case 'remap':{
-                        APIdisabledFlags.remapDemo = false
-                        break
-                    }
+                    // case 'remap':{
+                    //     APIdisabledFlags.remapDemo = false
+                    //     break
+                    // }
                     case 'clear':{
 
                         break
@@ -2558,43 +2547,6 @@ const Options = ({
                         Integers. Move one or more indexes. 'range' is optional, and must be equal to or 
                         above the 'from' value.
                     </Text> 
-
-                    <Heading size = 'xs'>Remap indexes</Heading>
-
-                    <Stack direction = {['column','row','row']} alignItems = 'baseline'>
-
-                    <FormControl isDisabled = {APIdisabledFlags.remapDemo} width = 'xs'>
-                        <Select
-                            value = {editAPIFunctionArguments.remapDemo} 
-                            size = 'sm'
-                            onChange = {onChangeFunctions.remapDemo}
-                        >
-                            <option value="backwardsort">Backward sort</option>
-                            <option value="replaceitems">Replace items</option>
-                        </Select>
-                    </FormControl>
-
-                    <FormControl>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-
-                            <FormLabel htmlFor='remap' fontSize = 'sm'>Enable</FormLabel>
-
-                            <Switch 
-                                isChecked = {functionEnabledSettings.remap} 
-                                onChange = {onChangeFunctions.onChangeEnabler} 
-                                id='remap' 
-                            />
-                        </InputGroup>
-                    </FormControl>
-
-                    </Stack>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
-                        items to the newly assigned indexes. We've included a random test that applies to 
-                        the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
-                        items scroll out of scope. See Explanations for details.
-                    </Text>
 
                     <Heading size = 'xs'>Reload the cache</Heading>
                     <FormControl>

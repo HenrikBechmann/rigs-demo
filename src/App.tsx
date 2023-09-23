@@ -56,7 +56,6 @@ const defaultAPIFunctionArguments:GenericObject = {
   moveTo:'',
   moveFrom:'',
   moveRange:'',
-  remapDemo:'backwardsort',
 }
 
 const contentTitles:GenericObject = {
@@ -616,21 +615,21 @@ const getFunctionToastContent = (
       seeconsole = true
       break
     }
-    case 'remap': {
-      switch (APIFunctionArguments.remapDemo) {
-        case 'backwardsort':{
-          remapindex_backwardsort(functionsAPI)
-          break
-        }
-        case 'replaceitems':{
-          remapindex_replaceItems(functionsAPI)
-          break
-        }
-      }
-      codeblock = `functionsAPI.remapIndexes(changeMap)`
-      seeconsole = true
-      break
-    }
+    // case 'remap': {
+    //   switch (APIFunctionArguments.remapDemo) {
+    //     case 'backwardsort':{
+    //       remapindex_backwardsort(functionsAPI)
+    //       break
+    //     }
+    //     case 'replaceitems':{
+    //       remapindex_replaceItems(functionsAPI)
+    //       break
+    //     }
+    //   }
+    //   codeblock = `functionsAPI.remapIndexes(changeMap)`
+    //   seeconsole = true
+    //   break
+    // }
     case 'clear':{
       functionsAPI.clearCache()
       codeblock = `functionsAPI.clearCache()`
@@ -647,82 +646,82 @@ const getFunctionToastContent = (
   </>
 }
 
-const remapindex_backwardsort = (functionsAPI:GenericObject) => {
+// const remapindex_backwardsort = (functionsAPI:GenericObject) => {
 
-  const cradleindexmap = functionsAPI.getCradleIndexMap()
-  if (!cradleindexmap) return
+//   const cradleindexmap = functionsAPI.getCradleIndexMap()
+//   if (!cradleindexmap) return
 
-  const cradleindexarray:Array<number[]> = Array.from(cradleindexmap)
-  cradleindexarray.sort((a:number[],b:number[]) => {
-      const aval = a[0], bval = b[0]
-      return aval - bval
-  })
+//   const cradleindexarray:Array<number[]> = Array.from(cradleindexmap)
+//   cradleindexarray.sort((a:number[],b:number[]) => {
+//       const aval = a[0], bval = b[0]
+//       return aval - bval
+//   })
 
-  const indexarray = cradleindexarray.map((item:number[]) => item[0])
-  const cacheItemIDarray = cradleindexarray.map((item:number[]) => item[1])
-  cacheItemIDarray.reverse()
+//   const indexarray = cradleindexarray.map((item:number[]) => item[0])
+//   const cacheItemIDarray = cradleindexarray.map((item:number[]) => item[1])
+//   cacheItemIDarray.reverse()
 
-  const changeMap = new Map()
+//   const changeMap = new Map()
 
-  for (const i in indexarray) {
-    changeMap.set(indexarray[i],cacheItemIDarray[i])
-  }
-  const returnarray = functionsAPI.remapIndexes(changeMap)
+//   for (const i in indexarray) {
+//     changeMap.set(indexarray[i],cacheItemIDarray[i])
+//   }
+//   const returnarray = functionsAPI.remapIndexes(changeMap)
 
-  console.log(`remapIndexes:
-[modifiedIndexesList,
-remappedIndexesList,
-deletedIndexesList,
-ReplacedItemsList,
-deletedOrphanedItemsIDList,
-deletedOrphanedIndexesList,
-errorEntriesMap,
-changeMap]`, 
-  returnarray)
+//   console.log(`remapIndexes:
+// [modifiedIndexesList,
+// remappedIndexesList,
+// deletedIndexesList,
+// ReplacedItemsList,
+// deletedOrphanedItemsIDList,
+// deletedOrphanedIndexesList,
+// errorEntriesMap,
+// changeMap]`, 
+//   returnarray)
 
-}
+// }
 
-const remapindex_replaceItems = (functionsAPI:GenericObject) => {
+// const remapindex_replaceItems = (functionsAPI:GenericObject) => {
 
-  const cradleindexmap = functionsAPI.getCradleIndexMap()
-  if (!cradleindexmap) return
+//   const cradleindexmap = functionsAPI.getCradleIndexMap()
+//   if (!cradleindexmap) return
 
-  const indexList = [...cradleindexmap.keys()]
+//   const indexList = [...cradleindexmap.keys()]
 
-  const maxListPtr = indexList.length - 1
+//   const maxListPtr = indexList.length - 1
 
-  const changeMap = new Map()
+//   const changeMap = new Map()
 
-  // replace two items
-  let index = indexList[1]
-  changeMap.set(index, undefined)
+//   // replace two items
+//   let index = indexList[1]
+//   changeMap.set(index, undefined)
 
-  if (maxListPtr >= 5) {
-    index = indexList[5]
-    changeMap.set(index, undefined)
-  }
+//   if (maxListPtr >= 5) {
+//     index = indexList[5]
+//     changeMap.set(index, undefined)
+//   }
 
-  // swap two items
-  index = indexList[0]
-  const lastptr = Math.min(4, maxListPtr)
-  let lastindex = indexList[lastptr]
-  const firstitemid = cradleindexmap.get(index)
-  const lastitemid = cradleindexmap.get(lastindex)
+//   // swap two items
+//   index = indexList[0]
+//   const lastptr = Math.min(4, maxListPtr)
+//   let lastindex = indexList[lastptr]
+//   const firstitemid = cradleindexmap.get(index)
+//   const lastitemid = cradleindexmap.get(lastindex)
 
-  changeMap.set(index,lastitemid)
-  changeMap.set(lastindex, firstitemid)
+//   changeMap.set(index,lastitemid)
+//   changeMap.set(lastindex, firstitemid)
 
-  const returnarray = functionsAPI.remapIndexes(changeMap)
+//   const returnarray = functionsAPI.remapIndexes(changeMap)
 
-  console.log(`remapIndexes:
-[modifiedIndexesList,
-remappedIndexesList,
-deletedIndexesList,
-indexesOfReplacedItemsList,
-deletedOrphanedItemsIDList,
-deletedOrphanedIndexesList,
-errorEntriesMap,
-changeMap]`, 
-  returnarray)
+//   console.log(`remapIndexes:
+// [modifiedIndexesList,
+// remappedIndexesList,
+// deletedIndexesList,
+// indexesOfReplacedItemsList,
+// deletedOrphanedItemsIDList,
+// deletedOrphanedIndexesList,
+// errorEntriesMap,
+// changeMap]`, 
+//   returnarray)
 
-}
+// }
