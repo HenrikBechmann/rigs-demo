@@ -327,11 +327,11 @@ const simpleComponentStyles = {
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
-    const {color, type, typeText, scrollerProperties, sourceID} = props
+    const {color, type, typeText, scrollerContext, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
 
-    // console.log('isDnd, scrollerProperties',isDnd, {...scrollerProperties})
+    // console.log('isDnd, scrollerContext',isDnd, {...scrollerContext})
 
     if (color) simpleComponentStyles.outer.backgroundColor = color
     let localTypeText
@@ -349,7 +349,7 @@ const SimpleItem = (props:any) => {
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
             {isDnd && float}
-            {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br style = {{clear:'left'}}/>
+            {`list index ${props.scrollerContext.cell.current.index},`}<br style = {{clear:'left'}}/>
             {`cache itemID ${props.itemID}`}
             {sourceID && <><br />{`sourceID: ${sourceID}`}</>}
             {localTypeText && <><br />{localTypeText}</>}
@@ -368,7 +368,7 @@ const getSimpleItem = (index:number, itemID:number) => {
      if (index == 30) return Promise.reject(new Error('not found for demo purposes'))
      if (index == 40) return 5 // deliberate return of an invalid (non-React-component) content type for demo
 
-     const component = <SimpleItem index = {index} itemID = {itemID} scrollerProperties = {null} />
+     const component = <SimpleItem index = {index} itemID = {itemID} scrollerContext = {null} />
 
      return component
 
@@ -398,7 +398,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
-             scrollerProperties = {null} />
+             scrollerContext = {null} />
      }
 
     const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
@@ -469,7 +469,7 @@ const getSimpleItemPromise = (index:number, itemID:number) => {
 
         setTimeout(()=> {
 
-            resolve(<SimpleItem index = {index} itemID = {itemID} scrollerProperties = {null}/>)
+            resolve(<SimpleItem index = {index} itemID = {itemID} scrollerContext = {null}/>)
 
         },400 + (Math.random() * 2000))
 
@@ -498,7 +498,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
                 typeText = {typeText}
                 color = { color }
                 sourceID = {sourceID}
-                scrollerProperties = {null}
+                scrollerContext = {null}
             />)
 
         },400 + (Math.random() * 2000))
@@ -654,9 +654,9 @@ const getVariableTestString = (index:number, itemID:number) => {
 
 const VariableItem = (props:any) => {
 
-    const {color, type, typeText, scrollerProperties, sourceID} = props
+    const {color, type, typeText, scrollerContext, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
 
     let localTypeText = '', sourceIDText = ''
     if (type && typeText) localTypeText = `${type} from ${typeText}:`
@@ -669,7 +669,7 @@ const VariableItem = (props:any) => {
 
     },[isDnd])
 
-    const testString = getVariableTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID)
+    const testString = getVariableTestString(props.scrollerContext.cell.current.index, props.itemID)
 
     const testStringRef = useRef(testString)
 
@@ -679,7 +679,7 @@ const VariableItem = (props:any) => {
         cellWidth,
         cellHeight
 
-    } = props.scrollerProperties.scrollerPropertiesRef.current
+    } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
         (orientation == 'vertical')?
@@ -784,7 +784,7 @@ const VariableItem = (props:any) => {
 
 const getVariableItem = (index:number, itemID:number) => {
 
-     return <VariableItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+     return <VariableItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
 
 }
 
@@ -812,7 +812,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
-             scrollerProperties = {null} />
+             scrollerContext = {null} />
      }
 
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
@@ -876,7 +876,7 @@ const getVariableItemPromise = (index:number, itemID:number) => {
     return new Promise((resolve, reject) => {
         setTimeout(()=> {
 
-            resolve(<VariableItem index = {index} itemID = {itemID} scrollerProperties = {null}/>)
+            resolve(<VariableItem index = {index} itemID = {itemID} scrollerContext = {null}/>)
 
         },1000 + (Math.random() * 2000))
     })
@@ -905,7 +905,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
                      typeText = {typeText}
                      color = { color }
                      sourceID = {sourceID}
-                     scrollerProperties = {null} 
+                     scrollerContext = {null} 
                  />
             )
 
@@ -964,9 +964,9 @@ const getDynamicTestString = (index:number, itemID:number) => {
 
 const VariableItemDynamic = (props:any) => {
 
-    const {color, type, typeText, scrollerProperties, sourceID} = props
+    const {color, type, typeText, scrollerContext, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
 
     let localTypeText = '', sourceIDText = ''
     if (type && typeText) localTypeText = `${type} from ${typeText}:`
@@ -985,7 +985,7 @@ const VariableItemDynamic = (props:any) => {
         cellWidth,
         cellHeight
 
-    } = props.scrollerProperties.scrollerPropertiesRef.current
+    } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
         (orientation == 'vertical')?
@@ -1017,7 +1017,7 @@ const VariableItemDynamic = (props:any) => {
     useEffect(()=>{
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
-            const teststringinstance = getDynamicTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID)
+            const teststringinstance = getDynamicTestString(props.scrollerContext.cell.current.index, props.itemID)
             setTeststring(teststringinstance)
 
         },200 + (Math.random() * 2000))
@@ -1046,13 +1046,13 @@ const VariableItemDynamic = (props:any) => {
 
 const getVariableItemDynamic = (index:number, itemID:number) => {
 
-     return <VariableItemDynamic index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+     return <VariableItemDynamic index = {index} itemID = {itemID} scrollerContext = {null}/>    
 
 }
 
 const getVariableItemDynamicPack = (index:number, itemID:number, context:GenericObject) => {
 
-     // return <VariableItemDynamic index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+     // return <VariableItemDynamic index = {index} itemID = {itemID} scrollerContext = {null}/>    
 
     const accept = context.accept
 
@@ -1076,7 +1076,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
-             scrollerProperties = {null} />
+             scrollerContext = {null} />
      }
 
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
@@ -1132,9 +1132,9 @@ const getVariableOversizedTestString = (index:number, itemID:number) => {
 
 const VariableOversizedItem = (props:any) => {
 
-    const {color, type, typeText, scrollerProperties, sourceID} = props
+    const {color, type, typeText, scrollerContext, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
 
     let localTypeText = '', sourceIDText = ''
     if (type && typeText) localTypeText = `${type} from ${typeText}:`
@@ -1147,7 +1147,7 @@ const VariableOversizedItem = (props:any) => {
 
     },[isDnd])
 
-    const testStringRef = useRef(getVariableOversizedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
+    const testStringRef = useRef(getVariableOversizedTestString(props.scrollerContext.cell.current.index, props.itemID))
 
     const {
 
@@ -1155,7 +1155,7 @@ const VariableOversizedItem = (props:any) => {
         cellWidth,
         cellHeight
 
-    } = props.scrollerProperties.scrollerPropertiesRef.current
+    } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
         (orientation == 'vertical')?
@@ -1259,13 +1259,13 @@ const VariableOversizedItem = (props:any) => {
 
 const getVariableOversizedItem = (index:number, itemID:number) => {
 
-     return <VariableOversizedItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+     return <VariableOversizedItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
 
 }
 
 const getVariableOversizedItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-     // return <VariableOversizedItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+     // return <VariableOversizedItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
 
     const accept = context.accept
 
@@ -1289,7 +1289,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
              typeText = {typeText}
              color = { color }
              sourceID = {sourceID}
-             scrollerProperties = {null} />
+             scrollerContext = {null} />
      }
 
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
@@ -1438,7 +1438,7 @@ const SubscrollerComponent = (props:any) => {
     const { 
         index, 
         itemID,
-        scrollerProperties,
+        scrollerContext,
         cacheAPI,
         variant,
         dndOptions,
@@ -1467,21 +1467,21 @@ const SubscrollerComponent = (props:any) => {
         styles,
     } = properties
 
-    const { scrollerPropertiesRef } = scrollerProperties
+    const { scroller } = scrollerContext
 
     const dynamicorientationRef = useRef<null | string>(null)
 
     useEffect(() =>{
 
-        const { orientation } = scrollerPropertiesRef.current
+        const { orientation } = scroller.current
         dynamicorientationRef.current = 
             (orientation == 'vertical')?
                 'horizontal':
                 'vertical'
 
-    },[scrollerPropertiesRef.current.orientation])
+    },[scroller.current.orientation])
 
-    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
+    const { size:listsize, lowindex } = scroller.current.virtualListProps
 
     useEffect(()=>{
 
@@ -1495,7 +1495,7 @@ const SubscrollerComponent = (props:any) => {
 
     },[testState])
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
 
     const float = useMemo(() => {
         if (isDnd) return <div 
@@ -1509,7 +1509,7 @@ const SubscrollerComponent = (props:any) => {
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             {isDnd && float}
-            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
+            [{props.scrollerContext.cell.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
             {' sourceID: '+ sourceID + '; ' + dndOptions.accept.join(', ')}
         </div>
         <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
@@ -1532,7 +1532,7 @@ const SubscrollerComponent = (props:any) => {
                 styles = { styles }
                 layout = { layout }
                 dndOptions = { dndOptions }
-                scrollerProperties = { scrollerProperties }
+                scrollerContext = { scrollerContext }
                 cacheAPI = {cacheAPI}
             />
 
@@ -1567,9 +1567,9 @@ const getVariableSubscrollerTestString = (index:number, itemID:number) => {
 
 const VariableSubscrollerItem = (props:any) => {
 
-    const {color, type, typeText, scrollerProperties, sourceID} = props
+    const {color, type, typeText, scrollerContext, sourceID} = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
 
     let localTypeText = '', sourceIDText = ''
     if (type && typeText) localTypeText = `${type} from ${typeText}:`
@@ -1582,7 +1582,7 @@ const VariableSubscrollerItem = (props:any) => {
 
     },[isDnd])
 
-    const testStringRef = useRef(getVariableSubscrollerTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
+    const testStringRef = useRef(getVariableSubscrollerTestString(props.scrollerContext.cell.current.index, props.itemID))
 
     const {
 
@@ -1590,7 +1590,7 @@ const VariableSubscrollerItem = (props:any) => {
         cellWidth,
         cellHeight
 
-    } = props.scrollerProperties.scrollerPropertiesRef.current
+    } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
         (orientation == 'vertical')?
@@ -1626,7 +1626,7 @@ const VariableSubscrollerItem = (props:any) => {
 
 const getVariableSubscrollerItem = (index:number, itemID:number) => {
 
-     return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+     return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
 
 }
 
@@ -1648,7 +1648,7 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
             typeText = {typeText}
             color = { color }
             sourceID = {sourceID}
-            scrollerProperties = {null}
+            scrollerContext = {null}
         />
 
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
@@ -1723,10 +1723,10 @@ const UniformSubscrollerItem = (props:any) => {
         typeText,
         color,
         sourceID,
-        scrollerProperties,
+        scrollerContext,
     } = props
 
-    const isDnd = scrollerProperties?.scrollerPropertiesRef.current.dndEnabled
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
 
     const styles = {...uniformSubscrollerItemStyles, backgroundColor:color}
 
@@ -1743,7 +1743,7 @@ const UniformSubscrollerItem = (props:any) => {
         data-type = 'uniform-subscroller-item'
         style = { styles }>
             {isDnd && float}
-            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} {type}: {typeText}
+            [{props.scrollerContext.cell.current.index}]={itemID} {type}: {typeText}
             {sourceID && <><br />{`sourceID: ${sourceID}`}</>}
     </div>
 
@@ -1767,7 +1767,7 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
             typeText = {typeText}
             color = { color }
             sourceID = {sourceID}
-            scrollerProperties = {null}
+            scrollerContext = {null}
         />
 
     const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
@@ -1836,7 +1836,7 @@ const getMixedSubscroller = (index:number, itemID:number) => {
         sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = { null }
-        scrollerProperties = { null }
+        scrollerContext = { null }
     />
 
 }
@@ -1868,7 +1868,7 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
         sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = { null }
-        scrollerProperties = { null }
+        scrollerContext = { null }
     />
 
     const itemPack = {
@@ -1948,7 +1948,7 @@ const getMixedSubscrollerPromise = (index:number, itemID:number) => {
                     sourceID = {sourceID}
                     dndOptions = { dndOptions }
                     cacheAPI = {null}
-                    scrollerProperties = {null}
+                    scrollerContext = {null}
                 />
             )
 
@@ -1988,7 +1988,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
                     sourceID = {sourceID}
                     dndOptions = { dndOptions }
                     cacheAPI = {null}
-                    scrollerProperties = {null}
+                    scrollerContext = {null}
                 />
             )
 
@@ -2100,7 +2100,7 @@ const getUniformSubscroller = (index:number, itemID:number) => {
         sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = {null}
-        scrollerProperties = {null}
+        scrollerContext = {null}
     />
 }
 
@@ -2129,7 +2129,7 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
         sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = {null}
-        scrollerProperties = {null}
+        scrollerContext = {null}
     />
 
     const itemPack = {
@@ -2191,7 +2191,7 @@ const getVariableSubscroller = (index:number, itemID:number) => {
         sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = {null}
-        scrollerProperties = {null}
+        scrollerContext = {null}
     />
 }
 
@@ -2220,7 +2220,7 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
         sourceID = {sourceID}
         dndOptions = { dndOptions }
         cacheAPI = {null}
-        scrollerProperties = {null}
+        scrollerContext = {null}
     />
 
     const itemPack = {
