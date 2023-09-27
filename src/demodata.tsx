@@ -422,6 +422,12 @@ const simpleScrollerStyles = {
         borderRadius:'8px',
         backgroundColor:'pink',
     },
+    // dndHighlights:{
+    //     source:"red",
+    //     target:"green",
+    //     dropped:"plum",
+    //     scrolltab:"cyan",
+    // }
 }
 
 // placeholder messages
