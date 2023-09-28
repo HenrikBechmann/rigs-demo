@@ -1740,7 +1740,7 @@ const Options = ({
                             Item Exceptions
                         </Checkbox>
                         <FormHelperText>
-                            This reports details of a failed <Code>getItem</Code> call.
+                            This reports details of a failed <Code>getItemPack</Code> call.
                         </FormHelperText>
                     </FormControl>
 

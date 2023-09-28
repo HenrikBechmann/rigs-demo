@@ -362,18 +362,7 @@ const SimpleItem = (props:any) => {
 // scroller property assembly for simple uniform content component
 // -----------------
 
-// the getItem function for simple uniform content
-const getSimpleItem = (index:number, itemID:number) => {
-
-     if (index == 30) return Promise.reject(new Error('not found for demo purposes'))
-     if (index == 40) return 5 // deliberate return of an invalid (non-React-component) content type for demo
-
-     const component = <SimpleItem index = {index} itemID = {itemID} scrollerContext = {null} />
-
-     return component
-
-}
-
+// the getItemPack function for simple uniform content
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
     const accept = context.accept
@@ -450,7 +439,6 @@ const simplecontentProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem: getSimpleItem,
     getItemPack: getSimpleItemPack,
     styles: simpleScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
@@ -468,21 +456,7 @@ const simplecontentProperties = {
 // scroller property values assembled for this content variant
 // -----------------
 
-// the getItem function for simple uniform promises; note the setTimeout
-const getSimpleItemPromise = (index:number, itemID:number) => {
-
-    return new Promise((resolve, reject) => {
-
-        setTimeout(()=> {
-
-            resolve(<SimpleItem index = {index} itemID = {itemID} scrollerContext = {null}/>)
-
-        },400 + (Math.random() * 2000))
-
-    })
-
-}
-
+// the getItemPack function for simple uniform promises; note the setTimeout
 const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
     const accept = context.accept
@@ -548,7 +522,6 @@ const simplepromisesProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem: getSimpleItemPromise,
     getItemPack: getSimpleItemPromisePack,
     styles: simplePromisesScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
@@ -610,7 +583,6 @@ const simpleAutoExpandProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem: getSimpleItem,
     getItemPack: getSimpleItemPack,
     getExpansionCount:getSimpleAutoExpansionCount,
     styles: simpleAutoExpandScrollerStyles,
@@ -788,12 +760,6 @@ const VariableItem = (props:any) => {
 // scroller property values assembled for variable content
 // -----------------
 
-const getVariableItem = (index:number, itemID:number) => {
-
-     return <VariableItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
-
-}
-
 const getVariableItemPack = (index:number, itemID:number, context:GenericObject) => {
 
     const accept = context.accept
@@ -859,7 +825,6 @@ const variablecontentProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableItem,
     getItemPack: getVariableItemPack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
@@ -877,18 +842,6 @@ const variablecontentProperties = {
 // -----------------
 
 // note the setTimeout function to simulate latency
-const getVariableItemPromise = (index:number, itemID:number) => {
-
-    return new Promise((resolve, reject) => {
-        setTimeout(()=> {
-
-            resolve(<VariableItem index = {index} itemID = {itemID} scrollerContext = {null}/>)
-
-        },1000 + (Math.random() * 2000))
-    })
-
-}
-
 const getVariableItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
     
@@ -947,7 +900,6 @@ const variablepromiseProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableItemPromise,
     getItemPack: getVariableItemPromisePack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
@@ -1050,12 +1002,6 @@ const VariableItemDynamic = (props:any) => {
 // scroller property values assembled for dynamic variable content
 // -----------------
 
-const getVariableItemDynamic = (index:number, itemID:number) => {
-
-     return <VariableItemDynamic index = {index} itemID = {itemID} scrollerContext = {null}/>    
-
-}
-
 const getVariableItemDynamicPack = (index:number, itemID:number, context:GenericObject) => {
 
      // return <VariableItemDynamic index = {index} itemID = {itemID} scrollerContext = {null}/>    
@@ -1113,7 +1059,6 @@ const variabledynamicProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableItemDynamic,
     getItemPack: getVariableItemDynamicPack,
     styles: variableScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
@@ -1263,12 +1208,6 @@ const VariableOversizedItem = (props:any) => {
 // scroller property values assembled for variable oversized content
 // -----------------
 
-const getVariableOversizedItem = (index:number, itemID:number) => {
-
-     return <VariableOversizedItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
-
-}
-
 const getVariableOversizedItemPack = (index:number, itemID:number, context:GenericObject) => {
 
      // return <VariableOversizedItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
@@ -1326,7 +1265,6 @@ const variableoversizedProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableOversizedItem,
     getItemPack: getVariableOversizedItemPack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
@@ -1382,7 +1320,6 @@ const variableautoexpandProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableItem,
     getItemPack: getVariableItemPack,
     getExpansionCount:getVariableAutoExpansionCount,
     styles: variableAutoexpandScrollerStyles,
@@ -1466,7 +1403,6 @@ const SubscrollerComponent = (props:any) => {
         startingIndex, 
         startingListSize,
         startingListRange, 
-        getItem,
         getItemPack,
         cache,
         layout,
@@ -1531,7 +1467,6 @@ const SubscrollerComponent = (props:any) => {
                 startingListSize = {startingListSize}
                 startingListRange = {startingListRange}
                 startingIndex = {startingIndex}
-                getItem = {getItem}
                 getItemPack = {getItemPack}
                 callbacks = { null }
                 placeholder = { null }
@@ -1630,12 +1565,6 @@ const VariableSubscrollerItem = (props:any) => {
     </div>
 }
 
-const getVariableSubscrollerItem = (index:number, itemID:number) => {
-
-     return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
-
-}
-
 const getVariableSubscrollerItemPack = (index:number, itemID:number, context:GenericObject) => {
 
     const accept = context.accept
@@ -1684,7 +1613,6 @@ const variableSubscrollerProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableSubscrollerItem,
     getItemPack: getVariableSubscrollerItemPack,
     styles:subScrollerStyles,
     placeholderMessages: null,
@@ -1698,7 +1626,7 @@ const variableSubscrollerProperties = {
 // -------------------[ uniform subscroller cell content ]-----------------
 
 // -----------------
-// (the subscroller content component itself is a simple div, so is defined in the getUniformSubscrollerItem function below)
+// (the subscroller content component itself is a simple div, so is defined in the getUniformSubscrollerItemPack function below)
 // -----------------
 
 const uniformSubscrollerItemStyles = {
@@ -1713,12 +1641,6 @@ const uniformSubscrollerItemStyles = {
 // -----------------
 // properties assembled for uniform subscroller variant
 // -----------------
-
-const getUniformSubscrollerItem = (index:any, itemID:number) => {
-
-    return <div style = { uniformSubscrollerItemStyles}>[{index}]={itemID}</div>
-
-}
 
 const UniformSubscrollerItem = (props:any) => {
 
@@ -1803,7 +1725,6 @@ const uniformSubscrollerProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem: getUniformSubscrollerItem,
     getItemPack: getUniformSubscrollerItemPack,
     styles:subScrollerStyles,
     placeholderMessages: null,
@@ -1815,37 +1736,6 @@ const uniformSubscrollerProperties = {
 }
 
 // --------------------[ nesting mixed scroller properties ]----------------------
-
-const getMixedSubscroller = (index:number, itemID:number) => {
-
-    const variant =
-        ((index % 2) == 0)?
-        'uniform':
-        'variable'
-
-    const accept = getSubscrollerAccepts(variant) || []
-
-    const sourceID = globalSourceID++
-
-    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
-
-    const dndOptions = {
-        type:variant,
-        accept,
-        dragText,
-    }
-
-    return <SubscrollerComponent 
-        index = { index } 
-        itemID = { itemID }
-        variant = { variant }
-        sourceID = {sourceID}
-        dndOptions = { dndOptions }
-        cacheAPI = { null }
-        scrollerContext = { null }
-    />
-
-}
 
 const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
 
@@ -1910,7 +1800,6 @@ const nestingmixedProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getMixedSubscroller,
     getItemPack:getMixedSubscrollerPack,
     styles:nestingScrollerStyles,
     placeholderMessages: null,
@@ -1927,42 +1816,6 @@ const nestingmixedProperties = {
 // -----------------
 
 // note the setTimeout
-const getMixedSubscrollerPromise = (index:number, itemID:number) => {
-
-    const variant =
-        ((index % 2) == 0)?
-        'uniform':
-        'variable'
-
-    const accept = getSubscrollerAccepts(variant)
-
-    const sourceID = globalSourceID++
-
-    const dndOptions = {
-        type:variant,
-        accept,
-    }
-
-    return new Promise((resolve, reject) => {
-        setTimeout(()=> {
-
-            resolve(
-                <SubscrollerComponent 
-                    index = {index} 
-                    itemID = {itemID}
-                    variant = {variant}
-                    sourceID = {sourceID}
-                    dndOptions = { dndOptions }
-                    cacheAPI = {null}
-                    scrollerContext = {null}
-                />
-            )
-
-        },400 + (Math.random() * 2000))
-    })
-
-}
-
 const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
     const selector = (Math.abs(index) % 2)
@@ -2024,7 +1877,6 @@ const nestingmixedpromisesProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getMixedSubscrollerPromise,
     getItemPack:getMixedSubscrollerPromisePack,
     styles:nestingScrollerStyles,
     placeholderMessages: null,
@@ -2069,7 +1921,6 @@ const nestingmixedautoexpandProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getMixedSubscroller,
     getItemPack:getMixedSubscrollerPack,
     getExpansionCount:getNestingMixedAutoExpansionCount,
     styles:nestingScrollerStyles,
@@ -2085,30 +1936,6 @@ const nestingmixedautoexpandProperties = {
 // -----------------
 // scroller property values assembled for the nested scroller
 // -----------------
-
-const getUniformSubscroller = (index:number, itemID:number) => {
-
-    const variant = 'uniform'
-
-    const accept = getSubscrollerAccepts(variant)
-
-    const sourceID = globalSourceID++
-
-    const dndOptions = {
-        type:variant,
-        accept,
-    }
-
-    return <SubscrollerComponent 
-        index = {index} 
-        itemID = {itemID}
-        variant = {variant}
-        sourceID = {sourceID}
-        dndOptions = { dndOptions }
-        cacheAPI = {null}
-        scrollerContext = {null}
-    />
-}
 
 const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
 
@@ -2161,7 +1988,6 @@ const nestinguniformProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getUniformSubscroller,
     getItemPack:getUniformSubscrollerPack,
     styles:nestingScrollerStyles,
     placeholderMessages: null,
@@ -2176,30 +2002,6 @@ const nestinguniformProperties = {
 // -----------------
 // scroller property values assembled for the nested scroller
 // -----------------
-
-const getVariableSubscroller = (index:number, itemID:number) => {
-
-    const variant = 'variable'
-
-    const accept = getSubscrollerAccepts(variant)
-
-    const sourceID = globalSourceID++
-
-    const dndOptions = {
-        type:variant,
-        accept,
-    }
-
-    return <SubscrollerComponent 
-        index = {index} 
-        itemID = {itemID}
-        variant = {variant}
-        sourceID = {sourceID}
-        dndOptions = { dndOptions }
-        cacheAPI = {null}
-        scrollerContext = {null}
-    />
-}
 
 const getVariableSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
 
@@ -2252,7 +2054,6 @@ const nestingvariableProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getVariableSubscroller,
     getItemPack:getVariableSubscrollerPack,
     styles:nestingScrollerStyles,
     placeholderMessages: null,

@@ -120,8 +120,8 @@ changed. But see also the _Scroll To_ option in the _Service Function Operations
 
 **Starting list size** is applied only on initial mounting of a scroller, or in this demo whenever the content 
 type is changed. Subsequently the list size can be changed directly through the API (see the _Change virtual list 
-size_ option in the _Service Function Operations options_ section), or when a \`getItem\` call returns a \`null\` 
-(this becomes the new end-of-list), or when the list size is modified through the cache management API (again, see 
+size_ option in the _Service Function Operations options_ section), or when the list size is modified through the 
+cache management API (again, see 
 the _Service Function Operations options_ section). Starting list size is ignored when Starting list range is set.
 
 **Starting list range** is applied only on initial mounting of a scroller, or in this demo whenever the content 
@@ -166,7 +166,7 @@ const callbacks = {
     functionsCallback, // obtain API functions
     referenceIndexCallback, // current index at the Cradle axis
     boundaryCallback, // current start-of-list or end-of-list index loaded to Cradle
-    itemExceptionCallback, // information on failed getItem call
+    itemExceptionCallback, // information on failed getItemPack call
     changeListSizeCallback, // list size has changed
     changeListRangeCallback, // list range has changed
     deleteListCallback, // items have been deleted from the cache
@@ -260,9 +260,8 @@ of the \`Cradle\` to the specified index.
 
 The \`setListsize(...)\` function allows the host to modify the size of the virtual list. If any cache or \`Cradle\` 
 items become out of scope as a result of this change they are removed from the cache, and the \`Cradle\` is moved as
-appropriate. The size of the virtual list is initially set with the \`startingListSize\` property. The size of the list
-can also be truncated by returning \`null\` from a \`getItem\` call. This will cause the list to be truncated to the 
-index value of the \`getItem\` call. Finally, the list size may be changed as a side effect of cache management calls 
+appropriate. The size of the virtual list is initially set with the \`startingListSize\` property. 
+Finally, the list size may be changed as a side effect of cache management calls 
 listed below.
 
 \`setListRange(...)\` optionally takes an array of two numbers \`[lowindex, highindex]\`, being the \`lowindex\` and 
@@ -289,7 +288,7 @@ cache. Neither return any feedback.
 
 const performance_md = `
 There are several tools available to optimize the performance of RIGS:
-- the design and "weight" of the components added to the scroller cells, as returned by \`getItem(...)\`
+- the design and "weight" of the components added to the scroller cells, as returned by \`getItemPack(...)\`
 - preloading components in your application before returning them to RIGS
 - the number of cells displayed in the viewport can make a big difference; the fewer, the faster
 - the \`runwaySize\` property can influence both the appearance and performance of the scroller
