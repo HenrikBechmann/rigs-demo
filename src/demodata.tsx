@@ -188,11 +188,11 @@ const preloadIndexCallback = (index:number) => {
             index)
 
 }
-const deleteListCallback = (reason:string, deleteList:number[]) => {
+const deleteListCallback = (deleteList:number[], context:object) => {
     
     demoCallbackFlagsRef.current.deleteListCallback && 
-        console.log('deleteListCallback: reason, deleteList',
-            reason, deleteList)
+        console.log('deleteListCallback: deleteList, context',
+            deleteList, context)
 
 }
 const repositioningIndexCallback = (index:number) => {
@@ -227,11 +227,12 @@ const changeListRangeCallback = (newlistrange:number) => {
 
 }
 
-const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
+// const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
+const itemExceptionCallback = (index:number, context:GenericObject) => {
     
     demoCallbackFlagsRef.current.itemExceptionCallback && 
-        console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
-            index, itemID, returnvalue, location, error)
+        console.log('itemExceptionCallback: index, context',
+            index, context)
 
 }
 
@@ -376,7 +377,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
     let component
 
      if (index == 30) {
-         component = Promise.reject(new Error('not found for demo purposes'))
+         component = Promise.reject(new Error(`not found for demo purposes (${index})`))
      } else if (index == 40) {
          component = 5 // deliberate return of an invalid (non-React-component) content type for demo
      } else {
