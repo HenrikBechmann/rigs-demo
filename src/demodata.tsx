@@ -219,11 +219,11 @@ const changeListSizeCallback = (newlistsize:number) => {
 
 }
 
-const changeListRangeCallback = (newlistrange:number) => {
+const changeListRangeCallback = (newlistrange:number, context:object) => {
     
     demoCallbackFlagsRef.current.changeListRangeCallback && 
-        console.log('changeListRangeCallback: newlistrange', 
-            newlistrange)
+        console.log('changeListRangeCallback: newlistrange, context', 
+            newlistrange, context)
 
 }
 
