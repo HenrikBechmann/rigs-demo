@@ -195,11 +195,11 @@ const deleteListCallback = (deleteList:number[], context:object) => {
             deleteList, context)
 
 }
-const repositioningIndexCallback = (index:number) => {
+const repositioningIndexCallback = (index:number, context:object) => {
     
     demoCallbackFlagsRef.current.repositioningIndexCallback && 
-        console.log('repositioningIndexCallback: index',
-            index)
+        console.log('repositioningIndexCallback: index, context',
+            index, context)
 
 }
 
