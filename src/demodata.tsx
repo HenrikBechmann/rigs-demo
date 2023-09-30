@@ -203,19 +203,19 @@ const repositioningIndexCallback = (index:number) => {
 
 }
 
-const repositioningFlagCallback = (flag:boolean) => {
+const repositioningFlagCallback = (flag:boolean, context:object) => {
     
     demoCallbackFlagsRef.current.repositioningFlagCallback && 
-        console.log('repositioningFlagCallback: index',
-            flag)
+        console.log('repositioningFlagCallback: flag, context',
+            flag, context)
 
 }
 
-const changeListSizeCallback = (newlistsize:number) => {
+const changeListSizeCallback = (newlistsize:number, context:object) => {
     
     demoCallbackFlagsRef.current.changeListSizeCallback && 
-        console.log('changeListSizeCallback: newlistsize', 
-            newlistsize)
+        console.log('changeListSizeCallback: newlistsize, context', 
+            newlistsize, context)
 
 }
 
