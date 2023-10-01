@@ -582,7 +582,7 @@ const getFunctionToastContent = (
     case 'insert': {
       const result = functionsAPI.insertIndex(
         APIFunctionArguments.insertFrom, APIFunctionArguments.insertRange)
-      console.log('[changedList, replacedList, removedList, deletedList]',result)
+      console.log('[changes = [changedList, replacedList, removedList, deletedList], context]',result)
       if (APIFunctionArguments.insertRange) {
         codeblock = `functionsAPI.insertIndex(${APIFunctionArguments.insertFrom},${APIFunctionArguments.insertRange})`
       } else {
@@ -594,7 +594,7 @@ const getFunctionToastContent = (
     case 'remove': {
       const result = functionsAPI.removeIndex(
         APIFunctionArguments.removeFrom, APIFunctionArguments.removeRange)
-      console.log('[changedList, replacedList, removedList, deletedList]',result)
+      console.log('[changes = [changedList, replacedList, removedList, deletedList],context]',result)
       if (APIFunctionArguments.removeRange) {
         codeblock = `functionsAPI.removeIndex(${APIFunctionArguments.removeFrom},${APIFunctionArguments.removeRange})`
       } else {
