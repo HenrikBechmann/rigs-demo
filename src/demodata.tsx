@@ -168,11 +168,11 @@ export const demoCallbackFlagsRef = {current:{...defaultCallbackFlags} as Generi
 // the individual callback definitions follow...
 // -----------------
 
-const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
+const referenceIndexCallback = (index:number, context:GenericObject) => { //location:string, cradleState:string) => {
 
     demoCallbackFlagsRef.current.referenceIndexCallback && 
-        console.log('referenceIndexCallback: index, location, cradleState',
-            index, location, cradleState)
+        console.log('referenceIndexCallback: index, context',
+            index, context)
    
 }
 
