@@ -176,9 +176,9 @@ const referenceIndexCallback = (index:number, location:string, cradleState:strin
    
 }
 
-const boundaryCallback = (position:string, index:number) => {
+const boundaryCallback = (position:string, index:number, context:GenericObject) => {
     demoCallbackFlagsRef.current.boundaryCallback && 
-        console.log('boundaryCallback: position, index', position, index)
+        console.log('boundaryCallback: position, index, context', position, index, context)
 }
 
 const preloadIndexCallback = (index:number, context:GenericObject) => {
