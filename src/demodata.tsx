@@ -394,7 +394,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
     const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
@@ -490,7 +490,7 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
     const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID },
     }
@@ -877,7 +877,7 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
@@ -1036,7 +1036,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
@@ -1242,7 +1242,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
@@ -1591,7 +1591,7 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
@@ -1703,7 +1703,7 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
     const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
@@ -1770,7 +1770,7 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
     />
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{ type:cellType, sourceID},
     }
@@ -1857,7 +1857,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
     })
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{ type:cellType, sourceID},
     }
@@ -1968,7 +1968,7 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
     />
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{ type:cellType, sourceID},
     }
@@ -2034,7 +2034,7 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
     />
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{ type:cellType, sourceID},
     }
