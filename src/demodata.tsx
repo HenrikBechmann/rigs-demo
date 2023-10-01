@@ -328,11 +328,9 @@ const simpleComponentStyles = {
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
-    const {color, type, typeText, scrollerContext, sourceID} = props
+    const {color, type, typeText, itemID, scrollerContext, sourceID} = props
 
     const isDnd = scrollerContext?.scroller.current.dndEnabled
-
-    // console.log('isDnd, scrollerContext',isDnd, {...scrollerContext})
 
     if (color) simpleComponentStyles.outer.backgroundColor = color
     let localTypeText
@@ -347,12 +345,16 @@ const SimpleItem = (props:any) => {
 
     },[isDnd])
 
+    const indexstring = `list index ${scrollerContext.cell.current.index},`
+    const itemIDstring = `cache itemID ${itemID}`
+    const sourceIDstring = `sourceID: ${sourceID}`
+
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
             {isDnd && float}
-            {`list index ${props.scrollerContext.cell.current.index},`}<br style = {{clear:'left'}}/>
-            {`cache itemID ${props.itemID}`}
-            {sourceID && <><br />{`sourceID: ${sourceID}`}</>}
+            {indexstring}<br style = {{clear:'left'}}/>
+            {itemIDstring}
+            {sourceID && <><br />{sourceIDstring}</>}
             {localTypeText && <><br />{localTypeText}</>}
         </div>
     </div>
@@ -651,7 +653,9 @@ const VariableItem = (props:any) => {
 
     const testString = getVariableTestString(props.scrollerContext.cell.current.index, props.itemID)
 
-    const testStringRef = useRef(testString)
+    const testStringRef = useRef<any>(null)
+
+    testStringRef.current = testString
 
     const {
 
@@ -792,7 +796,7 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
     const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
 
     const itemPack = {
-        content:component,
+        component,
         dndOptions:{type:cellType, dragText},
         profile:{color, type:cellType, typeText, sourceID},
     }
