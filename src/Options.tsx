@@ -955,16 +955,16 @@ const Options = ({
 
     const APISnapshotFunctions = {
         getCacheIndexMap: () => {
-            console.log('cacheIndexMap =',functionsAPI.getCacheIndexMap())
+            console.log('[cacheIndexMap, context] =',functionsAPI.getCacheIndexMap())
         },
         getCacheItemMap: () => {
-            console.log('cacheItemMap =',functionsAPI.getCacheItemMap())
+            console.log('[cacheItemMap, context] =',functionsAPI.getCacheItemMap())
         },
         getCradleIndexMap: () => {
-            console.log('cradleIndexMap =',functionsAPI.getCradleIndexMap())
+            console.log('[cradleIndexMap, context] =',functionsAPI.getCradleIndexMap())
         },
         getPropertiesSnapshot: () => {
-            console.log('properties =',functionsAPI.getPropertiesSnapshot())
+            console.log('[properties, context] =',functionsAPI.getPropertiesSnapshot())
         }
     }
 
@@ -1134,7 +1134,7 @@ const Options = ({
 
         if (originalContentTypeSelectorRef.current === sessionContentTypeSelectorRef.current) {
 
-            const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+            const [scrollerProps] = functionsAPIRef.current.getPropertiesSnapshot()
             indexRangeRef.current = scrollerProps.virtualListProps.range
 
             return
@@ -1166,7 +1166,7 @@ const Options = ({
         switch (optionsState) {
             case 'setup': {
 
-                const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+                const [scrollerProps] = functionsAPIRef.current.getPropertiesSnapshot()
                 indexRangeRef.current = scrollerProps.virtualListProps.range
 
                 const contentSelection = sessionContentTypeSelectorRef.current

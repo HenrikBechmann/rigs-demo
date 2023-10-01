@@ -366,7 +366,7 @@ function App() {
         setTimeout(()=>{ // allow cycle for load scroller, get functions and indexRange
 
           if (functionsAPIRef.current.getPropertiesSnapshot) {
-              const props = functionsAPIRef.current.getPropertiesSnapshot()
+              const [props] = functionsAPIRef.current.getPropertiesSnapshot()
               indexRangeRef.current = props.virtualListProps.range
           }
           setDemoState('ready') 
