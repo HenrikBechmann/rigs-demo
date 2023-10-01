@@ -181,11 +181,11 @@ const boundaryCallback = (position:string, index:number) => {
         console.log('boundaryCallback: position, index', position, index)
 }
 
-const preloadIndexCallback = (index:number) => {
+const preloadIndexCallback = (index:number, context:GenericObject) => {
     
     demoCallbackFlagsRef.current.preloadIndexCallback && 
-        console.log('preloadIndexCallback: index', 
-            index)
+        console.log('preloadIndexCallback: index, context', 
+            index, context)
 
 }
 const deleteListCallback = (deleteList:number[], context:object) => {
