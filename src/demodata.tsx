@@ -380,6 +380,8 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
      if (index == 30) {
          component = Promise.reject(new Error(`not found for demo purposes (${index})`))
+     } else if (index == 35) {
+         return undefined
      } else if (index == 40) {
          component = 5 // deliberate return of an invalid (non-React-component) content type for demo
      } else {
