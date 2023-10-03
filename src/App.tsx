@@ -409,7 +409,7 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.4.2-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-2.0.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
