@@ -611,7 +611,7 @@ const getFunctionToastContent = (
       } else {
         codeblock = `functionsAPI.moveIndex(${APIFunctionArguments.moveTo},${APIFunctionArguments.moveFrom})`
       }
-      console.log('[processedIndexList, movedIndexList, context]', result)
+      console.log('[processedIndexList, movedIndexList, displacedIndexList, context]', result)
       seeconsole = true
       break
     }
