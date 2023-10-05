@@ -54,6 +54,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
             const dndOptions = {
                 accept:acceptAll(testData),
+                dropEffect:undefined // 'move' //'copy',
             }
 
             dndOptionsRef.current = dndOptions
