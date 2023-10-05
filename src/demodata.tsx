@@ -53,7 +53,6 @@ export const testNestingAccepts:GenericObject = {
 }
 
 // selction drivers for dnd
-
 function getRandomInt(max:number) {
   return Math.floor(Math.random() * max);
 }
