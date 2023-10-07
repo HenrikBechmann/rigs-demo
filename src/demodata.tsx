@@ -367,13 +367,27 @@ const SimpleItem = (props:any) => {
 // the getItemPack function for simple uniform content
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accept = context.accept
+    const accept = context.accept;
+    let cellType, typeText, color, sourceID
 
-    const [cellType, typeText] = selectCellType(testUniformData,accept,index)
+    if (context.contextType == 'dndFetchRequest') {
 
-    const color = testUniformDataColors[cellType]
+        cellType = context.item.dndOptions.type;
+        ({ 
+            typeText,
+            color,
+            sourceID,
+        } = context.item.profile)
 
-    const sourceID = globalSourceID++
+    } else {
+
+        ([cellType, typeText] = selectCellType(testUniformData,accept,index))
+
+        color = testUniformDataColors[cellType]
+
+        sourceID = globalSourceID++
+
+    }
 
     let component
 
