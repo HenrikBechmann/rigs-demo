@@ -368,26 +368,46 @@ const SimpleItem = (props:any) => {
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
     const accept = context.accept;
-    let cellType, typeText, color, sourceID
+    let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
     if (context.contextType == 'dndFetchRequest') {
 
-        cellType = context.item.dndOptions.type;
+        ({ type:cellType } = context.item.dndOptions)
+        const { profile } = context.item
+        const { dropEffect } = context.item;
         ({ 
             typeText,
+            originalTypeText,
             color,
             sourceID,
         } = context.item.profile)
+        if (dropEffect == 'copy') {
+            ({ copyCount } = profile);
+            copyCount = copyCount ?? 0
+            copyCount++
+            if (!originalTypeText) {
+                originalTypeText = typeText
+            } else {
+                typeText = originalTypeText
+            }
+            typeText = `copy (${copyCount}) ` + typeText
+        }
 
     } else {
 
-        ([cellType, typeText] = selectCellType(testUniformData,accept,index))
+        ([cellType, typeText] = selectCellType(testUniformData,accept,index));
 
         color = testUniformDataColors[cellType]
 
         sourceID = globalSourceID++
 
     }
+
+    let dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+    if (copyCount) {
+        dragText = `copy (${copyCount}) ` + dragText
+    }
+
 
     let component
 
@@ -408,12 +428,18 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
              scrollerContext = {null} />
      }
 
-    const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+    const profile:GenericObject = {color, type:cellType, typeText, sourceID}
+    if (copyCount) {
+        profile.copyCount = copyCount
+    }
+    if (originalTypeText) {
+        profile.originalTypeText = originalTypeText
+    }
 
     const itemPack = {
         component,
         dndOptions:{type:cellType, dragText},
-        profile:{color, type:cellType, typeText, sourceID},
+        profile,
     }
 
      return itemPack
