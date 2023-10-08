@@ -1727,12 +1727,45 @@ const UniformSubscrollerItem = (props:any) => {
 const getUniformSubscrollerItemPack = (index:any, itemID:number, context:GenericObject) => {
 
     const accept = context.accept
+    let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
-    const [cellType, typeText] = selectCellType(testUniformData,accept,index)
+    if (context.contextType == 'dndFetchRequest') {
 
-    const color = testUniformDataColors[cellType]
+        ({ type:cellType } = context.item.dndOptions)
+        const { profile } = context.item
+        const { dropEffect } = context.item;
+        ({ 
+            typeText,
+            originalTypeText,
+            color,
+            sourceID,
+        } = context.item.profile)
+        if (dropEffect == 'copy') {
+            ({ copyCount } = profile);
+            copyCount = copyCount ?? 0
+            copyCount++
+            if (!originalTypeText) {
+                originalTypeText = typeText
+            } else {
+                typeText = originalTypeText
+            }
+            typeText = `copy (${copyCount}) ` + typeText
+        }
 
-    const sourceID = globalSourceID++
+    } else {
+
+        ([cellType, typeText] = selectCellType(testUniformData,accept,index));
+
+        color = testUniformDataColors[cellType]
+
+        sourceID = globalSourceID++
+
+    }
+
+    let dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+    if (copyCount) {
+        dragText = `copy (${copyCount}) ` + dragText
+    }
 
     const component = 
         <UniformSubscrollerItem 
@@ -1745,12 +1778,19 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
             scrollerContext = {null}
         />
 
-    const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+    // const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+    const profile:GenericObject = {color, type:cellType, typeText, sourceID}
+    if (copyCount) {
+        profile.copyCount = copyCount
+    }
+    if (originalTypeText) {
+        profile.originalTypeText = originalTypeText
+    }
 
     const itemPack = {
         component,
         dndOptions:{type:cellType, dragText},
-        profile:{color, type:cellType, typeText, sourceID},
+        profile,
     }
 
      return itemPack
