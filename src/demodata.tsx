@@ -1443,7 +1443,7 @@ const SubscrollerComponent = (props:any) => {
     const {
         // orientation, 
         gap, 
-        padding, 
+        // padding, 
         cellHeight, 
         cellWidth, 
         runwaySize, 
@@ -1456,9 +1456,17 @@ const SubscrollerComponent = (props:any) => {
         styles,
     } = properties
 
-    let { startingListRange } = properties
+    let { startingListRange, padding }:
+        {
+            startingListRange:number[] | number,
+            padding:number[] | number
+            
+        } = properties
 
-    if (index === 1) startingListRange = []
+    if (index === 1) {
+        startingListRange = []
+        padding = [20,10]
+    }
 
     const { scroller } = scrollerContext
 

@@ -230,7 +230,7 @@ function App() {
   },[])
 
   // baseline - static
-  const defaultContentTypeSelector = 'simplecontent'
+  const defaultContentTypeSelector = 'nestinguniform' //'simplecontent'
   const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackFlags imported above
