@@ -1449,12 +1449,16 @@ const SubscrollerComponent = (props:any) => {
         runwaySize, 
         startingIndex, 
         // startingListSize,
-        startingListRange, 
+        // startingListRange, 
         getItemPack,
         cache,
         layout,
         styles,
     } = properties
+
+    let { startingListRange } = properties
+
+    if (index === 1) startingListRange = []
 
     const { scroller } = scrollerContext
 
