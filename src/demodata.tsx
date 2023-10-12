@@ -1851,9 +1851,9 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        type:cellType,
+        // type:cellType,
         accept,
-        dragText,
+        // dragText,
     }
 
     const component = <SubscrollerComponent 
@@ -1930,9 +1930,9 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        type:cellType,
+        // type:cellType,
         accept,
-        dragText,
+        // dragText,
     }
 
     const component = new Promise((resolve, reject) => {
@@ -2049,9 +2049,9 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        type:cellType,
+        // type:cellType,
         accept,
-        dragText,
+        // dragText,
     }
 
     const component = <SubscrollerComponent 
@@ -2115,9 +2115,9 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        type:cellType,
+        // type:cellType,
         accept,
-        dragText,
+        // dragText,
     }
 
     const component = <SubscrollerComponent 

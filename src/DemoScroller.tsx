@@ -6,6 +6,26 @@ import {testUniformData, testVariableData, testNestingAccepts, acceptAll, Generi
 
 import GridScroller, { RigsDnd as DndScroller } from 'react-infinite-grid-scroller'
 
+const getDropEffect = (sourceScrollerID:number, targetScrollerID:number, context:GenericObject) => {
+
+    let hostDropEffect
+
+    // if (sourceScrollerID === targetScrollerID) {
+
+    //     hostDropEffect = 'move'
+
+    // } else {
+
+    //     hostDropEffect = 'copy'
+
+    // }
+
+    console.log('getDropEffect: context',context)
+
+    return hostDropEffect
+
+}
+
 const testDataSource:GenericObject = {
 
   simplecontent:testUniformData,
@@ -61,7 +81,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
         }
 
-        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector],getDropEffect}
 
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
@@ -89,7 +109,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
         }
 
-        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector],getDropEffect}
 
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
