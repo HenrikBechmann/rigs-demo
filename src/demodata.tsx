@@ -1852,6 +1852,7 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
 
     const dndOptions = {
         // type:cellType,
+        profile:{accept},
         accept,
         // dragText,
     }
@@ -1931,6 +1932,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
 
     const dndOptions = {
         // type:cellType,
+        profile:{accept},
         accept,
         // dragText,
     }
@@ -2050,6 +2052,7 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
 
     const dndOptions = {
         // type:cellType,
+        profile:{accept},
         accept,
         // dragText,
     }
@@ -2116,6 +2119,7 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
 
     const dndOptions = {
         // type:cellType,
+        profile:{accept},
         accept,
         // dragText,
     }
