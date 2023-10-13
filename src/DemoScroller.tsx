@@ -20,7 +20,7 @@ const getDropEffect = (sourceScrollerID:number, targetScrollerID:number, context
 
     // }
 
-    console.log('getDropEffect: context',context)
+    // console.log('getDropEffect: context',context)
 
     return hostDropEffect
 
