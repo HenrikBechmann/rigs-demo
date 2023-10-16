@@ -151,7 +151,6 @@ export const defaultCallbackFlags = {
     repositioningIndexCallback:false,
     preloadIndexCallback:false,
     itemExceptionCallback:false,
-    changeListSizeCallback:false,
     changeListRangeCallback:false,
     deleteListCallback:false,
     repositioningFlagCallback:false,
@@ -210,14 +209,6 @@ const repositioningFlagCallback = (flag:boolean, context:object) => {
 
 }
 
-const changeListSizeCallback = (newlistsize:number, context:object) => {
-    
-    demoCallbackFlagsRef.current.changeListSizeCallback && 
-        console.log('changeListSizeCallback: newlistsize, context', 
-            newlistsize, context)
-
-}
-
 const changeListRangeCallback = (newlistrange:number, context:object) => {
     
     demoCallbackFlagsRef.current.changeListRangeCallback && 
@@ -257,7 +248,6 @@ const callbacks = {
     repositioningIndexCallback,
     preloadIndexCallback,
     itemExceptionCallback,
-    changeListSizeCallback,
     changeListRangeCallback,
     deleteListCallback,
     repositioningFlagCallback,
@@ -472,7 +462,6 @@ const simplePlaceholderMessages = {
 // properties for the simple uniform content scroller
 const simplecontentProperties = {
     startingIndex:0,
-    // startingListSize:300,
     startingListRange:[-50,50],
     orientation: 'vertical',
     cellHeight:150,
@@ -555,7 +544,6 @@ const simplePromisesScrollerStyles = {
 // properties for the simple promises scroller
 const simplepromisesProperties = {
     startingIndex:0,
-    // startingListSize:300,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:150,
@@ -616,7 +604,6 @@ const simpleAutoExpandScrollerStyles = {
 // properties for the simple promises scroller
 const simpleAutoExpandProperties = {
     startingIndex:0,
-    // startingListSize:300,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:150,
@@ -858,7 +845,6 @@ const variablePlaceholderMessages = {
 
 const variablecontentProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-60,60],
     orientation:'vertical',
     cellHeight:320,
@@ -933,7 +919,6 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
 
 const variablepromiseProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
@@ -1092,7 +1077,6 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
 
 const variabledynamicProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
@@ -1298,7 +1282,6 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
 const variableoversizedProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:800,
@@ -1353,7 +1336,6 @@ const variableAutoexpandPlaceholderMessages = {
 
 const variableautoexpandProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-60,60],
     orientation:'vertical',
     cellHeight:320,
@@ -1448,8 +1430,6 @@ const SubscrollerComponent = (props:any) => {
         cellWidth, 
         runwaySize, 
         startingIndex, 
-        // startingListSize,
-        // startingListRange, 
         getItemPack,
         cache,
         layout,
@@ -1523,7 +1503,6 @@ const SubscrollerComponent = (props:any) => {
                 cellHeight = {cellHeight}
                 cellWidth = {cellWidth}
                 runwaySize = {runwaySize}
-                // startingListSize = {startingListSize}
                 startingListRange = {startingListRange}
                 startingIndex = {startingIndex}
                 getItemPack = {getItemPack}
@@ -1660,7 +1639,6 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
 const variableSubscrollerProperties = {
 
     startingIndex:0,
-    // startingListSize:100,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:300,
@@ -1812,7 +1790,6 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
 const uniformSubscrollerProperties = {
 
     startingIndex:0,
-    // startingListSize:100,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:45,
@@ -1888,7 +1865,6 @@ const nestingScrollerStyles = {
 
 const nestingmixedProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-50,50],
     orientation:'horizontal',
     cellHeight:400,
@@ -1966,7 +1942,6 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
 
 const nestingmixedpromisesProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-50,50],
     orientation:'horizontal',
     cellHeight:400,
@@ -2010,7 +1985,6 @@ const getNestingMixedAutoExpansionCount = (position:string, index:number) => {
 
 const nestingmixedautoexpandProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-50,50],
     orientation:'horizontal',
     cellHeight:400,
@@ -2078,7 +2052,6 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
 
 const nestinguniformProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-50,50],
     orientation:'horizontal',
     cellHeight:400,
@@ -2145,7 +2118,6 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
 
 const nestingvariableProperties = {
     startingIndex:0,
-    // startingListSize:200,
     startingListRange:[-50,50],
     orientation:'horizontal',
     cellHeight:400,

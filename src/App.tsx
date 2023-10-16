@@ -43,7 +43,6 @@ const defaultAPIFunctionArguments:GenericObject = {
   scrollByPixel:'',
   scrolltobehavior:'',
   scrollbybehavior:'',
-  listsize:'',
   rangeAPIType:'rangeAPIvalues',
   listLowIndex:'',
   listHighIndex:'',
@@ -547,11 +546,6 @@ const getFunctionToastContent = (
           functionsAPI.scrollByPixel(APIFunctionArguments.scrollByPixel)
           codeblock = `functionsAPI.scrollByPixel(${APIFunctionArguments.scrollByPixel})`
       }
-      break
-    }
-    case 'listsize': {
-      functionsAPI.setListSize(APIFunctionArguments.listsize)
-      codeblock = `functionsAPI.setListSize(${APIFunctionArguments.listsize})`
       break
     }
     case 'listrange': {

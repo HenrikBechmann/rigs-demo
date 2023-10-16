@@ -167,7 +167,6 @@ const callbacks = {
     referenceIndexCallback, // current index at the Cradle axis
     boundaryCallback, // current start-of-list or end-of-list index loaded to Cradle
     itemExceptionCallback, // information on failed getItemPack call
-    changeListSizeCallback, // list size has changed
     changeListRangeCallback, // list range has changed
     deleteListCallback, // items have been deleted from the cache
     repositioningFlagCallback, // repositioning has started/ended
@@ -178,16 +177,6 @@ const callbacks = {
 ~~~
 See the formal documentation (linked in the _Documentation &amp; Source Code_ section) for details.
 
-Callbacks should be written as closures something like this (example from this site's demodata module):
-~~~
-const changeListSizeCallback = (newlistsize:number) => {
-    
-    demoCallbackFlagsRef.current.changeListSizeCallback && 
-        console.log('changeListSizeCallback: newlistsize', 
-            newlistsize)
-
-}
-~~~
 This example outputs feedback to the browser console if a flag has been set for the callback.
 
 The special callback \`functionsCallback\`, which acquires API functions from RIGS, should be written something 
@@ -258,16 +247,9 @@ of the \`Cradle\` to the specified index.
 
 \`scrollByPixel(...)\` scrolls the scroller up or down by the number of provided pixels, along the current orientation.
 
-The \`setListSize(...)\` function allows the host to modify the size of the virtual list. If any cache or \`Cradle\` 
-items become out of scope as a result of this change they are removed from the cache, and the \`Cradle\` is moved as
-appropriate. The size of the virtual list is initially set with the \`startingListSize\` property. 
-Finally, the list size may be changed as a side effect of cache management calls 
-listed below.
-
 \`setListRange(...)\` optionally takes an array of two numbers \`[lowindex, highindex]\`, being the \`lowindex\` and 
 \`highindex\` of the virtual list. \`lowindex\` must be <= \`highindex\`, but both can be positive or negative 
-integers. \`setListRange\` if present supercedes \`startingListSize\`. If \`setListRange\` is given an empty array 
-(\`[]\`) it creates an empty virtual list.
+integers. If \`setListRange\` is given an empty array (\`[]\`) it creates an empty virtual list.
 
 \`prependIndexCount(...)\` takes a positive integer for the number of indexes to add to the start of the virtual list.
 

@@ -84,7 +84,6 @@ const
         cellMinHeight:'properties',
         cellMinWidth:'properties',
         startingIndex:'properties',
-        startingListSize:'properties',
         rangePropertyType:'properties',
         startingLowIndex:'properties',
         startingHighIndex:'properties',
@@ -97,7 +96,6 @@ const
         scrollByPixel:'operations',
         scrolltobehavior:'operations',
         scrollbybehavior:'operations',
-        listsize:'operations',
         prependCount:'operations',
         appendCount:'operations',
         rangeAPIType:'properties',
@@ -121,7 +119,6 @@ const
         cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
         cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
         startingIndex:'blank, or integer greater than or equal to listlowindex',
-        startingListSize:'integer: required, with minimum 0',
         startingLowIndex:'integer: must be less than or equal to high index',
         startingHighIndex:'integer: must be greater than or equal to low index',
         padding:'blank, or integer, or comma separated list of 2-4 integers, all greater than or equal to 0',
@@ -131,7 +128,6 @@ const
         scrolltoIndex:'integer: required, greater than or equal to listlowindex',
         scrollToPixel:'integer:required, greater than or equal to 0',
         scrollByPixel:'integer:required',
-        listsize:'integer: required, greater than or equal to 0',
         listLowIndex:'integer: required, less than or equal to high index',
         listHighIndex:'integer:required, greater than or equal to low index',
         prependCount:'integer:required, greater than or equal to 0',
@@ -147,7 +143,6 @@ const
 
     accessControlledAPIFields = [
         'scrolltoIndex','scrollToPixel','scrollByPixel','scrolltobehavior','scrollbybehavior',
-        'listsize',
         'prependCount','appendCount',
         'listLowIndex','listHighIndex','rangeAPIType',
         'insertFrom', 'insertRange',
@@ -235,7 +230,6 @@ const Options = ({
             scrollByPixel:false,
             scrolltobehavior:false,
             scrollbybehavior:false,
-            listsize:false,
             rangeAPIType:false,
             listLowIndex:false,
             listHighIndex:false,
@@ -260,7 +254,6 @@ const Options = ({
             cellMinHeight:false,
             cellMinWidth:false,
             startingIndex:false,
-            startingListSize:false,
             startingLowIndex:false,
             startingHighIndex:false,
             padding:false,
@@ -271,7 +264,6 @@ const Options = ({
             scrolltoIndex:false,
             scrollToPixel:false,
             scrollByPixel:false,
-            listsize:false,
             listLowIndex:false,
             listHighIndex:false,
             prependCount:false,
@@ -291,7 +283,6 @@ const Options = ({
             goto:false,
             gotopixel:false,
             gobypixel:false,
-            listsize:false,
             prependCount:false,
             appendCount:false,
             listrange:false,
@@ -368,11 +359,6 @@ const Options = ({
                 isInvalid = !isValueGreaterThanOrEqualToMinValue(value,listlowindex)
             }
             invalidFieldFlags.startingIndex = isInvalid
-            return isInvalid
-        },
-        startingListSize:(value:string) => {
-            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, 0))
-            invalidFieldFlags.startingListSize = isInvalid
             return isInvalid
         },
         startingLowIndex:(value:string) => {
@@ -484,11 +470,6 @@ const Options = ({
         scrollByPixel:(value:string) => {
             const isInvalid = !isInteger(value)
             invalidFieldFlags.scrollByPixel = isInvalid
-            return isInvalid
-        },
-        listsize:(value:string) => {
-            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, 0))
-            invalidFieldFlags.listsize = isInvalid
             return isInvalid
         },
         listLowIndex:(value:string) => {
@@ -682,16 +663,6 @@ const Options = ({
             }
             setEditContentTypeProperties({...editContentTypeProperties})
         },
-        startingListSize:(input:string) => {
-            const editContentTypeProperties = editContentTypePropertiesRef.current
-            editContentTypeProperties.startingListSize = input
-            if (!isInvalidTests.startingListSize(input)) {
-                const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
-            }
-            setEditContentTypeProperties({...editContentTypeProperties})
-        },
         rangePropertyType:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
             editContentTypeProperties.rangePropertyType = input
@@ -827,14 +798,6 @@ const Options = ({
             editAPIFunctionArguments.scrollbybehavior = value
             sessionAPIFunctionArgumentsRef.current.scrollbybehavior = value
             setEditContentTypeProperties({...editContentTypeProperties})
-        },
-        listsize:(input:string) => {
-            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
-            editAPIFunctionArguments.listsize = input
-            if (!isInvalidTests.listsize(input)) {
-                sessionAPIFunctionArgumentsRef.current.listsize = input
-            }
-            setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
         listLowIndex:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
@@ -1063,11 +1026,6 @@ const Options = ({
                         isInvalidTests.scrollByPixel(editAPIFunctionArgumentsRef.current.scrollByPixel)
                         break
                     }
-                    case 'listsize':{
-                        APIdisabledFlags.listsize = false
-                        isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
-                        break
-                    }
                     case 'prependCount':{
                         APIdisabledFlags.prependCount = false
                         isInvalidTests.prependCount(editAPIFunctionArgumentsRef.current.prependCount)
@@ -1143,11 +1101,7 @@ const Options = ({
 
         const contentTypeProperties = 
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current]
-        if (contentTypeProperties.startingListRange) {
-            indexRangeRef.current = contentTypeProperties.startingListRange
-        } else {
-            indexRangeRef.current = [0, contentTypeProperties.startingListSize]
-        }
+        indexRangeRef.current = contentTypeProperties.startingListRange
 
     }
 
@@ -1465,36 +1419,6 @@ const Options = ({
                         'Go to index' in the 'Service functions: operations' section.
                     </Text>
 
-                    <Heading size = 'xs'>Starting list size</Heading>
-                    
-                    <FormControl isInvalid = {invalidFieldFlags.startingListSize} >
-                        <HStack>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-
-                            <FormLabel fontSize = 'sm'>startingListSize:</FormLabel>
-
-                            <NumberInput 
-                                value = {editContentTypeProperties.startingListSize} 
-                                size = 'sm'
-                                onChange = {onChangeFunctions.startingListSize}
-                                clampValueOnBlur = {false}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        </HStack>
-                        <FormErrorMessage>
-                            {errorMessages.startingListSize}
-                        </FormErrorMessage>
-                    </FormControl>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integer. This will only apply right after a content type change. It will 
-                        set the starting list size of the session for the content type. See also
-                        'Change virtual list size' in the 'Service functions: operations' section. 
-                        Ignored if 'Starting list range' is set.
-                    </Text>
-
                     <Heading size = 'xs'>Starting list range</Heading>
 
                     <RadioGroup 
@@ -1772,21 +1696,6 @@ const Options = ({
                         </Checkbox>
                         <FormHelperText>
                             During rapid repositioning mode, this streams the virtual location of the scroller.
-                        </FormHelperText>
-                    </FormControl>
-
-                    <FormControl borderTop = '1px'>
-                        <Checkbox 
-                            isChecked = {editCallbackFlags.changeListSizeCallback} 
-                            size = 'sm'
-                            mt = {2}
-                            id = 'changeListSizeCallback'
-                            onChange = {onChangeFunctions.callbackSettings}
-                        >
-                            List size change
-                        </Checkbox>
-                        <FormHelperText>
-                            Reports change to list size for any standard reason.
                         </FormHelperText>
                     </FormControl>
 
@@ -2114,50 +2023,6 @@ const Options = ({
                         </FormControl>
 
                     </VStack>
-
-                    <Heading size = 'xs'>Change virtual list size</Heading>
-
-                    <HStack alignItems = 'baseline'>
-
-                        <FormControl 
-                            isDisabled = {APIdisabledFlags.listsize}
-                            isInvalid = {invalidFieldFlags.listsize} >
-                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-
-                                <FormLabel fontSize = 'sm'>size:</FormLabel>
-
-                                <NumberInput 
-                                    value = {editAPIFunctionArguments.listsize} 
-                                    size = 'sm'
-                                    onChange = {onChangeFunctions.listsize}
-                                    clampValueOnBlur = {false}
-                                >
-                                    <NumberInputField border = '2px' />
-                                </NumberInput>
-                            </InputGroup>
-                            <FormErrorMessage>
-                                {errorMessages.listsize}
-                            </FormErrorMessage>
-                        </FormControl>
-
-                        <FormControl>
-                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-
-                                <FormLabel htmlFor='listsize' fontSize = 'sm'>Enable</FormLabel>
-
-                                <Switch 
-                                    isChecked = {functionEnabledSettings.listsize} 
-                                    onChange = {onChangeFunctions.onChangeEnabler} 
-                                    id='listsize' 
-                                />
-                            </InputGroup>
-                        </FormControl>
-
-                    </HStack>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integer. Change the size of the scroller's virtual list.
-                    </Text>
 
                     <Heading size = 'xs'>Change virtual list range</Heading>
 
