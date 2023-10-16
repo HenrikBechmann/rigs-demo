@@ -102,10 +102,14 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
             }
 
             const dndOptions = {
+                // master:{enabled:false},
                 accept,
+                // enabled:false,
             }
 
             dndOptionsRef.current = dndOptions
+
+            console.log('demo dndOptions',dndOptionsRef.current)
 
         }
 
