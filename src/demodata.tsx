@@ -1509,8 +1509,8 @@ const SubscrollerComponent = (props:any) => {
         const target = event.target as HTMLInputElement
         const isChecked = target.checked
         dndOptionsRef.current.enabled = isChecked
-        const [snapshot] = subscrollerAPIRef.current.getPropertiesSnapshot()
-        startingIndexRef.current = snapshot.cradleContentProps.axisReferenceIndex
+        // const [snapshot] = subscrollerAPIRef.current.getPropertiesSnapshot()
+        // startingIndexRef.current = snapshot.cradleContentProps.axisReferenceIndex
         // console.log('startingIndexRef.current, snapshot',startingIndexRef.current, snapshot)
         setTestState('revised')
     }
