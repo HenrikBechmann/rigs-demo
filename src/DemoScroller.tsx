@@ -102,7 +102,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
             }
 
             const dndOptions = {
-                // master:{enabled:false},
+                master:{enabled:false},
                 accept,
                 // enabled:false,
             }

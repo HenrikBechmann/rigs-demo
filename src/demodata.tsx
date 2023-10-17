@@ -6,6 +6,8 @@ import Scroller from 'react-infinite-grid-scroller'
 
 import { setDemoStatePack } from './App'
 
+import {FormControl, Checkbox} from '@chakra-ui/react'
+
 /*
     CONTENT TYPES are defined just below the SCROLLER CALLBACKS section.
 */
@@ -1429,17 +1431,18 @@ const SubscrollerComponent = (props:any) => {
         cellHeight, 
         cellWidth, 
         runwaySize, 
-        startingIndex, 
+        // startingIndex, 
         getItemPack,
         cache,
         layout,
         styles,
     } = properties
 
-    let { startingListRange, padding }:
+    let { startingListRange, padding, startingIndex }:
         {
             startingListRange:number[] | number,
-            padding:number[] | number
+            padding:number[] | number,
+            startingIndex:number,
             
         } = properties
 
@@ -1448,10 +1451,25 @@ const SubscrollerComponent = (props:any) => {
         padding = [20,10]
     }
 
+    const startingIndexRef = useRef(startingIndex)
+
+    const dndOptionsRef = useRef(dndOptions)
+
     const { scroller } = scrollerContext
 
     const dynamicorientationRef = useRef<null | string>(null)
 
+    const subscrollerAPIRef = useRef({} as GenericObject)
+
+    const functionsCallback = (functions:GenericObject) => {
+
+        subscrollerAPIRef.current = functions
+
+    }
+
+    const callbacks = {
+        functionsCallback,
+    }
     useEffect(() =>{
 
         const { orientation } = scroller.current
@@ -1487,12 +1505,34 @@ const SubscrollerComponent = (props:any) => {
 
     },[isDnd])
 
+    const checkdnd = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndOptionsRef.current.enabled = isChecked
+        const [snapshot] = subscrollerAPIRef.current.getPropertiesSnapshot()
+        startingIndexRef.current = snapshot.cradleContentProps.axisReferenceIndex
+        // console.log('startingIndexRef.current, snapshot',startingIndexRef.current, snapshot)
+        setTestState('revised')
+    }
+
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             {isDnd && float}
-            [{props.scrollerContext.cell.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
+            [{scrollerContext.cell.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
             {' sourceID: '+ sourceID + '; ' + dndOptions.accept.join(', ')}
+            <FormControl borderTop = '1px'>
+                <Checkbox 
+                    isChecked = {dndOptionsRef.current.enabled} 
+                    size = 'sm'
+                    mt = {2}
+                    id = 'referenceIndexCallback'
+                    onChange = {checkdnd}
+                >
+                    dnd
+                </Checkbox>
+            </FormControl>
         </div>
+
         <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
             <Scroller 
@@ -1504,9 +1544,9 @@ const SubscrollerComponent = (props:any) => {
                 cellWidth = {cellWidth}
                 runwaySize = {runwaySize}
                 startingListRange = {startingListRange}
-                startingIndex = {startingIndex}
+                startingIndex = {startingIndexRef.current}
                 getItemPack = {getItemPack}
-                callbacks = { null }
+                callbacks = { callbacks }
                 placeholder = { null }
                 styles = { styles }
                 layout = { layout }
