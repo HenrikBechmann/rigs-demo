@@ -1520,7 +1520,8 @@ const SubscrollerComponent = (props:any) => {
             {isDnd && float}
             [{scrollerContext.cell.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
             {' sourceID: '+ sourceID + '; ' + dndOptions.accept.join(', ')}
-            <FormControl borderTop = '1px'>
+            {scrollerContext.scroller.current.dndInstalled 
+            && <FormControl borderTop = '1px' style = {{clear:'left'}}>
                 <Checkbox 
                     isChecked = {dndOptionsRef.current.enabled} 
                     size = 'sm'
@@ -1530,7 +1531,7 @@ const SubscrollerComponent = (props:any) => {
                 >
                     dnd
                 </Checkbox>
-            </FormControl>
+            </FormControl>}
         </div>
 
         <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
@@ -1784,6 +1785,7 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
 
     } else {
 
+        // console.log('testUniformData,accept,index',testUniformData,accept,index);
         ([cellType, typeText] = selectCellType(testUniformData,accept,index));
 
         color = testUniformDataColors[cellType]
@@ -1868,10 +1870,8 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        // type:cellType,
         profile:{accept},
         accept,
-        // dragText,
     }
 
     const component = <SubscrollerComponent 

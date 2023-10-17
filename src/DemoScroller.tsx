@@ -86,7 +86,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
     } else if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',
-        'nestinguniform','nestingvariable'].includes(demoContentTypeSelector)){
+        /*'nestinguniform',*/'nestingvariable'].includes(demoContentTypeSelector)){
 
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
 
@@ -121,10 +121,12 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
 
-                demoContentTypeSelectorRef.current = demoContentTypeSelector
+            demoContentTypeSelectorRef.current = demoContentTypeSelector
             const dndOptions = {
                 accept:acceptAll(testData),
             }
+
+            console.log('GridScroller dndOptions',dndOptions, testData)
 
             dndOptionsRef.current = dndOptions
 

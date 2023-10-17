@@ -173,7 +173,11 @@ const Options = ({
     const 
         functionsAPI = functionsAPIRef.current,
 
-        indexRangeRef = useRef<number[]>([]),
+        indexRangeRef = useRef<number[]>([])
+
+    console.log('indexRangeRef',indexRangeRef)
+
+    const
         [listlowindex, listhighindex] = indexRangeRef.current,
         rangesize = 
             indexRangeRef.current.length == 0?
@@ -1101,7 +1105,13 @@ const Options = ({
 
         const contentTypeProperties = 
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current]
-        indexRangeRef.current = contentTypeProperties.startingListRange
+        if (contentTypeProperties.rangePropertyType = 'rangepropertyvalues') {
+            indexRangeRef.current = // contentTypeProperties.startingListRange
+                [contentTypeProperties.startingLowIndex,contentTypeProperties.startingHighIndex]
+        } else {
+            indexRangeRef.current = []
+        }
+        // console.log('updating sessionContentTypeSelectorRef, indexRangeRef, contentTypeProperties\n',sessionContentTypeSelectorRef, indexRangeRef, contentTypeProperties)
 
     }
 
