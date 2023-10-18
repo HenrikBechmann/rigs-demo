@@ -359,7 +359,7 @@ const SimpleItem = (props:any) => {
 // the getItemPack function for simple uniform content
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accept = context.accept;
+    const accept = context.sourceProfile.accept;
     let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
     if (context.contextType == 'dndFetchRequest') {
@@ -495,7 +495,7 @@ const simplecontentProperties = {
 // the getItemPack function for simple uniform promises; note the setTimeout
 const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accept = context.accept
+    const accept = context.sourceProfile.accept
 
     const [cellType, typeText] = selectCellType(testUniformData,accept,index)
 
@@ -798,7 +798,7 @@ const VariableItem = (props:any) => {
 
 const getVariableItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accept = context.accept
+    const accept = context.sourceProfile.accept
 
     const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
@@ -880,7 +880,7 @@ const variablecontentProperties = {
 const getVariableItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
     
-    const accept = context.accept
+    const accept = context.sourceProfile.accept
 
     const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
@@ -1040,7 +1040,7 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
 
      // return <VariableItemDynamic index = {index} itemID = {itemID} scrollerContext = {null}/>    
 
-    const accept = context.accept
+    const accept = context.sourceProfile.accept
 
     const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
@@ -1245,7 +1245,7 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
      // return <VariableOversizedItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
 
-    const accept = context.accept
+    const accept = context.sourceProfile.accept
 
     const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
@@ -1646,7 +1646,7 @@ const VariableSubscrollerItem = (props:any) => {
 
 const getVariableSubscrollerItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const accept = context.accept
+    const accept = context.sourceProfile.accept
 
     const [cellType, typeText] = selectCellType(testVariableData,accept,index)
 
@@ -1757,7 +1757,7 @@ const UniformSubscrollerItem = (props:any) => {
 
 const getUniformSubscrollerItemPack = (index:any, itemID:number, context:GenericObject) => {
 
-    const accept = context.accept
+    const accept = context.sourceProfile.accept
     let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
     if (context.contextType == 'dndFetchRequest') {
@@ -1859,7 +1859,7 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
 
     const selector = (Math.abs(index) % 2)
 
-    const variant = context.accept[selector]
+    const variant = context.sourceProfile.accept[selector]
 
     const cellType = variant
 
@@ -1870,7 +1870,6 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        profile:{accept},
         accept,
     }
 
@@ -1880,6 +1879,7 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
         variant = { variant }
         sourceID = {sourceID}
         dndOptions = { dndOptions }
+        profile = {accept}
         cacheAPI = { null }
         scrollerContext = { null }
     />
@@ -1936,7 +1936,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
 
     const selector = (Math.abs(index) % 2)
 
-    const variant = context.accept[selector]
+    const variant = context.sourceProfile.accept[selector]
 
     const cellType = variant
 
@@ -1947,10 +1947,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        // type:cellType,
-        profile:{accept},
         accept,
-        // dragText,
     }
 
     const component = new Promise((resolve, reject) => {
@@ -1963,6 +1960,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
                     variant = {variant}
                     sourceID = {sourceID}
                     dndOptions = { dndOptions }
+                    profile = {accept}
                     cacheAPI = {null}
                     scrollerContext = {null}
                 />
@@ -2065,10 +2063,7 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        // type:cellType,
-        profile:{accept},
         accept,
-        // dragText,
     }
 
     const component = <SubscrollerComponent 
@@ -2076,6 +2071,7 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
         itemID = {itemID}
         variant = {variant}
         sourceID = {sourceID}
+        profile = {accept}
         dndOptions = { dndOptions }
         cacheAPI = {null}
         scrollerContext = {null}
@@ -2131,10 +2127,7 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
     const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
-        // type:cellType,
-        profile:{accept},
         accept,
-        // dragText,
     }
 
     const component = <SubscrollerComponent 
@@ -2142,6 +2135,7 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
         itemID = {itemID}
         variant = {variant}
         sourceID = {sourceID}
+        profile = {accept}
         dndOptions = { dndOptions }
         cacheAPI = {null}
         scrollerContext = {null}
