@@ -59,9 +59,9 @@ const defaultAPIFunctionArguments:GenericObject = {
 
 const contentTitles:GenericObject = {
 
-  simplecontent:"Simple uniform content",
-  simplepromises:"Simple uniform promises",
-  simpleautoexpand:"Simple auto expand",
+  uniformcontent:"Simple uniform content",
+  uniformpromises:"Simple uniform promises",
+  uniformautoexpand:"Simple auto expand",
   variablecontent:"Variable content",
   variablepromises:"Variable promises",
   variabledynamic:"Variable dynamic",
@@ -229,7 +229,7 @@ function App() {
   },[])
 
   // baseline - static
-  const defaultContentTypeSelector = 'nestinguniform' //'simplecontent'
+  const defaultContentTypeSelector = 'nestinguniform' //'uniformcontent'
   const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackFlags imported above

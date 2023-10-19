@@ -272,9 +272,9 @@ const callbacks = {
         - all property objects are assembled in a namespace object at the bottom of this module 
             for use by the demo app
 
-    1. simplecontent:           simplecontentProperties,
-    2. simplepromises:          simplepromisesProperties,
-    3. simpleautoexpand:        simpleautoexpandProperties,
+    1. uniformcontent:           simplecontentProperties,
+    2. uniformpromises:          simplepromisesProperties,
+    3. uniformautoexpand:        simpleautoexpandProperties,
     4. variablecontent:         variablecontentProperties,
     5. variablepromises:        variablepromiseProperties,
     6. variabledynamic:         variabledynamicProperties,
@@ -2188,9 +2188,9 @@ const nestingvariableProperties = {
 
 // this is exported for the App module to use
 export const defaultAllContentTypeProperties = {
-    simplecontent:simplecontentProperties,
-    simplepromises:simplepromisesProperties,
-    simpleautoexpand:simpleAutoExpandProperties,
+    uniformcontent:simplecontentProperties,
+    uniformpromises:simplepromisesProperties,
+    uniformautoexpand:simpleAutoExpandProperties,
     variablecontent:variablecontentProperties,
     variablepromises:variablepromiseProperties,
     variabledynamic:variabledynamicProperties,

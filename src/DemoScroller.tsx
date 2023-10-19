@@ -28,9 +28,9 @@ const getDropEffect = (sourceScrollerID:number, targetScrollerID:number, context
 
 const testDataSource:GenericObject = {
 
-  simplecontent:testUniformData,
-  simplepromises:testUniformData,
-  simpleautoexpand:testUniformData,
+  uniformcontent:testUniformData,
+  uniformpromises:testUniformData,
+  uniformautoexpand:testUniformData,
   variablecontent:testVariableData,
   variablepromises:testVariableData,
   variabledynamic:testVariableData,
@@ -66,7 +66,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
     // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
 
-    if (['simplecontent','simplepromises','simpleautoexpand','variablecontent','variablepromises',
+    if (['uniformcontent','uniformpromises','uniformautoexpand','variablecontent','variablepromises',
         'variabledynamic','variableoversized','variableautoexpand'].includes(demoContentTypeSelector)) {
 
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
