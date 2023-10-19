@@ -112,36 +112,45 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
                 // enabled:true,
             }
 
-            // const profile = {accept:dndOptions.accept}
+            const profile = {accept:dndOptions.accept}
 
             dndOptionsRef.current = dndOptions
-            // profileRef.current = profile
+            profileRef.current = profile
 
             // console.log('demo dndOptions',dndOptionsRef.current)
 
         }
 
-        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector],getDropEffect}
+        const props = {profile:profileRef.current,dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector],getDropEffect}
 
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
     } else {
 
-        if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
+        if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !profileRef.current) {
 
             demoContentTypeSelectorRef.current = demoContentTypeSelector
-            // const profile = {
-            //     accept:acceptAll(testData),
-            // }
+            let accept
+            if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',].includes(demoContentTypeSelector)) {
+                accept = testNestingAccepts.mixed
+            } else if (demoContentTypeSelector == 'nestinguniform') {
+                accept = testNestingAccepts.uniform
+            } else if (demoContentTypeSelector == 'nestingvariable') {
+                accept = testNestingAccepts.variable
+            }
+
+            const profile = {
+                accept,
+            }
 
             // console.log('GridScroller dndOptions',dndOptions, testData)
 
-            // dndOptionsRef.current = dndOptions
+            profileRef.current = profile
 
         }
 
         // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
-        const props = demoAllContentTypeProperties[demoContentTypeSelector]
+        const props = {profile:profileRef.current, ...demoAllContentTypeProperties[demoContentTypeSelector]}
 
         // return <GridScroller key = {demoContentTypeSelector} {...demoAllContentTypeProperties[demoContentTypeSelector]}/>        
     

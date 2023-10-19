@@ -1193,19 +1193,19 @@ const Options = ({
                 value = {editContentTypeSelector} 
                 onChange = {onChangeFunctions.contentType}
             >
-                <option value="simplecontent">Simple uniform content</option>
-                <option value="simplepromises">Simple uniform promises</option>
-                <option value="simpleautoexpand">Simple auto expand</option>
+                <option value="uniformcontent">Uniform content</option>
+                <option value="uniformpromises">Uniform promises</option>
+                <option value="uniformautoexpand">Uniform auto expand</option>
                 <option value="variablecontent">Variable content</option>
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>
                 <option value="variableoversized">Variable oversized</option>
                 <option value="variableautoexpand">Variable auto expand</option>
+                <option value="nestinguniform">Nested uniform scrollers</option>
+                <option value="nestingvariable">Nested variable scrollers</option>
                 <option value="nestingmixed">Nested mixed scrollers</option>
                 <option value="nestingmixedpromises">Nested mixed scroller promises</option>
                 <option value="nestingmixedautoexpand">Nested mixed scroller auto expand</option>
-                <option value="nestinguniform">Nested uniform scrollers</option>
-                <option value="nestingvariable">Nested variable scrollers</option>
             </Select>
 
             <FormHelperText>

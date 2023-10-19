@@ -2062,7 +2062,7 @@ const nestingmixedautoexpandProperties = {
 
 const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const variant = 'uniform'
+    const [variant] = context.scrollerProfile.accept
 
     const cellType = variant
 
@@ -2126,7 +2126,8 @@ const nestinguniformProperties = {
 
 const getVariableSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
 
-    const variant = 'variable'
+    const [variant] = context.scrollerProfile.accept
+    // const variant = 'variable'
 
     const cellType = variant
 
