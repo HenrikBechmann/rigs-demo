@@ -6,6 +6,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import { 
 
   ChakraProvider, 
+  FormControl, Checkbox,
   Box, HStack, Grid, Show,
   Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, DrawerFooter,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 
@@ -220,7 +221,31 @@ export const setDemoStatePack:GenericObject = {
 
 function App() {
 
-  const [demoState, setDemoState] = useState('setup')
+  const 
+      [demoState, setDemoState] = useState('setup'),
+
+      dndInstalledRef = useRef(true),
+      dndMasterEnabledRef = useRef(true),
+      dndRootEnabledRef = useRef(true)
+
+    const dndinstalled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndInstalledRef.current = isChecked
+        setDemoState('updatedndsettings')
+    }
+    const dndmasterenabled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndMasterEnabledRef.current = isChecked
+        setDemoState('updatedndsettings')
+    }
+    const dndrootenabled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndRootEnabledRef.current = isChecked
+        setDemoState('updatedndsettings')
+    }
 
   useEffect(()=>{
 
@@ -229,7 +254,7 @@ function App() {
   },[])
 
   // baseline - static
-  const defaultContentTypeSelector = 'nestinguniform' //'uniformcontent'
+  const defaultContentTypeSelector = 'uniformcontent' // 'nestinguniform' 
   const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackFlags imported above
@@ -376,6 +401,7 @@ function App() {
       }
 
       case 'openoptions': 
+      case 'updatedndsettings':
       case 'openexplanations':{
 
         setDemoState('ready')
@@ -414,14 +440,48 @@ function App() {
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
           <i>Content:</i> {contentTitles[demoContentTypeSelectorRef.current]},&nbsp; 
           {demoAllContentTypePropertiesRef.current[demoContentTypeSelectorRef.current].orientation}, 
-          range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}]</Text>          
+          range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}]
+        </Text>
+        <HStack align = 'center'>
+            <FormControl mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
+                <i>Drag and drop: </i>
+                <Checkbox 
+                    isChecked = {dndInstalledRef.current} 
+                    size = 'sm'
+                    // mt = {2}
+                    onChange = {dndinstalled}
+                >
+                    installed | &nbsp;
+                </Checkbox>
+                <Checkbox 
+                    isChecked = {dndMasterEnabledRef.current} 
+                    size = 'sm'
+                    // mt = {2}
+                    onChange = {dndmasterenabled}
+                >
+                    master enabled | &nbsp;
+                </Checkbox>
+                <Checkbox 
+                    isChecked = {dndRootEnabledRef.current} 
+                    size = 'sm'
+                    // mt = {2}
+                    onChange = {dndrootenabled}
+                >
+                    root enabled
+                </Checkbox>
+            </FormControl>
+        </HStack>
       </Box>
 
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
         <DemoScroller 
           demoContentTypeSelector = {demoContentTypeSelectorRef.current} 
-          demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} />
+          demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} 
+          dndinstalled = {dndInstalledRef.current}
+          dndmasterenabled = {dndMasterEnabledRef.current}
+          dndrootenabled = {dndRootEnabledRef.current}
+        />
 
       </Box>
 

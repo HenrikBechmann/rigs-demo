@@ -1519,7 +1519,7 @@ const SubscrollerComponent = (props:any) => {
         // console.log('startingIndexRef.current, snapshot',startingIndexRef.current, snapshot)
         setTestState('revised')
     }
-
+    // console.log('scrollerContext.scroller.current',scrollerContext.scroller.current)
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             {isDnd && float}
@@ -1537,7 +1537,7 @@ const SubscrollerComponent = (props:any) => {
                     id = 'referenceIndexCallback'
                     onChange = {checkdnd}
                 >
-                    dnd
+                    Drag and drop
                 </Checkbox>
             </FormControl>}
         </div>

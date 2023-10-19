@@ -44,12 +44,21 @@ const testDataSource:GenericObject = {
 
 }
 
-const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) => {
+const Scroller = (
+    {
+        demoAllContentTypeProperties, 
+        demoContentTypeSelector, 
+        dndinstalled, 
+        dndmasterenabled, 
+        dndrootenabled
+    }:any) => {
 
-    const 
-        dndinstalled = true,
-        dndmasterenabled = false,
-        dndrootenabled = false
+    console.log('dndinstalled, dndmasterenabled, dndrootenabled',dndinstalled, dndmasterenabled, dndrootenabled)
+
+    // const 
+    //     dndinstalled = false,
+    //     dndmasterenabled = false,
+    //     dndrootenabled = false
 
     const testData = testDataSource[demoContentTypeSelector]
 
@@ -113,6 +122,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
     } else { // dnd not installed
 
+        console.log('running not installed')
         const profile = {
             accept:acceptRef.current,
         }
