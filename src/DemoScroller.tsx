@@ -53,7 +53,7 @@ const Scroller = (
         dndrootenabled
     }:any) => {
 
-    console.log('dndinstalled, dndmasterenabled, dndrootenabled',dndinstalled, dndmasterenabled, dndrootenabled)
+    // console.log('dndinstalled, dndmasterenabled, dndrootenabled',dndinstalled, dndmasterenabled, dndrootenabled)
 
     // const 
     //     dndinstalled = false,
