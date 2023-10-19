@@ -175,7 +175,7 @@ const Options = ({
 
         indexRangeRef = useRef<number[]>([])
 
-    console.log('indexRangeRef',indexRangeRef)
+    // console.log('indexRangeRef',indexRangeRef)
 
     const
         [listlowindex, listhighindex] = indexRangeRef.current,

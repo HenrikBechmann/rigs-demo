@@ -51,6 +51,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
     const demoContentTypeSelectorRef = useRef(demoContentTypeSelector)
 
     const dndOptionsRef = useRef<GenericObject | null>(null)
+    const profileRef = useRef<GenericObject | null>(null)
 
     // if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
 
@@ -74,14 +75,18 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
             const dndOptions = {
                 accept:acceptAll(testData),
+                master:{enabled:true},
                 dropEffect:undefined // 'move' //'copy',
             }
 
+            const profile = {accept:dndOptions.accept}
+
             dndOptionsRef.current = dndOptions
+            profileRef.current = profile
 
         }
 
-        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector],getDropEffect}
+        const props = {profile:profileRef.current, dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector],getDropEffect}
 
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
@@ -107,7 +112,10 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
                 // enabled:true,
             }
 
+            // const profile = {accept:dndOptions.accept}
+
             dndOptionsRef.current = dndOptions
+            // profileRef.current = profile
 
             // console.log('demo dndOptions',dndOptionsRef.current)
 
@@ -122,7 +130,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
 
             demoContentTypeSelectorRef.current = demoContentTypeSelector
-            // const dndOptions = {
+            // const profile = {
             //     accept:acceptAll(testData),
             // }
 

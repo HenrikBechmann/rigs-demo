@@ -359,6 +359,8 @@ const SimpleItem = (props:any) => {
 // the getItemPack function for simple uniform content
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
+    // console.log('getSimpleItemPack: context',context)
+
     const accept = context.scrollerProfile.accept;
     let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
@@ -1522,7 +1524,10 @@ const SubscrollerComponent = (props:any) => {
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             {isDnd && float}
             [{scrollerContext.cell.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
-            {' sourceID: '+ sourceID + '; ' + dndOptions.accept.join(', ')}
+            {
+                ' sourceID: '+ sourceID + '; ' 
+                + profile.accept.join(', ') // dndOptions.accept.join(', ')
+            }
             {scrollerContext.scroller.current.dndInstalled 
             && <FormControl borderTop = '1px' style = {{clear:'left'}}>
                 <Checkbox 
