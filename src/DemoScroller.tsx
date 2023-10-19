@@ -109,7 +109,7 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
 
             dndOptionsRef.current = dndOptions
 
-            console.log('demo dndOptions',dndOptionsRef.current)
+            // console.log('demo dndOptions',dndOptionsRef.current)
 
         }
 
@@ -122,17 +122,18 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
         if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
 
             demoContentTypeSelectorRef.current = demoContentTypeSelector
-            const dndOptions = {
-                accept:acceptAll(testData),
-            }
+            // const dndOptions = {
+            //     accept:acceptAll(testData),
+            // }
 
-            console.log('GridScroller dndOptions',dndOptions, testData)
+            // console.log('GridScroller dndOptions',dndOptions, testData)
 
-            dndOptionsRef.current = dndOptions
+            // dndOptionsRef.current = dndOptions
 
         }
 
-        const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+        // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+        const props = demoAllContentTypeProperties[demoContentTypeSelector]
 
         // return <GridScroller key = {demoContentTypeSelector} {...demoAllContentTypeProperties[demoContentTypeSelector]}/>        
     
