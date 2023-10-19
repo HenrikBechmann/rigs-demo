@@ -46,58 +46,33 @@ const testDataSource:GenericObject = {
 
 const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) => {
 
+    const 
+        dndinstalled = true,
+        dndmasterenabled = false,
+        dndrootenabled = false
+
     const testData = testDataSource[demoContentTypeSelector]
 
     const demoContentTypeSelectorRef = useRef(demoContentTypeSelector)
 
     const dndOptionsRef = useRef<GenericObject | null>(null)
     const profileRef = useRef<GenericObject | null>(null)
+    const acceptRef = useRef<string[] | null>(null)
 
-    // if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
+    // choose accept list. All options are listed to be explicit
 
-    //         demoContentTypeSelectorRef.current = demoContentTypeSelector
-    //     const dndOptions = {
-    //         accept:acceptAll(testData),
-    //     }
+    if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !acceptRef.current) {
 
-    //     dndOptionsRef.current = dndOptions
+        let accept
+        if (['uniformcontent','uniformpromises','uniformautoexpand','variablecontent','variablepromises',
+            'variabledynamic','variableoversized','variableautoexpand'].includes(demoContentTypeSelector)) {
 
-    // }
+            accept = acceptAll(testData)
+            acceptRef.current = accept
 
-    // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
+        } else if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',
+            'nestinguniform','nestingvariable'].includes(demoContentTypeSelector)) {
 
-    if (['uniformcontent','uniformpromises','uniformautoexpand','variablecontent','variablepromises',
-        'variabledynamic','variableoversized','variableautoexpand'].includes(demoContentTypeSelector)) {
-
-        if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
-
-            demoContentTypeSelectorRef.current = demoContentTypeSelector
-
-            const dndOptions = {
-                accept:acceptAll(testData),
-                master:{enabled:true},
-                dropEffect:undefined // 'move' //'copy',
-            }
-
-            const profile = {accept:dndOptions.accept}
-
-            dndOptionsRef.current = dndOptions
-            profileRef.current = profile
-
-        }
-
-        const props = {profile:profileRef.current, dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector],getDropEffect}
-
-        return <DndScroller key = {demoContentTypeSelector} {...props}/>
-
-    } else if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',
-        /*'nestinguniform',*/'nestingvariable'].includes(demoContentTypeSelector)){
-
-        if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !dndOptionsRef.current) {
-
-            demoContentTypeSelectorRef.current = demoContentTypeSelector
-
-            let accept
             if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',].includes(demoContentTypeSelector)) {
                 accept = testNestingAccepts.mixed
             } else if (demoContentTypeSelector == 'nestinguniform') {
@@ -105,55 +80,53 @@ const Scroller = ({demoAllContentTypeProperties, demoContentTypeSelector}:any) =
             } else if (demoContentTypeSelector == 'nestingvariable') {
                 accept = testNestingAccepts.variable
             }
-
-            const dndOptions = {
-                master:{enabled:true},
-                accept,
-                // enabled:true,
-            }
-
-            const profile = {accept:dndOptions.accept}
-
-            dndOptionsRef.current = dndOptions
-            profileRef.current = profile
-
-            // console.log('demo dndOptions',dndOptionsRef.current)
+            acceptRef.current = accept
 
         }
 
-        const props = {profile:profileRef.current,dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector],getDropEffect}
+        demoContentTypeSelectorRef.current = demoContentTypeSelector
+
+    }
+
+    if (dndinstalled) {
+
+        const dndOptions = {
+            accept:acceptRef.current,
+            master:{enabled:dndmasterenabled},
+            enabled:dndrootenabled,
+            dropEffect:undefined // 'move' //'copy',
+        }
+
+        const profile = {accept:dndOptions.accept}
+
+        dndOptionsRef.current = dndOptions
+        profileRef.current = profile
+
+        const props = {
+            ...demoAllContentTypeProperties[demoContentTypeSelector],
+            profile:profileRef.current, 
+            dndOptions:dndOptionsRef.current,
+            getDropEffect,
+        }
 
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
-    } else {
+    } else { // dnd not installed
 
-        if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !profileRef.current) {
-
-            demoContentTypeSelectorRef.current = demoContentTypeSelector
-            let accept
-            if (['nestingmixed','nestingmixedpromises','nestingmixedautoexpand',].includes(demoContentTypeSelector)) {
-                accept = testNestingAccepts.mixed
-            } else if (demoContentTypeSelector == 'nestinguniform') {
-                accept = testNestingAccepts.uniform
-            } else if (demoContentTypeSelector == 'nestingvariable') {
-                accept = testNestingAccepts.variable
-            }
-
-            const profile = {
-                accept,
-            }
-
-            // console.log('GridScroller dndOptions',dndOptions, testData)
-
-            profileRef.current = profile
-
+        const profile = {
+            accept:acceptRef.current,
         }
+
+        // console.log('GridScroller dndOptions',dndOptions, testData)
+
+        profileRef.current = profile
 
         // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
-        const props = {profile:profileRef.current, ...demoAllContentTypeProperties[demoContentTypeSelector]}
+        const props = {
+            ...demoAllContentTypeProperties[demoContentTypeSelector],
+            profile:profileRef.current, 
+        }
 
-        // return <GridScroller key = {demoContentTypeSelector} {...demoAllContentTypeProperties[demoContentTypeSelector]}/>        
-    
         return <GridScroller key = {demoContentTypeSelector} {...props}/>        
 
     }

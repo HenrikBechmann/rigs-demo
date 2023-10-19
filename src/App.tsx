@@ -59,9 +59,9 @@ const defaultAPIFunctionArguments:GenericObject = {
 
 const contentTitles:GenericObject = {
 
-  uniformcontent:"Simple uniform content",
-  uniformpromises:"Simple uniform promises",
-  uniformautoexpand:"Simple auto expand",
+  uniformcontent:"Uniform content",
+  uniformpromises:"Uniform promises",
+  uniformautoexpand:"Uniform auto expand",
   variablecontent:"Variable content",
   variablepromises:"Variable promises",
   variabledynamic:"Variable dynamic",
