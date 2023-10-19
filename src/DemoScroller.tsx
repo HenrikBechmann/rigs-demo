@@ -1,6 +1,6 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto
 
-import React, {useRef} from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 
 import {testUniformData, testVariableData, testNestingAccepts, acceptAll, GenericObject} from './demodata'
 
@@ -53,25 +53,19 @@ const Scroller = (
         dndrootenabled
     }:any) => {
 
-    // console.log('dndinstalled, dndmasterenabled, dndrootenabled',dndinstalled, dndmasterenabled, dndrootenabled)
+    const [scrollerState, setScrollerState] = useState('ready')
 
-    // const 
-    //     dndinstalled = false,
-    //     dndmasterenabled = false,
-    //     dndrootenabled = false
+    const 
+        testData = testDataSource[demoContentTypeSelector],
 
-    const testData = testDataSource[demoContentTypeSelector]
+        demoContentTypeSelectorRef = useRef(demoContentTypeSelector),
 
-    const demoContentTypeSelectorRef = useRef(demoContentTypeSelector)
-
-    const dndOptionsRef = useRef<GenericObject | null>(null)
-    const profileRef = useRef<GenericObject | null>(null)
-    const acceptRef = useRef<string[] | null>(null)
-
-    // choose accept list. All options are listed to be explicit
+        profileRef = useRef<GenericObject | null>(null),
+        acceptRef = useRef<string[] | null>(null)
 
     if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !acceptRef.current) {
 
+        // choose accept list. All options are listed to be explicit
         let accept
         if (['uniformcontent','uniformpromises','uniformautoexpand','variablecontent','variablepromises',
             'variabledynamic','variableoversized','variableautoexpand'].includes(demoContentTypeSelector)) {
@@ -95,21 +89,50 @@ const Scroller = (
 
         demoContentTypeSelectorRef.current = demoContentTypeSelector
 
+        const profile = {
+            accept:acceptRef.current,
+        }
+
+        profileRef.current = profile
+
     }
 
-    if (dndinstalled) {
-
-        const dndOptions = {
+    const dndOptionsRef = useRef<GenericObject>({
             accept:acceptRef.current,
             master:{enabled:dndmasterenabled},
             enabled:dndrootenabled,
             dropEffect:undefined // 'move' //'copy',
+        })
+
+    useEffect (()=>{
+
+
+        dndOptionsRef.current = {
+            ...dndOptionsRef.current,
+            master:{enabled:dndmasterenabled},
+            enabled:dndrootenabled,
         }
 
-        const profile = {accept:dndOptions.accept}
+        // console.log('updating dndOptionsRef', dndOptionsRef.current)
 
-        dndOptionsRef.current = dndOptions
-        profileRef.current = profile
+        setScrollerState('update')
+
+    },[dndmasterenabled, dndrootenabled])
+
+    useEffect(()=>{
+
+        switch (scrollerState) {
+            case 'update':{
+                setScrollerState('ready')
+                break
+            }
+        }
+
+    },[scrollerState])
+
+    if (dndinstalled) {
+
+        // console.log('demo running installed', dndOptionsRef.current)
 
         const props = {
             ...demoAllContentTypeProperties[demoContentTypeSelector],
@@ -121,15 +144,6 @@ const Scroller = (
         return <DndScroller key = {demoContentTypeSelector} {...props}/>
 
     } else { // dnd not installed
-
-        console.log('running not installed')
-        const profile = {
-            accept:acceptRef.current,
-        }
-
-        // console.log('GridScroller dndOptions',dndOptions, testData)
-
-        profileRef.current = profile
 
         // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
         const props = {
