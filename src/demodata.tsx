@@ -683,11 +683,15 @@ const VariableItem = (props:any) => {
 
     },[isDnd])
 
-    const testString = getVariableTestString(props.scrollerContext.cell.current.index, props.itemID)
-
     const testStringRef = useRef<any>(null)
 
-    testStringRef.current = testString
+    if (!testStringRef.current) {
+
+        const testString = getVariableTestString(props.scrollerContext.cell.current.index, props.itemID)
+
+        testStringRef.current = testString
+
+    }
 
     const {
 
@@ -698,14 +702,14 @@ const VariableItem = (props:any) => {
     } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
-        (orientation == 'vertical')?
-            {
+        (orientation == 'vertical')
+            ?{
                 maxHeight:cellHeight,
                 height:'',
                 maxWidth:'',
                 width:'100%',
-            }:
-            {
+            }
+            :{
                 maxHeight:'',
                 height:'100%',
                 maxWidth:cellWidth,
