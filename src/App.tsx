@@ -1,7 +1,7 @@
 
 // copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, createContext} from 'react';
 
 import { 
 
@@ -37,6 +37,7 @@ import {
 
 } from './demodata'
 
+export const DndEnabledContext = createContext(false)
 
 const defaultAPIFunctionArguments:GenericObject = {
   gotoIndex:'',
@@ -414,7 +415,7 @@ function App() {
   // overscrollBehavior is set here to attempt to stop reload in mobile. not working
   return (
     <ChakraProvider>
-
+    <DndEnabledContext.Provider value = {dndMasterEnabledRef.current}>
     <Box height = '100vh' style={{overscrollBehavior:'none'}}><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr' style={{overscrollBehavior:'none'}}>
 
       <Box padding = {[1,1,2]}>
@@ -567,7 +568,7 @@ function App() {
       invalidSections = {invalidSectionsRef.current}
       onClose = {onCloseErrors}
     />
-
+    </DndEnabledContext.Provider>
     </ChakraProvider>
   )
 }

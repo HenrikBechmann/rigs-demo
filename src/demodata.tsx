@@ -1,10 +1,10 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useState, useEffect, useMemo} from 'react'
+import React, {useRef, useState, useEffect, useMemo, useContext} from 'react'
 
 import Scroller from 'react-infinite-grid-scroller'
 
-import { setDemoStatePack } from './App'
+import { setDemoStatePack, DndEnabledContext } from './App'
 
 import {FormControl, Checkbox} from '@chakra-ui/react'
 
@@ -1407,9 +1407,13 @@ const subScrollerStyles = {
 
 const SubscrollerComponent = (props:any) => {
 
-    const [testState, setTestState] = useState('setup')
-    const testStateRef = useRef<string|null>(null)
-    testStateRef.current = testState
+    const [subscrollerState, setSubscrollerState] = useState('setup')
+    const subscrollerStateRef = useRef<string|null>(null)
+    subscrollerStateRef.current = subscrollerState
+
+    const dndEnabledContext = useContext( DndEnabledContext )
+
+    // console.log('dndEnabledContext',dndEnabledContext)
 
     const { 
         index, 
@@ -1460,6 +1464,13 @@ const SubscrollerComponent = (props:any) => {
 
     const dndOptionsRef = useRef(dndOptions)
 
+    useEffect(()=>{
+
+        dndOptionsRef.current.enabled = dndEnabledContext
+        setSubscrollerState('revised')
+
+    },[dndEnabledContext])
+
     const { scroller } = scrollerContext
 
     const dynamicorientationRef = useRef<null | string>(null)
@@ -1489,15 +1500,15 @@ const SubscrollerComponent = (props:any) => {
 
     useEffect(()=>{
 
-        switch (testState) {
+        switch (subscrollerState) {
             case 'setup':
             case 'revised': {
-                setTestState('ready')
+                setSubscrollerState('ready')
                 break
             }
         }
 
-    },[testState])
+    },[subscrollerState])
 
     const isDnd = scrollerContext?.scroller.current.dndEnabled
 
@@ -1514,7 +1525,7 @@ const SubscrollerComponent = (props:any) => {
         const target = event.target as HTMLInputElement
         const isChecked = target.checked
         dndOptionsRef.current.enabled = isChecked
-        setTestState('revised')
+        setSubscrollerState('revised')
     }
     // console.log('scrollerContext.scroller.current',scrollerContext.scroller.current)
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
@@ -1531,7 +1542,7 @@ const SubscrollerComponent = (props:any) => {
                     isChecked = {dndOptionsRef.current.enabled} 
                     size = 'sm'
                     mt = {2}
-                    id = 'referenceIndexCallback'
+                    // id = 'referenceIndexCallback'
                     onChange = {checkdnd}
                 >
                     Drag and drop
@@ -1544,14 +1555,14 @@ const SubscrollerComponent = (props:any) => {
             <Scroller 
                 orientation = { dynamicorientationRef.current } 
                 cache = { cache }
-                gap = {gap}
-                padding = {padding}
-                cellHeight = {cellHeight}
-                cellWidth = {cellWidth}
-                runwaySize = {runwaySize}
-                startingListRange = {startingListRange}
-                startingIndex = {startingIndexRef.current}
-                getItemPack = {getItemPack}
+                gap = { gap}
+                padding = { padding }
+                cellHeight = { cellHeight }
+                cellWidth = { cellWidth }
+                runwaySize = { runwaySize }
+                startingListRange = { startingListRange }
+                startingIndex = { startingIndexRef.current }
+                getItemPack = { getItemPack }
                 callbacks = { callbacks }
                 placeholder = { null }
                 styles = { styles }
@@ -1559,7 +1570,7 @@ const SubscrollerComponent = (props:any) => {
                 dndOptions = { dndOptions }
                 profile = { profile }
                 scrollerContext = { scrollerContext }
-                cacheAPI = {cacheAPI}
+                cacheAPI = { cacheAPI }
             />
 
         </div>
