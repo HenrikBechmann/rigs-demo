@@ -1422,7 +1422,7 @@ const SubscrollerComponent = (props:any) => {
         profile,
     } = props
 
-    // console.log('subScrollerComponent: profile',profile)
+    // console.log('subScrollerComponent: dndOptions', {...dndOptions})
 
     const properties = 
         (variant == 'uniform')?
@@ -1514,9 +1514,6 @@ const SubscrollerComponent = (props:any) => {
         const target = event.target as HTMLInputElement
         const isChecked = target.checked
         dndOptionsRef.current.enabled = isChecked
-        // const [snapshot] = subscrollerAPIRef.current.getPropertiesSnapshot()
-        // startingIndexRef.current = snapshot.cradleContentProps.axisReferenceIndex
-        // console.log('startingIndexRef.current, snapshot',startingIndexRef.current, snapshot)
         setTestState('revised')
     }
     // console.log('scrollerContext.scroller.current',scrollerContext.scroller.current)
@@ -2075,6 +2072,8 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
     const dndOptions = {
         accept,
     }
+
+    // console.log('getUniformSubscrollerPack, dndOptions',dndOptions)
 
     const component = <SubscrollerComponent 
         index = {index} 
