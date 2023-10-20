@@ -452,9 +452,9 @@ function App() {
                     // mt = {2}
                     onChange = {dndinstalled}
                 >
-                    installed | &nbsp;
+                    installed 
                 </Checkbox>
-                <Checkbox 
+                {dndInstalledRef.current &&  <> | &nbsp;<Checkbox 
                     isChecked = {dndMasterEnabledRef.current} 
                     size = 'sm'
                     // mt = {2}
@@ -469,7 +469,7 @@ function App() {
                     onChange = {dndrootenabled}
                 >
                     root enabled
-                </Checkbox>
+                </Checkbox></>}
             </FormControl>
         </HStack>
       </Box>
