@@ -226,8 +226,8 @@ function App() {
       [demoState, setDemoState] = useState('setup'),
 
       dndInstalledRef = useRef(true),
-      dndMasterEnabledRef = useRef(false),
-      dndRootEnabledRef = useRef(false)
+      dndMasterEnabledRef = useRef(true),
+      dndRootEnabledRef = useRef(true)
 
     const dndinstalled = (event:React.ChangeEvent) => {
         const target = event.target as HTMLInputElement
@@ -443,33 +443,35 @@ function App() {
           {demoAllContentTypePropertiesRef.current[demoContentTypeSelectorRef.current].orientation}, 
           range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}]
         </Text>
-        <HStack align = 'center'>
-            <FormControl mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
-                <i>Drag and drop: </i>
-                <Checkbox 
+        <HStack align = 'center' justify = 'start'>
+            <FormControl>
+                <Text as = 'span' align = 'center' fontSize = {14} ml={1} ><i>Drag and drop: </i></Text>
+                <Checkbox
                     isChecked = {dndInstalledRef.current} 
                     size = 'sm'
-                    // mt = {2}
+                    mt = {1}
                     onChange = {dndinstalled}
                 >
-                    installed 
+                    installed | &nbsp;
                 </Checkbox>
-                {dndInstalledRef.current &&  <> | &nbsp;<Checkbox 
+                { dndInstalledRef.current &&
+                <><Checkbox
                     isChecked = {dndMasterEnabledRef.current} 
                     size = 'sm'
-                    // mt = {2}
+                    mt = {1}
                     onChange = {dndmasterenabled}
                 >
-                    master enabled | &nbsp;
+                    sub-scrollers enabled | &nbsp;
                 </Checkbox>
-                <Checkbox 
+                <Checkbox
                     isChecked = {dndRootEnabledRef.current} 
                     size = 'sm'
-                    // mt = {2}
+                    mt = {1}
                     onChange = {dndrootenabled}
                 >
-                    root enabled
-                </Checkbox></>}
+                    root scroller enabled
+                </Checkbox></>
+                }
             </FormControl>
         </HStack>
       </Box>

@@ -63,6 +63,8 @@ const Scroller = (
         profileRef = useRef<GenericObject | null>(null),
         acceptRef = useRef<string[] | null>(null)
 
+    // console.log('demoContentTypeSelector, testData',demoContentTypeSelector, testData)
+
     if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !acceptRef.current) {
 
         // choose accept list. All options are listed to be explicit
@@ -108,16 +110,17 @@ const Scroller = (
 
 
         dndOptionsRef.current = {
-            ...dndOptionsRef.current,
+            accept:acceptRef.current,
             master:{enabled:dndmasterenabled},
             enabled:dndrootenabled,
+            dropEffect:undefined,
         }
 
         // console.log('updating dndOptionsRef', dndOptionsRef.current)
 
         setScrollerState('update')
 
-    },[dndmasterenabled, dndrootenabled])
+    },[dndmasterenabled, dndrootenabled, demoContentTypeSelector])
 
     useEffect(()=>{
 
