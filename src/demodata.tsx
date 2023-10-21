@@ -1758,13 +1758,12 @@ const UniformSubscrollerItem = (props:any) => {
     const styles = {...uniformSubscrollerItemStyles, backgroundColor:color}
 
     const float = useMemo(() => {
-        if (isDnd) return <div 
+        return <div 
             style = {{float:'left', height: '28px', width:'34px'}} 
             data-type = 'dnd-float'
         />
-        else return null
 
-    },[isDnd])
+    },[])
 
     return <div 
         data-type = 'uniform-subscroller-item'

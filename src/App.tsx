@@ -454,23 +454,23 @@ function App() {
                 >
                     installed | &nbsp;
                 </Checkbox>
-                { dndInstalledRef.current &&
-                <><Checkbox
-                    isChecked = {dndMasterEnabledRef.current} 
-                    size = 'sm'
-                    mt = {1}
-                    onChange = {dndmasterenabled}
-                >
-                    sub-scrollers enabled | &nbsp;
-                </Checkbox>
-                <Checkbox
-                    isChecked = {dndRootEnabledRef.current} 
-                    size = 'sm'
-                    mt = {1}
-                    onChange = {dndrootenabled}
-                >
-                    root scroller enabled
-                </Checkbox></>
+                { dndInstalledRef.current 
+                    && <><Checkbox
+                        isChecked = {dndMasterEnabledRef.current} 
+                        size = 'sm'
+                        mt = {1}
+                        onChange = {dndmasterenabled}
+                    >
+                        sub-scrollers enabled | &nbsp;
+                    </Checkbox>
+                    <Checkbox
+                        isChecked = {dndRootEnabledRef.current} 
+                        size = 'sm'
+                        mt = {1}
+                        onChange = {dndrootenabled}
+                    >
+                        root scroller enabled
+                    </Checkbox></>
                 }
             </FormControl>
         </HStack>
