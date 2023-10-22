@@ -1417,8 +1417,6 @@ const SubscrollerComponent = (props:any) => {
 
     const dndEnabledContext = useContext( DndEnabledContext )
 
-    // console.log('dndEnabledContext',dndEnabledContext)
-
     const { 
         index, 
         itemID,
@@ -1429,8 +1427,6 @@ const SubscrollerComponent = (props:any) => {
         sourceID,
         profile,
     } = props
-
-    // console.log('subScrollerComponent: dndOptions', {...dndOptions})
 
     const properties = 
         (variant == 'uniform')?
