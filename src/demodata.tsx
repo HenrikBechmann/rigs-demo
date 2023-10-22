@@ -1423,7 +1423,7 @@ const SubscrollerComponent = (props:any) => {
         index, 
         itemID,
         scrollerContext,
-        cacheAPI,
+        // cacheAPI,
         variant,
         dndOptions,
         sourceID,
@@ -1467,6 +1467,7 @@ const SubscrollerComponent = (props:any) => {
     const startingIndexRef = useRef(startingIndex)
 
     const dndOptionsRef = useRef(dndOptions)
+    dndOptionsRef.current = dndOptions
 
     useEffect(()=>{
 
@@ -1546,7 +1547,6 @@ const SubscrollerComponent = (props:any) => {
                     isChecked = {dndOptionsRef.current.enabled} 
                     size = 'sm'
                     mt = {2}
-                    // id = 'referenceIndexCallback'
                     onChange = {checkdnd}
                 >
                     Drag and drop
@@ -1571,10 +1571,10 @@ const SubscrollerComponent = (props:any) => {
                 placeholder = { null }
                 styles = { styles }
                 layout = { layout }
-                dndOptions = { dndOptions }
+                dndOptions = { dndOptionsRef.current }
                 profile = { profile }
                 scrollerContext = { scrollerContext }
-                cacheAPI = { cacheAPI }
+                // cacheAPI = { cacheAPI }
             />
 
         </div>
@@ -1901,7 +1901,7 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
         sourceID = {sourceID}
         dndOptions = { dndOptions }
         profile = {{accept}}
-        cacheAPI = { null }
+        // cacheAPI = { null }
         scrollerContext = { null }
     />
 
@@ -1982,7 +1982,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
                     sourceID = {sourceID}
                     dndOptions = { dndOptions }
                     profile = {{accept}}
-                    cacheAPI = {null}
+                    // cacheAPI = {null}
                     scrollerContext = {null}
                 />
             )
@@ -2096,7 +2096,7 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
         sourceID = {sourceID}
         profile = {{accept}}
         dndOptions = { dndOptions }
-        cacheAPI = {null}
+        // cacheAPI = {null}
         scrollerContext = {null}
     />
 
@@ -2160,7 +2160,7 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
         sourceID = {sourceID}
         profile = {{accept}}
         dndOptions = { dndOptions }
-        cacheAPI = {null}
+        // cacheAPI = {null}
         scrollerContext = {null}
     />
 
