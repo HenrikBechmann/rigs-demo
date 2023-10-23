@@ -499,7 +499,17 @@ const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericOb
 
     const accept = context.scrollerProfile.accept
 
-    const [cellType, typeText] = selectCellType(testUniformData,accept,index)
+    let [cellType, typeText] = selectCellType(testUniformData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
 
     const color = testUniformDataColors[cellType]
 
@@ -806,7 +816,17 @@ const getVariableItemPack = (index:number, itemID:number, context:GenericObject)
 
     const accept = context.scrollerProfile.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
 
     const color = testVariableDataColors[cellType]
 
@@ -888,7 +908,17 @@ const getVariableItemPromisePack = (index:number, itemID:number, context:Generic
     
     const accept = context.scrollerProfile.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
 
     const color = testVariableDataColors[cellType]
 
@@ -1048,7 +1078,17 @@ const getVariableItemDynamicPack = (index:number, itemID:number, context:Generic
 
     const accept = context.scrollerProfile.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
 
     const color = testVariableDataColors[cellType]
 
@@ -1253,7 +1293,17 @@ const getVariableOversizedItemPack = (index:number, itemID:number, context:Gener
 
     const accept = context.scrollerProfile.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
 
     const color = testVariableDataColors[cellType]
 
@@ -1421,7 +1471,7 @@ const SubscrollerComponent = (props:any) => {
         index, 
         itemID,
         scrollerContext,
-        // cacheAPI,
+        context,
         variant,
         dndOptions,
         sourceID,
@@ -1528,6 +1578,19 @@ const SubscrollerComponent = (props:any) => {
         dndOptionsRef.current.enabled = isChecked
         setSubscrollerState('revised')
     }
+
+    let desc = profile.accept.join(', ')
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            desc += ' (subscroller template copy)'
+        }
+
+    }
+
     // console.log('scrollerContext.scroller.current',scrollerContext.scroller.current)
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
@@ -1535,7 +1598,7 @@ const SubscrollerComponent = (props:any) => {
             [{scrollerContext.cell.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
             {
                 ' sourceID: '+ sourceID + '; ' 
-                + profile.accept.join(', ') // dndOptions.accept.join(', ')
+                + desc
             }
             {scrollerContext.scroller.current.dndInstalled 
             && <FormControl borderTop = '1px' style = {{clear:'left'}}>
@@ -1665,7 +1728,17 @@ const getVariableSubscrollerItemPack = (index:number, itemID:number, context:Gen
 
     const accept = context.scrollerProfile.accept
 
-    const [cellType, typeText] = selectCellType(testVariableData,accept,index)
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
 
     const color = testVariableDataColors[cellType]
 
@@ -1880,7 +1953,16 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
 
     const cellType = variant
 
-    const accept = getSubscrollerAccepts(cellType) || []
+    let accept
+    if (context.contextType == 'dndFetchRequest') {
+
+        accept = context.item.profile.accept
+
+    } else {
+
+        accept = getSubscrollerAccepts(cellType) || []
+
+    }
 
     const sourceID = globalSourceID++
 
@@ -1897,14 +1979,14 @@ const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObj
         sourceID = {sourceID}
         dndOptions = { dndOptions }
         profile = {{accept}}
-        // cacheAPI = { null }
+        context = {context}
         scrollerContext = { null }
     />
 
     const itemPack = {
         component,
         dndOptions:{type:cellType, dragText},
-        profile:{ type:cellType, sourceID},
+        profile:{ type:cellType, sourceID, accept},
     }
 
      return itemPack
@@ -1957,7 +2039,17 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
 
     const cellType = variant
 
-    const accept = getSubscrollerAccepts(cellType) || [] // "possibly undefined" below
+    let accept:any
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        accept = context.item.profile.accept
+
+    } else {
+
+        accept = getSubscrollerAccepts(cellType) || []
+
+    }
 
     const sourceID = globalSourceID++
 
@@ -1978,7 +2070,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
                     sourceID = {sourceID}
                     dndOptions = { dndOptions }
                     profile = {{accept}}
-                    // cacheAPI = {null}
+                    context = { context }
                     scrollerContext = {null}
                 />
             )
@@ -1989,7 +2081,7 @@ const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:Gen
     const itemPack = {
         component,
         dndOptions:{type:cellType, dragText},
-        profile:{ type:cellType, sourceID},
+        profile:{ type:cellType, sourceID, accept},
     }
 
      return itemPack
@@ -2073,7 +2165,17 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
 
     const cellType = variant
 
-    const accept = getSubscrollerAccepts(variant) || []
+    let accept:any
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        accept = context.item.profile.accept
+
+    } else {
+
+        accept = getSubscrollerAccepts(cellType) || []
+
+    }
 
     const sourceID = globalSourceID++
 
@@ -2083,8 +2185,6 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
         accept,
     }
 
-    // console.log('getUniformSubscrollerPack, dndOptions',dndOptions)
-
     const component = <SubscrollerComponent 
         index = {index} 
         itemID = {itemID}
@@ -2092,14 +2192,14 @@ const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericO
         sourceID = {sourceID}
         profile = {{accept}}
         dndOptions = { dndOptions }
-        // cacheAPI = {null}
+        context = { context }
         scrollerContext = {null}
     />
 
     const itemPack = {
         component,
         dndOptions:{type:cellType, dragText},
-        profile:{ type:cellType, sourceID},
+        profile:{ type:cellType, sourceID, accept},
     }
 
      return itemPack
@@ -2139,11 +2239,21 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
 
     const cellType = variant
 
-    const accept = getSubscrollerAccepts(variant) || []
+    let accept:any
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        accept = context.item.profile.accept
+
+    } else {
+
+        accept = getSubscrollerAccepts(cellType) || []
+
+    }
 
     const sourceID = globalSourceID++
 
-    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
+    let dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
 
     const dndOptions = {
         accept,
@@ -2156,14 +2266,14 @@ const getVariableSubscrollerPack = (index:number, itemID:number, context:Generic
         sourceID = {sourceID}
         profile = {{accept}}
         dndOptions = { dndOptions }
-        // cacheAPI = {null}
+        context = { context }
         scrollerContext = {null}
     />
 
     const itemPack = {
         component,
         dndOptions:{type:cellType, dragText},
-        profile:{ type:cellType, sourceID},
+        profile:{ type:cellType, sourceID, accept},
     }
 
      return itemPack
