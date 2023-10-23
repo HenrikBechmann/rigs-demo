@@ -1650,6 +1650,21 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
+                            isChecked = {editCallbackFlags.dragDropTransferCallback} 
+                            size = 'sm'
+                            mt = {2}
+                            id = 'dragDropTransferCallback'
+                            onChange = {onChangeFunctions.callbackSettings}
+                        >
+                            Drag and Drop Transfer callback
+                        </Checkbox>
+                        <FormHelperText>
+                            This reports when and item has been successfully transferred with drag and drop.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Checkbox 
                             isChecked = {editCallbackFlags.preloadIndexCallback} 
                             size = 'sm'
                             mt = {2}

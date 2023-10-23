@@ -157,6 +157,7 @@ export const defaultCallbackFlags = {
     deleteListCallback:false,
     repositioningFlagCallback:false,
     boundaryCallback:false,
+    dragDropTransferCallback:false,
 }
 
 // initialize the demo settings with the default settings, and export to the App module. 
@@ -179,6 +180,15 @@ const referenceIndexCallback = (index:number, context:GenericObject) => { //loca
 const boundaryCallback = (position:string, index:number, context:GenericObject) => {
     demoCallbackFlagsRef.current.boundaryCallback && 
         console.log('boundaryCallback: position, index, context', position, index, context)
+}
+
+const dragDropTransferCallback = (
+    sourceScrollerID:number, sourceIndex:number, targetScrollerID:number, targetIndex:number, context:GenericObject) => {
+
+    demoCallbackFlagsRef.current.dragDropTransferCallback && 
+        console.log('dragDropTransferCallback: sourceScrollerID, sourceIndex, targetScrollerID targetIndex, context', 
+            sourceScrollerID, sourceIndex, targetScrollerID, targetIndex, context)
+
 }
 
 const preloadIndexCallback = (index:number, context:GenericObject) => {
@@ -211,8 +221,8 @@ const repositioningFlagCallback = (flag:boolean, context:object) => {
 
 }
 
-const changeListRangeCallback = (newlistrange:number, context:object) => {
-    
+const changeListRangeCallback = (newlistrange:number[], context:object) => {
+
     demoCallbackFlagsRef.current.changeListRangeCallback && 
         console.log('changeListRangeCallback: newlistrange, context', 
             newlistrange, context)
@@ -254,6 +264,7 @@ const callbacks = {
     deleteListCallback,
     repositioningFlagCallback,
     boundaryCallback,
+    dragDropTransferCallback,
 }
 
 // =============================================================================
@@ -1477,6 +1488,7 @@ const SubscrollerComponent = (props:any) => {
         dndOptions,
         sourceID,
         profile,
+        callbacks:generalcallbacks,
     } = props
 
     const properties = 
@@ -1491,7 +1503,6 @@ const SubscrollerComponent = (props:any) => {
         cellHeight, 
         cellWidth, 
         runwaySize, 
-        // startingIndex, 
         getItemPack,
         cache,
         layout,
@@ -1537,6 +1548,9 @@ const SubscrollerComponent = (props:any) => {
 
     const callbacks = {
         functionsCallback,
+        deleteListCallback,
+        changeListRangeCallback,
+        dragDropTransferCallback,
     }
     useEffect(() =>{
 
