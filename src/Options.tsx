@@ -2437,7 +2437,7 @@ const Options = ({
                         </InputGroup>
                     </FormControl>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        This clears the and reloads the cache, and reloads the cradle at its current position.
+                        This clears and reloads the cache, and reloads the cradle at its current position.
                     </Text>
 
                     <Heading size = 'xs'>Clear the cache</Heading>

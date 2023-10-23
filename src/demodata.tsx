@@ -272,9 +272,9 @@ const callbacks = {
         - all property objects are assembled in a namespace object at the bottom of this module 
             for use by the demo app
 
-    1. uniformcontent:           simplecontentProperties,
-    2. uniformpromises:          simplepromisesProperties,
-    3. uniformautoexpand:        simpleautoexpandProperties,
+    1. uniformcontent:          uniformcontentProperties,
+    2. uniformpromises:         uniformpromisesProperties,
+    3. uniformautoexpand:       uniformautoexpandProperties,
     4. variablecontent:         variablecontentProperties,
     5. variablepromises:        variablepromiseProperties,
     6. variabledynamic:         variabledynamicProperties,
@@ -464,7 +464,7 @@ const simplePlaceholderMessages = {
 }
 
 // properties for the simple uniform content scroller
-const simplecontentProperties = {
+const uniformcontentProperties = {
     startingIndex:0,
     startingListRange:[-50,50],
     orientation: 'vertical',
@@ -556,7 +556,7 @@ const simplePromisesScrollerStyles = {
 
 
 // properties for the simple promises scroller
-const simplepromisesProperties = {
+const uniformpromisesProperties = {
     startingIndex:0,
     startingListRange:[-50,50],
     orientation:'vertical',
@@ -616,7 +616,7 @@ const simpleAutoExpandScrollerStyles = {
 
 
 // properties for the simple promises scroller
-const simpleAutoExpandProperties = {
+const uniformautoexpandProperties = {
     startingIndex:0,
     startingListRange:[-50,50],
     orientation:'vertical',
@@ -661,19 +661,8 @@ let variableComponentStyles = {
 // const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
 const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst.'
 
-const getVariableTestString = (index:number, itemID:number) => {
-
-    let teststr
-
-    if ([0,1,51,52,196,197,198,199].includes(index)) {
-        teststr = 'SHORT STRING ' + ` [${index}]=${itemID}`// short string for demo
-    } else if (index == 3) {
-        teststr =`[${index}]=${itemID} test string => ${teststring.substr(0,.5 * teststring.length)}`
-    } else {
-        teststr =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
-    }
-
-    return teststr
+const getVariableString = () => {
+    return teststring.substr(0,Math.random() * teststring.length)
 }
 
 const VariableItem = (props:any) => {
@@ -697,11 +686,16 @@ const VariableItem = (props:any) => {
 
     if (!testStringRef.current) {
 
-        const testString = getVariableTestString(props.scrollerContext.cell.current.index, props.itemID)
+        const testString = getVariableString()
 
         testStringRef.current = testString
 
     }
+
+    const presentationString = useMemo(()=>{
+        return `[${props.scrollerContext.cell.current.index}]=${props.scrollerContext.cell.current.itemID} test string => ` +
+        testStringRef.current
+    },[props.scrollerContext.cell.current.index, props.scrollerContext.cell.current.itemID])
 
     const {
 
@@ -803,7 +797,7 @@ const VariableItem = (props:any) => {
             {isDnd && float}
             {sourceIDText && <>{sourceIDText} <br /></>} 
             {localTypeText && <>{localTypeText} <br /></>}
-            {testStringRef.current}
+            {presentationString}
         </div>
     </div>
 }
@@ -984,9 +978,9 @@ const variablepromiseProperties = {
 // variable dynamic content component definition
 // -----------------
 
-const getDynamicTestString = (index:number, itemID:number) => {
+const getDynamicTestString = () => {
 
-    return `[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+    return `${teststring.substr(0,Math.random() * teststring.length)}`
 
 }
 
@@ -1045,7 +1039,9 @@ const VariableItemDynamic = (props:any) => {
     useEffect(()=>{
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
-            const teststringinstance = getDynamicTestString(props.scrollerContext.cell.current.index, props.itemID)
+            const teststringinstance = 
+                `[${scrollerContext.cell.current.index}]=${scrollerContext.cell.current.itemID} test string => ` 
+                + getDynamicTestString()
             setTeststring(teststringinstance)
 
         },200 + (Math.random() * 2000))
@@ -1151,11 +1147,11 @@ const variabledynamicProperties = {
 
 const oversizedteststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
 
-const getVariableOversizedTestString = (index:number, itemID:number) => {
+const getVariableOversizedTestString = () => {
 
     let teststr
 
-    teststr =`[${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
+    teststr =`${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
 
     return teststr
 }
@@ -1177,7 +1173,12 @@ const VariableOversizedItem = (props:any) => {
 
     },[isDnd])
 
-    const testStringRef = useRef(getVariableOversizedTestString(props.scrollerContext.cell.current.index, props.itemID))
+    const testStringRef = useRef(getVariableOversizedTestString())
+
+    const presentationString = useMemo(() => {
+        return `[${props.scrollerContext.cell.current.index}]=${props.scrollerContext.cell.current.itemID} test string => `
+        + testStringRef.current
+    },[props.scrollerContext.cell.current.index, props.scrollerContext.cell.current.itemID])
 
     const {
 
@@ -1278,7 +1279,7 @@ const VariableOversizedItem = (props:any) => {
             {isDnd && float}
             {sourceIDText && <>{sourceIDText} <br /></>} 
             {localTypeText && <>{localTypeText} <br /></>}
-            {testStringRef.current}
+            {presentationString}
         </div>
     </div>
 }
@@ -2306,9 +2307,9 @@ const nestingvariableProperties = {
 
 // this is exported for the App module to use
 export const defaultAllContentTypeProperties = {
-    uniformcontent:simplecontentProperties,
-    uniformpromises:simplepromisesProperties,
-    uniformautoexpand:simpleAutoExpandProperties,
+    uniformcontent:uniformcontentProperties,
+    uniformpromises:uniformpromisesProperties,
+    uniformautoexpand:uniformautoexpandProperties,
     variablecontent:variablecontentProperties,
     variablepromises:variablepromiseProperties,
     variabledynamic:variabledynamicProperties,
