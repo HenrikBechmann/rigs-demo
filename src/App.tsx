@@ -262,6 +262,7 @@ function App() {
   // defaultAPIFunctionArguments defined above
 
   const indexRangeRef = useRef([])
+  const cacheRef = useRef({cache:null, max:null})
   
   // assigned from demo versions for edit
   const 
@@ -393,6 +394,7 @@ function App() {
           if (functionsAPIRef.current.getPropertiesSnapshot) {
               const [props] = functionsAPIRef.current.getPropertiesSnapshot()
               indexRangeRef.current = props.virtualListProps.range
+              cacheRef.current = {cache:props.cache,max:props.cacheMax}
           }
           setDemoState('ready') 
 
@@ -441,7 +443,8 @@ function App() {
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
           <i>Content:</i> {contentTitles[demoContentTypeSelectorRef.current]},&nbsp; 
           {demoAllContentTypePropertiesRef.current[demoContentTypeSelectorRef.current].orientation}, 
-          range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}]
+          range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}],
+          cache = {cacheRef.current.cache} (max {cacheRef.current.max})
         </Text>
         <HStack align = 'center' justify = 'start'>
             <FormControl>
