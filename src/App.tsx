@@ -255,7 +255,7 @@ function App() {
   },[])
 
   // baseline - static
-  const defaultContentTypeSelector = 'uniformcontent' // 'nestinguniform'
+  const defaultContentTypeSelector = 'variablecontent' //'uniformcontent' // 'nestinguniform'
   const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackFlags imported above
