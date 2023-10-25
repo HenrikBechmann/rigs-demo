@@ -387,6 +387,7 @@ function App() {
       case 'setup':
       case 'apply': 
       case 'autoexpand':
+      case 'revised':
       case 'resetall': {
 
         setTimeout(()=>{ // allow cycle for load scroller, get functions and indexRange
@@ -482,6 +483,7 @@ function App() {
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
         <DemoScroller 
+          setDemoState = { setDemoState }
           demoContentTypeSelector = {demoContentTypeSelectorRef.current} 
           demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} 
           dndinstalled = {dndInstalledRef.current}

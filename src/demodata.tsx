@@ -182,7 +182,7 @@ const boundaryCallback = (position:string, index:number, context:GenericObject) 
         console.log('boundaryCallback: position, index, context', position, index, context)
 }
 
-const dragDropTransferCallback = (
+export const dragDropTransferCallback = (
     sourceScrollerID:number, sourceIndex:number, targetScrollerID:number, targetIndex:number, context:GenericObject) => {
 
     demoCallbackFlagsRef.current.dragDropTransferCallback && 

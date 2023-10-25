@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react'
 
-import {testUniformData, testVariableData, testNestingAccepts, acceptAll, GenericObject} from './demodata'
+import {testUniformData, testVariableData, testNestingAccepts, acceptAll, GenericObject, dragDropTransferCallback} from './demodata'
 
 import GridScroller, { RigsDnd as DndScroller } from 'react-infinite-grid-scroller'
 
@@ -50,10 +50,21 @@ const Scroller = (
         demoContentTypeSelector, 
         dndinstalled, 
         dndmasterenabled, 
-        dndrootenabled
+        dndrootenabled,
+        setDemoState,
     }:any) => {
 
     const [scrollerState, setScrollerState] = useState('ready')
+
+    const respondToDndRangeChange = (sourceScrollerID:number, sourceIndex:number, targetScrollerID:number, targetIndex:number, context:GenericObject) => {
+
+        if (context.item.dropEffect == 'copy' || (sourceScrollerID !== targetScrollerID)) {
+            setDemoState('revised')
+        }
+
+        dragDropTransferCallback(sourceScrollerID, sourceIndex, targetScrollerID, targetIndex, context)
+
+    }
 
     const 
         testData = testDataSource[demoContentTypeSelector],
@@ -62,8 +73,6 @@ const Scroller = (
 
         profileRef = useRef<GenericObject | null>(null),
         acceptRef = useRef<string[] | null>(null)
-
-    // console.log('demoContentTypeSelector, testData',demoContentTypeSelector, testData)
 
     if (demoContentTypeSelector != demoContentTypeSelectorRef.current || !acceptRef.current) {
 
@@ -116,8 +125,6 @@ const Scroller = (
             dropEffect:undefined,
         }
 
-        // console.log('updating dndOptionsRef', dndOptionsRef.current)
-
         setScrollerState('update')
 
     },[dndmasterenabled, dndrootenabled, demoContentTypeSelector])
@@ -133,12 +140,18 @@ const Scroller = (
 
     },[scrollerState])
 
+    const contentTypeProperties = { ...(demoAllContentTypeProperties[demoContentTypeSelector]) }
+
+    const callbacks = contentTypeProperties.callbacks ?? {}
+
+    callbacks.dragDropTransferCallback = respondToDndRangeChange
+
+    contentTypeProperties.callbacks = callbacks
+
     if (dndinstalled) {
 
-        // console.log('demo running installed', dndOptionsRef.current)
-
         const props = {
-            ...demoAllContentTypeProperties[demoContentTypeSelector],
+            ...contentTypeProperties,
             profile:profileRef.current, 
             dndOptions:dndOptionsRef.current,
             getDropEffect,
@@ -150,7 +163,7 @@ const Scroller = (
 
         // const props = {dndOptions:dndOptionsRef.current,...demoAllContentTypeProperties[demoContentTypeSelector]}
         const props = {
-            ...demoAllContentTypeProperties[demoContentTypeSelector],
+            ...contentTypeProperties,
             profile:profileRef.current, 
         }
 
