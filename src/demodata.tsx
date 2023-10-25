@@ -2229,7 +2229,7 @@ const nestinguniformProperties = {
     padding:5,
     gap:5,
     runwaySize:3,
-    cache:'keepload',
+    cache:'cradle',
     cacheMax:200,
     layout: 'uniform',
 
