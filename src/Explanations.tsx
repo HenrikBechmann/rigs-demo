@@ -31,7 +31,7 @@ There are several main ways to experiment with content sizing and configuration 
 
 - try out the various content types offered in the _Options_ drawer
 - change the size of the browser window
-- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for reset to 100%). Zooming down to 50% or 33% is interesting
+- zoom the browser window (Ctrl-minus or Ctrl-plus; Ctrl-zero for reset to 100%). Zooming down to 50% or even 33% is interesting
 
 There are many options that can be set in the _Options_ drawer.
 
@@ -51,10 +51,11 @@ permanent content
 direction on loading cells, with minimal visible disruption
 - first loads all content into a cache (React \`portals\`) so that state is not lost when components are moved from
 one part of the \`Cradle\` to another during scrolling
-- provides for a _repositioning_ feature, such that if the \`Cradle\` is forced out of scope during scrolling, the 
+- provides for a _repositioning_ feature, such that if the \`Cradle\` is forced out of scope during scrolling (by getting behind in 
+processing), the 
 scroller automatically reverts to _repositioning_ mode, in which it informs the user of the current location of the 
 scroll in relation to the entire virtual list
-- provides a memory _cache_, such that components can optionally be retained in memory (limited by the \`maxCache\` 
+- provides a sparse memory _cache_, such that components can optionally be retained in memory (limited by the \`maxCache\` 
 parameter) even when the content scrolls out of scope, to allow retention of the state of complex components.
 `
 
@@ -63,13 +64,13 @@ For this demonstration, there are three types of content, plus a few variations.
 the configurations of these content types can be viewed [here](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx).
 
 The three basic content types of this demo site are: 
-- simple uniform
+- uniform
 - variable
 - nested scrollers
 
 The variations include \`promises\` of all three types which are randomly delayed for loading. There is also
 a _dynamic_ version of the variable content type, in which every cell randomly, and continuously, loads new and 
-different data. Finally there is an _oversized_ variable version which explores the effect of having cells that can
+different data. Finally there is an _oversized_ variable version which explores the effect of having cells that
 extend beyond the boundaries of the viewport. The scroller still scrolls in all of these circumstances.
 
 Each of the content type items shows the virtual list \`index\` 
@@ -89,8 +90,7 @@ The term _variable_ is for the layout in which for vertical orientation, the cel
 \`cellMinHeight\` and \`cellHeight\` parameter values, and for horizontal orientation the cell width can
 vary between the \`cellMinWidth\` and \`cellWidth\` parameter values.
 
-There is also a *shared cache (experimental)* content type which shares cache for all visible scrollers. This
-currently has no operational effect.
+Note that There is a *shared cache* mode for drag and drop which shares cache for all visible scrollers.
 
 Of course these content types are just samples. The main point of RIGS is to allow almost any kind of React Component 
 content.
@@ -112,17 +112,11 @@ list (following CSS assignment conventions).
 The **gap** property defines the gap (gutters) between cells, 
 both vertically and horizontally. It can be an integer or a 2 part comma separated list (column-gap/row-gap). 
 Gaps do not apply at the beginning or end of rows or columns (controlled by 
-padding instead). Adjusting the background colour using the \`styles\` object (see the bottom of this panel) colors 
+padding instead). Adjusting the background color e done can busing the \`styles\` object (see the bottom of this panel) colors 
 the padding and gap spaces.
 
 **Starting index** is applied only on initial mounting of a scroller, or in this demo whenever the content type is
 changed. But see also the _Scroll To_ option in the _Service Function Operations options_ section.
-
-**Starting list size** is applied only on initial mounting of a scroller, or in this demo whenever the content 
-type is changed. Subsequently the list size can be changed directly through the API (see the _Change virtual list 
-size_ option in the _Service Function Operations options_ section), or when the list size is modified through the 
-cache management API (again, see 
-the _Service Function Operations options_ section). Starting list size is ignored when Starting list range is set.
 
 **Starting list range** is applied only on initial mounting of a scroller, or in this demo whenever the content 
 type is changed. Subsequently the list range can be changed directly through the API (see the _Change virtual list 
@@ -172,7 +166,8 @@ const callbacks = {
     repositioningFlagCallback, // repositioning has started/ended
     repositioningIndexCallback, // current virtual repositioning index
     preloadIndexCallback, // current index being preloaded
-    boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
+    boundaryCallback, // (position, index, context) - position is "SOL" or "EOL", index is the corresponding boundary index
+    dragDropTransferCallback, // provides information about the latest successful user drag and drop operation
 }
 ~~~
 See the formal documentation (linked in the _Documentation &amp; Source Code_ section) for details.
@@ -276,10 +271,6 @@ There are several tools available to optimize the performance of RIGS:
 - the \`runwaySize\` property can influence both the appearance and performance of the scroller
 - the \`cache\` strategy employed ("cradle", "keepload", or "preload") can effect the timing and latency of loads and
 reloads; the \`cacheMax\` size canc be set to constrain the cache to protect device memory
-- the \`IDLECALLBACK_TIMEOUT\` value can be set through the \`technical\` property, to modify the timeout of the
-\`requestIdleCallback\` function employed by the \`CellFrame\` component. A higher value allows more time for initial
-loading and painting, but can lead to longer latency periods.
-- changing the \`CACHE_PARTITION_SIZE\` value (number of portals per partition) may have a marginal effect.
 `
 
 const motivation_md = `
@@ -289,7 +280,8 @@ The motivation for RIGS was to have a scroller that supports all of:
 - both vertical and horizontal scrolling
 - both uniform and variable cell sizes
 - nested scrollers
-- API support for sorting, filtering, and drag-n-drop
+- API support for sorting, filtering, and drag and drop
+- RIGS now supports drag and drop natively
 
 All this to support enhanced browser application experiences for users.
 `
