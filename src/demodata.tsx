@@ -1,14 +1,139 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useState, useEffect} from 'react'
+import React, {useRef, useState, useEffect, useMemo, useContext} from 'react'
 
 import Scroller from 'react-infinite-grid-scroller'
 
-import { setDemoStatePack } from './App'
+import { setDemoStatePack, DndEnabledContext } from './App'
+
+import {FormControl, Checkbox} from '@chakra-ui/react'
 
 /*
     CONTENT TYPES are defined just below the SCROLLER CALLBACKS section.
 */
+
+// -----------------------------[ Test data for dnd ]--------------------------------
+
+let globalSourceID = 0
+
+// proxies for index for type selection purposes
+let uniformInstanceID = 0
+let variableInstanceID = 0
+
+export const testUniformData:GenericObject = {
+    Housing:['Studio','1-bed','2-bed','family home'],
+    Tools:['hammer','saw','screwdriver','wrench'],
+    Food:['bread','onions','mushrooms','potatoes'],
+    Furniture:['chair','bed','couch','table'],
+}
+
+const testUniformDataColors:GenericObject = {
+    Housing:'AntiqueWhite',
+    Tools: 'AquaMarine',
+    Food: 'Cyan',
+    Furniture:'Gold',
+}
+
+export const testVariableData:GenericObject = {
+    Post:['Frank','Julia','Rachid','Selma'],
+    Message:['Karl','Roxi','Jane','Ben'],
+    Opinion:['Greg','Summer','John','Gloria'],
+    Report:['Mike','Cynthia','Bianca','Jim'],
+}
+
+const testVariableDataColors:GenericObject = {
+    Post:'BurlyWood',
+    Message: 'DarkKhaki',
+    Opinion: 'DarkSalmon',
+    Report:'LightPink',
+}
+
+export const testNestingAccepts:GenericObject = {
+    variable:['variable'],
+    uniform:['uniform'],
+    mixed:['uniform','variable'],
+}
+
+// selction drivers for dnd
+function getRandomInt(max:number) {
+  return Math.floor(Math.random() * max);
+}
+
+export const acceptAll = (testData:object) => {
+    return Object.keys(testData)
+}
+
+const acceptOne = (testData:object) => {
+    const groups = Object.keys(testData)
+    return [groups[getRandomInt(groups.length)]]
+}
+
+const acceptTwo = (testData:object) => {
+    const [first] = acceptOne(testData)
+    let [second] = acceptOne(testData)
+    while (first == second) {
+        [second] = acceptOne(testData)
+    }
+    return [first,second]
+}
+
+const acceptThree = (testData:object) => {
+    const [remove] = acceptOne(testData)
+    const list = Object.keys(testData)
+    const result = list.filter((item)=> item != remove )
+    return result
+}
+
+const rotateAccepts = (testData:object,index:number) => {
+    const selector = Math.abs(index) % 4
+    let accept
+    switch (selector) {
+        case 0: {
+            return acceptAll(testData)
+            break
+        }
+        case 1: {
+            return acceptTwo(testData)
+            break
+        }
+        case 2: {
+            return acceptOne(testData)
+            break
+        }
+        case 3: {
+            return acceptThree(testData)
+            break
+        }
+    }
+}
+
+const getSubscrollerAccepts = (variant:string) => {
+
+    const testData = 
+        variant == 'uniform'?
+            testUniformData:
+            testVariableData
+
+    const instanceID = 
+        variant == 'uniform'?
+            uniformInstanceID++:
+            variableInstanceID++
+
+    return rotateAccepts(testData,instanceID)
+
+}
+
+const selectCellType = (testData:GenericObject, accept:Array<string>,index:number) => {
+
+    const selector = (Math.abs(index) % accept.length)
+    const cellType:string = accept[selector]
+    const textOptions:Array<any> = testData[cellType]
+
+    const typeText = textOptions[getRandomInt(textOptions.length)]
+
+    return [cellType, typeText]
+
+}
 
 // =============================================================================
 // ==============================[ SCROLLER CALLBACKS ]=========================
@@ -28,11 +153,11 @@ export const defaultCallbackFlags = {
     repositioningIndexCallback:false,
     preloadIndexCallback:false,
     itemExceptionCallback:false,
-    changeListSizeCallback:false,
     changeListRangeCallback:false,
     deleteListCallback:false,
     repositioningFlagCallback:false,
     boundaryCallback:false,
+    dragDropTransferCallback:false,
 }
 
 // initialize the demo settings with the default settings, and export to the App module. 
@@ -44,70 +169,72 @@ export const demoCallbackFlagsRef = {current:{...defaultCallbackFlags} as Generi
 // the individual callback definitions follow...
 // -----------------
 
-const referenceIndexCallback = (index:number, location:string, cradleState:string) => {
+const referenceIndexCallback = (index:number, context:GenericObject) => { //location:string, cradleState:string) => {
 
     demoCallbackFlagsRef.current.referenceIndexCallback && 
-        console.log('referenceIndexCallback: index, location, cradleState',
-            index, location, cradleState)
+        console.log('referenceIndexCallback: index, context',
+            index, context)
    
 }
 
-const boundaryCallback = (position:string, index:number) => {
+const boundaryCallback = (position:string, index:number, context:GenericObject) => {
     demoCallbackFlagsRef.current.boundaryCallback && 
-        console.log('boundaryCallback: position, index', position, index)
+        console.log('boundaryCallback: position, index, context', position, index, context)
 }
 
-const preloadIndexCallback = (index:number) => {
+export const dragDropTransferCallback = (
+    sourceScrollerID:number, sourceIndex:number, targetScrollerID:number, targetIndex:number, context:GenericObject) => {
+
+    demoCallbackFlagsRef.current.dragDropTransferCallback && 
+        console.log('dragDropTransferCallback: sourceScrollerID, sourceIndex, targetScrollerID targetIndex, context', 
+            sourceScrollerID, sourceIndex, targetScrollerID, targetIndex, context)
+
+}
+
+const preloadIndexCallback = (index:number, context:GenericObject) => {
     
     demoCallbackFlagsRef.current.preloadIndexCallback && 
-        console.log('preloadIndexCallback: index', 
-            index)
+        console.log('preloadIndexCallback: index, context', 
+            index, context)
 
 }
-const deleteListCallback = (reason:string, deleteList:number[]) => {
+const deleteListCallback = (deleteList:number[], context:object) => {
     
     demoCallbackFlagsRef.current.deleteListCallback && 
-        console.log('deleteListCallback: reason, deleteList',
-            reason, deleteList)
+        console.log('deleteListCallback: deleteList, context',
+            deleteList, context)
 
 }
-const repositioningIndexCallback = (index:number) => {
+const repositioningIndexCallback = (index:number, context:object) => {
     
     demoCallbackFlagsRef.current.repositioningIndexCallback && 
-        console.log('repositioningIndexCallback: index',
-            index)
+        console.log('repositioningIndexCallback: index, context',
+            index, context)
 
 }
 
-const repositioningFlagCallback = (flag:boolean) => {
+const repositioningFlagCallback = (flag:boolean, context:object) => {
     
     demoCallbackFlagsRef.current.repositioningFlagCallback && 
-        console.log('repositioningFlagCallback: index',
-            flag)
+        console.log('repositioningFlagCallback: flag, context',
+            flag, context)
 
 }
 
-const changeListSizeCallback = (newlistsize:number) => {
-    
-    demoCallbackFlagsRef.current.changeListSizeCallback && 
-        console.log('changeListSizeCallback: newlistsize', 
-            newlistsize)
+const changeListRangeCallback = (newlistrange:number[], context:object) => {
 
-}
-
-const changeListRangeCallback = (newlistrange:number) => {
-    
     demoCallbackFlagsRef.current.changeListRangeCallback && 
-        console.log('changeListRangeCallback: newlistrange', 
-            newlistrange)
+        console.log('changeListRangeCallback: newlistrange, context', 
+            newlistrange, context)
 
 }
 
-const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
+// const itemExceptionCallback = (index:number, itemID:number, returnvalue:any, location:string, error:Error) => {
+const itemExceptionCallback = (index:number, context:GenericObject) => {
     
     demoCallbackFlagsRef.current.itemExceptionCallback && 
-        console.log('itemExceptionCallback: index, itemID, returnvalue, location, error',
-            index, itemID, returnvalue, location, error)
+        console.log('itemExceptionCallback: index, context',
+            index, context)
 
 }
 
@@ -133,11 +260,11 @@ const callbacks = {
     repositioningIndexCallback,
     preloadIndexCallback,
     itemExceptionCallback,
-    changeListSizeCallback,
     changeListRangeCallback,
     deleteListCallback,
     repositioningFlagCallback,
     boundaryCallback,
+    dragDropTransferCallback,
 }
 
 // =============================================================================
@@ -150,22 +277,26 @@ const callbacks = {
     - a first part to define the components to be sent to the scroller
     - a second part to assemble the property values to send to the scroller
 
-    The left column is the list of seven content type choices on the Options page
+    The left column is the list of thirteen content type choices on the Options page
     The right column is the names of the objects holding the scroller properties for those content types
         - you can search for those property objects below to see how they are created
         - all property objects are assembled in a namespace object at the bottom of this module 
             for use by the demo app
 
-    1. simplecontent:    simplecontentProperties,
-    2. simplepromises:   simplepromisesProperties,
-    2.1 simpleautoexpand:simpleautoexpandProperties,
-    3. variablecontent:  variablecontentProperties,
-    4. variablepromises: variablepromiseProperties,
-    5. variabledynamic:  variabledynamicProperties,
-    6. variableoversized: variableoversizedProperties,
-    7. nestedcontent:    nestedcontentProperties,
-    8. nestedpromises:   nestedpromisesProperties,
-    9. sharedcache:      sharedcacheProperties
+    1. uniformcontent:          uniformcontentProperties,
+    2. uniformpromises:         uniformpromisesProperties,
+    3. uniformautoexpand:       uniformautoexpandProperties,
+    4. variablecontent:         variablecontentProperties,
+    5. variablepromises:        variablepromiseProperties,
+    6. variabledynamic:         variabledynamicProperties,
+    7. variableoversized:       variableoversizedProperties,
+    8. variableautoexpand:      variableautoexpandProperties,
+    9. nestingmixed:            nestingmixedProperties,
+    10. nestingmixedpromises:   nestingmixedpromisesProperties,
+    
+    11. nestingmixedautoexpand: nestingmixedautoexpandProperties,
+    12. nestinguniform:         nestinguniformProperties,
+    13. nestingvariable:        nestingvariableProperties,
 
 */
 
@@ -182,14 +313,14 @@ const simpleComponentStyles = {
         top:0,
         left:0,
         padding:'3px',
-        backgroundColor:'white', 
+        // backgroundColor:'white', 
         margin:'3px'
     } as React.CSSProperties,
     outer: {
         position:'relative',
         height:'100%', 
         width:'100%',
-        backgroundColor:'white',
+        // backgroundColor:'white',
         border: '1px solid black',
         borderRadius:'8px',
         overflow:'hidden',
@@ -199,10 +330,34 @@ const simpleComponentStyles = {
 // the simple uniform content component
 const SimpleItem = (props:any) => {
 
+    const {color, type, typeText, itemID, scrollerContext, sourceID} = props
+
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
+
+    if (color) simpleComponentStyles.outer.backgroundColor = color
+    let localTypeText
+    if (type && typeText) localTypeText = `${type}: ${typeText}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div 
+            style = {{float:'left', height: '28px', width:'31px'}} 
+            data-type = 'dnd-float'
+        />
+        else return null
+
+    },[isDnd])
+
+    const indexstring = `list index ${scrollerContext.cell.current.index},`
+    const itemIDstring = `cache itemID ${itemID}`
+    const sourceIDstring = `sourceID: ${sourceID}`
+
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
-            {`list index ${props.scrollerProperties.cellFramePropertiesRef.current.index},`}<br/>
-            {`cache itemID ${props.itemID}`}
+            {isDnd && float}
+            {indexstring}<br style = {{clear:'left'}}/>
+            {itemIDstring}
+            {sourceID && <><br />{sourceIDstring}</>}
+            {localTypeText && <><br />{localTypeText}</>}
         </div>
     </div>
 
@@ -212,15 +367,87 @@ const SimpleItem = (props:any) => {
 // scroller property assembly for simple uniform content component
 // -----------------
 
-// the getItem function for simple uniform content
-const getSimpleItem = (index:number, itemID:number) => {
+// the getItemPack function for simple uniform content
+const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-     if (index == 30) return Promise.reject(new Error('not found for demo purposes'))
-     if (index == 40) return 5 // deliberate return of an invalid (non-React-component) content type for demo
+    // console.log('getSimpleItemPack: context',context)
 
-     const component = <SimpleItem index = {index} itemID = {itemID} scrollerProperties = {null} />
+    const accept = context.scrollerProfile.accept;
+    let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
-     return component
+    if (context.contextType == 'dndFetchRequest') {
+
+        ({ type:cellType } = context.item.dndOptions)
+        const { profile } = context.item
+        const { dropEffect } = context.item;
+        ({ 
+            typeText,
+            originalTypeText,
+            color,
+            sourceID,
+        } = context.item.profile)
+        if (dropEffect == 'copy') {
+            ({ copyCount } = profile);
+            copyCount = copyCount ?? 0
+            copyCount++
+            if (!originalTypeText) {
+                originalTypeText = typeText
+            } else {
+                typeText = originalTypeText
+            }
+            typeText = `copy (${copyCount}) ` + typeText
+        }
+
+    } else {
+
+        ([cellType, typeText] = selectCellType(testUniformData,accept,index));
+
+        color = testUniformDataColors[cellType]
+
+        sourceID = globalSourceID++
+
+    }
+
+    let dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+    if (copyCount) {
+        dragText = `copy (${copyCount}) ` + dragText
+    }
+
+
+    let component
+
+     if (index == 30) {
+         component = Promise.reject(new Error(`not found for demo purposes (${index})`))
+     } else if (index == 35) {
+         return undefined
+     } else if (index == 40) {
+         component = 5 // deliberate return of an invalid (non-React-component) content type for demo
+     } else {
+         component = <SimpleItem 
+             index = {index} 
+             itemID = {itemID} 
+             type = {cellType}
+             typeText = {typeText}
+             color = { color }
+             sourceID = {sourceID}
+             scrollerContext = {null} />
+     }
+
+    const profile:GenericObject = {color, type:cellType, typeText, sourceID}
+    if (copyCount) {
+        profile.copyCount = copyCount
+    }
+    if (originalTypeText) {
+        profile.originalTypeText = originalTypeText
+    }
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile,
+    }
+
+     return itemPack
 
 }
 
@@ -233,6 +460,13 @@ const simpleScrollerStyles = {
         borderRadius:'8px',
         backgroundColor:'pink',
     },
+    // dndHighlights:{
+    //     source:"red",
+    //     target:"green",
+    //     dropped:"plum",
+    //     scrolltab:"cyan",
+    //     scroller:"blue",
+    // }
 }
 
 // placeholder messages
@@ -241,11 +475,10 @@ const simplePlaceholderMessages = {
 }
 
 // properties for the simple uniform content scroller
-const simplecontentProperties = {
+const uniformcontentProperties = {
     startingIndex:0,
-    startingListSize:300,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation: 'vertical',
     cellHeight:150,
     cellWidth:150,
     padding:10,
@@ -255,7 +488,7 @@ const simplecontentProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem: getSimpleItem,
+    getItemPack: getSimpleItemPack,
     styles: simpleScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
@@ -272,19 +505,54 @@ const simplecontentProperties = {
 // scroller property values assembled for this content variant
 // -----------------
 
-// the getItem function for simple uniform promises; note the setTimeout
-const getSimpleItemPromise = (index:number, itemID:number) => {
+// the getItemPack function for simple uniform promises; note the setTimeout
+const getSimpleItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
-    return new Promise((resolve, reject) => {
+    const accept = context.scrollerProfile.accept
+
+    let [cellType, typeText] = selectCellType(testUniformData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
+
+    const color = testUniformDataColors[cellType]
+
+    const sourceID = globalSourceID++
+
+    const component = new Promise((resolve, reject) => {
 
         setTimeout(()=> {
 
-            resolve(<SimpleItem index = {index} itemID = {itemID} scrollerProperties = {null}/>)
+            resolve(<SimpleItem 
+                index = {index} 
+                itemID = {itemID} 
+                type = {cellType}
+                typeText = {typeText}
+                color = { color }
+                sourceID = {sourceID}
+                scrollerContext = {null}
+            />)
 
         },400 + (Math.random() * 2000))
 
     })
 
+    const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{color, type:cellType, typeText, sourceID },
+    }
+
+     return itemPack
 }
 
 const simplePromisesScrollerStyles = {
@@ -299,9 +567,8 @@ const simplePromisesScrollerStyles = {
 
 
 // properties for the simple promises scroller
-const simplepromisesProperties = {
+const uniformpromisesProperties = {
     startingIndex:0,
-    startingListSize:300,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:150,
@@ -313,7 +580,7 @@ const simplepromisesProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem: getSimpleItemPromise,
+    getItemPack: getSimpleItemPromisePack,
     styles: simplePromisesScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
@@ -322,7 +589,7 @@ const simplepromisesProperties = {
     },
 }
 
-// ============================[ 2.1 Simple auto expand ]==============================
+// ============================[ 3. Simple auto expand ]==============================
 
 // the simple content component definitions above are used for these items, except for the following...
 
@@ -330,7 +597,7 @@ const simplepromisesProperties = {
 // scroller property values assembled for this content variant
 // -----------------
 
-const getAutoExpansionCount = (position:string, index:number) => {
+const getSimpleAutoExpansionCount = (position:string, index:number) => {
 
     let count = 0
 
@@ -360,9 +627,8 @@ const simpleAutoExpandScrollerStyles = {
 
 
 // properties for the simple promises scroller
-const simpleAutoExpandProperties = {
+const uniformautoexpandProperties = {
     startingIndex:0,
-    startingListSize:300,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:150,
@@ -374,8 +640,8 @@ const simpleAutoExpandProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem: getSimpleItem,
-    getExpansionCount:getAutoExpansionCount,
+    getItemPack: getSimpleItemPack,
+    getExpansionCount:getSimpleAutoExpansionCount,
     styles: simpleAutoExpandScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
@@ -384,7 +650,7 @@ const simpleAutoExpandProperties = {
     },
 }
 
-// ==========================[ 3. variable content ]============================
+// ==========================[ 4. variable content ]============================
 
 // -----------------
 // variable content component definition
@@ -392,38 +658,55 @@ const simpleAutoExpandProperties = {
 
 let variableComponentStyles = {
     outer:{
-        backgroundColor:'white',
+        // backgroundColor:'white',
         overflow:'scroll',
     } as React.CSSProperties,
     inner:{
         padding:'3px',
         border:'1px solid black',
         borderRadius:'8px',
-        backgroundColor:'white', 
+        // backgroundColor:'white', 
     } as React.CSSProperties
 }
 
 // const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
 const teststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst.'
 
-const getVariableTestString = (index:number, itemID:number) => {
-
-    let teststr
-
-    if ([0,1,51,52,196,197,198,199].includes(index)) {
-        teststr = 'SHORT STRING ' + ` [${index}]=${itemID}`// short string for demo
-    } else if (index == 3) {
-        teststr =`[${index}]=${itemID} test string => ${teststring.substr(0,.5 * teststring.length)}`
-    } else {
-        teststr =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
-    }
-
-    return teststr
+const getVariableString = () => {
+    return teststring.substr(0,Math.random() * teststring.length)
 }
 
 const VariableItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
+    const {color, type, typeText, scrollerContext, sourceID} = props
+
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
+
+    let localTypeText = '', sourceIDText = ''
+    if (type && typeText) localTypeText = `${type} from ${typeText}:`
+
+    if (sourceID) sourceIDText = `sourceID: ${sourceID}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '30px', width:'34px'}} />
+        else return null
+
+    },[isDnd])
+
+    const testStringRef = useRef<any>(null)
+
+    if (!testStringRef.current) {
+
+        const testString = getVariableString()
+
+        testStringRef.current = testString
+
+    }
+
+    const presentationString = useMemo(()=>{
+        return `[${props.scrollerContext.cell.current.index}]=${props.scrollerContext.cell.current.itemID} test string => ` +
+        testStringRef.current
+    },[props.scrollerContext.cell.current.index, props.scrollerContext.cell.current.itemID])
 
     const {
 
@@ -431,17 +714,17 @@ const VariableItem = (props:any) => {
         cellWidth,
         cellHeight
 
-    } = props.scrollerProperties.scrollerPropertiesRef.current
+    } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
-        (orientation == 'vertical')?
-            {
+        (orientation == 'vertical')
+            ?{
                 maxHeight:cellHeight,
                 height:'',
                 maxWidth:'',
                 width:'100%',
-            }:
-            {
+            }
+            :{
                 maxHeight:'',
                 height:'100%',
                 maxWidth:cellWidth,
@@ -449,6 +732,9 @@ const VariableItem = (props:any) => {
             }
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+    const innerstyles = {...variableComponentStyles.inner}
+
+    color && (innerstyles.backgroundColor = color)
 
     // ------------------------[ handle scroll position recovery ]---------------------
 
@@ -518,7 +804,12 @@ const VariableItem = (props:any) => {
 
     // register the scroller element
     return <div ref = {scrollerElementRef} data-type = 'variable-content' style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
+        <div style = {innerstyles}>
+            {isDnd && float}
+            {sourceIDText && <>{sourceIDText} <br /></>} 
+            {localTypeText && <>{localTypeText} <br /></>}
+            {presentationString}
+        </div>
     </div>
 }
 
@@ -526,9 +817,52 @@ const VariableItem = (props:any) => {
 // scroller property values assembled for variable content
 // -----------------
 
-const getVariableItem = (index:number, itemID:number) => {
+const getVariableItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-     return <VariableItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+    const accept = context.scrollerProfile.accept
+
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
+
+    const color = testVariableDataColors[cellType]
+
+    const sourceID = globalSourceID++
+
+    let component
+
+     if (index == 30) {
+         component = Promise.reject(new Error('not found for demo purposes'))
+     } else if (index == 40) {
+         component = 5 // deliberate return of an invalid (non-React-component) content type for demo
+     } else {
+         component = <VariableItem 
+             index = {index} 
+             itemID = {itemID} 
+             type = {cellType}
+             typeText = {typeText}
+             color = { color }
+             sourceID = {sourceID}
+             scrollerContext = {null} />
+     }
+
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{color, type:cellType, typeText, sourceID},
+    }
+
+    return itemPack
 
 }
 
@@ -544,8 +878,7 @@ const variablePlaceholderMessages = {
 
 const variablecontentProperties = {
     startingIndex:0,
-    startingListSize:200,
-    // startingListRange:[-60,60],
+    startingListRange:[-60,60],
     orientation:'vertical',
     cellHeight:320,
     cellWidth:250,
@@ -558,7 +891,7 @@ const variablecontentProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableItem,
+    getItemPack: getVariableItemPack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
@@ -566,7 +899,7 @@ const variablecontentProperties = {
         showAxis:false
     },
 }
-// =========================[ 4. variable promises ]================================
+// =========================[ 5. variable promises ]================================
 
 // the variable component definitions are reused for the variable promises variant
 
@@ -575,21 +908,60 @@ const variablecontentProperties = {
 // -----------------
 
 // note the setTimeout function to simulate latency
-const getVariableItemPromise = (index:number, itemID:number) => {
+const getVariableItemPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
-    return new Promise((resolve, reject) => {
+    
+    const accept = context.scrollerProfile.accept
+
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
+
+    const color = testVariableDataColors[cellType]
+
+    const sourceID = globalSourceID++
+
+    let component = new Promise((resolve, reject) => {
         setTimeout(()=> {
 
-            resolve(<VariableItem index = {index} itemID = {itemID} scrollerProperties = {null}/>)
+            resolve(
+                <VariableItem 
+                     index = {index} 
+                     itemID = {itemID} 
+                     type = {cellType}
+                     typeText = {typeText}
+                     color = { color }
+                     sourceID = {sourceID}
+                     scrollerContext = {null} 
+                 />
+            )
 
         },1000 + (Math.random() * 2000))
+    
     })
+
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{color, type:cellType, typeText, sourceID},
+    }
+
+    return itemPack
 
 }
 
 const variablepromiseProperties = {
     startingIndex:0,
-    startingListSize:200,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
@@ -603,7 +975,7 @@ const variablepromiseProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableItemPromise,
+    getItemPack: getVariableItemPromisePack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
@@ -611,19 +983,34 @@ const variablepromiseProperties = {
         showAxis:false
     },
 }
-// ===========================[ 5. variable dynamic ]===============================
+// ===========================[ 6. variable dynamic ]===============================
 
 // -----------------
 // variable dynamic content component definition
 // -----------------
 
-const getDynamicTestString = (index:number, itemID:number) => {
+const getDynamicTestString = () => {
 
-    return `[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
+    return `${teststring.substr(0,Math.random() * teststring.length)}`
 
 }
 
 const VariableItemDynamic = (props:any) => {
+
+    const {color, type, typeText, scrollerContext, sourceID} = props
+
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
+
+    let localTypeText = '', sourceIDText = ''
+    if (type && typeText) localTypeText = `${type} from ${typeText}:`
+
+    if (sourceID) sourceIDText = `sourceID: ${sourceID}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '30px', width:'34px'}} />
+        else return null
+
+    },[isDnd])
 
     const {
 
@@ -631,7 +1018,7 @@ const VariableItemDynamic = (props:any) => {
         cellWidth,
         cellHeight
 
-    } = props.scrollerProperties.scrollerPropertiesRef.current
+    } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
         (orientation == 'vertical')?
@@ -649,8 +1036,9 @@ const VariableItemDynamic = (props:any) => {
             }
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+    const innerstyles = {...variableComponentStyles.inner}
 
-    // const originalindexRef = useRef(props.index)
+    color && (innerstyles.backgroundColor = color)
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -662,7 +1050,9 @@ const VariableItemDynamic = (props:any) => {
     useEffect(()=>{
         intervalRef.current = setInterval(() => {
             iterationRef.current ++
-            const teststringinstance = getDynamicTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID)
+            const teststringinstance = 
+                `[${scrollerContext.cell.current.index}]=${scrollerContext.cell.current.itemID} test string => ` 
+                + getDynamicTestString()
             setTeststring(teststringinstance)
 
         },200 + (Math.random() * 2000))
@@ -675,7 +1065,12 @@ const VariableItemDynamic = (props:any) => {
     },[])
 
     return <div data-type = 'variable-dynamic' style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{teststringRef.current}</div>
+        <div style = {innerstyles}>
+            {isDnd && float}
+            {sourceIDText && <>{sourceIDText} <br /></>} 
+            {localTypeText && <>{localTypeText} <br /></>}
+            {teststringRef.current}
+        </div>
     </div>
 
 }
@@ -684,15 +1079,59 @@ const VariableItemDynamic = (props:any) => {
 // scroller property values assembled for dynamic variable content
 // -----------------
 
-const getVariableItemDynamic = (index:number, itemID:number) => {
+const getVariableItemDynamicPack = (index:number, itemID:number, context:GenericObject) => {
 
-     return <VariableItemDynamic index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+     // return <VariableItemDynamic index = {index} itemID = {itemID} scrollerContext = {null}/>    
+
+    const accept = context.scrollerProfile.accept
+
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
+
+    const color = testVariableDataColors[cellType]
+
+    const sourceID = globalSourceID++
+
+    let component
+
+     if (index == 30) {
+         component = Promise.reject(new Error('not found for demo purposes'))
+     } else if (index == 40) {
+         component = 5 // deliberate return of an invalid (non-React-component) content type for demo
+     } else {
+         component = <VariableItemDynamic
+             index = {index} 
+             itemID = {itemID} 
+             type = {cellType}
+             typeText = {typeText}
+             color = { color }
+             sourceID = {sourceID}
+             scrollerContext = {null} />
+     }
+
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{color, type:cellType, typeText, sourceID},
+    }
+
+    return itemPack
 
 }
 
 const variabledynamicProperties = {
     startingIndex:0,
-    startingListSize:200,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:320,
@@ -706,7 +1145,7 @@ const variabledynamicProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableItemDynamic,
+    getItemPack: getVariableItemDynamicPack,
     styles: variableScrollerStyles,
     placeholderMessages: simplePlaceholderMessages,
     callbacks,
@@ -714,22 +1153,43 @@ const variabledynamicProperties = {
         showAxis:false
     },
 }
-// ======================[ 6. variable oversized content ]=========================
+
+// ======================[ 7. variable oversized content ]=========================
 
 const oversizedteststring = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida arcu. Arcu odio ut sem nulla pharetra diam. Amet facilisis magna etiam tempor orci eu. Consequat mauris nunc congue nisi vitae suscipit. Est ultricies integer quis auctor elit. Tellus in hac habitasse platea dictumst vestibulum rhoncus est. Purus non enim praesent elementum facilisis leo. At volutpat diam ut venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl nunc. Sed elementum tempus egestas sed sed risus pretium quam. Tristique risus nec feugiat in fermentum. Sem fringilla ut morbi tincidunt. Malesuada nunc vel risus commodo. Nulla pellentesque dignissim enim sit amet venenatis urna cursus. In egestas erat imperdiet sed euismod nisi porta.'
 
-const getVariableOversizedTestString = (index:number, itemID:number) => {
+const getVariableOversizedTestString = () => {
 
     let teststr
 
-    teststr =`[${index}]=${itemID} test string => ${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
+    teststr =`${oversizedteststring.substr(0,800 + (Math.random() * (oversizedteststring.length - 800)))}`
 
     return teststr
 }
 
 const VariableOversizedItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableOversizedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
+    const {color, type, typeText, scrollerContext, sourceID} = props
+
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
+
+    let localTypeText = '', sourceIDText = ''
+    if (type && typeText) localTypeText = `${type} from ${typeText}:`
+
+    if (sourceID) sourceIDText = `sourceID: ${sourceID}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '30px', width:'34px'}} />
+        else return null
+
+    },[isDnd])
+
+    const testStringRef = useRef(getVariableOversizedTestString())
+
+    const presentationString = useMemo(() => {
+        return `[${props.scrollerContext.cell.current.index}]=${props.scrollerContext.cell.current.itemID} test string => `
+        + testStringRef.current
+    },[props.scrollerContext.cell.current.index, props.scrollerContext.cell.current.itemID])
 
     const {
 
@@ -737,7 +1197,7 @@ const VariableOversizedItem = (props:any) => {
         cellWidth,
         cellHeight
 
-    } = props.scrollerProperties.scrollerPropertiesRef.current
+    } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
         (orientation == 'vertical')?
@@ -755,6 +1215,9 @@ const VariableOversizedItem = (props:any) => {
             }
 
     const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+    const innerstyles = {...variableComponentStyles.inner}
+
+    color && (innerstyles.backgroundColor = color)
 
     // ------------------------[ handle scroll position recovery ]---------------------
 
@@ -823,7 +1286,12 @@ const VariableOversizedItem = (props:any) => {
     cacheSentinel()
 
     return <div ref = {scrollerElementRef} data-type = 'variable-oversized' style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
+        <div style = {innerstyles}>
+            {isDnd && float}
+            {sourceIDText && <>{sourceIDText} <br /></>} 
+            {localTypeText && <>{localTypeText} <br /></>}
+            {presentationString}
+        </div>
     </div>
 }
 
@@ -831,15 +1299,59 @@ const VariableOversizedItem = (props:any) => {
 // scroller property values assembled for variable oversized content
 // -----------------
 
-const getVariableOversizedItem = (index:number, itemID:number) => {
+const getVariableOversizedItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-     return <VariableOversizedItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+     // return <VariableOversizedItem index = {index} itemID = {itemID} scrollerContext = {null}/>    
+
+    const accept = context.scrollerProfile.accept
+
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
+
+    const color = testVariableDataColors[cellType]
+
+    const sourceID = globalSourceID++
+
+    let component
+
+     if (index == 30) {
+         component = Promise.reject(new Error('not found for demo purposes'))
+     } else if (index == 40) {
+         component = 5 // deliberate return of an invalid (non-React-component) content type for demo
+     } else {
+         component = <VariableOversizedItem 
+             index = {index} 
+             itemID = {itemID} 
+             type = {cellType}
+             typeText = {typeText}
+             color = { color }
+             sourceID = {sourceID}
+             scrollerContext = {null} />
+     }
+
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{color, type:cellType, typeText, sourceID},
+    }
+
+    return itemPack
 
 }
 
 const variableoversizedProperties = {
     startingIndex:0,
-    startingListSize:200,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:800,
@@ -853,7 +1365,7 @@ const variableoversizedProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableOversizedItem,
+    getItemPack: getVariableOversizedItemPack,
     styles: variableScrollerStyles,
     placeholderMessages: variablePlaceholderMessages,
     callbacks,
@@ -862,16 +1374,74 @@ const variableoversizedProperties = {
     },
 }
 
-// ======================[ 7. nested scrollers content (scroller of sub-scrollers) ]=========================
+// ======================[ 8. variable auto expand ]=========================
+
+const getVariableAutoExpansionCount = (position:string, index:number) => {
+
+    let count = 0
+
+    if (position == 'SOL' && index >= -1000) count = 10
+
+    if (position == 'EOL' && index <= 1000) count = 10
+
+    const statePack:GenericObject = setDemoStatePack
+
+    if (count) {
+        statePack.setDemoState('autoexpand')
+    }
+
+    return count
+
+}
+
+const variableAutoexpandScrollerStyles = {
+    viewport:{
+        overscrollBehavior:'none'
+    },
+}
+
+const variableAutoexpandPlaceholderMessages = {
+    
+}
+
+const variableautoexpandProperties = {
+    startingIndex:0,
+    startingListRange:[-60,60],
+    orientation:'vertical',
+    cellHeight:320,
+    cellWidth:250,
+    cellMinHeight:25,
+    cellMinWidth:25,
+    padding:10,
+    gap:5,
+    runwaySize:5,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'variable',
+
+    getItemPack: getVariableItemPack,
+    getExpansionCount:getVariableAutoExpansionCount,
+    styles: variableAutoexpandScrollerStyles,
+    placeholderMessages: variableAutoexpandPlaceholderMessages,
+    callbacks,
+    technical: {
+        showAxis:false
+    },
+}
+
+// ======================[ 9. nesting mixed (uniform and variable) subscrollers ]=========================
 
 // For this there is a scroller, that contains cells of scrollers (subscrollers)
 // The subscroller content comes in two variants - variable content, and uniform content
 
 // -----------------
-// nested scrollers cell component definition
+// nested sub scrollers cell component definition
 // -----------------
+// --------------------[ subscroller component definition ]-----------------------
 
-const nestedSubscrollerComponentStyles = {
+// subscrollers are passed a variant property which defines content
+
+const subcrollerComponentStyles = {
     container: {
         display:'flex',
         flexDirection:'column',
@@ -885,6 +1455,7 @@ const nestedSubscrollerComponentStyles = {
         padding:'3px',
         backgroundColor:'silver',
         border:'2p solid darkgray',
+        fontSize:'small',
     } as React.CSSProperties,
     frame:{
         position:'relative',
@@ -894,94 +1465,190 @@ const nestedSubscrollerComponentStyles = {
     } as React.CSSProperties,
 }
 
+const subScrollerStyles = {
+    // dndDragIcon:{
+    //     top:'5px',
+    // },
+}
+
 const SubscrollerComponent = (props:any) => {
 
-    const [testState, setTestState] = useState('setup')
-    const testStateRef = useRef<string|null>(null)
-    testStateRef.current = testState
+    const [subscrollerState, setSubscrollerState] = useState('setup')
+    const subscrollerStateRef = useRef<string|null>(null)
+    subscrollerStateRef.current = subscrollerState
+
+    const dndEnabledContext = useContext( DndEnabledContext )
 
     const { 
         index, 
         itemID,
-        scrollerProperties,
+        scrollerContext,
+        context,
+        variant,
+        dndOptions,
+        sourceID,
+        profile,
+        callbacks:generalcallbacks,
     } = props
-
-    const variant =
-        ((index % 2) == 0)?
-        'uniform':
-        'variable'
 
     const properties = 
         (variant == 'uniform')?
-            nestedUniformSubscrollerProperties:
-            nestedVariableSubscrollerProperties
+            uniformSubscrollerProperties:
+            variableSubscrollerProperties
 
     const {
         // orientation, 
         gap, 
-        padding, 
+        // padding, 
         cellHeight, 
         cellWidth, 
         runwaySize, 
-        startingIndex, 
-        startingListSize,
-        startingListRange, 
-        getItem, 
+        getItemPack,
         cache,
         layout,
+        styles,
     } = properties
 
-    const { scrollerPropertiesRef } = scrollerProperties
+    let { startingListRange, padding, startingIndex }:
+        {
+            startingListRange:number[] | number,
+            padding:number[] | number,
+            startingIndex:number,
+            
+        } = properties
+
+    if (index === 1) {
+        startingListRange = [-30,30]
+        padding = [20,10]
+    }
+
+    const startingIndexRef = useRef(startingIndex)
+
+    const dndOptionsRef = useRef(dndOptions)
+    dndOptionsRef.current = dndOptions
+
+    useEffect(()=>{
+
+        dndOptionsRef.current.enabled = dndEnabledContext
+        setSubscrollerState('revised')
+
+    },[dndEnabledContext])
+
+    const { scroller } = scrollerContext
 
     const dynamicorientationRef = useRef<null | string>(null)
 
+    const subscrollerAPIRef = useRef({} as GenericObject)
+
+    const functionsCallback = (functions:GenericObject) => {
+
+        subscrollerAPIRef.current = functions
+
+    }
+
+    const callbacks = {
+        functionsCallback,
+        deleteListCallback,
+        changeListRangeCallback,
+        dragDropTransferCallback,
+    }
     useEffect(() =>{
 
-        const { orientation } = scrollerPropertiesRef.current
+        const { orientation } = scroller.current
         dynamicorientationRef.current = 
             (orientation == 'vertical')?
                 'horizontal':
                 'vertical'
 
-    },[scrollerPropertiesRef.current.orientation])
+    },[scroller.current.orientation])
 
-    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
+    const { size:listsize, lowindex } = scroller.current.virtualListProps
 
     useEffect(()=>{
 
-        switch (testState) {
+        switch (subscrollerState) {
             case 'setup':
             case 'revised': {
-                setTestState('ready')
+                setSubscrollerState('ready')
                 break
             }
         }
 
-    },[testState])
+    },[subscrollerState])
 
-    return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
-        <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
+
+    const float = useMemo(() => {
+        if (isDnd) return <div 
+            style = {{float:'left', height: '28px', width:'18px'}} 
+            data-type = 'dnd-float'
+        />
+        else return null
+
+    },[isDnd])
+
+    const checkdnd = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndOptionsRef.current.enabled = isChecked
+        setSubscrollerState('revised')
+    }
+
+    let desc = profile.accept.join(', ')
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            desc += ' (subscroller template copy)'
+        }
+
+    }
+
+    // console.log('scrollerContext.scroller.current',scrollerContext.scroller.current)
+    return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
+        <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
+            {isDnd && float}
+            [{scrollerContext.cell.current.index}]={itemID} {index + 1 - lowindex}/{listsize}
+            {
+                ' sourceID: '+ sourceID + '; ' 
+                + desc
+            }
+            {scrollerContext.scroller.current.dndInstalled 
+            && <FormControl borderTop = '1px' style = {{clear:'left'}}>
+                <Checkbox 
+                    isChecked = {dndOptionsRef.current.enabled} 
+                    size = 'sm'
+                    mt = {2}
+                    onChange = {checkdnd}
+                >
+                    Drag and drop
+                </Checkbox>
+            </FormControl>}
         </div>
-        <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
+
+        <div data-type = "list-content" style = {subcrollerComponentStyles.frame}>
 
             <Scroller 
                 orientation = { dynamicorientationRef.current } 
                 cache = { cache }
-                gap = {gap}
-                padding = {padding}
-                cellHeight = {cellHeight}
-                cellWidth = {cellWidth}
-                runwaySize = {runwaySize}
-                startingListSize = {startingListSize}
-                startingListRange = {startingListRange}
-                startingIndex = {startingIndex}
-                getItem = {getItem}
-                callbacks = {null}
-                placeholder = {null}
-                styles = { null }
+                gap = { gap}
+                padding = { padding }
+                cellHeight = { cellHeight }
+                cellWidth = { cellWidth }
+                runwaySize = { runwaySize }
+                startingListRange = { startingListRange }
+                startingIndex = { startingIndexRef.current }
+                getItemPack = { getItemPack }
+                callbacks = { callbacks }
+                placeholder = { null }
+                styles = { styles }
                 layout = { layout }
-                scrollerProperties = { scrollerProperties }
+                dndOptions = { dndOptionsRef.current }
+                profile = { profile }
+                scrollerContext = { scrollerContext }
+                // cacheAPI = { cacheAPI }
             />
 
         </div>
@@ -990,13 +1657,23 @@ const SubscrollerComponent = (props:any) => {
 
 }
 
-// --------------------[ 7a. subscoller variable cell content variant ]-----------------------
+// --------------------[ variable subscroller cell content ]-----------------------
 
-// -----------------
-// content for variable subscroller variant
-// -----------------
+let variableSubscrollerItemStyles = {
+    outer:{
+        // backgroundColor:'white',
+        overflow:'scroll',
+    } as React.CSSProperties,
+    inner:{
+        padding:'3px',
+        border:'1px solid black',
+        borderRadius:'8px',
+        // backgroundColor:'white',
+        fontSize:'small',
+    } as React.CSSProperties
+}
 
-const getVariableNestedTestString = (index:number, itemID:number) => {
+const getVariableSubscrollerTestString = (index:number, itemID:number) => {
 
     const str =`[${index}]=${itemID} test string => ${teststring.substr(0,Math.random() * teststring.length)}`
 
@@ -1005,7 +1682,22 @@ const getVariableNestedTestString = (index:number, itemID:number) => {
 
 const VariableSubscrollerItem = (props:any) => {
 
-    const testStringRef = useRef(getVariableNestedTestString(props.scrollerProperties.cellFramePropertiesRef.current.index, props.itemID))
+    const {color, type, typeText, scrollerContext, sourceID} = props
+
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
+
+    let localTypeText = '', sourceIDText = ''
+    if (type && typeText) localTypeText = `${type} from ${typeText}:`
+
+    if (sourceID) sourceIDText = `sourceID: ${sourceID}`
+
+    const float = useMemo(() => {
+        if (isDnd) return <div style = {{float:'left', height: '30px', width:'34px'}} />
+        else return null
+
+    },[isDnd])
+
+    const testStringRef = useRef(getVariableSubscrollerTestString(props.scrollerContext.cell.current.index, props.itemID))
 
     const {
 
@@ -1013,7 +1705,7 @@ const VariableSubscrollerItem = (props:any) => {
         cellWidth,
         cellHeight
 
-    } = props.scrollerProperties.scrollerPropertiesRef.current
+    } = props.scrollerContext.scroller.current
 
     const orientationstyles = 
         (orientation == 'vertical')?
@@ -1022,35 +1714,77 @@ const VariableSubscrollerItem = (props:any) => {
                 height:'',
                 maxWidth:'',
                 width:'100%',
+                fontSize:'small',
             }:
             {
                 maxHeight:'',
                 height:'100%',
                 maxWidth:cellWidth,
                 width:'',
+                fontSize:'small',
             }
 
-    const outerstyles = {...variableComponentStyles.outer, ...orientationstyles}
+    const outerstyles = {...variableSubscrollerItemStyles.outer, ...orientationstyles}
+    const innerstyles = {...variableComponentStyles.inner}
+
+    color && (innerstyles.backgroundColor = color)
 
     return <div data-type = 'variable-subscroller' style = {outerstyles}>
-        <div style = {variableComponentStyles.inner}>{testStringRef.current}</div>
+        <div style = {innerstyles}>
+            {isDnd && float}
+            {sourceIDText && <>{sourceIDText} <br /></>} 
+            {localTypeText && <>{localTypeText} <br /></>}
+            {testStringRef.current}
+        </div>
     </div>
 }
 
-// -----------------
-// properties assembled for variable subscroller variant
-// -----------------
+const getVariableSubscrollerItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-const getVariableSubscrollerItem = (index:number, itemID:number) => {
+    const accept = context.scrollerProfile.accept
 
-     return <VariableSubscrollerItem index = {index} itemID = {itemID} scrollerProperties = {null}/>    
+    let [cellType, typeText] = selectCellType(testVariableData,accept,index)
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        const { dropEffect } = context.item;
+
+        if (dropEffect == 'copy') {
+            typeText += ' (copy)'
+        }
+
+    }
+
+    const color = testVariableDataColors[cellType]
+
+    const sourceID = globalSourceID++
+
+    const component = 
+        <VariableSubscrollerItem 
+            index = {index} 
+            itemID = {itemID} 
+            type = {cellType}
+            typeText = {typeText}
+            color = { color }
+            sourceID = {sourceID}
+            scrollerContext = {null}
+        />
+
+    const dragText = `sourceID: ${sourceID}, ${cellType} from ${typeText}`
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{color, type:cellType, typeText, sourceID},
+    }
+
+     return itemPack
 
 }
 
-const nestedVariableSubscrollerProperties = {
+const variableSubscrollerProperties = {
 
     startingIndex:0,
-    startingListSize:100,
     startingListRange:[-50,50],
     orientation:'vertical',
     cellHeight:300,
@@ -1062,8 +1796,8 @@ const nestedVariableSubscrollerProperties = {
     cacheMax:200,
     layout: 'variable',
 
-    getItem: getVariableSubscrollerItem,
-    styles:null,
+    getItemPack: getVariableSubscrollerItemPack,
+    styles:subScrollerStyles,
     placeholderMessages: null,
     callbacks:null,
     technical: {
@@ -1072,38 +1806,140 @@ const nestedVariableSubscrollerProperties = {
 
 }
 
-// -------------------[ 7b. subscroller uniform  cell content variant ]-----------------
+// -------------------[ uniform subscroller cell content ]-----------------
 
 // -----------------
-// component definition for uniform subscroller variant
-// (the component itself is a simple div, so is defined in the getUniformSubscrollerItem function below)
+// (the subscroller content component itself is a simple div, so is defined in the getUniformSubscrollerItemPack function below)
 // -----------------
 
-const uniformSubscrollerItemStyle = {
+const uniformSubscrollerItemStyles = {
         padding:'3px',
         border:'1px solid green',
-        backgroundColor:'white',
+        // backgroundColor:'white',
         height:'100%',
         boxSizing:'border-box',
+        fontSize:'small',
     } as React.CSSProperties
 
 // -----------------
 // properties assembled for uniform subscroller variant
 // -----------------
 
-const getUniformSubscrollerItem = (index:any, itemID:number) => {
+const UniformSubscrollerItem = (props:any) => {
 
-    return <div style = { uniformSubscrollerItemStyle}>[{index}]={itemID}</div>
+    const {
+        index,
+        itemID,
+        type,
+        typeText,
+        color,
+        sourceID,
+        scrollerContext,
+    } = props
+
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
+
+    const styles = {...uniformSubscrollerItemStyles, backgroundColor:color}
+
+    const float = useMemo(() => {
+        return <div 
+            style = {{float:'left', height: '28px', width:'34px'}} 
+            data-type = 'dnd-float'
+        />
+
+    },[])
+
+    return <div 
+        data-type = 'uniform-subscroller-item'
+        style = { styles }>
+            {isDnd && float}
+            [{props.scrollerContext.cell.current.index}]={itemID} {type}: {typeText}
+            {sourceID && <><br />{`sourceID: ${sourceID}`}</>}
+    </div>
 
 }
 
-const nestedUniformSubscrollerProperties = {
+const getUniformSubscrollerItemPack = (index:any, itemID:number, context:GenericObject) => {
+
+    // console.log('getUniformSubscrollerItemPack:context', context)
+    const accept = context.scrollerProfile.accept
+    let cellType, typeText, originalTypeText, color, sourceID, copyCount
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        ({ type:cellType } = context.item.dndOptions)
+        const { profile } = context.item
+        const { dropEffect } = context.item;
+        ({ 
+            typeText,
+            originalTypeText,
+            color,
+            sourceID,
+        } = context.item.profile)
+        if (dropEffect == 'copy') {
+            ({ copyCount } = profile);
+            copyCount = copyCount ?? 0
+            copyCount++
+            if (!originalTypeText) {
+                originalTypeText = typeText
+            } else {
+                typeText = originalTypeText
+            }
+            typeText = `copy (${copyCount}) ` + typeText
+        }
+
+    } else {
+
+        // console.log('testUniformData,accept,index',testUniformData,accept,index);
+        ([cellType, typeText] = selectCellType(testUniformData,accept,index));
+
+        color = testUniformDataColors[cellType]
+
+        sourceID = globalSourceID++
+
+    }
+
+    let dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+    if (copyCount) {
+        dragText = `copy (${copyCount}) ` + dragText
+    }
+
+    const component = 
+        <UniformSubscrollerItem 
+            index = {index} 
+            itemID = {itemID} 
+            type = {cellType}
+            typeText = {typeText}
+            color = { color }
+            sourceID = {sourceID}
+            scrollerContext = {null}
+        />
+
+    // const dragText = `sourceID: ${sourceID}, ${cellType}: ${typeText}`
+    const profile:GenericObject = {color, type:cellType, typeText, sourceID}
+    if (copyCount) {
+        profile.copyCount = copyCount
+    }
+    if (originalTypeText) {
+        profile.originalTypeText = originalTypeText
+    }
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile,
+    }
+
+     return itemPack
+
+}
+
+const uniformSubscrollerProperties = {
 
     startingIndex:0,
-    startingListSize:100,
     startingListRange:[-50,50],
     orientation:'vertical',
-    cellHeight:40,
+    cellHeight:45,
     cellWidth:250,
     padding:6,
     gap:2,
@@ -1112,8 +1948,8 @@ const nestedUniformSubscrollerProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem: getUniformSubscrollerItem,
-    styles:null,
+    getItemPack: getUniformSubscrollerItemPack,
+    styles:subScrollerStyles,
     placeholderMessages: null,
     callbacks:null,
     technical: {
@@ -1122,33 +1958,69 @@ const nestedUniformSubscrollerProperties = {
 
 }
 
-// --------------------[ back to 7. - scroller of subscrollers properties ]----------------------
+// --------------------[ nesting mixed scroller properties ]----------------------
 
-// -----------------
-// scroller property values assembled for the nested scroller
-// -----------------
+const getMixedSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
 
-const getSubscroller = (index:number, itemID:number) => {
+    const selector = (Math.abs(index) % 2)
 
-    return <SubscrollerComponent 
-        index = {index} 
-        itemID = {itemID}
-        scrollerProperties = {null}
+    const variant = context.scrollerProfile.accept[selector]
+
+    const cellType = variant
+
+    let accept
+    if (context.contextType == 'dndFetchRequest') {
+
+        accept = context.item.profile.accept
+
+    } else {
+
+        accept = getSubscrollerAccepts(cellType) || []
+
+    }
+
+    const sourceID = globalSourceID++
+
+    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
+
+    const dndOptions = {
+        accept,
+    }
+
+    const component = <SubscrollerComponent 
+        index = { index } 
+        itemID = { itemID }
+        variant = { variant }
+        sourceID = {sourceID}
+        dndOptions = { dndOptions }
+        profile = {{accept}}
+        context = {context}
+        scrollerContext = { null }
     />
 
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{ type:cellType, sourceID, accept},
+    }
+
+     return itemPack
+
 }
 
-const nestedScrollerStyles = {
+const nestingScrollerStyles = {
     viewport:{
-        overscrollBehavior:'none'
+        overscrollBehavior:'none',
     },
+    dndDragIcon: {
+        top:'5px',
+    }
 }
 
-const nestedcontentProperties = {
+const nestingmixedProperties = {
     startingIndex:0,
-    startingListSize:200,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation:'horizontal',
     cellHeight:400,
     cellWidth:300,
     padding:5,
@@ -1158,8 +2030,8 @@ const nestedcontentProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getSubscroller,
-    styles:nestedScrollerStyles,
+    getItemPack:getMixedSubscrollerPack,
+    styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical:{
@@ -1167,36 +2039,73 @@ const nestedcontentProperties = {
     },
 }
 
-// =======================[ 8. scroller of subscrollers content item promises ]========================
+// =======================[ 10. nesting mixed subscroller item promises ]========================
 
 // -----------------
 // scroller property values assembled for the nested scroller promises variant
 // -----------------
 
 // note the setTimeout
-const getNestedSubscrollerPromise = (index:number, itemID:number) => {
+const getMixedSubscrollerPromisePack = (index:number, itemID:number, context:GenericObject) => {
 
-    return new Promise((resolve, reject) => {
+    const selector = (Math.abs(index) % 2)
+
+    const variant = context.scrollerProfile.accept[selector]
+
+    const cellType = variant
+
+    let accept:any
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        accept = context.item.profile.accept
+
+    } else {
+
+        accept = getSubscrollerAccepts(cellType) || []
+
+    }
+
+    const sourceID = globalSourceID++
+
+    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
+
+    const dndOptions = {
+        accept,
+    }
+
+    const component = new Promise((resolve, reject) => {
         setTimeout(()=> {
 
             resolve(
                 <SubscrollerComponent 
                     index = {index} 
                     itemID = {itemID}
-                    scrollerProperties = {null}
+                    variant = {variant}
+                    sourceID = {sourceID}
+                    dndOptions = { dndOptions }
+                    profile = {{accept}}
+                    context = { context }
+                    scrollerContext = {null}
                 />
             )
 
         },400 + (Math.random() * 2000))
     })
 
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{ type:cellType, sourceID, accept},
+    }
+
+     return itemPack
 }
 
-const nestedpromisesProperties = {
+const nestingmixedpromisesProperties = {
     startingIndex:0,
-    startingListSize:200,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation:'horizontal',
     cellHeight:400,
     cellWidth:300,
     padding:5,
@@ -1206,8 +2115,8 @@ const nestedpromisesProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getNestedSubscrollerPromise,
-    styles:nestedScrollerStyles,
+    getItemPack:getMixedSubscrollerPromisePack,
+    styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical: {
@@ -1215,125 +2124,31 @@ const nestedpromisesProperties = {
     },
 }
 
-// --------------------[ 9. - scroller of shared cache properties ]----------------------
+// --------------------[ 11. - nesting mixed subscroller auto expand ]----------------------
 
 
-const SharedCacheComponent = (props:any) => {
+const getNestingMixedAutoExpansionCount = (position:string, index:number) => {
 
-    const [testState, setTestState] = useState('setup')
-    const testStateRef = useRef<string|null>(null)
-    testStateRef.current = testState
+    let count = 0
 
-    const { 
-        index, 
-        itemID,
-        scrollerProperties,
-        cacheAPI,
-    } = props
+    if (position == 'SOL' && index >= -1000) count = 10
 
-    const properties = nestedUniformSubscrollerProperties
+    if (position == 'EOL' && index <= 1000) count = 10
 
-    const {
-        // orientation, 
-        gap, 
-        padding, 
-        cellHeight, 
-        cellWidth, 
-        runwaySize, 
-        startingIndex, 
-        startingListSize, 
-        startingListRange,
-        getItem, 
-        cache,
-        layout,
-    } = properties
+    const statePack:GenericObject = setDemoStatePack
 
-    const { scrollerPropertiesRef } = scrollerProperties
+    if (count) {
+        statePack.setDemoState('autoexpand')
+    }
 
-    const dynamicorientationRef = useRef<null | string>(null)
-
-    useEffect(() =>{
-
-        const { orientation } = scrollerPropertiesRef.current
-        dynamicorientationRef.current = 
-            (orientation == 'vertical')?
-                'horizontal':
-                'vertical'
-
-    },[scrollerPropertiesRef.current.orientation])
-
-    const { size:listsize, lowindex } = scrollerPropertiesRef.current.virtualListProps
-
-    useEffect(()=>{
-
-        switch (testState) {
-            case 'setup':
-            case 'revised': {
-                setTestState('ready')
-                break
-            }
-        }
-
-    },[testState])
-
-    return <div data-type = "list-frame" style = {nestedSubscrollerComponentStyles.container} >
-        <div data-type = "list-header" style = {nestedSubscrollerComponentStyles.header} >
-            [{props.scrollerProperties.cellFramePropertiesRef.current.index}]={itemID} List #{index + 1 - lowindex} of {listsize}
-        </div>
-        <div data-type = "list-content" style = {nestedSubscrollerComponentStyles.frame}>
-
-            <Scroller 
-                orientation = { dynamicorientationRef.current } 
-                cache = { cache }
-                gap = {gap}
-                padding = {padding}
-                cellHeight = {cellHeight}
-                cellWidth = {cellWidth}
-                runwaySize = {runwaySize}
-                startingListSize = {startingListSize}
-                startingListRange = {startingListRange}
-                startingIndex = {startingIndex}
-                getItem = {getItem}
-                callbacks = {null}
-                placeholder = {null}
-                styles = { null }
-                layout = { layout }
-                scrollerProperties = { scrollerProperties }
-                cacheAPI = {cacheAPI}
-            />
-
-        </div>
-
-    </div>
+    return count
 
 }
 
-// -----------------
-// scroller property values assembled for the nested scroller
-// -----------------
-
-const getSharedCacheSubscroller = (index:number, itemID:number) => {
-
-    return <SharedCacheComponent 
-        index = {index} 
-        itemID = {itemID}
-        scrollerProperties = {null}
-        cacheAPI = {null}
-    />
-
-}
-
-const sharedcacheScrollerStyles = {
-    viewport:{
-        overscrollBehavior:'none'
-    },
-}
-
-const sharedcacheProperties = {
+const nestingmixedautoexpandProperties = {
     startingIndex:0,
-    startingListSize:200,
     startingListRange:[-50,50],
-    orientation:'vertical',
+    orientation:'horizontal',
     cellHeight:400,
     cellWidth:300,
     padding:5,
@@ -1343,8 +2158,83 @@ const sharedcacheProperties = {
     cacheMax:200,
     layout: 'uniform',
 
-    getItem:getSharedCacheSubscroller,
-    styles:sharedcacheScrollerStyles,
+    getItemPack:getMixedSubscrollerPack,
+    getExpansionCount:getNestingMixedAutoExpansionCount,
+    styles:nestingScrollerStyles,
+    placeholderMessages: null,
+    callbacks,
+    technical: {
+        showAxis:false
+    },
+}
+
+// --------------------[ 12. - nesting uniform scrollers ]----------------------
+
+// -----------------
+// scroller property values assembled for the nested scroller
+// -----------------
+
+const getUniformSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
+
+    const [variant] = context.scrollerProfile.accept
+
+    const cellType = variant
+
+    let accept:any
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        accept = context.item.profile.accept
+
+    } else {
+
+        accept = getSubscrollerAccepts(cellType) || []
+
+    }
+
+    const sourceID = globalSourceID++
+
+    const dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
+
+    const dndOptions = {
+        accept,
+    }
+
+    const component = <SubscrollerComponent 
+        index = {index} 
+        itemID = {itemID}
+        variant = {variant}
+        sourceID = {sourceID}
+        profile = {{accept}}
+        dndOptions = { dndOptions }
+        context = { context }
+        scrollerContext = {null}
+    />
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{ type:cellType, sourceID, accept},
+    }
+
+     return itemPack
+}
+
+const nestinguniformProperties = {
+    startingIndex:0,
+    startingListRange:[-50,50],
+    orientation:'horizontal',
+    cellHeight:400,
+    cellWidth:300,
+    padding:5,
+    gap:5,
+    runwaySize:3,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    getItemPack:getUniformSubscrollerPack,
+    styles:nestingScrollerStyles,
     placeholderMessages: null,
     callbacks,
     technical:{
@@ -1352,20 +2242,98 @@ const sharedcacheProperties = {
     },
 }
 
+// --------------------[ 13. - nesting variable scrollers ]----------------------
+
+// -----------------
+// scroller property values assembled for the nested scroller
+// -----------------
+
+const getVariableSubscrollerPack = (index:number, itemID:number, context:GenericObject) => {
+
+    const [variant] = context.scrollerProfile.accept
+
+    const cellType = variant
+
+    let accept:any
+
+    if (context.contextType == 'dndFetchRequest') {
+
+        accept = context.item.profile.accept
+
+    } else {
+
+        accept = getSubscrollerAccepts(cellType) || []
+
+    }
+
+    const sourceID = globalSourceID++
+
+    let dragText = `sourceID: ${sourceID}, ${accept.join(', ')}`
+
+    const dndOptions = {
+        accept,
+    }
+
+    const component = <SubscrollerComponent 
+        index = {index} 
+        itemID = {itemID}
+        variant = {variant}
+        sourceID = {sourceID}
+        profile = {{accept}}
+        dndOptions = { dndOptions }
+        context = { context }
+        scrollerContext = {null}
+    />
+
+    const itemPack = {
+        component,
+        dndOptions:{type:cellType, dragText},
+        profile:{ type:cellType, sourceID, accept},
+    }
+
+     return itemPack
+}
+
+const nestingvariableProperties = {
+    startingIndex:0,
+    startingListRange:[-50,50],
+    orientation:'horizontal',
+    cellHeight:400,
+    cellWidth:300,
+    padding:5,
+    gap:5,
+    runwaySize:3,
+    cache:'cradle',
+    cacheMax:200,
+    layout: 'uniform',
+
+    getItemPack:getVariableSubscrollerPack,
+    styles:nestingScrollerStyles,
+    placeholderMessages: null,
+    callbacks,
+    technical:{
+        showAxis:false
+    },
+}
+
+
 // ==============================[ consolidated scroller properties namespace ]=========================
 
 // this is exported for the App module to use
 export const defaultAllContentTypeProperties = {
-    simplecontent:simplecontentProperties,
-    simplepromises:simplepromisesProperties,
-    simpleautoexpand:simpleAutoExpandProperties,
+    uniformcontent:uniformcontentProperties,
+    uniformpromises:uniformpromisesProperties,
+    uniformautoexpand:uniformautoexpandProperties,
     variablecontent:variablecontentProperties,
     variablepromises:variablepromiseProperties,
     variabledynamic:variabledynamicProperties,
     variableoversized:variableoversizedProperties,
-    nestedcontent:nestedcontentProperties,
-    nestedpromises:nestedpromisesProperties,
-    sharedcache:sharedcacheProperties,
+    variableautoexpand:variableautoexpandProperties,
+    nestingmixed:nestingmixedProperties,
+    nestingmixedpromises:nestingmixedpromisesProperties,
+    nestingmixedautoexpand: nestingmixedautoexpandProperties,
+    nestinguniform:nestinguniformProperties,
+    nestingvariable:nestingvariableProperties,
 }
 
 // this is exported for the App module to use

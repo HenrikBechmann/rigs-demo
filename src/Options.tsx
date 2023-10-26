@@ -69,92 +69,86 @@ const isValueLessThanOrEqualToMaxValue = (compareValue:any, maxValue:any) => {
 
 // ------------------------[ static field data ]----------------------
 
-const sectionTitles:GenericObject = {
-  properties:'Properties for the selected content type',
-  callbacks:'Callbacks',
-  snapshots:'Service functions: snapshots',
-  operations:'Service functions: operations',
-}
+const 
+    sectionTitles:GenericObject = {
+        properties:'Properties for the selected content type',
+        callbacks:'Callbacks',
+        snapshots:'Service functions: snapshots',
+        operations:'Service functions: operations',
+    },
 
-const fieldSections:GenericObject = {
+    fieldSections:GenericObject = {
 
-    cellHeight:'properties',
-    cellWidth:'properties',
-    cellMinHeight:'properties',
-    cellMinWidth:'properties',
-    startingIndex:'properties',
-    startingListSize:'properties',
-    rangePropertyType:'properties',
-    startingLowIndex:'properties',
-    startingHighIndex:'properties',
-    padding:'properties',
-    gap:'properties',
-    runwaySize:'properties',
-    cacheMax:'properties',
-    scrolltoIndex:'operations',
-    scrollToPixel:'operations',
-    scrollByPixel:'operations',
-    scrolltobehavior:'operations',
-    scrollbybehavior:'operations',
-    listsize:'operations',
-    prependCount:'operations',
-    appendCount:'operations',
-    rangeAPIType:'properties',
-    listLowIndex:'operations',
-    listHighIndex:'operations',
-    insertFrom:'operations',
-    insertRange:'operations',
-    removeFrom:'operations',
-    removeRange:'operations',
-    moveFrom:'operations',
-    moveRange:'operations',
-    moveTo:'operations',
+        cellHeight:'properties',
+        cellWidth:'properties',
+        cellMinHeight:'properties',
+        cellMinWidth:'properties',
+        startingIndex:'properties',
+        rangePropertyType:'properties',
+        startingLowIndex:'properties',
+        startingHighIndex:'properties',
+        padding:'properties',
+        gap:'properties',
+        runwaySize:'properties',
+        cacheMax:'properties',
+        scrolltoIndex:'operations',
+        scrollToPixel:'operations',
+        scrollByPixel:'operations',
+        scrolltobehavior:'operations',
+        scrollbybehavior:'operations',
+        prependCount:'operations',
+        appendCount:'operations',
+        rangeAPIType:'properties',
+        listLowIndex:'operations',
+        listHighIndex:'operations',
+        insertFrom:'operations',
+        insertRange:'operations',
+        removeFrom:'operations',
+        removeRange:'operations',
+        moveFrom:'operations',
+        moveRange:'operations',
+        moveTo:'operations',
 
-}
+    },
 
+    // display error messages
+    errorMessages = { 
+        // string selection, no errors
+        cellHeight:'integer: cellHeight is required with minimum of 25',
+        cellWidth:'integer: cellWidth is required with minimum 25',
+        cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
+        cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
+        startingIndex:'blank, or integer greater than or equal to listlowindex',
+        startingLowIndex:'integer: must be less than or equal to high index',
+        startingHighIndex:'integer: must be greater than or equal to low index',
+        padding:'blank, or integer, or comma separated list of 2-4 integers, all greater than or equal to 0',
+        gap:'blank, or integer, or comma separated list of 2 integers, all greater than or equal to 0',
+        runwaySize:'blank, or integer minimum 1',
+        cacheMax:'blank, or integer greater than or equal to 0',
+        scrolltoIndex:'integer: required, greater than or equal to listlowindex',
+        scrollToPixel:'integer:required, greater than or equal to 0',
+        scrollByPixel:'integer:required',
+        listLowIndex:'integer: required, less than or equal to high index',
+        listHighIndex:'integer:required, greater than or equal to low index',
+        prependCount:'integer:required, greater than or equal to 0',
+        appendCount:'integer:required, greater than or equal to 0',
+        insertFrom:'integer: required, greater than or equal to listlowindex',
+        insertRange:'blank, or integer greater than or equal to the "from" index',
+        removeFrom:'integer: required, greater than or equal to listlowindex',
+        removeRange:'blank, or integer greater than or equal to the "from" index',
+        moveFrom:'integer: required, greater than or equal to listlowindex',
+        moveRange:'blank, or integer greater than or equal to the "from" index',
+        moveTo:'integer: required, greater than or equal to listlowindex',
+    },
 
-// display error messages
-const errorMessages = { 
-    // string selection, no errors
-    cellHeight:'integer: cellHeight is required with minimum of 25',
-    cellWidth:'integer: cellWidth is required with minimum 25',
-    cellMinHeight:'blank, or integer minimum 25 and less than or equal to cellHeight',
-    cellMinWidth:'blank, or integer minimum 25 and less than or equal to cellWidth',
-    startingIndex:'blank, or integer greater than or equal to listlowindex',
-    startingListSize:'integer: required, with minimum 0',
-    startingLowIndex:'integer: must be less than or equal to high index',
-    startingHighIndex:'integer: must be greater than or equal to low index',
-    padding:'blank, or integer, or comma separated list of 2-4 integers, all greater than or equal to 0',
-    gap:'blank, or integer, or comma separated list of 2 integers, all greater than or equal to 0',
-    runwaySize:'blank, or integer minimum 1',
-    cacheMax:'blank, or integer greater than or equal to 0',
-    scrolltoIndex:'integer: required, greater than or equal to listlowindex',
-    scrollToPixel:'integer:required, greater than or equal to 0',
-    scrollByPixel:'integer:required',
-    listsize:'integer: required, greater than or equal to 0',
-    listLowIndex:'integer: required, less than or equal to high index',
-    listHighIndex:'integer:required, greater than or equal to low index',
-    prependCount:'integer:required, greater than or equal to 0',
-    appendCount:'integer:required, greater than or equal to 0',
-    insertFrom:'integer: required, greater than or equal to listlowindex',
-    insertRange:'blank, or integer greater than or equal to the "from" index',
-    removeFrom:'integer: required, greater than or equal to listlowindex',
-    removeRange:'blank, or integer greater than or equal to the "from" index',
-    moveFrom:'integer: required, greater than or equal to listlowindex',
-    moveRange:'blank, or integer greater than or equal to the "from" index',
-    moveTo:'integer: required, greater than or equal to listlowindex',
-}
-
-const accessControlledAPIFields = [
-    'scrolltoIndex','scrollToPixel','scrollByPixel','scrolltobehavior','scrollbybehavior',
-    'listsize',
-    'prependCount','appendCount',
-    'listLowIndex','listHighIndex','rangeAPIType',
-    'insertFrom', 'insertRange',
-    'removeFrom', 'removeRange',
-    'moveFrom', 'moveRange', 'moveTo',
-    'remapDemo',
-]
+    accessControlledAPIFields = [
+        'scrolltoIndex','scrollToPixel','scrollByPixel','scrolltobehavior','scrollbybehavior',
+        'prependCount','appendCount',
+        'listLowIndex','listHighIndex','rangeAPIType',
+        'insertFrom', 'insertRange',
+        'removeFrom', 'removeRange',
+        'moveFrom', 'moveRange', 'moveTo',
+    ]
 
 // ----------------------------------------------------
 // Options component; about 40 fields
@@ -179,7 +173,11 @@ const Options = ({
     const 
         functionsAPI = functionsAPIRef.current,
 
-        indexRangeRef = useRef<number[]>([]),
+        indexRangeRef = useRef<number[]>([])
+
+    // console.log('indexRangeRef',indexRangeRef)
+
+    const
         [listlowindex, listhighindex] = indexRangeRef.current,
         rangesize = 
             indexRangeRef.current.length == 0?
@@ -195,58 +193,47 @@ const Options = ({
         [editContentTypeSelector, setEditContentTypeSelector] = 
             useState(sessionContentTypeSelectorRef.current),
         [editOperationFunctionSelector, setEditOperationFunctionSelector] = 
-            useState(sessionOperationFunctionSelectorRef.current)
+            useState(sessionOperationFunctionSelectorRef.current),
 
-    const
-        editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current)
-    editOperationFunctionSelectorRef.current = editOperationFunctionSelector
+        editOperationFunctionSelectorRef = useRef(sessionOperationFunctionSelectorRef.current),
 
-    // objects. The local values are used to assign valid edits to the inherited values
-    const
+        // objects. The local values are used to assign valid edits to the inherited values
         [editContentTypeProperties, setEditContentTypeProperties] = 
             useState({...sessionAllContentTypePropertiesRef.current[editContentTypeSelector]}),
-        editContentTypePropertiesRef = useRef(editContentTypeProperties)
-    editContentTypePropertiesRef.current = editContentTypeProperties
+        editContentTypePropertiesRef = useRef(editContentTypeProperties),
 
-    const 
         [editCallbackFlags, setEditCallbackFlags] = 
-            useState({...sessionCallbackFlagsRef.current})
+            useState({...sessionCallbackFlagsRef.current}),
     
-    const 
         [editAPIFunctionArguments, setEditAPIFunctionArguments] = 
             useState({...sessionAPIFunctionArgumentsRef.current}),
-        editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments)
-    editAPIFunctionArgumentsRef.current = editAPIFunctionArguments
+        editAPIFunctionArgumentsRef = useRef(editAPIFunctionArguments),
 
-    // --------------------------------[ internal mutable field data ]-----------------------------
+        // --------------------------------[ internal mutable field data ]-----------------------------
 
-    const 
         rangeTextColorsRef = useRef({
             rangepropertyvalues:'gray',
             emptyrangeproperty:'gray',
             rangeAPIvalues:'gray',
             emptyrangeAPI:'gray',
         }),
-        rangeTextColors = rangeTextColorsRef.current
+        rangeTextColors = rangeTextColorsRef.current,
 
-    const 
         propertyDisabledFlagsRef = useRef({
             startingLowIndex:false,
             startingHighIndex:false,
         }),
-        propertyDisabledFlags = propertyDisabledFlagsRef.current
+        propertyDisabledFlags = propertyDisabledFlagsRef.current,
 
-    // disabled controls
-    const 
+        // disabled controls
         APIdisabledFlagsRef = useRef<GenericObject>({
-            cellMinHeight:false, // property
-            cellMinWidth:false, // property
+            cellMinHeight:false,
+            cellMinWidth:false,
             scrolltoIndex:false,
             scrollToPixel:false,
             scrollByPixel:false,
             scrolltobehavior:false,
             scrollbybehavior:false,
-            listsize:false,
             rangeAPIType:false,
             listLowIndex:false,
             listHighIndex:false,
@@ -259,12 +246,10 @@ const Options = ({
             moveFrom:false,
             moveRange:false,
             moveTo:false,
-            remapDemo:false,
         }),
-        APIdisabledFlags = APIdisabledFlagsRef.current
+        APIdisabledFlags = APIdisabledFlagsRef.current,
 
-    // invalid flags
-    const 
+        // invalid flags
         invalidFieldFlagsRef = useRef<GenericObject>({
             contentType:false,
             orientation:false,
@@ -273,7 +258,6 @@ const Options = ({
             cellMinHeight:false,
             cellMinWidth:false,
             startingIndex:false,
-            startingListSize:false,
             startingLowIndex:false,
             startingHighIndex:false,
             padding:false,
@@ -284,7 +268,6 @@ const Options = ({
             scrolltoIndex:false,
             scrollToPixel:false,
             scrollByPixel:false,
-            listsize:false,
             listLowIndex:false,
             listHighIndex:false,
             prependCount:false,
@@ -296,9 +279,29 @@ const Options = ({
             moveFrom:false,
             moveRange:false,
             moveTo:false,
-            remapDemo:false,
         }),
-        invalidFieldFlags = invalidFieldFlagsRef.current
+        invalidFieldFlags = invalidFieldFlagsRef.current,
+
+        // scroller function switch settings
+        functionEnabledSettingsRef = useRef<GenericObject>({
+            goto:false,
+            gotopixel:false,
+            gobypixel:false,
+            prependCount:false,
+            appendCount:false,
+            listrange:false,
+            reload:false,
+            insert:false,
+            remove:false,
+            move:false,
+            // remap:false,
+            clear:false,
+        }),
+        functionEnabledSettings = functionEnabledSettingsRef.current
+
+    editOperationFunctionSelectorRef.current = editOperationFunctionSelector
+    editContentTypePropertiesRef.current = editContentTypeProperties
+    editAPIFunctionArgumentsRef.current = editAPIFunctionArguments
 
     // test forwarded to host; returns text list of invalid section titles for display to user
     const getInvalidSections = () => {
@@ -317,25 +320,6 @@ const Options = ({
         return sectionSet
 
     }
-
-    // scroller function switch settings
-    const 
-            functionEnabledSettingsRef = useRef<GenericObject>({
-            goto:false,
-            gotopixel:false,
-            gobypixel:false,
-            listsize:false,
-            prependCount:false,
-            appendCount:false,
-            listrange:false,
-            reload:false,
-            insert:false,
-            remove:false,
-            move:false,
-            remap:false,
-            clear:false,
-        }),
-        functionEnabledSettings = functionEnabledSettingsRef.current
 
     // -----------------------------------[ field management functions ]------------------------------
 
@@ -379,11 +363,6 @@ const Options = ({
                 isInvalid = !isValueGreaterThanOrEqualToMinValue(value,listlowindex)
             }
             invalidFieldFlags.startingIndex = isInvalid
-            return isInvalid
-        },
-        startingListSize:(value:string) => {
-            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, 0))
-            invalidFieldFlags.startingListSize = isInvalid
             return isInvalid
         },
         startingLowIndex:(value:string) => {
@@ -495,11 +474,6 @@ const Options = ({
         scrollByPixel:(value:string) => {
             const isInvalid = !isInteger(value)
             invalidFieldFlags.scrollByPixel = isInvalid
-            return isInvalid
-        },
-        listsize:(value:string) => {
-            const isInvalid = (!isInteger(value) || !isValueGreaterThanOrEqualToMinValue(value, 0))
-            invalidFieldFlags.listsize = isInvalid
             return isInvalid
         },
         listLowIndex:(value:string) => {
@@ -693,16 +667,6 @@ const Options = ({
             }
             setEditContentTypeProperties({...editContentTypeProperties})
         },
-        startingListSize:(input:string) => {
-            const editContentTypeProperties = editContentTypePropertiesRef.current
-            editContentTypeProperties.startingListSize = input
-            if (!isInvalidTests.startingListSize(input)) {
-                const newSessionProperties = 
-                    {...sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current],startingListSize:input}
-                sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current] = newSessionProperties
-            }
-            setEditContentTypeProperties({...editContentTypeProperties})
-        },
         rangePropertyType:(input:string) => {
             const editContentTypeProperties = editContentTypePropertiesRef.current
             editContentTypeProperties.rangePropertyType = input
@@ -839,14 +803,6 @@ const Options = ({
             sessionAPIFunctionArgumentsRef.current.scrollbybehavior = value
             setEditContentTypeProperties({...editContentTypeProperties})
         },
-        listsize:(input:string) => {
-            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
-            editAPIFunctionArguments.listsize = input
-            if (!isInvalidTests.listsize(input)) {
-                sessionAPIFunctionArgumentsRef.current.listsize = input
-            }
-            setEditAPIFunctionArguments({...editAPIFunctionArguments})
-        },
         listLowIndex:(input:string) => {
             const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
             editAPIFunctionArguments.listLowIndex = input
@@ -962,28 +918,20 @@ const Options = ({
             }
             setEditAPIFunctionArguments({...editAPIFunctionArguments})
         },
-        remapDemo:(event:React.ChangeEvent) => {
-            const editAPIFunctionArguments = editAPIFunctionArgumentsRef.current
-            const target = event.target as HTMLSelectElement
-            const value = target.value
-            editAPIFunctionArguments.remapDemo = value
-            sessionAPIFunctionArgumentsRef.current.remapDemo = value
-            setEditAPIFunctionArguments({...editAPIFunctionArguments})
-        },
     }
 
     const APISnapshotFunctions = {
         getCacheIndexMap: () => {
-            console.log('cacheIndexMap =',functionsAPI.getCacheIndexMap())
+            console.log('[cacheIndexMap, context] =',functionsAPI.getCacheIndexMap())
         },
         getCacheItemMap: () => {
-            console.log('cacheItemMap =',functionsAPI.getCacheItemMap())
+            console.log('[cacheItemMap, context] =',functionsAPI.getCacheItemMap())
         },
         getCradleIndexMap: () => {
-            console.log('cradleIndexMap =',functionsAPI.getCradleIndexMap())
+            console.log('[cradleIndexMap, context] =',functionsAPI.getCradleIndexMap())
         },
         getPropertiesSnapshot: () => {
-            console.log('properties =',functionsAPI.getPropertiesSnapshot())
+            console.log('[properties, context] =',functionsAPI.getPropertiesSnapshot())
         }
     }
 
@@ -991,7 +939,7 @@ const Options = ({
         contentType:(contentSelection:string) => {
 
             let disabled
-            if (['variablecontent','variablepromises','variabledynamic','variableoversized'].includes(contentSelection)) {
+            if (['variablecontent','variablepromises','variabledynamic','variableoversized','variableautoexpand'].includes(contentSelection)) {
 
                 disabled = false
                 isInvalidTests.cellMinHeight(editContentTypePropertiesRef.current.cellMinHeight)
@@ -1082,11 +1030,6 @@ const Options = ({
                         isInvalidTests.scrollByPixel(editAPIFunctionArgumentsRef.current.scrollByPixel)
                         break
                     }
-                    case 'listsize':{
-                        APIdisabledFlags.listsize = false
-                        isInvalidTests.listsize(editAPIFunctionArgumentsRef.current.listsize)
-                        break
-                    }
                     case 'prependCount':{
                         APIdisabledFlags.prependCount = false
                         isInvalidTests.prependCount(editAPIFunctionArgumentsRef.current.prependCount)
@@ -1134,10 +1077,10 @@ const Options = ({
                         isInvalidTests.moveTo(editAPIFunctionArgumentsRef.current.moveTo)
                         break
                     }
-                    case 'remap':{
-                        APIdisabledFlags.remapDemo = false
-                        break
-                    }
+                    // case 'remap':{
+                    //     APIdisabledFlags.remapDemo = false
+                    //     break
+                    // }
                     case 'clear':{
 
                         break
@@ -1153,7 +1096,7 @@ const Options = ({
 
         if (originalContentTypeSelectorRef.current === sessionContentTypeSelectorRef.current) {
 
-            const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+            const [scrollerProps] = functionsAPIRef.current.getPropertiesSnapshot()
             indexRangeRef.current = scrollerProps.virtualListProps.range
 
             return
@@ -1162,11 +1105,13 @@ const Options = ({
 
         const contentTypeProperties = 
             sessionAllContentTypePropertiesRef.current[sessionContentTypeSelectorRef.current]
-        if (contentTypeProperties.startingListRange) {
-            indexRangeRef.current = contentTypeProperties.startingListRange
+        if (contentTypeProperties.rangePropertyType = 'rangepropertyvalues') {
+            indexRangeRef.current = // contentTypeProperties.startingListRange
+                [contentTypeProperties.startingLowIndex,contentTypeProperties.startingHighIndex]
         } else {
-            indexRangeRef.current = [0, contentTypeProperties.startingListSize]
+            indexRangeRef.current = []
         }
+        // console.log('updating sessionContentTypeSelectorRef, indexRangeRef, contentTypeProperties\n',sessionContentTypeSelectorRef, indexRangeRef, contentTypeProperties)
 
     }
 
@@ -1185,7 +1130,7 @@ const Options = ({
         switch (optionsState) {
             case 'setup': {
 
-                const scrollerProps = functionsAPIRef.current.getPropertiesSnapshot()
+                const [scrollerProps] = functionsAPIRef.current.getPropertiesSnapshot()
                 indexRangeRef.current = scrollerProps.virtualListProps.range
 
                 const contentSelection = sessionContentTypeSelectorRef.current
@@ -1248,16 +1193,19 @@ const Options = ({
                 value = {editContentTypeSelector} 
                 onChange = {onChangeFunctions.contentType}
             >
-                <option value="simplecontent">Simple uniform content</option>
-                <option value="simplepromises">Simple uniform promises</option>
-                <option value="simpleautoexpand">Simple auto expand</option>
+                <option value="uniformcontent">Uniform content</option>
+                <option value="uniformpromises">Uniform promises</option>
+                <option value="uniformautoexpand">Uniform auto expand</option>
                 <option value="variablecontent">Variable content</option>
                 <option value="variablepromises">Variable promises</option>
                 <option value="variabledynamic">Variable dynamic</option>
                 <option value="variableoversized">Variable oversized</option>
-                <option value="nestedcontent">Nested scrollers</option>
-                <option value="nestedpromises">Nested scroller promises</option>
-                <option value="sharedcache">Shared cache (experimental)</option>
+                <option value="variableautoexpand">Variable auto expand</option>
+                <option value="nestinguniform">Nested uniform scrollers</option>
+                <option value="nestingvariable">Nested variable scrollers</option>
+                <option value="nestingmixed">Nested mixed scrollers</option>
+                <option value="nestingmixedpromises">Nested mixed scroller promises</option>
+                <option value="nestingmixedautoexpand">Nested mixed scroller auto expand</option>
             </Select>
 
             <FormHelperText>
@@ -1481,36 +1429,6 @@ const Options = ({
                         'Go to index' in the 'Service functions: operations' section.
                     </Text>
 
-                    <Heading size = 'xs'>Starting list size</Heading>
-                    
-                    <FormControl isInvalid = {invalidFieldFlags.startingListSize} >
-                        <HStack>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-
-                            <FormLabel fontSize = 'sm'>startingListSize:</FormLabel>
-
-                            <NumberInput 
-                                value = {editContentTypeProperties.startingListSize} 
-                                size = 'sm'
-                                onChange = {onChangeFunctions.startingListSize}
-                                clampValueOnBlur = {false}
-                            >
-                                <NumberInputField border = '2px' />
-                            </NumberInput>
-                        </InputGroup>
-                        </HStack>
-                        <FormErrorMessage>
-                            {errorMessages.startingListSize}
-                        </FormErrorMessage>
-                    </FormControl>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integer. This will only apply right after a content type change. It will 
-                        set the starting list size of the session for the content type. See also
-                        'Change virtual list size' in the 'Service functions: operations' section. 
-                        Ignored if 'Starting list range' is set.
-                    </Text>
-
                     <Heading size = 'xs'>Starting list range</Heading>
 
                     <RadioGroup 
@@ -1732,6 +1650,21 @@ const Options = ({
 
                     <FormControl borderTop = '1px'>
                         <Checkbox 
+                            isChecked = {editCallbackFlags.dragDropTransferCallback} 
+                            size = 'sm'
+                            mt = {2}
+                            id = 'dragDropTransferCallback'
+                            onChange = {onChangeFunctions.callbackSettings}
+                        >
+                            Drag and Drop Transfer callback
+                        </Checkbox>
+                        <FormHelperText>
+                            This reports when and item has been successfully transferred with drag and drop.
+                        </FormHelperText>
+                    </FormControl>
+
+                    <FormControl borderTop = '1px'>
+                        <Checkbox 
                             isChecked = {editCallbackFlags.preloadIndexCallback} 
                             size = 'sm'
                             mt = {2}
@@ -1756,7 +1689,7 @@ const Options = ({
                             Item Exceptions
                         </Checkbox>
                         <FormHelperText>
-                            This reports details of a failed <Code>getItem</Code> call.
+                            This reports details of a failed <Code>getItemPack</Code> call.
                         </FormHelperText>
                     </FormControl>
 
@@ -1788,21 +1721,6 @@ const Options = ({
                         </Checkbox>
                         <FormHelperText>
                             During rapid repositioning mode, this streams the virtual location of the scroller.
-                        </FormHelperText>
-                    </FormControl>
-
-                    <FormControl borderTop = '1px'>
-                        <Checkbox 
-                            isChecked = {editCallbackFlags.changeListSizeCallback} 
-                            size = 'sm'
-                            mt = {2}
-                            id = 'changeListSizeCallback'
-                            onChange = {onChangeFunctions.callbackSettings}
-                        >
-                            List size change
-                        </Checkbox>
-                        <FormHelperText>
-                            Reports change to list size for any standard reason.
                         </FormHelperText>
                     </FormControl>
 
@@ -2130,50 +2048,6 @@ const Options = ({
                         </FormControl>
 
                     </VStack>
-
-                    <Heading size = 'xs'>Change virtual list size</Heading>
-
-                    <HStack alignItems = 'baseline'>
-
-                        <FormControl 
-                            isDisabled = {APIdisabledFlags.listsize}
-                            isInvalid = {invalidFieldFlags.listsize} >
-                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline'>
-
-                                <FormLabel fontSize = 'sm'>size:</FormLabel>
-
-                                <NumberInput 
-                                    value = {editAPIFunctionArguments.listsize} 
-                                    size = 'sm'
-                                    onChange = {onChangeFunctions.listsize}
-                                    clampValueOnBlur = {false}
-                                >
-                                    <NumberInputField border = '2px' />
-                                </NumberInput>
-                            </InputGroup>
-                            <FormErrorMessage>
-                                {errorMessages.listsize}
-                            </FormErrorMessage>
-                        </FormControl>
-
-                        <FormControl>
-                            <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-
-                                <FormLabel htmlFor='listsize' fontSize = 'sm'>Enable</FormLabel>
-
-                                <Switch 
-                                    isChecked = {functionEnabledSettings.listsize} 
-                                    onChange = {onChangeFunctions.onChangeEnabler} 
-                                    id='listsize' 
-                                />
-                            </InputGroup>
-                        </FormControl>
-
-                    </HStack>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        Integer. Change the size of the scroller's virtual list.
-                    </Text>
 
                     <Heading size = 'xs'>Change virtual list range</Heading>
 
@@ -2564,43 +2438,6 @@ const Options = ({
                         above the 'from' value.
                     </Text> 
 
-                    <Heading size = 'xs'>Remap indexes</Heading>
-
-                    <Stack direction = {['column','row','row']} alignItems = 'baseline'>
-
-                    <FormControl isDisabled = {APIdisabledFlags.remapDemo} width = 'xs'>
-                        <Select
-                            value = {editAPIFunctionArguments.remapDemo} 
-                            size = 'sm'
-                            onChange = {onChangeFunctions.remapDemo}
-                        >
-                            <option value="backwardsort">Backward sort</option>
-                            <option value="replaceitems">Replace items</option>
-                        </Select>
-                    </FormControl>
-
-                    <FormControl>
-                        <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
-
-                            <FormLabel htmlFor='remap' fontSize = 'sm'>Enable</FormLabel>
-
-                            <Switch 
-                                isChecked = {functionEnabledSettings.remap} 
-                                onChange = {onChangeFunctions.onChangeEnabler} 
-                                id='remap' 
-                            />
-                        </InputGroup>
-                    </FormControl>
-
-                    </Stack>
-
-                    <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        The remap function takes as input a map of indexes to scroller-assigned itemID's, and moves the
-                        items to the newly assigned indexes. We've included a random test that applies to 
-                        the cradle. For purposes of this demo the new mappings are 'forgotten' when the moved
-                        items scroll out of scope. See Explanations for details.
-                    </Text>
-
                     <Heading size = 'xs'>Reload the cache</Heading>
                     <FormControl>
                         <InputGroup size = 'sm' flexGrow = {1} alignItems = 'baseline' mt = {2}>
@@ -2615,7 +2452,7 @@ const Options = ({
                         </InputGroup>
                     </FormControl>
                     <Text fontSize = 'sm' paddingBottom = {2} borderBottom = '1px'>
-                        This clears the and reloads the cache, and reloads the cradle at its current position.
+                        This clears and reloads the cache, and reloads the cradle at its current position.
                     </Text>
 
                     <Heading size = 'xs'>Clear the cache</Heading>
