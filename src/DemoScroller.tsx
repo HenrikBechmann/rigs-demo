@@ -112,7 +112,7 @@ const Scroller = (
             accept:acceptRef.current,
             master:{enabled:dndmasterenabled},
             enabled:dndrootenabled,
-            dropEffect:'copy'//undefined // 'move' //'copy',
+            dropEffect:undefined // 'move' //'copy',
         })
 
     useEffect (()=>{
@@ -122,7 +122,7 @@ const Scroller = (
             accept:acceptRef.current,
             master:{enabled:dndmasterenabled},
             enabled:dndrootenabled,
-            dropEffect:'copy'//undefined, TEST
+            dropEffect:undefined // ,'copy'
         }
 
         setScrollerState('update')

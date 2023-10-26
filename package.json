@@ -14,9 +14,10 @@
     "@types/node": "^20.1.1",
     "framer-motion": "^10.0.1",
     "github-markdown-css": "^5.1.0",
-    "react-markdown": "^8.0.3",
+    "react-infinite-grid-scroller": "file:../react-infinite-grid-scroller",
+    "react-markdown": "^9.0.0",
     "react-scripts": "5.0.1",
-    "remark-gfm": "^3.0.1",
+    "remark-gfm": "^4.0.0",
     "typescript": "^5.0.4",
     "web-vitals": "^3.1.1"
   },
