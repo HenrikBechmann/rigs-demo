@@ -1,11 +1,12 @@
 
 // copyright (c) 2022 Henrik Bechmann, Toronto, Licence: MIT 
 
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, createContext} from 'react';
 
 import { 
 
   ChakraProvider, 
+  FormControl, Checkbox,
   Box, HStack, Grid, Show,
   Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, DrawerFooter,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 
@@ -36,6 +37,7 @@ import {
 
 } from './demodata'
 
+export const DndEnabledContext = createContext(false)
 
 const defaultAPIFunctionArguments:GenericObject = {
   gotoIndex:'',
@@ -43,7 +45,6 @@ const defaultAPIFunctionArguments:GenericObject = {
   scrollByPixel:'',
   scrolltobehavior:'',
   scrollbybehavior:'',
-  listsize:'',
   rangeAPIType:'rangeAPIvalues',
   listLowIndex:'',
   listHighIndex:'',
@@ -56,21 +57,23 @@ const defaultAPIFunctionArguments:GenericObject = {
   moveTo:'',
   moveFrom:'',
   moveRange:'',
-  remapDemo:'backwardsort',
 }
 
 const contentTitles:GenericObject = {
 
-  simplecontent:"Simple uniform content",
-  simplepromises:"Simple uniform promises",
-  simpleautoexpand:"Simple auto expand",
+  uniformcontent:"Uniform content",
+  uniformpromises:"Uniform promises",
+  uniformautoexpand:"Uniform auto expand",
   variablecontent:"Variable content",
   variablepromises:"Variable promises",
   variabledynamic:"Variable dynamic",
   variableoversized:"Variable oversized",
-  nestedcontent:"Nested uniform scrollers",
-  nestedpromises:"Nested uniform scroller promises",
-  sharedcache:"Shared cache (experimental)",
+  variableautoexpand:"Variable autoexpand",
+  nestingmixed:"Nested mixed scrollers",
+  nestingmixedpromises:"Nested mixed scroller promises",
+  nestingmixedautoexpand:"Nested mixed auto expand",
+  nestinguniform:"Nested uniform scrollers",
+  nestingvariable:"Nested variable scrollers",
 
 }
 
@@ -219,7 +222,31 @@ export const setDemoStatePack:GenericObject = {
 
 function App() {
 
-  const [demoState, setDemoState] = useState('setup')
+  const 
+      [demoState, setDemoState] = useState('setup'),
+
+      dndInstalledRef = useRef(true),
+      dndMasterEnabledRef = useRef(true),
+      dndRootEnabledRef = useRef(true)
+
+    const dndinstalled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndInstalledRef.current = isChecked
+        setDemoState('updatedndsettings')
+    }
+    const dndmasterenabled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndMasterEnabledRef.current = isChecked
+        setDemoState('updatedndsettings')
+    }
+    const dndrootenabled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndRootEnabledRef.current = isChecked
+        setDemoState('updatedndsettings')
+    }
 
   useEffect(()=>{
 
@@ -228,13 +255,14 @@ function App() {
   },[])
 
   // baseline - static
-  const defaultContentTypeSelector = 'simplecontent'
+  const defaultContentTypeSelector = 'nestinguniform' // 'uniformcontent' //  'variablecontent'
   const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackFlags imported above
   // defaultAPIFunctionArguments defined above
 
   const indexRangeRef = useRef([])
+  const cacheRef = useRef({cache:null, max:null})
   
   // assigned from demo versions for edit
   const 
@@ -359,12 +387,16 @@ function App() {
       case 'setup':
       case 'apply': 
       case 'autoexpand':
+      case 'revised':
       case 'resetall': {
 
         setTimeout(()=>{ // allow cycle for load scroller, get functions and indexRange
 
-          const props = functionsAPIRef.current.getPropertiesSnapshot()
-          indexRangeRef.current = props.virtualListProps.range
+          if (functionsAPIRef.current.getPropertiesSnapshot) {
+              const [props] = functionsAPIRef.current.getPropertiesSnapshot()
+              indexRangeRef.current = props.virtualListProps.range
+              cacheRef.current = {cache:props.cache,max:props.cacheMax}
+          }
           setDemoState('ready') 
 
         },100)
@@ -373,6 +405,7 @@ function App() {
       }
 
       case 'openoptions': 
+      case 'updatedndsettings':
       case 'openexplanations':{
 
         setDemoState('ready')
@@ -385,7 +418,7 @@ function App() {
   // overscrollBehavior is set here to attempt to stop reload in mobile. not working
   return (
     <ChakraProvider>
-
+    <DndEnabledContext.Provider value = {dndMasterEnabledRef.current}>
     <Box height = '100vh' style={{overscrollBehavior:'none'}}><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr' style={{overscrollBehavior:'none'}}>
 
       <Box padding = {[1,1,2]}>
@@ -405,20 +438,58 @@ function App() {
             Options
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-1.4.2-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-2.0.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
           <i>Content:</i> {contentTitles[demoContentTypeSelectorRef.current]},&nbsp; 
           {demoAllContentTypePropertiesRef.current[demoContentTypeSelectorRef.current].orientation}, 
-          range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}]</Text>          
+          range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}],
+          cache = {cacheRef.current.cache} (max {cacheRef.current.max})
+        </Text>
+        <HStack align = 'center' justify = 'start'>
+            <FormControl>
+                <Text as = 'span' align = 'center' fontSize = {14} ml={1} ><i>Drag and drop: </i></Text>
+                <Checkbox
+                    isChecked = {dndInstalledRef.current} 
+                    size = 'sm'
+                    mt = {1}
+                    onChange = {dndinstalled}
+                >
+                    installed | &nbsp;
+                </Checkbox>
+                { dndInstalledRef.current 
+                    && <><Checkbox
+                        isChecked = {dndMasterEnabledRef.current} 
+                        size = 'sm'
+                        mt = {1}
+                        onChange = {dndmasterenabled}
+                    >
+                        sub-scrollers enabled | &nbsp;
+                    </Checkbox>
+                    <Checkbox
+                        isChecked = {dndRootEnabledRef.current} 
+                        size = 'sm'
+                        mt = {1}
+                        onChange = {dndrootenabled}
+                    >
+                        root scroller enabled
+                    </Checkbox></>
+                }
+            </FormControl>
+        </HStack>
       </Box>
 
       <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
 
         <DemoScroller 
+          setDemoState = { setDemoState }
           demoContentTypeSelector = {demoContentTypeSelectorRef.current} 
-          demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} />
+          demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} 
+          dndinstalled = {dndInstalledRef.current}
+          dndmasterenabled = {dndMasterEnabledRef.current}
+          dndrootenabled = {dndRootEnabledRef.current}
+        />
 
       </Box>
 
@@ -504,7 +575,7 @@ function App() {
       invalidSections = {invalidSectionsRef.current}
       onClose = {onCloseErrors}
     />
-
+    </DndEnabledContext.Provider>
     </ChakraProvider>
   )
 }
@@ -545,11 +616,6 @@ const getFunctionToastContent = (
       }
       break
     }
-    case 'listsize': {
-      functionsAPI.setListSize(APIFunctionArguments.listsize)
-      codeblock = `functionsAPI.setListSize(${APIFunctionArguments.listsize})`
-      break
-    }
     case 'listrange': {
       if (APIFunctionArguments.rangeAPIType == 'rangeAPIvalues') {
           functionsAPI.setListRange([APIFunctionArguments.listLowIndex, APIFunctionArguments.listHighIndex])
@@ -578,7 +644,7 @@ const getFunctionToastContent = (
     case 'insert': {
       const result = functionsAPI.insertIndex(
         APIFunctionArguments.insertFrom, APIFunctionArguments.insertRange)
-      console.log('[changeList, replaceList, removeList]',result)
+      console.log('[changes = [changedList, replacedList, removedList, deletedList], context]',result)
       if (APIFunctionArguments.insertRange) {
         codeblock = `functionsAPI.insertIndex(${APIFunctionArguments.insertFrom},${APIFunctionArguments.insertRange})`
       } else {
@@ -590,7 +656,7 @@ const getFunctionToastContent = (
     case 'remove': {
       const result = functionsAPI.removeIndex(
         APIFunctionArguments.removeFrom, APIFunctionArguments.removeRange)
-      console.log('[changeList, replaceList, removeList]',result)
+      console.log('[changes = [changedList, replacedList, removedList, deletedList],context]',result)
       if (APIFunctionArguments.removeRange) {
         codeblock = `functionsAPI.removeIndex(${APIFunctionArguments.removeFrom},${APIFunctionArguments.removeRange})`
       } else {
@@ -607,22 +673,7 @@ const getFunctionToastContent = (
       } else {
         codeblock = `functionsAPI.moveIndex(${APIFunctionArguments.moveTo},${APIFunctionArguments.moveFrom})`
       }
-      console.log('processedIndexList', result)
-      seeconsole = true
-      break
-    }
-    case 'remap': {
-      switch (APIFunctionArguments.remapDemo) {
-        case 'backwardsort':{
-          remapindex_backwardsort(functionsAPI)
-          break
-        }
-        case 'replaceitems':{
-          remapindex_replaceItems(functionsAPI)
-          break
-        }
-      }
-      codeblock = `functionsAPI.remapIndexes(changeMap)`
+      console.log('[processedIndexList, movedIndexList, displacedIndexList, context]', result)
       seeconsole = true
       break
     }
@@ -642,82 +693,3 @@ const getFunctionToastContent = (
   </>
 }
 
-const remapindex_backwardsort = (functionsAPI:GenericObject) => {
-
-  const cradleindexmap = functionsAPI.getCradleIndexMap()
-  if (!cradleindexmap) return
-
-  const cradleindexarray:Array<number[]> = Array.from(cradleindexmap)
-  cradleindexarray.sort((a:number[],b:number[]) => {
-      const aval = a[0], bval = b[0]
-      return aval - bval
-  })
-
-  const indexarray = cradleindexarray.map((item:number[]) => item[0])
-  const cacheItemIDarray = cradleindexarray.map((item:number[]) => item[1])
-  cacheItemIDarray.reverse()
-
-  const changeMap = new Map()
-
-  for (const i in indexarray) {
-    changeMap.set(indexarray[i],cacheItemIDarray[i])
-  }
-  const returnarray = functionsAPI.remapIndexes(changeMap)
-
-  console.log(`remapIndexes:
-[modifiedIndexesList,
-remappedIndexesList,
-deletedIndexesList,
-ReplacedItemsList,
-deletedOrphanedItemsIDList,
-deletedOrphanedIndexesList,
-errorEntriesMap,
-changeMap]`, 
-  returnarray)
-
-}
-
-const remapindex_replaceItems = (functionsAPI:GenericObject) => {
-
-  const cradleindexmap = functionsAPI.getCradleIndexMap()
-  if (!cradleindexmap) return
-
-  const indexList = [...cradleindexmap.keys()]
-
-  const maxListPtr = indexList.length - 1
-
-  const changeMap = new Map()
-
-  // replace two items
-  let index = indexList[1]
-  changeMap.set(index, undefined)
-
-  if (maxListPtr >= 5) {
-    index = indexList[5]
-    changeMap.set(index, undefined)
-  }
-
-  // swap two items
-  index = indexList[0]
-  const lastptr = Math.min(4, maxListPtr)
-  let lastindex = indexList[lastptr]
-  const firstitemid = cradleindexmap.get(index)
-  const lastitemid = cradleindexmap.get(lastindex)
-
-  changeMap.set(index,lastitemid)
-  changeMap.set(lastindex, firstitemid)
-
-  const returnarray = functionsAPI.remapIndexes(changeMap)
-
-  console.log(`remapIndexes:
-[modifiedIndexesList,
-remappedIndexesList,
-deletedIndexesList,
-indexesOfReplacedItemsList,
-deletedOrphanedItemsIDList,
-deletedOrphanedIndexesList,
-errorEntriesMap,
-changeMap]`, 
-  returnarray)
-
-}
