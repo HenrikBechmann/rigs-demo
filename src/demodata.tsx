@@ -1518,7 +1518,7 @@ const SubscrollerComponent = (props:any) => {
         } = properties
 
     if (index === 1) {
-        startingListRange = [-2,2]
+        startingListRange = [-30,30]
         padding = [20,10]
     }
 
