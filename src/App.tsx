@@ -225,9 +225,9 @@ function App() {
   const 
       [demoState, setDemoState] = useState('setup'),
 
-      dndInstalledRef = useRef(true),
-      dndMasterEnabledRef = useRef(true),
-      dndRootEnabledRef = useRef(true)
+      dndInstalledRef = useRef(false),
+      dndMasterEnabledRef = useRef(false),
+      dndRootEnabledRef = useRef(false)
 
     const dndinstalled = (event:React.ChangeEvent) => {
         const target = event.target as HTMLInputElement
