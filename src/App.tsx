@@ -128,7 +128,7 @@ const DragDropControl = (props:any) => {
     },[controlState])
 
     return  <HStack align = 'center' justify = 'start'>
-            <FormControl>
+            <FormControl mb = '35px'>
                 <Text as = 'span' align = 'center' fontSize = {14} ml={1} ><i>Drag and drop: </i></Text>
                 <Checkbox
                     isChecked = {dndInstalledValue} 
