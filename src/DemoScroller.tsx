@@ -55,24 +55,44 @@ const framestyle:CSSProperties = {position:'absolute',inset:0}
 
 const StaticGridLayout = (props:any) => {
 
-    const { dndinstalled, dndOptions } = props
+    const { dndinstalled, dndOptions, uniformprops, nestingprops } = props
+
+    const uniformaccept = acceptAll(testDataSource.uniformcontent)
+    const nestedaccept = ['uniform'] // acceptAll(testDataSource.nestinguniform)
+
+    console.log('uniformaccept, nestedaccept',uniformaccept, nestedaccept)
+
+    const uniformDndOptions = {...dndOptions, accept:uniformaccept}
+    const nestedDndOptions = {...dndOptions, accept:nestedaccept}
+
+    console.log('uniformDndOptions, nestedDndOptions',uniformDndOptions, nestedDndOptions)
+
+    const dnduniformprops = {...uniformprops, dndOptions:uniformDndOptions}
+    const dndnestingprops = {...nestingprops, dndOptions:nestedDndOptions}
+    dndnestingprops.cellHeight = '250'
+
+    console.log('dnduniformprops, dndnestingprops',dnduniformprops, dndnestingprops)
 
     return dndinstalled 
         ? <Grid templateRows = '2fr 1fr' style = {framestyle}>
-             <GridItem>
-                <div>Hello Drag and Drop top</div>
+             <GridItem data-type = 'grid-item-top' >
+             <div style = {{position:'relative',height:'100%', backgroundColor:'gray'}}>
+                <DndScroller key = 'nestinguniform' {...dndnestingprops}/>
+             </div>
              </GridItem>
-             <GridItem>
-                <div>Hello Drag and Drop bottom</div>
+             <GridItem data-type = 'grid-item-bottom' >
+               <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'firebrick'}}>
+                <DndScroller key = 'uniformcontent' {...dnduniformprops}/>
+                </div>
              </GridItem>
           </Grid>
 
          : <Grid templateRows = '2fr 1fr' style = {framestyle}>
              <GridItem>
-                 <div>Hello top</div>
+                 <GridScroller key = 'nestinguniform' {...nestingprops}/>
              </GridItem>
              <GridItem>
-                 <div>Hello bottom</div>
+                 <GridScroller key = 'uniformcontent' {...uniformprops}/>
              </GridItem>
            </Grid>
 }
@@ -82,13 +102,16 @@ const StaticLayout = (props:any) => {
     const [scrollerState, setScrollerState] = useState('ready')
 
    const {
-        // demoAllContentTypeProperties, 
+        demoAllContentTypeProperties, 
         // demoContentTypeSelector, 
         dndinstalled, 
         dndmasterenabled, 
         dndrootenabled,
         setDemoState,
     } = props
+
+    const nestingprops = demoAllContentTypeProperties['nestinguniform']
+    const uniformprops = demoAllContentTypeProperties['uniformcontent']
 
     const acceptRef = useRef('-x-none-x-')
 
@@ -123,7 +146,12 @@ const StaticLayout = (props:any) => {
 
     },[scrollerState])
 
-    return <StaticGridLayout dndinstalled = {dndinstalled} dndOptions = {dndOptionsRef.current} />
+    return <StaticGridLayout 
+        dndinstalled = {dndinstalled} 
+        dndOptions = {dndOptionsRef.current} 
+        uniformprops = { uniformprops }
+        nestingprops = { nestingprops }
+    />
 }
 
 const ScrollerController = (props:any) => {
