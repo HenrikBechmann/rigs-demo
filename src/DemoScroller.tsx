@@ -89,10 +89,14 @@ const StaticGridLayout = (props:any) => {
 
          : <Grid templateRows = '2fr 1fr' style = {framestyle}>
              <GridItem>
+             <div style = {{position:'relative',height:'100%', backgroundColor:'gray'}}>
                  <GridScroller key = 'nestinguniform' {...nestingprops}/>
+             </div>
              </GridItem>
              <GridItem>
+               <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'firebrick'}}>
                  <GridScroller key = 'uniformcontent' {...uniformprops}/>
+             </div>
              </GridItem>
            </Grid>
 }
