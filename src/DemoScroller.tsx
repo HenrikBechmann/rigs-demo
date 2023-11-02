@@ -2,7 +2,14 @@
 
 import React, { useRef, useEffect, useState } from 'react'
 
-import {testUniformData, testVariableData, testNestingAccepts, acceptAll, GenericObject, dragDropTransferCallback} from './demodata'
+import {
+    testUniformData, 
+    testVariableData, 
+    testNestingAccepts, 
+    acceptAll, 
+    GenericObject, 
+    dragDropTransferCallback
+} from './demodata'
 
 import GridScroller, { RigsDnd as DndScroller } from 'react-infinite-grid-scroller'
 
@@ -44,6 +51,18 @@ const testDataSource:GenericObject = {
 
 }
 
+const ScrollerController = (props:any) => {
+    let component
+    if (props.demoContentTypeSelector == 'staticlayout') {
+        component = null
+    } else {
+        component = <Scroller {...props} />
+    }
+    return component
+}
+
+export default ScrollerController
+
 const Scroller = (
     {
         demoAllContentTypeProperties, 
@@ -56,7 +75,13 @@ const Scroller = (
 
     const [scrollerState, setScrollerState] = useState('ready')
 
-    const respondToDndRangeChange = (sourceScrollerID:number, sourceIndex:number, targetScrollerID:number, targetIndex:number, context:GenericObject) => {
+    const respondToDndRangeChange = (
+        sourceScrollerID:number, 
+        sourceIndex:number, 
+        targetScrollerID:number, 
+        targetIndex:number, 
+        context:GenericObject
+    ) => {
 
         if (context.item.dropEffect == 'copy' || (sourceScrollerID !== targetScrollerID)) {
             setDemoState('revised')
@@ -172,5 +197,3 @@ const Scroller = (
     }
 
 }
-
-export default Scroller
