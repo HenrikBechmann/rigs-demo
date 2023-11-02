@@ -2317,6 +2317,11 @@ const nestingvariableProperties = {
 }
 
 
+const staticlayoutProperties = {
+
+    layout: 'static',
+
+}
 // ==============================[ consolidated scroller properties namespace ]=========================
 
 // this is exported for the App module to use
@@ -2334,6 +2339,7 @@ export const defaultAllContentTypeProperties = {
     nestingmixedautoexpand: nestingmixedautoexpandProperties,
     nestinguniform:nestinguniformProperties,
     nestingvariable:nestingvariableProperties,
+    staticlayout:staticlayoutProperties,
 }
 
 // this is exported for the App module to use

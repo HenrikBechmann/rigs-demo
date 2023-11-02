@@ -74,6 +74,7 @@ const contentTitles:GenericObject = {
   nestingmixedautoexpand:"Nested mixed auto expand",
   nestinguniform:"Nested uniform scrollers",
   nestingvariable:"Nested variable scrollers",
+  staticlayout:"Static layout",
 
 }
 
@@ -364,14 +365,19 @@ function App() {
   const showOptions = () => {
 
     sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
-    sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
-    sessionAllContentTypePropertiesRef.current = 
-      mapAllPropertiesDemoToSession(
-        demoAllContentTypePropertiesRef.current,
-        sessionAllContentTypePropertiesRef.current
-     )
-    sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
-    sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
+
+    if (demoContentTypeSelectorRef.current != 'staticlayout') {
+
+        sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
+        sessionAllContentTypePropertiesRef.current = 
+          mapAllPropertiesDemoToSession(
+            demoAllContentTypePropertiesRef.current,
+            sessionAllContentTypePropertiesRef.current
+         )
+        sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
+        sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
+
+    }
 
     onOpenOptions()
 
@@ -379,15 +385,20 @@ function App() {
 
   const applyOptions = () => {
 
+
     demoContentTypeSelectorRef.current = sessionContentTypeSelectorRef.current
-    demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
-    demoAllContentTypePropertiesRef.current = 
-      mapAllPropertiesSessionToDemo(
-        sessionAllContentTypePropertiesRef.current,
-        demoAllContentTypePropertiesRef.current
-      )
-    demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
-    demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
+
+    if (sessionContentTypeSelectorRef.current != 'staticlayout') {
+        demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
+        demoAllContentTypePropertiesRef.current = 
+          mapAllPropertiesSessionToDemo(
+            sessionAllContentTypePropertiesRef.current,
+            demoAllContentTypePropertiesRef.current
+          )
+        demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
+        demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
+
+    }
 
     invalidSectionsRef.current = optionsAPIRef.current.getInvalidSections()
 

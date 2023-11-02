@@ -51,10 +51,60 @@ const testDataSource:GenericObject = {
 
 }
 
+const StaticLayout = (props:any) => {
+
+    const [scrollerState, setScrollerState] = useState('ready')
+
+   const {
+        // demoAllContentTypeProperties, 
+        // demoContentTypeSelector, 
+        dndinstalled, 
+        dndmasterenabled, 
+        dndrootenabled,
+        setDemoState,
+    } = props
+
+    const acceptRef = useRef('-x-none-x-')
+
+    const dndOptionsRef = useRef<GenericObject>({
+            accept:acceptRef.current,
+            master:{enabled:dndmasterenabled},
+            enabled:dndrootenabled,
+            dropEffect:undefined // 'move' //'copy',
+        })
+
+    useEffect (()=>{
+
+        dndOptionsRef.current = {
+            accept:acceptRef.current,
+            master:{enabled:dndmasterenabled},
+            enabled:dndrootenabled,
+            dropEffect:undefined // ,'copy'
+        }
+
+        setScrollerState('update')
+
+    },[dndmasterenabled, dndrootenabled]) //, demoContentTypeSelector])
+
+    useEffect(()=>{
+
+        switch (scrollerState) {
+            case 'update':{
+                setScrollerState('ready')
+                break
+            }
+        }
+
+    },[scrollerState])
+
+    return <div>Hello</div>
+}
+
 const ScrollerController = (props:any) => {
+
     let component
     if (props.demoContentTypeSelector == 'staticlayout') {
-        component = null
+        component = <StaticLayout {...props} />
     } else {
         component = <Scroller {...props} />
     }
