@@ -485,7 +485,7 @@ function App() {
     <DndEnabledContext.Provider value = {dndMasterEnabledValue}>
     <Box height = '100vh' style={{overscrollBehavior:'none'}}><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr' style={{overscrollBehavior:'none'}}>
 
-      <Box padding = {[1,1,2]}>
+      <Box padding = {[1]}>
 
         <Show above = 'sm'>
           <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>react-infinite-grid-scroller (RIGS) demo</Heading>
@@ -505,7 +505,7 @@ function App() {
             Drag and Drop
           </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-2.0.0-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-2.1.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
@@ -516,7 +516,7 @@ function App() {
         </Text>
       </Box>
 
-      <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
+      <Box margin = {[1]} border = '1px' position = 'relative' >
 
         <DemoScroller 
           setDemoState = { setDemoState }
