@@ -400,7 +400,9 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     } else {
 
-        ([cellType, typeText] = selectCellType(testUniformData,accept,index));
+        // console.log('selectCellType', testUniformData, accept, index);
+
+        ([cellType, typeText] = selectCellType(testUniformData,accept,index))
 
         color = testUniformDataColors[cellType]
 

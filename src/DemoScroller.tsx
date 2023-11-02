@@ -60,18 +60,18 @@ const StaticGridLayout = (props:any) => {
     const uniformaccept = acceptAll(testDataSource.uniformcontent)
     const nestedaccept = ['uniform'] // acceptAll(testDataSource.nestinguniform)
 
-    console.log('uniformaccept, nestedaccept',uniformaccept, nestedaccept)
+    // console.log('uniformaccept, nestedaccept',uniformaccept, nestedaccept)
 
     const uniformDndOptions = {...dndOptions, accept:uniformaccept}
     const nestedDndOptions = {...dndOptions, accept:nestedaccept}
 
-    console.log('uniformDndOptions, nestedDndOptions',uniformDndOptions, nestedDndOptions)
+    // console.log('uniformDndOptions, nestedDndOptions',uniformDndOptions, nestedDndOptions)
 
-    const dnduniformprops = {...uniformprops, dndOptions:uniformDndOptions}
-    const dndnestingprops = {...nestingprops, dndOptions:nestedDndOptions}
+    const dnduniformprops = {...uniformprops, profile:uniformDndOptions, dndOptions:uniformDndOptions}
+    const dndnestingprops = {...nestingprops, profile:nestedDndOptions, dndOptions:nestedDndOptions}
     dndnestingprops.cellHeight = '250'
 
-    console.log('dnduniformprops, dndnestingprops',dnduniformprops, dndnestingprops)
+    // console.log('dnduniformprops, dndnestingprops',dnduniformprops, dndnestingprops)
 
     return dndinstalled 
         ? <Grid templateRows = '2fr 1fr' style = {framestyle}>
