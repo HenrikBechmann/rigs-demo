@@ -1,7 +1,7 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto
 
 import React, { useRef, useEffect, useState } from 'react'
-
+import { Grid, GridItem } from '@chakra-ui/react'
 import {
     testUniformData, 
     testVariableData, 
@@ -51,6 +51,16 @@ const testDataSource:GenericObject = {
 
 }
 
+const StaticGridLayout = (props:any) => {
+
+    const { dndinstalled, dndOptions } = props
+
+    return dndinstalled 
+        ? <div>Hello Drag and Drop</div>
+        : <div>Hello</div>
+
+}
+
 const StaticLayout = (props:any) => {
 
     const [scrollerState, setScrollerState] = useState('ready')
@@ -97,10 +107,7 @@ const StaticLayout = (props:any) => {
 
     },[scrollerState])
 
-    return dndinstalled 
-        ? <div>Hello Drag and Drop</div>
-        : <div>Hello</div>
-    
+    return <StaticGridLayout dndinstalled = {dndinstalled} dndOptions = {dndOptionsRef.current} />
 }
 
 const ScrollerController = (props:any) => {
