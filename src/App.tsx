@@ -311,7 +311,7 @@ function App() {
       [demoState, setDemoState] = useState('setup')
 
   // baseline - static
-  const defaultContentTypeSelector = 'nestinguniform' // 'uniformcontent' //  'variablecontent'
+  const defaultContentTypeSelector = 'staticlayout' // 'nestinguniform' // 'uniformcontent' //  'variablecontent'
   const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackFlags imported above
