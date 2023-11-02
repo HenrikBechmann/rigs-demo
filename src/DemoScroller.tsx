@@ -84,7 +84,7 @@ const StaticLayout = (props:any) => {
 
         setScrollerState('update')
 
-    },[dndmasterenabled, dndrootenabled]) //, demoContentTypeSelector])
+    },[dndmasterenabled, dndrootenabled])
 
     useEffect(()=>{
 
@@ -97,7 +97,10 @@ const StaticLayout = (props:any) => {
 
     },[scrollerState])
 
-    return <div>Hello</div>
+    return dndinstalled 
+        ? <div>Hello Drag and Drop</div>
+        : <div>Hello</div>
+    
 }
 
 const ScrollerController = (props:any) => {
