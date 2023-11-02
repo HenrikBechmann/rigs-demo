@@ -1,6 +1,6 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto
 
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, CSSProperties } from 'react'
 import { Grid, GridItem } from '@chakra-ui/react'
 import {
     testUniformData, 
@@ -51,14 +51,30 @@ const testDataSource:GenericObject = {
 
 }
 
+const framestyle:CSSProperties = {position:'absolute',inset:0}
+
 const StaticGridLayout = (props:any) => {
 
     const { dndinstalled, dndOptions } = props
 
     return dndinstalled 
-        ? <div>Hello Drag and Drop</div>
-        : <div>Hello</div>
+        ? <Grid templateRows = '2fr 1fr' style = {framestyle}>
+             <GridItem>
+                <div>Hello Drag and Drop top</div>
+             </GridItem>
+             <GridItem>
+                <div>Hello Drag and Drop bottom</div>
+             </GridItem>
+          </Grid>
 
+         : <Grid templateRows = '2fr 1fr' style = {framestyle}>
+             <GridItem>
+                 <div>Hello top</div>
+             </GridItem>
+             <GridItem>
+                 <div>Hello bottom</div>
+             </GridItem>
+           </Grid>
 }
 
 const StaticLayout = (props:any) => {
