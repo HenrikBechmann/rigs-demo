@@ -71,8 +71,6 @@ const StaticGridLayout = (props:any) => {
     const dndnestingprops = {...nestingprops, profile:nestedDndOptions, dndOptions:nestedDndOptions}
     dndnestingprops.cellHeight = '250'
 
-    // console.log('dnduniformprops, dndnestingprops',dnduniformprops, dndnestingprops)
-
     return dndinstalled 
         ? <Grid templateRows = '2fr 1fr' style = {framestyle}>
              <GridItem data-type = 'grid-item-top' >
@@ -87,13 +85,13 @@ const StaticGridLayout = (props:any) => {
              </GridItem>
           </Grid>
 
-         : <Grid templateRows = '2fr 1fr' style = {framestyle}>
-             <GridItem>
+        : <Grid templateRows = '2fr 1fr' style = {framestyle}>
+             <GridItem data-type = 'grid-item-top' >
              <div style = {{position:'relative',height:'100%', backgroundColor:'aliceblue'}}>
                  <GridScroller key = 'nestinguniform' {...nestingprops}/>
              </div>
              </GridItem>
-             <GridItem>
+             <GridItem data-type = 'grid-item-bottom' >
                <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'beige'}}>
                  <GridScroller key = 'uniformcontent' {...uniformprops}/>
              </div>
