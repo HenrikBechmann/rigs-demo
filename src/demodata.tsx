@@ -371,8 +371,6 @@ const SimpleItem = (props:any) => {
 // the getItemPack function for simple uniform content
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
 
-    // console.log('getSimpleItemPack: context',context)
-
     const accept = context.scrollerProfile.accept;
     let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
@@ -400,8 +398,6 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
         }
 
     } else {
-
-        // console.log('selectCellType', testUniformData, accept, index);
 
         ([cellType, typeText] = selectCellType(testUniformData,accept,index))
 
@@ -1609,7 +1605,6 @@ const SubscrollerComponent = (props:any) => {
 
     }
 
-    // console.log('scrollerContext.scroller.current',scrollerContext.scroller.current)
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             {isDnd && float}
@@ -1864,7 +1859,6 @@ const UniformSubscrollerItem = (props:any) => {
 
 const getUniformSubscrollerItemPack = (index:any, itemID:number, context:GenericObject) => {
 
-    // console.log('getUniformSubscrollerItemPack:context', context)
     const accept = context.scrollerProfile.accept
     let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
@@ -1893,7 +1887,6 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
 
     } else {
 
-        // console.log('testUniformData,accept,index',testUniformData,accept,index);
         ([cellType, typeText] = selectCellType(testUniformData,accept,index));
 
         color = testUniformDataColors[cellType]

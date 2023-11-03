@@ -27,8 +27,6 @@ const getDropEffect = (sourceScrollerID:number, targetScrollerID:number, context
 
     // }
 
-    // console.log('getDropEffect: context',context)
-
     return hostDropEffect
 
 }
@@ -60,12 +58,8 @@ const StaticGridLayout = (props:any) => {
     const uniformaccept = acceptAll(testDataSource.uniformcontent)
     const nestedaccept = ['uniform'] // acceptAll(testDataSource.nestinguniform)
 
-    // console.log('uniformaccept, nestedaccept',uniformaccept, nestedaccept)
-
     const uniformDndOptions = {...dndOptions, accept:uniformaccept}
     const nestedDndOptions = {...dndOptions, accept:nestedaccept}
-
-    // console.log('uniformDndOptions, nestedDndOptions',uniformDndOptions, nestedDndOptions)
 
     const dnduniformprops = {...uniformprops, profile:uniformDndOptions, dndOptions:uniformDndOptions}
     const dndnestingprops = {...nestingprops, profile:nestedDndOptions, dndOptions:nestedDndOptions}
