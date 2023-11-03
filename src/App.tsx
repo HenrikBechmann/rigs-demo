@@ -366,7 +366,7 @@ function App() {
 
     sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
 
-    if (demoContentTypeSelectorRef.current != 'staticlayout') {
+    // if (demoContentTypeSelectorRef.current != 'staticlayout') {
 
         sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
         sessionAllContentTypePropertiesRef.current = 
@@ -377,7 +377,9 @@ function App() {
         sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
         sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
 
-    }
+    // } else {
+
+    // }
 
     onOpenOptions()
 
@@ -388,15 +390,18 @@ function App() {
 
     demoContentTypeSelectorRef.current = sessionContentTypeSelectorRef.current
 
-    if (sessionContentTypeSelectorRef.current != 'staticlayout') {
-        demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
-        demoAllContentTypePropertiesRef.current = 
-          mapAllPropertiesSessionToDemo(
-            sessionAllContentTypePropertiesRef.current,
-            demoAllContentTypePropertiesRef.current
-          )
-        demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
-        demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
+    demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
+    demoAllContentTypePropertiesRef.current = 
+      mapAllPropertiesSessionToDemo(
+        sessionAllContentTypePropertiesRef.current,
+        demoAllContentTypePropertiesRef.current
+      )
+    demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
+    demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
+
+    if (sessionContentTypeSelectorRef.current == 'staticlayout') {
+
+        demoAllContentTypePropertiesRef.current['staticlayout'].layout = 'static'
 
     }
 
