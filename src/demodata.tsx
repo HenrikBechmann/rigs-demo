@@ -313,6 +313,7 @@ const simpleComponentStyles = {
         top:0,
         left:0,
         padding:'3px',
+        fontSize:'small',
         // backgroundColor:'white', 
         margin:'3px'
     } as React.CSSProperties,
@@ -354,10 +355,10 @@ const SimpleItem = (props:any) => {
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
             {isDnd && float}
-            {indexstring}<br style = {{clear:'left'}}/>
-            {itemIDstring}
-            {sourceID && <><br />{sourceIDstring}</>}
-            {localTypeText && <><br />{localTypeText}</>}
+            {indexstring}
+            {itemIDstring} &nbsp;
+            {sourceID && sourceIDstring} &nbsp;
+            {localTypeText && localTypeText}
         </div>
     </div>
 
@@ -2320,9 +2321,7 @@ const nestingvariableProperties = {
 
 
 const staticlayoutProperties = {
-
     layout: 'static',
-
 }
 // ==============================[ consolidated scroller properties namespace ]=========================
 

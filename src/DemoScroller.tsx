@@ -76,12 +76,12 @@ const StaticGridLayout = (props:any) => {
     return dndinstalled 
         ? <Grid templateRows = '2fr 1fr' style = {framestyle}>
              <GridItem data-type = 'grid-item-top' >
-             <div style = {{position:'relative',height:'100%', backgroundColor:'gray'}}>
+             <div style = {{position:'relative',height:'100%', backgroundColor:'aliceblue'}}>
                 <DndScroller key = 'nestinguniform' {...dndnestingprops}/>
              </div>
              </GridItem>
              <GridItem data-type = 'grid-item-bottom' >
-               <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'firebrick'}}>
+               <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'beige'}}>
                 <DndScroller key = 'uniformcontent' {...dnduniformprops}/>
                 </div>
              </GridItem>
@@ -89,12 +89,12 @@ const StaticGridLayout = (props:any) => {
 
          : <Grid templateRows = '2fr 1fr' style = {framestyle}>
              <GridItem>
-             <div style = {{position:'relative',height:'100%', backgroundColor:'gray'}}>
+             <div style = {{position:'relative',height:'100%', backgroundColor:'aliceblue'}}>
                  <GridScroller key = 'nestinguniform' {...nestingprops}/>
              </div>
              </GridItem>
              <GridItem>
-               <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'firebrick'}}>
+               <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'beige'}}>
                  <GridScroller key = 'uniformcontent' {...uniformprops}/>
              </div>
              </GridItem>
