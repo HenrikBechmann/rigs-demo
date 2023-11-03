@@ -348,7 +348,7 @@ const SimpleItem = (props:any) => {
 
     },[isDnd])
 
-    const indexstring = `list index ${scrollerContext.cell.current.index},`
+    const indexstring = `list index ${scrollerContext.cell.current.index}, `
     const itemIDstring = `cache itemID ${itemID}`
     const sourceIDstring = `sourceID: ${sourceID}`
 
@@ -356,8 +356,8 @@ const SimpleItem = (props:any) => {
         <div style = {simpleComponentStyles.inner}>
             {isDnd && float}
             {indexstring}
-            {itemIDstring} &nbsp;
-            {sourceID && sourceIDstring} &nbsp;
+            {itemIDstring}, &nbsp;
+            {sourceID && sourceIDstring}, &nbsp;
             {localTypeText && localTypeText}
         </div>
     </div>
