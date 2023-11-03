@@ -1,6 +1,6 @@
 {
   "name": "rigs-demo",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "comment": "something ",
   "homepage": "https://henrikbechmann.github.io/rigs-demo",
@@ -15,7 +15,7 @@
     "@types/node": "^20.1.1",
     "framer-motion": "^10.0.1",
     "github-markdown-css": "^5.1.0",
-    "react-infinite-grid-scroller": "^2.0.0",
+    "react-infinite-grid-scroller": "^2.1.0",
     "react-markdown": "^9.0.0",
     "react-scripts": "5.0.1",
     "remark-gfm": "^4.0.0",
