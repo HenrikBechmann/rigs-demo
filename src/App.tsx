@@ -74,6 +74,91 @@ const contentTitles:GenericObject = {
   nestingmixedautoexpand:"Nested mixed auto expand",
   nestinguniform:"Nested uniform scrollers",
   nestingvariable:"Nested variable scrollers",
+  staticlayout:"Static layout",
+
+}
+
+let
+  dndInstalledValue = true,
+  dndMasterEnabledValue = true,
+  dndRootEnabledValue = true
+
+const DragDropControl = (props:any) => {
+
+    const [controlState, setControlState] = useState('ready')
+
+    const { setDemoState } = props
+
+    useEffect(()=>{
+
+      setDemoStatePack.setDemoState = setDemoState
+
+    },[])
+
+
+    const dndinstalled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndInstalledValue = isChecked
+        setControlState('update')
+        setDemoState('updatedndsettings')
+    }
+    const dndmasterenabled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndMasterEnabledValue = isChecked
+        setControlState('update')
+        setDemoState('updatedndsettings')
+    }
+    const dndrootenabled = (event:React.ChangeEvent) => {
+        const target = event.target as HTMLInputElement
+        const isChecked = target.checked
+        dndRootEnabledValue = isChecked
+        setControlState('update')
+        setDemoState('updatedndsettings')
+    }
+
+    useEffect(()=>{
+
+        switch (controlState) {
+        case 'update':
+            setControlState('ready')
+            break
+        }
+
+    },[controlState])
+
+    return  <HStack align = 'center' justify = 'start'>
+            <FormControl mb = '35px'>
+                <Text as = 'span' align = 'center' fontSize = {14} ml={1} ><i>Drag and drop: </i></Text>
+                <Checkbox
+                    isChecked = {dndInstalledValue} 
+                    size = 'sm'
+                    mt = {1}
+                    onChange = {dndinstalled}
+                >
+                    installed | &nbsp;
+                </Checkbox>
+                { dndInstalledValue 
+                    && <><Checkbox
+                        isChecked = {dndMasterEnabledValue} 
+                        size = 'sm'
+                        mt = {1}
+                        onChange = {dndmasterenabled}
+                    >
+                        sub-scrollers enabled | &nbsp;
+                    </Checkbox>
+                    <Checkbox
+                        isChecked = {dndRootEnabledValue} 
+                        size = 'sm'
+                        mt = {1}
+                        onChange = {dndrootenabled}
+                    >
+                        root scroller enabled
+                    </Checkbox></>
+                }
+            </FormControl>
+        </HStack>
 
 }
 
@@ -222,40 +307,11 @@ export const setDemoStatePack:GenericObject = {
 
 function App() {
 
-  const 
-      [demoState, setDemoState] = useState('setup'),
-
-      dndInstalledRef = useRef(true),
-      dndMasterEnabledRef = useRef(true),
-      dndRootEnabledRef = useRef(true)
-
-    const dndinstalled = (event:React.ChangeEvent) => {
-        const target = event.target as HTMLInputElement
-        const isChecked = target.checked
-        dndInstalledRef.current = isChecked
-        setDemoState('updatedndsettings')
-    }
-    const dndmasterenabled = (event:React.ChangeEvent) => {
-        const target = event.target as HTMLInputElement
-        const isChecked = target.checked
-        dndMasterEnabledRef.current = isChecked
-        setDemoState('updatedndsettings')
-    }
-    const dndrootenabled = (event:React.ChangeEvent) => {
-        const target = event.target as HTMLInputElement
-        const isChecked = target.checked
-        dndRootEnabledRef.current = isChecked
-        setDemoState('updatedndsettings')
-    }
-
-  useEffect(()=>{
-
-      setDemoStatePack.setDemoState = setDemoState
-
-  },[])
+    const 
+      [demoState, setDemoState] = useState('setup')
 
   // baseline - static
-  const defaultContentTypeSelector = 'nestinguniform' // 'uniformcontent' //  'variablecontent'
+  const defaultContentTypeSelector = 'staticlayout' // 'nestinguniform' // 'uniformcontent' //  'variablecontent'
   const defaultOperationFunctionSelector = ''
   // defaultAllContentTypeProperties imported above
   // defaultCallbackFlags imported above
@@ -283,10 +339,12 @@ function App() {
   // drawer management
   const 
       { isOpen:isOpenOptions, onOpen:onOpenOptions, onClose:onCloseOptions } = useDisclosure(),
-      { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure()
+      { isOpen:isOpenExplanations, onOpen:onOpenExplanations, onClose:onCloseExplanations } = useDisclosure(),
+      { isOpen:isOpenDragDrop, onOpen:onOpenDragDrop, onClose:onCloseDragDrop } = useDisclosure()
 
   const optionsButtonRef = useRef(null)
   const explanationsButtonRef = useRef(null)
+  const dragdropButtonRef = useRef(null)
 
   // error handling
   const optionsAPIRef = useRef<GenericObject>({})
@@ -297,17 +355,31 @@ function App() {
   const invalidSectionsRef = useRef<any>(null)
 
   // ---- buttons response
+
+  const showDragDrop = () => {
+
+    onOpenDragDrop()
+
+  }
+
   const showOptions = () => {
 
     sessionContentTypeSelectorRef.current = demoContentTypeSelectorRef.current
-    sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
-    sessionAllContentTypePropertiesRef.current = 
-      mapAllPropertiesDemoToSession(
-        demoAllContentTypePropertiesRef.current,
-        sessionAllContentTypePropertiesRef.current
-     )
-    sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
-    sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
+
+    // if (demoContentTypeSelectorRef.current != 'staticlayout') {
+
+        sessionOperationFunctionSelectorRef.current = demoOperationFunctionSelectorRef.current
+        sessionAllContentTypePropertiesRef.current = 
+          mapAllPropertiesDemoToSession(
+            demoAllContentTypePropertiesRef.current,
+            sessionAllContentTypePropertiesRef.current
+         )
+        sessionCallbackFlagsRef.current = {...demoCallbackFlagsRef.current}
+        sessionAPIFunctionArgumentsRef.current = {...demoAPIFunctionArgumentsRef.current}
+
+    // } else {
+
+    // }
 
     onOpenOptions()
 
@@ -315,7 +387,9 @@ function App() {
 
   const applyOptions = () => {
 
+
     demoContentTypeSelectorRef.current = sessionContentTypeSelectorRef.current
+
     demoOperationFunctionSelectorRef.current = sessionOperationFunctionSelectorRef.current
     demoAllContentTypePropertiesRef.current = 
       mapAllPropertiesSessionToDemo(
@@ -324,6 +398,12 @@ function App() {
       )
     demoCallbackFlagsRef.current = {...sessionCallbackFlagsRef.current}
     demoAPIFunctionArgumentsRef.current = {...sessionAPIFunctionArgumentsRef.current}
+
+    if (sessionContentTypeSelectorRef.current == 'staticlayout') {
+
+        demoAllContentTypePropertiesRef.current['staticlayout'].layout = 'static'
+
+    }
 
     invalidSectionsRef.current = optionsAPIRef.current.getInvalidSections()
 
@@ -418,10 +498,10 @@ function App() {
   // overscrollBehavior is set here to attempt to stop reload in mobile. not working
   return (
     <ChakraProvider>
-    <DndEnabledContext.Provider value = {dndMasterEnabledRef.current}>
+    <DndEnabledContext.Provider value = {dndMasterEnabledValue}>
     <Box height = '100vh' style={{overscrollBehavior:'none'}}><Grid height = '100%' autoFlow = 'row' autoRows = 'max-content 1fr' style={{overscrollBehavior:'none'}}>
 
-      <Box padding = {[1,1,2]}>
+      <Box padding = {[1]}>
 
         <Show above = 'sm'>
           <Heading fontSize = {[20,20,30]} mb = {[1,1,2]}>react-infinite-grid-scroller (RIGS) demo</Heading>
@@ -437,8 +517,11 @@ function App() {
           <Button ref = {optionsButtonRef} size = {['sm','sm','md']} onClick = {showOptions}>
             Options
           </Button>
+          <Button ref = {dragdropButtonRef} size = {['sm','sm','md']} onClick = {showDragDrop}>
+            Drag and Drop
+          </Button>
           <Link href="https://www.npmjs.com/package/react-infinite-grid-scroller" rel="nofollow" isExternal>
-            <Image src="https://img.shields.io/badge/npm-2.0.0-brightgreen"/>
+            <Image src="https://img.shields.io/badge/npm-2.1.0-brightgreen"/>
           </Link>
         </HStack>
         <Text mt = {[1,1,2]} ml = {[1,1,2]} fontSize = {[9,9,14]}>
@@ -447,48 +530,17 @@ function App() {
           range = [{indexRangeRef.current[0]},{indexRangeRef.current[1]}],
           cache = {cacheRef.current.cache} (max {cacheRef.current.max})
         </Text>
-        <HStack align = 'center' justify = 'start'>
-            <FormControl>
-                <Text as = 'span' align = 'center' fontSize = {14} ml={1} ><i>Drag and drop: </i></Text>
-                <Checkbox
-                    isChecked = {dndInstalledRef.current} 
-                    size = 'sm'
-                    mt = {1}
-                    onChange = {dndinstalled}
-                >
-                    installed | &nbsp;
-                </Checkbox>
-                { dndInstalledRef.current 
-                    && <><Checkbox
-                        isChecked = {dndMasterEnabledRef.current} 
-                        size = 'sm'
-                        mt = {1}
-                        onChange = {dndmasterenabled}
-                    >
-                        sub-scrollers enabled | &nbsp;
-                    </Checkbox>
-                    <Checkbox
-                        isChecked = {dndRootEnabledRef.current} 
-                        size = 'sm'
-                        mt = {1}
-                        onChange = {dndrootenabled}
-                    >
-                        root scroller enabled
-                    </Checkbox></>
-                }
-            </FormControl>
-        </HStack>
       </Box>
 
-      <Box margin = {[1,2,3]} border = '1px' position = 'relative' >
+      <Box margin = {[1]} border = '1px' position = 'relative' >
 
         <DemoScroller 
           setDemoState = { setDemoState }
           demoContentTypeSelector = {demoContentTypeSelectorRef.current} 
           demoAllContentTypeProperties = {demoAllContentTypePropertiesRef.current} 
-          dndinstalled = {dndInstalledRef.current}
-          dndmasterenabled = {dndMasterEnabledRef.current}
-          dndrootenabled = {dndRootEnabledRef.current}
+          dndinstalled = {dndInstalledValue}
+          dndmasterenabled = {dndMasterEnabledValue}
+          dndrootenabled = {dndRootEnabledValue}
         />
 
       </Box>
@@ -565,6 +617,25 @@ function App() {
 
         <DrawerBody>
           <Explanations />
+        </DrawerBody>
+
+      </DrawerContent>
+    </Drawer>
+
+    <Drawer
+      isOpen={isOpenDragDrop}
+      placement='top'
+      size = 'md'
+      onClose={onCloseDragDrop}
+      finalFocusRef={explanationsButtonRef}
+    >
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader>Drag and Drop</DrawerHeader>
+
+        <DrawerBody>
+          <DragDropControl setDemoState = { setDemoState }/>
         </DrawerBody>
 
       </DrawerContent>

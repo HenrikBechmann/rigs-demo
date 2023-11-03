@@ -175,8 +175,6 @@ const Options = ({
 
         indexRangeRef = useRef<number[]>([])
 
-    // console.log('indexRangeRef',indexRangeRef)
-
     const
         [listlowindex, listhighindex] = indexRangeRef.current,
         rangesize = 
@@ -1111,7 +1109,6 @@ const Options = ({
         } else {
             indexRangeRef.current = []
         }
-        // console.log('updating sessionContentTypeSelectorRef, indexRangeRef, contentTypeProperties\n',sessionContentTypeSelectorRef, indexRangeRef, contentTypeProperties)
 
     }
 
@@ -1206,6 +1203,7 @@ const Options = ({
                 <option value="nestingmixed">Nested mixed scrollers</option>
                 <option value="nestingmixedpromises">Nested mixed scroller promises</option>
                 <option value="nestingmixedautoexpand">Nested mixed scroller auto expand</option>
+                <option value="staticlayout">Static layout</option>
             </Select>
 
             <FormHelperText>
@@ -1581,7 +1579,7 @@ const Options = ({
 
                     <FormControl>
                         <Checkbox 
-                            isChecked = {editContentTypeProperties.technical.showAxis} 
+                            isChecked = {editContentTypeProperties.technical?.showAxis} 
                             size = 'sm'
                             mt = {2}
                             onChange = {onChangeFunctions.showAxis}

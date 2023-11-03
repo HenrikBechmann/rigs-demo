@@ -1,8 +1,15 @@
 // copyright (c) 2022 Henrik Bechmann, Toronto
 
-import React, { useRef, useEffect, useState } from 'react'
-
-import {testUniformData, testVariableData, testNestingAccepts, acceptAll, GenericObject, dragDropTransferCallback} from './demodata'
+import React, { useRef, useEffect, useState, CSSProperties } from 'react'
+import { Grid, GridItem } from '@chakra-ui/react'
+import {
+    testUniformData, 
+    testVariableData, 
+    testNestingAccepts, 
+    acceptAll, 
+    GenericObject, 
+    dragDropTransferCallback
+} from './demodata'
 
 import GridScroller, { RigsDnd as DndScroller } from 'react-infinite-grid-scroller'
 
@@ -19,8 +26,6 @@ const getDropEffect = (sourceScrollerID:number, targetScrollerID:number, context
     //     hostDropEffect = 'copy'
 
     // }
-
-    // console.log('getDropEffect: context',context)
 
     return hostDropEffect
 
@@ -44,6 +49,120 @@ const testDataSource:GenericObject = {
 
 }
 
+const framestyle:CSSProperties = {position:'absolute',inset:0}
+
+const StaticGridLayout = (props:any) => {
+
+    const { dndinstalled, dndOptions, uniformprops, nestingprops } = props
+
+    const uniformaccept = acceptAll(testDataSource.uniformcontent)
+    const nestedaccept = ['uniform'] // acceptAll(testDataSource.nestinguniform)
+
+    const uniformDndOptions = {...dndOptions, accept:uniformaccept}
+    const nestedDndOptions = {...dndOptions, accept:nestedaccept}
+
+    const dnduniformprops = {...uniformprops, profile:uniformDndOptions, dndOptions:uniformDndOptions}
+    const dndnestingprops = {...nestingprops, profile:nestedDndOptions, dndOptions:nestedDndOptions}
+    dndnestingprops.cellHeight = '250'
+
+    return dndinstalled 
+        ? <Grid templateRows = '2fr 1fr' style = {framestyle}>
+             <GridItem data-type = 'grid-item-top' >
+             <div style = {{position:'relative',height:'100%', backgroundColor:'aliceblue'}}>
+                <DndScroller key = 'nestinguniform' {...dndnestingprops}/>
+             </div>
+             </GridItem>
+             <GridItem data-type = 'grid-item-bottom' >
+               <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'beige'}}>
+                <DndScroller key = 'uniformcontent' {...dnduniformprops}/>
+                </div>
+             </GridItem>
+          </Grid>
+
+        : <Grid templateRows = '2fr 1fr' style = {framestyle}>
+             <GridItem data-type = 'grid-item-top' >
+             <div style = {{position:'relative',height:'100%', backgroundColor:'aliceblue'}}>
+                 <GridScroller key = 'nestinguniform' {...nestingprops}/>
+             </div>
+             </GridItem>
+             <GridItem data-type = 'grid-item-bottom' >
+               <div style = {{position:'relative',height:'100%', borderTop:'1px', backgroundColor:'beige'}}>
+                 <GridScroller key = 'uniformcontent' {...uniformprops}/>
+             </div>
+             </GridItem>
+           </Grid>
+}
+
+const StaticLayout = (props:any) => {
+
+    const [scrollerState, setScrollerState] = useState('ready')
+
+   const {
+        demoAllContentTypeProperties, 
+        // demoContentTypeSelector, 
+        dndinstalled, 
+        dndmasterenabled, 
+        dndrootenabled,
+        setDemoState,
+    } = props
+
+    const nestingprops = demoAllContentTypeProperties['nestinguniform']
+    const uniformprops = demoAllContentTypeProperties['uniformcontent']
+
+    const acceptRef = useRef('-x-none-x-')
+
+    const dndOptionsRef = useRef<GenericObject>({
+            accept:acceptRef.current,
+            master:{enabled:dndmasterenabled},
+            enabled:dndrootenabled,
+            dropEffect:undefined // 'move' //'copy',
+        })
+
+    useEffect (()=>{
+
+        dndOptionsRef.current = {
+            accept:acceptRef.current,
+            master:{enabled:dndmasterenabled},
+            enabled:dndrootenabled,
+            dropEffect:undefined // ,'copy'
+        }
+
+        setScrollerState('update')
+
+    },[dndmasterenabled, dndrootenabled])
+
+    useEffect(()=>{
+
+        switch (scrollerState) {
+            case 'update':{
+                setScrollerState('ready')
+                break
+            }
+        }
+
+    },[scrollerState])
+
+    return <StaticGridLayout 
+        dndinstalled = {dndinstalled} 
+        dndOptions = {dndOptionsRef.current} 
+        uniformprops = { uniformprops }
+        nestingprops = { nestingprops }
+    />
+}
+
+const ScrollerController = (props:any) => {
+
+    let component
+    if (props.demoContentTypeSelector == 'staticlayout') {
+        component = <StaticLayout {...props} />
+    } else {
+        component = <Scroller {...props} />
+    }
+    return component
+}
+
+export default ScrollerController
+
 const Scroller = (
     {
         demoAllContentTypeProperties, 
@@ -56,7 +175,13 @@ const Scroller = (
 
     const [scrollerState, setScrollerState] = useState('ready')
 
-    const respondToDndRangeChange = (sourceScrollerID:number, sourceIndex:number, targetScrollerID:number, targetIndex:number, context:GenericObject) => {
+    const respondToDndRangeChange = (
+        sourceScrollerID:number, 
+        sourceIndex:number, 
+        targetScrollerID:number, 
+        targetIndex:number, 
+        context:GenericObject
+    ) => {
 
         if (context.item.dropEffect == 'copy' || (sourceScrollerID !== targetScrollerID)) {
             setDemoState('revised')
@@ -172,5 +297,3 @@ const Scroller = (
     }
 
 }
-
-export default Scroller

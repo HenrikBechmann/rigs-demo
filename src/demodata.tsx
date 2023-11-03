@@ -313,6 +313,7 @@ const simpleComponentStyles = {
         top:0,
         left:0,
         padding:'3px',
+        fontSize:'small',
         // backgroundColor:'white', 
         margin:'3px'
     } as React.CSSProperties,
@@ -347,17 +348,17 @@ const SimpleItem = (props:any) => {
 
     },[isDnd])
 
-    const indexstring = `list index ${scrollerContext.cell.current.index},`
+    const indexstring = `list index ${scrollerContext.cell.current.index}, `
     const itemIDstring = `cache itemID ${itemID}`
     const sourceIDstring = `sourceID: ${sourceID}`
 
     return <div data-type = 'simple-uniform' style = {simpleComponentStyles.outer}>
         <div style = {simpleComponentStyles.inner}>
             {isDnd && float}
-            {indexstring}<br style = {{clear:'left'}}/>
-            {itemIDstring}
-            {sourceID && <><br />{sourceIDstring}</>}
-            {localTypeText && <><br />{localTypeText}</>}
+            {indexstring}
+            {itemIDstring}, &nbsp;
+            {sourceID && sourceIDstring}, &nbsp;
+            {localTypeText && localTypeText}
         </div>
     </div>
 
@@ -369,8 +370,6 @@ const SimpleItem = (props:any) => {
 
 // the getItemPack function for simple uniform content
 const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) => {
-
-    // console.log('getSimpleItemPack: context',context)
 
     const accept = context.scrollerProfile.accept;
     let cellType, typeText, originalTypeText, color, sourceID, copyCount
@@ -400,7 +399,7 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     } else {
 
-        ([cellType, typeText] = selectCellType(testUniformData,accept,index));
+        ([cellType, typeText] = selectCellType(testUniformData,accept,index))
 
         color = testUniformDataColors[cellType]
 
@@ -1606,7 +1605,6 @@ const SubscrollerComponent = (props:any) => {
 
     }
 
-    // console.log('scrollerContext.scroller.current',scrollerContext.scroller.current)
     return <div data-type = "list-frame" style = {subcrollerComponentStyles.container} >
         <div data-type = "list-header" style = {subcrollerComponentStyles.header} >
             {isDnd && float}
@@ -1861,7 +1859,6 @@ const UniformSubscrollerItem = (props:any) => {
 
 const getUniformSubscrollerItemPack = (index:any, itemID:number, context:GenericObject) => {
 
-    // console.log('getUniformSubscrollerItemPack:context', context)
     const accept = context.scrollerProfile.accept
     let cellType, typeText, originalTypeText, color, sourceID, copyCount
 
@@ -1890,7 +1887,6 @@ const getUniformSubscrollerItemPack = (index:any, itemID:number, context:Generic
 
     } else {
 
-        // console.log('testUniformData,accept,index',testUniformData,accept,index);
         ([cellType, typeText] = selectCellType(testUniformData,accept,index));
 
         color = testUniformDataColors[cellType]
@@ -2317,6 +2313,9 @@ const nestingvariableProperties = {
 }
 
 
+const staticlayoutProperties = {
+    layout: 'static',
+}
 // ==============================[ consolidated scroller properties namespace ]=========================
 
 // this is exported for the App module to use
@@ -2334,6 +2333,7 @@ export const defaultAllContentTypeProperties = {
     nestingmixedautoexpand: nestingmixedautoexpandProperties,
     nestinguniform:nestinguniformProperties,
     nestingvariable:nestingvariableProperties,
+    staticlayout:staticlayoutProperties,
 }
 
 // this is exported for the App module to use
