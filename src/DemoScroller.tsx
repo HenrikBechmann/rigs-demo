@@ -53,7 +53,7 @@ const testDataSource:GenericObject = {
 
 const nativeTypeCallback = (item:any, context:GenericObject) => {
     console.log('nativeTypeCallback: item, context', item, context)
-    alert('dropped native type ' + context.itemType + ' see console for details')
+    alert('nativeTypes dropped ' + context.itemType + ' see console')
 }
 
 const framestyle:CSSProperties = {position:'absolute',inset:0}
