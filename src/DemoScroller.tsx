@@ -11,7 +11,9 @@ import {
     dragDropTransferCallback
 } from './demodata'
 
-import GridScroller, { RigsDnd as DndScroller } from 'react-infinite-grid-scroller'
+import GridScroller, { RigsDnd as DndScroller, nativeTypes } from 'react-infinite-grid-scroller'
+
+// console.log('DEMO nativeTypes', nativeTypes)
 
 const getDropEffect = (sourceScrollerID:number, targetScrollerID:number, context:GenericObject) => {
 
@@ -49,6 +51,11 @@ const testDataSource:GenericObject = {
 
 }
 
+const nativeTypeCallback = (item:any, context:GenericObject) => {
+    console.log('nativeTypeCallback: item, context', item, context)
+    alert('dropped native type ' + context.itemType + ' see console for details')
+}
+
 const framestyle:CSSProperties = {position:'absolute',inset:0}
 
 const StaticGridLayout = (props:any) => {
@@ -56,9 +63,10 @@ const StaticGridLayout = (props:any) => {
     const { dndinstalled, dndOptions, uniformprops, nestingprops } = props
 
     const uniformaccept = acceptAll(testDataSource.uniformcontent)
+    uniformaccept.push('__NATIVE_FILE__', '__NATIVE_URL__', '__NATIVE_TEXT__')
     const nestedaccept = ['uniform'] // acceptAll(testDataSource.nestinguniform)
 
-    const uniformDndOptions = {...dndOptions, accept:uniformaccept}
+    const uniformDndOptions = {...dndOptions, accept:uniformaccept, nativeTypeCallback}
     const nestedDndOptions = {...dndOptions, accept:nestedaccept}
 
     const dnduniformprops = {...uniformprops, profile:uniformDndOptions, dndOptions:uniformDndOptions}
