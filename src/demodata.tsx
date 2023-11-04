@@ -399,7 +399,11 @@ const getSimpleItemPack = (index:number, itemID:number, context:GenericObject) =
 
     } else {
 
-        ([cellType, typeText] = selectCellType(testUniformData,accept,index))
+        const acceptlist = accept.filter((item:any)=>{
+            return !['__NATIVE_FILE__','__NATIVE_URL__','__NATIVE_TEXT__'].includes(item)
+        });
+
+        ([cellType, typeText] = selectCellType(testUniformData,acceptlist,index))
 
         color = testUniformDataColors[cellType]
 
